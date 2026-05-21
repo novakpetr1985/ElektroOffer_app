@@ -1,4 +1,7 @@
-﻿namespace ElektroOffer_app.Models
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+namespace ElektroOffer_app.Models
 {
     public class WorkItem
     {
