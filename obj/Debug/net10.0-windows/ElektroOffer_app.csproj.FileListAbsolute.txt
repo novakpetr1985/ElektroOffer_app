@@ -143,3 +143,4 @@ D:\_GitHub\ElektroOffer_app\bin\Debug\net10.0-windows\runtimes\win-x64\native\e_
 D:\_GitHub\ElektroOffer_app\bin\Debug\net10.0-windows\runtimes\win-x86\native\e_sqlite3.dll
 D:\_GitHub\ElektroOffer_app\obj\Debug\net10.0-windows\ElektroOffer_app.csproj.AssemblyReference.cache
 D:\_GitHub\ElektroOffer_app\obj\Debug\net10.0-windows\ElektroO.329A0C93.Up2Date
+D:\_GitHub\ElektroOffer_app\obj\Debug\net10.0-windows\ElektroOffer_app.sourcelink.json
