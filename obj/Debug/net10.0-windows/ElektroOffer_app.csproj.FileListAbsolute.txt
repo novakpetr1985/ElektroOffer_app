@@ -6,7 +6,6 @@ D:\_GitHub\ElektroOffer_app\bin\Debug\net10.0-windows\ElektroOffer_app.pdb
 D:\_GitHub\ElektroOffer_app\obj\Debug\net10.0-windows\MainWindow.g.cs
 D:\_GitHub\ElektroOffer_app\obj\Debug\net10.0-windows\App.g.cs
 D:\_GitHub\ElektroOffer_app\obj\Debug\net10.0-windows\ElektroOffer_app_MarkupCompile.cache
-D:\_GitHub\ElektroOffer_app\obj\Debug\net10.0-windows\ElektroOffer_app_MarkupCompile.lref
 D:\_GitHub\ElektroOffer_app\obj\Debug\net10.0-windows\MainWindow.baml
 D:\_GitHub\ElektroOffer_app\obj\Debug\net10.0-windows\ElektroOffer_app.g.resources
 D:\_GitHub\ElektroOffer_app\obj\Debug\net10.0-windows\ElektroOffer_app.GeneratedMSBuildEditorConfig.editorconfig

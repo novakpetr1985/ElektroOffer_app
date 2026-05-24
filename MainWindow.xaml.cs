@@ -20,5 +20,10 @@ namespace ElektroOffer_app
         {
             InitializeComponent();
         }
+
+        private void OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
+        }
     }
 }

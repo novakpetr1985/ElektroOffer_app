@@ -18,20 +18,20 @@
                    FontWeight="Bold"
                    Margin="0,0,0,15"/>
 
-        <!-- MATERIÁL -->
-        <TextBlock Text="Materiál:" Grid.Row="1"/>
-        <ComboBox x:Name="MaterialCombo"
+        <!-- PRÁCE -->
+        <TextBlock Text="Práce:" Grid.Row="1"/>
+        <ComboBox x:Name="PriceItemCombo"
                   Grid.Row="1"
                   Margin="0,20,0,10"
-                  DisplayMemberPath="Name"
-                  SelectionChanged="OnSelectionChanged"/>
-
-        <!-- PRÁCE -->
-        <TextBlock Text="Práce:" Grid.Row="2"/>
-        <ComboBox x:Name="PriceItemCombo"
+                  DisplayMemberPath="Task"
+                  SelectionChanged="OnSelectionChanged"/>        
+        
+        <!-- MATERIÁL -->
+        <TextBlock Text="Materiál:" Grid.Row="2"/>
+        <ComboBox x:Name="MaterialCombo"
                   Grid.Row="2"
                   Margin="0,20,0,10"
-                  DisplayMemberPath="Task"
+                  DisplayMemberPath="Name"
                   SelectionChanged="OnSelectionChanged"/>
 
         <!-- VÝSLEDEK -->
