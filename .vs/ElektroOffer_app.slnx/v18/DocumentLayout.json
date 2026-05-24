@@ -7,16 +7,16 @@
       "RelativeMoniker": "D:0:0:{D8CE3C2E-7BD8-AE34-2666-57AD10DFCE51}|ElektroOffer_app.csproj|solutionrelative:mainwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{D8CE3C2E-7BD8-AE34-2666-57AD10DFCE51}|ElektroOffer_app.csproj|d:\\_github\\elektrooffer_app\\migrations\\20260521205633_initialcreate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{D8CE3C2E-7BD8-AE34-2666-57AD10DFCE51}|ElektroOffer_app.csproj|solutionrelative:migrations\\20260521205633_initialcreate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{D8CE3C2E-7BD8-AE34-2666-57AD10DFCE51}|ElektroOffer_app.csproj|d:\\_github\\elektrooffer_app\\models\\workitem.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D8CE3C2E-7BD8-AE34-2666-57AD10DFCE51}|ElektroOffer_app.csproj|solutionrelative:models\\workitem.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{D8CE3C2E-7BD8-AE34-2666-57AD10DFCE51}|ElektroOffer_app.csproj|d:\\_github\\elektrooffer_app\\data\\appdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{D8CE3C2E-7BD8-AE34-2666-57AD10DFCE51}|ElektroOffer_app.csproj|solutionrelative:data\\appdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{D8CE3C2E-7BD8-AE34-2666-57AD10DFCE51}|ElektroOffer_app.csproj|d:\\_github\\elektrooffer_app\\models\\workitem.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{D8CE3C2E-7BD8-AE34-2666-57AD10DFCE51}|ElektroOffer_app.csproj|solutionrelative:models\\workitem.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{D8CE3C2E-7BD8-AE34-2666-57AD10DFCE51}|ElektroOffer_app.csproj|d:\\_github\\elektrooffer_app\\migrations\\20260521205633_initialcreate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D8CE3C2E-7BD8-AE34-2666-57AD10DFCE51}|ElektroOffer_app.csproj|solutionrelative:migrations\\20260521205633_initialcreate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -36,14 +36,14 @@
               "RelativeDocumentMoniker": "MainWindow.xaml.cs",
               "ToolTip": "D:\\_GitHub\\ElektroOffer_app\\MainWindow.xaml.cs",
               "RelativeToolTip": "MainWindow.xaml.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABcAAAABAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAMAAAAaAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-05-21T20:57:50.75Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 3,
               "Title": "20260521205633_InitialCreate.cs",
               "DocumentMoniker": "D:\\_GitHub\\ElektroOffer_app\\Migrations\\20260521205633_InitialCreate.cs",
               "RelativeDocumentMoniker": "Migrations\\20260521205633_InitialCreate.cs",
@@ -63,11 +63,12 @@
               "RelativeToolTip": "Data\\AppDbContext.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABEAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-05-21T20:40:25.008Z"
+              "WhenOpened": "2026-05-21T20:40:25.008Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 1,
               "Title": "WorkItem.cs",
               "DocumentMoniker": "D:\\_GitHub\\ElektroOffer_app\\Models\\WorkItem.cs",
               "RelativeDocumentMoniker": "Models\\WorkItem.cs",
@@ -75,7 +76,8 @@
               "RelativeToolTip": "Models\\WorkItem.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-05-21T20:38:26.253Z"
+              "WhenOpened": "2026-05-21T20:38:26.253Z",
+              "EditorCaption": ""
             }
           ]
         }
