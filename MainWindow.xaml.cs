@@ -12,7 +12,8 @@ namespace ElektroOffer_app
     public partial class MainWindow : Window
     {
         private ObservableCollection<PriceItems> _priceItems = new();
-        private ObservableCollection<CalculationItems> _calculationItems = new();
+        private ObservableCollection<CalculationItems> _workItems = new();
+        private ObservableCollection<CalculationItems> _materialItems = new();
 
         public MainWindow()
         {
@@ -20,10 +21,11 @@ namespace ElektroOffer_app
 
             LoadPriceItems();
 
-            // 10 prázdných řádků (jak jsi chtěl)
-            for (int i = 0; i < 10; i++)
+            // + prázdné řádky
+            for (int i = 0; i < 5; i++)
             {
-                _calculationItems.Add(new CalculationItems());
+                _workItems.Add(new CalculationItems());
+                _materialItems.Add(new CalculationItems());
             }
 
             SetupUI();
