@@ -1,9 +1,12 @@
 ﻿<Window x:Class="ElektroOffer_app.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Elektro Offer - Kalkulace" Height="350" Width="500">
+        Title="Elektro Offer - Kalkulace"
+        Height="450"
+        Width="700">
 
-    <Grid Margin="15">
+    <Grid Margin="20">
+
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
@@ -14,35 +17,46 @@
 
         <!-- NADPIS -->
         <TextBlock Text="Kalkulace ceny"
-                   FontSize="20"
+                   FontSize="24"
                    FontWeight="Bold"
-                   Margin="0,0,0,15"/>
+                   Margin="0,0,0,20"/>
 
-        <!-- PRÁCE -->
-        <TextBlock Text="Práce:" Grid.Row="1"/>
-        <ComboBox x:Name="PriceItemCombo"
-                  Grid.Row="1"
-                  Margin="0,20,0,10"
-                  DisplayMemberPath="Task"
-                  SelectionChanged="OnSelectionChanged"/>        
-        
-        <!-- MATERIÁL -->
-        <TextBlock Text="Materiál:" Grid.Row="2"/>
-        <ComboBox x:Name="MaterialCombo"
-                  Grid.Row="2"
-                  Margin="0,20,0,10"
-                  DisplayMemberPath="Name"
-                  SelectionChanged="OnSelectionChanged"/>
+        <!-- VÝBĚR PRÁCE -->
+        <StackPanel Grid.Row="1" Margin="0,0,0,15">
+
+            <TextBlock Text="Výběr práce:"
+                       FontWeight="Bold"/>
+
+            <ComboBox x:Name="PriceItemCombo"
+                      Height="30"
+                      Margin="0,5,0,0"
+                      SelectionChanged="OnSelectionChanged"/>
+        </StackPanel>
+
+        <!-- POČET JEDNOTEK -->
+        <StackPanel Grid.Row="2" Margin="0,0,0,15">
+
+            <TextBlock Text="Počet jednotek:"
+                       FontWeight="Bold"/>
+
+            <TextBox x:Name="QuantityTextBox"
+                     Height="30"
+                     Margin="0,5,0,0"
+                     TextChanged="OnSelectionChanged"/>
+        </StackPanel>
 
         <!-- VÝSLEDEK -->
-        <TextBlock Text="Výsledek:" Grid.Row="3"
-                   Margin="0,10,0,0"/>
+        <StackPanel Grid.Row="3" Margin="0,10,0,0">
 
-        <TextBlock x:Name="ResultText"
-                   Grid.Row="4"
-                   FontSize="18"
-                   FontWeight="Bold"
-                   Foreground="DarkGreen"
-                   Margin="0,10,0,0"/>
+            <TextBlock Text="Celková cena:"
+                       FontWeight="Bold"/>
+
+            <TextBlock x:Name="ResultText"
+                       FontSize="26"
+                       FontWeight="Bold"
+                       Foreground="DarkGreen"
+                       Margin="0,10,0,0"/>
+        </StackPanel>
+
     </Grid>
 </Window>
