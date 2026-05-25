@@ -2,60 +2,100 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="Elektro Offer - Kalkulace"
-        Height="450"
-        Width="700">
+        Height="650"
+        Width="900">
+
+    <Window.Resources>
+
+        <!-- JEDEN ŘÁDEK KALKULACE -->
+        <DataTemplate x:Key="CalculationItemTemplate">
+
+            <StackPanel Orientation="Horizontal" Margin="0,5">
+
+                <!-- výběr položky -->
+                <ComboBox Width="300"
+                          ItemsSource="{Binding DataContext._priceItems, RelativeSource={RelativeSource AncestorType=Window}}"
+                          DisplayMemberPath="FullName"
+                          SelectedItem="{Binding Item}"/>
+
+                <!-- množství -->
+                <TextBox Width="70"
+                         Margin="10,0,0,0"
+                         Text="{Binding Quantity}"/>
+
+                <!-- jednotka (pokud máš v modelu) -->
+                <TextBlock Width="40"
+                           Margin="10,0,0,0"
+                           Text="{Binding Item.Unit}"/>
+
+                <!-- cena -->
+                <TextBlock Width="120"
+                           Margin="10,0,0,0"
+                           FontWeight="Bold"
+                           Text="{Binding Total}"/>
+
+            </StackPanel>
+
+        </DataTemplate>
+
+    </Window.Resources>
 
     <Grid Margin="20">
 
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
+            <!-- total -->
             <RowDefinition Height="Auto"/>
+            <!-- práce -->
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
+            <!-- materiál -->
             <RowDefinition Height="*"/>
+            <!-- spacer -->
         </Grid.RowDefinitions>
 
-        <!-- NADPIS -->
-        <TextBlock Text="Kalkulace ceny"
-                   FontSize="24"
+        <!-- CELKOVÁ CENA -->
+        <TextBlock x:Name="ResultText"
+                   FontSize="26"
                    FontWeight="Bold"
+                   Foreground="DarkGreen"
                    Margin="0,0,0,20"/>
 
-        <!-- VÝBĚR PRÁCE -->
-        <StackPanel Grid.Row="1" Margin="0,0,0,15">
+        <!-- PRÁCE -->
+        <StackPanel Grid.Row="1" Margin="0,0,0,20">
 
-            <TextBlock Text="Výběr práce:"
-                       FontWeight="Bold"/>
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="PRÁCE"
+                           FontSize="18"
+                           FontWeight="Bold"/>
 
-            <ComboBox x:Name="PriceItemCombo"
-                      Height="30"
-                      Margin="0,5,0,0"
-                      SelectionChanged="OnSelectionChanged"/>
+                <Button Content="+"
+                        Width="30"
+                        Margin="10,0,0,0"
+                        Click="AddWorkItem_Click"/>
+            </StackPanel>
+
+            <ItemsControl x:Name="WorkItemsControl"
+                          ItemTemplate="{StaticResource CalculationItemTemplate}"/>
+
         </StackPanel>
 
-        <!-- POČET JEDNOTEK -->
-        <StackPanel Grid.Row="2" Margin="0,0,0,15">
+        <!-- MATERIÁL -->
+        <StackPanel Grid.Row="2">
 
-            <TextBlock Text="Počet jednotek:"
-                       FontWeight="Bold"/>
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="MATERIÁL"
+                           FontSize="18"
+                           FontWeight="Bold"/>
 
-            <TextBox x:Name="QuantityTextBox"
-                     Height="30"
-                     Margin="0,5,0,0"
-                     TextChanged="OnSelectionChanged"/>
-        </StackPanel>
+                <Button Content="+"
+                        Width="30"
+                        Margin="10,0,0,0"
+                        Click="AddMaterialItem_Click"/>
+            </StackPanel>
 
-        <!-- VÝSLEDEK -->
-        <StackPanel Grid.Row="3" Margin="0,10,0,0">
+            <ItemsControl x:Name="MaterialItemsControl"
+                          ItemTemplate="{StaticResource CalculationItemTemplate}"/>
 
-            <TextBlock Text="Celková cena:"
-                       FontWeight="Bold"/>
-
-            <TextBlock x:Name="ResultText"
-                       FontSize="26"
-                       FontWeight="Bold"
-                       Foreground="DarkGreen"
-                       Margin="0,10,0,0"/>
         </StackPanel>
 
     </Grid>

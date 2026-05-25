@@ -2,7 +2,6 @@
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
-using System.Windows.Controls;
 using Microsoft.Data.Sqlite;
 using ElektroOffer_app.Models;
 using System.IO;
@@ -11,43 +10,76 @@ namespace ElektroOffer_app
 {
     public partial class MainWindow : Window
     {
+        // ---------------------------
+        // 📦 DATOVÉ KOLEKCE
+        // ---------------------------
+
+        // Ceník načtený z databáze (Práce + Materiál)
         private ObservableCollection<PriceItems> _priceItems = new();
+
+        // Řádky pro PRÁCI
         private ObservableCollection<CalculationItems> _workItems = new();
+
+        // Řádky pro MATERIÁL
         private ObservableCollection<CalculationItems> _materialItems = new();
 
+
+        // ---------------------------
+        // 🏗️ KONSTRUKTOR - START APPKY
+        // ---------------------------
         public MainWindow()
         {
             InitializeComponent();
 
+            // 1) načti ceník z DB
             LoadPriceItems();
 
-            // + prázdné řádky
+            // 2) inicializuj UI vazby (ItemsControl)
+            SetupUI();
+
+            // 3) vytvoř startovní prázdné řádky
             for (int i = 0; i < 5; i++)
             {
                 _workItems.Add(new CalculationItems());
                 _materialItems.Add(new CalculationItems());
             }
-
-            SetupUI();
         }
 
+
         // ---------------------------
-        // NAČTENÍ CENÍKU Z DB
+        // 🔗 PROPOJENÍ UI ↔ DATA
+        // ---------------------------
+        private void SetupUI()
+        {
+            // ItemsControl v XAML (PRÁCE)
+            WorkItemsControl.ItemsSource = _workItems;
+
+            // ItemsControl v XAML (MATERIÁL)
+            MaterialItemsControl.ItemsSource = _materialItems;
+        }
+
+
+        // ---------------------------
+        // 📥 NAČTENÍ CENÍKU Z DB
         // ---------------------------
         private void LoadPriceItems()
         {
             _priceItems.Clear();
 
+            // cesta k SQLite databázi
             string dbPath =
-                 System.IO.Path.Combine(
+                System.IO.Path.Combine(
                     AppDomain.CurrentDomain.BaseDirectory,
                     "elektrooffer.db");
 
             using var connection =
                 new SqliteConnection($"Data Source={dbPath}");
+
             connection.Open();
 
             var cmd = connection.CreateCommand();
+
+            // načítáme všechny položky ceníku
             cmd.CommandText =
                 @"SELECT Id, BasePrice, Unit, Task, Specification, Material, Location, MaterialCoef, PositionCoef
                   FROM PriceItems";
@@ -71,51 +103,49 @@ namespace ElektroOffer_app
             }
         }
 
+
         // ---------------------------
-        // NASTAVENÍ COMBOBOXŮ
+        // ➕ PŘIDÁNÍ PRÁCE (BUTTON +)
         // ---------------------------
-        private void SetupUI()
+        private void AddWorkItem_Click(object sender, RoutedEventArgs e)
         {
-            // napojení ComboBoxu (v XAML musí být ItemsControl / ListBox / StackPanel)
-            PriceItemCombo.ItemsSource = _priceItems;
-            PriceItemCombo.DisplayMemberPath = "FullName";
+            _workItems.Add(new CalculationItems());
         }
 
+
         // ---------------------------
-        // VÝPOČET 1 ŘÁDKU
+        // ➕ PŘIDÁNÍ MATERIÁLU (BUTTON +)
         // ---------------------------
-        private void OnSelectionChanged(object sender, EventArgs e)
+        private void AddMaterialItem_Click(object sender, RoutedEventArgs e)
         {
-            try
-            {
-                if (PriceItemCombo.SelectedItem is not PriceItems item)
-                    return;
-
-                double quantity = 0;
-                double.TryParse(QuantityTextBox.Text, out quantity);
-
-                double total =
-                    item.BasePrice *
-                    item.MaterialCoef *
-                    item.PositionCoef *
-                    quantity;
-
-                ResultText.Text = $"{total:N2} Kč";
-            }
-            catch
-            {
-                ResultText.Text = "";
-            }
+            _materialItems.Add(new CalculationItems());
         }
 
+
         // ---------------------------
-        // CELKOVÝ SOUČET (pro budoucí UI)
+        // 💰 VÝPOČET CELKOVÉ CENY
         // ---------------------------
         private double GetGrandTotal()
         {
-            return _calculationItems
-                .Where(x => x.Item != null)
-                .Sum(x => x.Total);
+            // součet práce
+            double workTotal = _workItems.Sum(x => x.Total);
+
+            // součet materiálu
+            double materialTotal = _materialItems.Sum(x => x.Total);
+
+            return workTotal + materialTotal;
         }
+
+
+        // ---------------------------
+        // 🧠 STARÁ LOGIKA (LEGACY - NEPOUŽÍVÁ SE VE VARIANTĚ 2)
+        // ---------------------------
+        /*
+        private void OnSelectionChanged(...)
+        {
+            // toto je původní single-item logika
+            // ve variantě 2 už se NEPOUŽÍVÁ
+        }
+        */
     }
 }

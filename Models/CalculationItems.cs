@@ -1,16 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using ElektroOffer_app.Models;
 
-namespace ElektroOffer_app.Models
+public class CalculationItems
 {
-    public class CalculationItems
+    public PriceItems Item { get; set; }
+
+    public double Quantity { get; set; }
+
+    // výpočet jednoho řádku
+    public double Total
     {
-        public PriceItems Item { get; set; }
+        get
+        {
+            if (Item == null)
+                return 0;
 
-        public double Quantity { get; set; }
-
-        public double Total =>
-            Item.BasePrice * Item.MaterialCoef * Item.PositionCoef * Quantity;
+            return Item.BasePrice *
+                   Item.MaterialCoef *
+                   Item.PositionCoef *
+                   Quantity;
+        }
     }
 }
