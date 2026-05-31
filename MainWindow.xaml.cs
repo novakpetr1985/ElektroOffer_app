@@ -5,7 +5,6 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Windows;
-using System.Windows.Media.Media3D;
 
 namespace ElektroOffer_app
 {
@@ -19,7 +18,7 @@ namespace ElektroOffer_app
         private ObservableCollection<PriceItems> _priceItems = new();
 
         // ceník MATERIÁLU (tabulka Materials)
-        private ObservableCollection<System.Windows.Media.Media3D.Material> _materials = new();
+        private ObservableCollection<Material> _materials = new();
 
 
         // ---------------------------
