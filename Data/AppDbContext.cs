@@ -1,4 +1,7 @@
-﻿using System;
+﻿// NEPOUŽÍVAT zatím – budeš používat později
+
+/*
+using System;
 using System.Collections.Generic;
 using System.Text;
 using Microsoft.EntityFrameworkCore;

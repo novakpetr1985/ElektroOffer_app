@@ -1,47 +1,67 @@
 ﻿using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using ElektroOffer_app.Models;
 
-public class CalculationItems : INotifyPropertyChanged
+namespace ElektroOffer_app
 {
-    private Material _item;
-    public Material Item
+    // =========================
+    // 🧮 JEDEN ŘÁDEK KALKULACE
+    // =========================
+    public class CalculationItems : INotifyPropertyChanged
     {
-        get => _item;
-        set
+        private PriceItems? _item;
+        private double _quantity;
+
+        // =========================
+        // vybraná položka (práce / materiál)
+        // =========================
+        public PriceItems? Item
         {
-            _item = value;
-            OnPropertyChanged(nameof(Item));
-            OnPropertyChanged(nameof(Total));
+            get => _item;
+            set
+            {
+                _item = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(Total));
+            }
         }
-    }
 
-    private double _quantity;
-    public double Quantity
-    {
-        get => _quantity;
-        set
+        // =========================
+        // množství
+        // =========================
+        public double Quantity
         {
-            _quantity = value;
-            OnPropertyChanged(nameof(Quantity));
-            OnPropertyChanged(nameof(Total));
+            get => _quantity;
+            set
+            {
+                _quantity = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(Total));
+            }
         }
-    }
 
-    public double Total
-    {
-        get
+        // =========================
+        // výpočet řádku
+        // =========================
+        public double Total
         {
-            if (Item == null)
-                return 0;
+            get
+            {
+                if (Item == null) return 0;
 
-            return Item.Price * Quantity;
+                return Item.BasePrice *
+                       Item.MaterialCoef *
+                       Item.PositionCoef *
+                       Quantity;
+            }
         }
-    }
 
-    public event PropertyChangedEventHandler PropertyChanged;
+        // =========================
+        // PROPERTY CHANGED
+        // =========================
+        public event PropertyChangedEventHandler? PropertyChanged;
 
-    private void OnPropertyChanged(string name)
-    {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+        private void OnPropertyChanged([CallerMemberName] string? name = null)
+            => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
     }
 }
