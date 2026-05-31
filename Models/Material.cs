@@ -1,22 +1,28 @@
 ﻿namespace ElektroOffer_app.Models
 {
     // =========================
-    // 📦 MATERIÁL (TABULKA Materials)
+    // 📦 MATERIÁL
     // =========================
-    // 👉 Reprezentuje jeden řádek v databázi
-    // 👉 Používá se pro výpočet ceny materiálu
+    // 👉 Jeden záznam materiálu v databázi
+    // 👉 Používá se pro kalkulaci ceny materiálu
     // =========================
     public class Material
     {
         public int Id { get; set; }
 
-        // název materiálu (např. kabel, jistič)
+        // =========================
+        // 📦 NÁZEV MATERIÁLU
+        // =========================
         public string Name { get; set; } = string.Empty;
 
-        // cena za jednotku
+        // =========================
+        // 💰 CENA ZA JEDNOTKU
+        // =========================
         public double Price { get; set; }
 
-        // jednotka (m, ks, balení)
+        // =========================
+        // 📏 JEDNOTKA
+        // =========================
         public string Unit { get; set; } = string.Empty;
     }
 }

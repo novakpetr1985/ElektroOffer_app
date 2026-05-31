@@ -1,41 +1,57 @@
 ﻿namespace ElektroOffer_app.Models
 {
     // =========================
-    // 🔧 CENÍK PRÁCE / SLUŽEB
+    // 🔧 CENÍK PRÁCE
     // =========================
-    // 👉 Reprezentuje položku práce (např. montáž zásuvky)
+    // 👉 Jeden řádek ceníku práce
     // 👉 Obsahuje koeficienty pro výpočet ceny
     // =========================
     public class PriceItems
     {
         public int Id { get; set; }
 
-        // základní cena práce
+        // =========================
+        // 💰 ZÁKLADNÍ CENA
+        // =========================
         public double BasePrice { get; set; }
 
-        // jednotka (hodina, ks)
+        // =========================
+        // 📏 JEDNOTKA
+        // =========================
         public string Unit { get; set; } = string.Empty;
 
-        // název práce
+        // =========================
+        // 🔧 NÁZEV PRÁCE
+        // =========================
         public string Task { get; set; } = string.Empty;
 
-        // specifikace práce
+        // =========================
+        // 📄 SPECIFIKACE
+        // =========================
         public string Specification { get; set; } = string.Empty;
 
-        // typ materiálu (popis)
+        // =========================
+        // 📦 TYP MATERIÁLU
+        // =========================
         public string Material { get; set; } = string.Empty;
 
-        // umístění (např. interiér / exteriér)
+        // =========================
+        // 📍 UMÍSTĚNÍ
+        // =========================
         public string Location { get; set; } = string.Empty;
 
-        // koeficient materiálu
+        // =========================
+        // 📊 KOEFICIENT MATERIÁLU
+        // =========================
         public double MaterialCoef { get; set; }
 
-        // koeficient polohy
+        // =========================
+        // 📊 KOEFICIENT POZICE
+        // =========================
         public double PositionCoef { get; set; }
 
         // =========================
-        // 🧾 TEXT PRO UI (COMBOBOX)
+        // 🧾 TEXT PRO COMBOBOX
         // =========================
         public string FullName =>
             $"{Task} | {Specification} | {Material} | {Location}";

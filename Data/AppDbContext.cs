@@ -4,25 +4,28 @@ using ElektroOffer_app.Models;
 namespace ElektroOffer_app.Data
 {
     // =========================
-    // 🧠 DATABÁZOVÝ KONTEJNER (EF CORE)
+    // 🧠 EF CORE DATABÁZOVÝ KONTEXT
     // =========================
-    // 👉 Slouží jako most mezi C# objekty a SQLite databází
-    // 👉 Nahrazuje ruční SQL (SqliteCommand, Reader)
+    // 👉 Řídí komunikaci mezi aplikací a SQLite
+    // 👉 Nahrazuje ruční SQL dotazy
     // =========================
     public class AppDbContext : DbContext
     {
         // =========================
-        // 🔧 TABULKY V DATABÁZI
+        // 🔧 TABULKA PRÁCE
         // =========================
         public DbSet<PriceItems> PriceItems => Set<PriceItems>();
+
+        // =========================
+        // 📦 TABULKA MATERIÁL
+        // =========================
         public DbSet<Material> Materials => Set<Material>();
 
         // =========================
-        // 🧩 KONFIGURACE DATABÁZE
+        // 🧩 KONFIGURACE DB
         // =========================
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            // ochrana proti dvojité konfiguraci
             if (!optionsBuilder.IsConfigured)
             {
                 optionsBuilder.UseSqlite("Data Source=elektrooffer.db");

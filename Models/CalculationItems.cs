@@ -7,18 +7,18 @@ namespace ElektroOffer_app
     // =========================
     // 🧮 KALKULAČNÍ ŘÁDEK
     // =========================
-    // 👉 Jeden řádek v kalkulaci (práce nebo materiál)
-    // 👉 Automaticky přepočítává cenu
+    // 👉 Jeden řádek kalkulace (práce nebo materiál)
+    // 👉 Automaticky přepočítává cenu při změnách
     // =========================
     public class CalculationItems : INotifyPropertyChanged
     {
         // =========================
-        // 🔧 PRÁCE (PriceItems)
+        // 🔧 PRÁCE (CENÍKOVÁ POLOŽKA)
         // =========================
         private PriceItems? _workItem;
 
         // =========================
-        // 📦 MATERIÁL (Material)
+        // 📦 MATERIÁL
         // =========================
         private Material? _materialItem;
 
