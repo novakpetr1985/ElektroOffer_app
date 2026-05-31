@@ -5,29 +5,58 @@ using ElektroOffer_app.Models;
 namespace ElektroOffer_app
 {
     // =========================
-    // 🧮 JEDEN ŘÁDEK KALKULACE
+    // 🧮 KALKULAČNÍ ŘÁDEK
+    // =========================
+    // 👉 Jeden řádek v kalkulaci (práce nebo materiál)
+    // 👉 Automaticky přepočítává cenu
     // =========================
     public class CalculationItems : INotifyPropertyChanged
     {
-        private PriceItems? _item;
+        // =========================
+        // 🔧 PRÁCE (PriceItems)
+        // =========================
+        private PriceItems? _workItem;
+
+        // =========================
+        // 📦 MATERIÁL (Material)
+        // =========================
+        private Material? _materialItem;
+
+        // =========================
+        // 📊 MNOŽSTVÍ
+        // =========================
         private double _quantity;
 
         // =========================
-        // vybraná položka (práce / materiál)
+        // 🔧 VÝBĚR PRÁCE
         // =========================
-        public PriceItems? Item
+        public PriceItems? WorkItem
         {
-            get => _item;
+            get => _workItem;
             set
             {
-                _item = value;
+                _workItem = value;
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(Total));
             }
         }
 
         // =========================
-        // množství
+        // 📦 VÝBĚR MATERIÁLU
+        // =========================
+        public Material? MaterialItem
+        {
+            get => _materialItem;
+            set
+            {
+                _materialItem = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(Total));
+            }
+        }
+
+        // =========================
+        // 📊 MNOŽSTVÍ
         // =========================
         public double Quantity
         {
@@ -41,23 +70,33 @@ namespace ElektroOffer_app
         }
 
         // =========================
-        // výpočet řádku
+        // 💰 VÝPOČET ŘÁDKU
         // =========================
         public double Total
         {
             get
             {
-                if (Item == null) return 0;
+                // 👉 výpočet práce
+                if (WorkItem != null)
+                {
+                    return WorkItem.BasePrice *
+                           WorkItem.MaterialCoef *
+                           WorkItem.PositionCoef *
+                           Quantity;
+                }
 
-                return Item.BasePrice *
-                       Item.MaterialCoef *
-                       Item.PositionCoef *
-                       Quantity;
+                // 👉 výpočet materiálu
+                if (MaterialItem != null)
+                {
+                    return MaterialItem.Price * Quantity;
+                }
+
+                return 0;
             }
         }
 
         // =========================
-        // PROPERTY CHANGED
+        // 🔔 NOTIFIKACE UI
         // =========================
         public event PropertyChangedEventHandler? PropertyChanged;
 

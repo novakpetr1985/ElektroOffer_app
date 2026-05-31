@@ -5,33 +5,37 @@
         Height="650"
         Width="900">
 
+    <!-- ========================= -->
+    <!-- HLAVNÍ ROZLOŽENÍ -->
+    <!-- ========================= -->
     <Grid Margin="20">
 
-        <!-- ========================= -->
-        <!-- ROZLOŽENÍ STRÁNKY -->
-        <!-- ========================= -->
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <!-- CELKOVÁ CENA -->
+
             <RowDefinition Height="Auto"/>
             <!-- PRÁCE -->
+
             <RowDefinition Height="Auto"/>
             <!-- MATERIÁL -->
+
             <RowDefinition Height="*"/>
-            <!-- PROSTOR -->
+            <!-- VOLNÝ PROSTOR -->
         </Grid.RowDefinitions>
 
         <!-- ========================= -->
-        <!-- CELKOVÁ CENA -->
+        <!-- 💰 CELKOVÁ CENA -->
         <!-- ========================= -->
-        <TextBlock FontSize="26"
+        <TextBlock Grid.Row="0"
+                   FontSize="26"
                    FontWeight="Bold"
                    Foreground="DarkGreen"
                    Margin="0,0,0,20"
                    Text="{Binding GrandTotal, StringFormat=N2}" />
 
         <!-- ========================= -->
-        <!-- PRÁCE -->
+        <!-- 🔧 PRÁCE -->
         <!-- ========================= -->
         <StackPanel Grid.Row="1" Margin="0,0,0,20">
 
@@ -53,14 +57,13 @@
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
 
-                        <!-- JEDEN ŘÁDEK PRÁCE -->
                         <StackPanel Orientation="Horizontal" Margin="0,5">
 
-                            <!-- výběr položky -->
+                            <!-- výběr práce -->
                             <ComboBox Width="300"
                                       ItemsSource="{Binding DataContext.WorkItemsSource, RelativeSource={RelativeSource AncestorType=Window}}"
                                       DisplayMemberPath="Task"
-                                      SelectedItem="{Binding Item, Mode=TwoWay}" />
+                                      SelectedItem="{Binding WorkItem, Mode=TwoWay}" />
 
                             <!-- množství -->
                             <TextBox Width="70"
@@ -87,7 +90,7 @@
         </StackPanel>
 
         <!-- ========================= -->
-        <!-- MATERIÁL -->
+        <!-- 📦 MATERIÁL -->
         <!-- ========================= -->
         <StackPanel Grid.Row="2">
 
@@ -115,7 +118,7 @@
                             <ComboBox Width="300"
                                       ItemsSource="{Binding DataContext.Materials, RelativeSource={RelativeSource AncestorType=Window}}"
                                       DisplayMemberPath="Name"
-                                      SelectedItem="{Binding Item, Mode=TwoWay}" />
+                                      SelectedItem="{Binding MaterialItem, Mode=TwoWay}" />
 
                             <!-- množství -->
                             <TextBox Width="70"
@@ -125,7 +128,7 @@
                             <!-- jednotka -->
                             <TextBlock Width="40"
                                        Margin="10,0,0,0"
-                                       Text="{Binding Item.Unit}" />
+                                       Text="{Binding MaterialItem.Unit}" />
 
                             <!-- cena -->
                             <TextBlock Width="120"

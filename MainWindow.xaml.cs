@@ -1,9 +1,8 @@
-﻿using ElektroOffer_app.Models;
-using Microsoft.Data.Sqlite;
+﻿using ElektroOffer_app.Data;
+using ElektroOffer_app.Models;
 using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows;
@@ -13,21 +12,22 @@ namespace ElektroOffer_app
     public partial class MainWindow : Window, INotifyPropertyChanged
     {
         // =========================
-        // 📦 DATA Z DB
+        // 📦 DATA Z DATABÁZE
         // =========================
         public ObservableCollection<PriceItems> WorkItemsSource { get; set; } = new();
         public ObservableCollection<Material> Materials { get; set; } = new();
 
         // =========================
-        // 📦 KALKULAČNÍ ŘÁDKY
+        // 🧮 KALKULAČNÍ ŘÁDKY
         // =========================
         public ObservableCollection<CalculationItems> WorkCalcItems { get; set; } = new();
         public ObservableCollection<CalculationItems> MaterialItems { get; set; } = new();
 
         // =========================
-        // 💰 CELKEM
+        // 💰 CELKOVÁ CENA
         // =========================
         private double _grandTotal;
+
         public double GrandTotal
         {
             get => _grandTotal;
@@ -39,31 +39,47 @@ namespace ElektroOffer_app
         }
 
         // =========================
-        // START
+        // 🚀 START APLIKACE
         // =========================
         public MainWindow()
         {
             InitializeComponent();
-
             DataContext = this;
 
-            LoadWorkItems();
-            LoadMaterials();
+            // =========================
+            // 📥 NAČTENÍ DAT Z DB (EF CORE)
+            // =========================
+            using (var db = new AppDbContext())
+            {
+                db.Database.EnsureCreated();
 
-            // startovní řádky
+                WorkItemsSource = new ObservableCollection<PriceItems>(
+                    db.PriceItems.ToList()
+                );
+
+                Materials = new ObservableCollection<Material>(
+                    db.Materials.ToList()
+                );
+            }
+
+            // =========================
+            // 🧮 STARTOVNÍ ŘÁDKY
+            // =========================
             for (int i = 0; i < 5; i++)
             {
                 WorkCalcItems.Add(new CalculationItems());
                 MaterialItems.Add(new CalculationItems());
             }
 
-            // sledování změn kolekcí
+            // =========================
+            // 🔔 SLEDOVÁNÍ ZMĚN
+            // =========================
             WorkCalcItems.CollectionChanged += (_, __) => Recalculate();
             MaterialItems.CollectionChanged += (_, __) => Recalculate();
         }
 
         // =========================
-        // ➕ WORK ITEM
+        // ➕ PŘIDAT PRÁCI
         // =========================
         private void AddWorkItem_Click(object sender, RoutedEventArgs e)
         {
@@ -71,7 +87,7 @@ namespace ElektroOffer_app
         }
 
         // =========================
-        // ➕ MATERIAL ITEM
+        // ➕ PŘIDAT MATERIÁL
         // =========================
         private void AddMaterialsItem_Click(object sender, RoutedEventArgs e)
         {
@@ -79,7 +95,7 @@ namespace ElektroOffer_app
         }
 
         // =========================
-        // 💰 PŘEPočet
+        // 💰 PŘEPočet CELKU
         // =========================
         private void Recalculate()
         {
@@ -89,63 +105,7 @@ namespace ElektroOffer_app
         }
 
         // =========================
-        // 📥 LOAD WORK ITEMS
-        // =========================
-        private void LoadWorkItems()
-        {
-            string dbPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "elektrooffer.db");
-
-            using var connection = new SqliteConnection($"Data Source={dbPath}");
-            connection.Open();
-
-            var cmd = connection.CreateCommand();
-            cmd.CommandText = @"SELECT Id, BasePrice, Unit, Task, MaterialCoef, PositionCoef FROM PriceItems";
-
-            using var reader = cmd.ExecuteReader();
-
-            while (reader.Read())
-            {
-                WorkItemsSource.Add(new PriceItems
-                {
-                    Id = reader.GetInt32(0),
-                    BasePrice = reader.GetDouble(1),
-                    Unit = reader.GetString(2),
-                    Task = reader.GetString(3),
-                    MaterialCoef = reader.GetDouble(4),
-                    PositionCoef = reader.GetDouble(5)
-                });
-            }
-        }
-
-        // =========================
-        // 📥 LOAD MATERIALS
-        // =========================
-        private void LoadMaterials()
-        {
-            string dbPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "elektrooffer.db");
-
-            using var connection = new SqliteConnection($"Data Source={dbPath}");
-            connection.Open();
-
-            var cmd = connection.CreateCommand();
-            cmd.CommandText = @"SELECT Id, Name, Price, Unit FROM Materials";
-
-            using var reader = cmd.ExecuteReader();
-
-            while (reader.Read())
-            {
-                Materials.Add(new Material
-                {
-                    Id = reader.GetInt32(0),
-                    Name = reader.GetString(1),
-                    Price = reader.GetDouble(2),
-                    Unit = reader.GetString(3)
-                });
-            }
-        }
-
-        // =========================
-        // PROPERTY CHANGED
+        // 🔔 NOTIFIKACE UI
         // =========================
         public event PropertyChangedEventHandler? PropertyChanged;
 
