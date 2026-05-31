@@ -5,83 +5,37 @@
         Height="650"
         Width="900">
 
-    <Window.Resources>
-
-        <!-- ===== MATERIÁL ŘÁDEK ===== -->
-        <DataTemplate x:Key="MaterialItemTemplate">
-
-            <StackPanel Orientation="Horizontal" Margin="0,5">
-
-                <ComboBox Width="300"
-                          ItemsSource="{Binding DataContext.Materials, RelativeSource={RelativeSource AncestorType=Window}}"
-                          DisplayMemberPath="Name"
-                          SelectedItem="{Binding Item}"/>
-
-                <TextBox Width="70"
-                         Margin="10,0,0,0"
-                         Text="{Binding Quantity, UpdateSourceTrigger=PropertyChanged}"/>
-
-                <TextBlock Width="40"
-                           Margin="10,0,0,0"
-                           Text="{Binding Item.Unit, TargetNullValue=''}"/>
-
-                <TextBlock Width="120"
-                           Margin="10,0,0,0"
-                           FontWeight="Bold"
-                           Text="{Binding Total}"/>
-
-            </StackPanel>
-
-        </DataTemplate>
-
-        <!-- ===== PRÁCE ŘÁDEK ===== -->
-        <DataTemplate x:Key="WorkItemTemplate">
-
-            <StackPanel Orientation="Horizontal" Margin="0,5">
-
-                <ComboBox Width="300"
-                          ItemsSource="{Binding DataContext.WorkItems, RelativeSource={RelativeSource AncestorType=Window}}"
-                          DisplayMemberPath="Name"
-                          SelectedItem="{Binding Item}"/>
-
-                <TextBox Width="70"
-                         Margin="10,0,0,0"
-                         Text="{Binding Quantity, UpdateSourceTrigger=PropertyChanged}"/>
-
-                <TextBlock Width="40"
-                           Margin="10,0,0,0"
-                           Text="h"/>
-
-                <TextBlock Width="120"
-                           Margin="10,0,0,0"
-                           FontWeight="Bold"
-                           Text="{Binding Total}"/>
-
-            </StackPanel>
-
-        </DataTemplate>
-
-    </Window.Resources>
-
     <Grid Margin="20">
 
+        <!-- ========================= -->
+        <!-- ROZLOŽENÍ STRÁNKY -->
+        <!-- ========================= -->
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
+            <!-- CELKOVÁ CENA -->
             <RowDefinition Height="Auto"/>
+            <!-- PRÁCE -->
             <RowDefinition Height="Auto"/>
+            <!-- MATERIÁL -->
             <RowDefinition Height="*"/>
+            <!-- PROSTOR -->
         </Grid.RowDefinitions>
 
+        <!-- ========================= -->
         <!-- CELKOVÁ CENA -->
-        <TextBlock x:Name="ResultText"
-                   FontSize="26"
+        <!-- ========================= -->
+        <TextBlock FontSize="26"
                    FontWeight="Bold"
                    Foreground="DarkGreen"
-                   Margin="0,0,0,20"/>
+                   Margin="0,0,0,20"
+                   Text="{Binding GrandTotal, StringFormat=N2}" />
 
+        <!-- ========================= -->
         <!-- PRÁCE -->
+        <!-- ========================= -->
         <StackPanel Grid.Row="1" Margin="0,0,0,20">
 
+            <!-- HLAVIČKA -->
             <StackPanel Orientation="Horizontal">
                 <TextBlock Text="PRÁCE"
                            FontSize="18"
@@ -93,14 +47,51 @@
                         Click="AddWorkItem_Click"/>
             </StackPanel>
 
-            <ItemsControl x:Name="WorkItemsControl"
-                          ItemTemplate="{StaticResource WorkItemTemplate}"/>
+            <!-- LIST PRÁCE -->
+            <ItemsControl ItemsSource="{Binding WorkCalcItems}">
+
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+
+                        <!-- JEDEN ŘÁDEK PRÁCE -->
+                        <StackPanel Orientation="Horizontal" Margin="0,5">
+
+                            <!-- výběr položky -->
+                            <ComboBox Width="300"
+                                      ItemsSource="{Binding DataContext.WorkItemsSource, RelativeSource={RelativeSource AncestorType=Window}}"
+                                      DisplayMemberPath="Task"
+                                      SelectedItem="{Binding Item, Mode=TwoWay}" />
+
+                            <!-- množství -->
+                            <TextBox Width="70"
+                                     Margin="10,0,0,0"
+                                     Text="{Binding Quantity, UpdateSourceTrigger=PropertyChanged}" />
+
+                            <!-- jednotka -->
+                            <TextBlock Width="40"
+                                       Margin="10,0,0,0"
+                                       Text="h" />
+
+                            <!-- cena -->
+                            <TextBlock Width="120"
+                                       Margin="10,0,0,0"
+                                       FontWeight="Bold"
+                                       Text="{Binding Total}" />
+
+                        </StackPanel>
+
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
 
         </StackPanel>
 
+        <!-- ========================= -->
         <!-- MATERIÁL -->
+        <!-- ========================= -->
         <StackPanel Grid.Row="2">
 
+            <!-- HLAVIČKA -->
             <StackPanel Orientation="Horizontal">
                 <TextBlock Text="MATERIÁL"
                            FontSize="18"
@@ -112,8 +103,41 @@
                         Click="AddMaterialsItem_Click"/>
             </StackPanel>
 
-            <ItemsControl x:Name="MaterialItemsControl"
-                          ItemTemplate="{StaticResource MaterialItemTemplate}"/>
+            <!-- LIST MATERIÁLU -->
+            <ItemsControl ItemsSource="{Binding MaterialItems}">
+
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+
+                        <StackPanel Orientation="Horizontal" Margin="0,5">
+
+                            <!-- výběr materiálu -->
+                            <ComboBox Width="300"
+                                      ItemsSource="{Binding DataContext.Materials, RelativeSource={RelativeSource AncestorType=Window}}"
+                                      DisplayMemberPath="Name"
+                                      SelectedItem="{Binding Item, Mode=TwoWay}" />
+
+                            <!-- množství -->
+                            <TextBox Width="70"
+                                     Margin="10,0,0,0"
+                                     Text="{Binding Quantity, UpdateSourceTrigger=PropertyChanged}" />
+
+                            <!-- jednotka -->
+                            <TextBlock Width="40"
+                                       Margin="10,0,0,0"
+                                       Text="{Binding Item.Unit}" />
+
+                            <!-- cena -->
+                            <TextBlock Width="120"
+                                       Margin="10,0,0,0"
+                                       FontWeight="Bold"
+                                       Text="{Binding Total}" />
+
+                        </StackPanel>
+
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
 
         </StackPanel>
 

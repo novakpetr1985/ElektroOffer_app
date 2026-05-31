@@ -2,131 +2,139 @@
 using Microsoft.Data.Sqlite;
 using System;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Windows;
 
 namespace ElektroOffer_app
 {
-    public partial class MainWindow : Window
+    public partial class MainWindow : Window, INotifyPropertyChanged
     {
-        // ---------------------------
-        // 📦 CENÍKY
-        // ---------------------------
+        // =========================
+        // 📦 DATA Z DB
+        // =========================
+        public ObservableCollection<PriceItems> WorkItemsSource { get; set; } = new();
+        public ObservableCollection<Material> Materials { get; set; } = new();
 
-        // ceník PRÁCE
-        private ObservableCollection<PriceItems> _priceItems = new();
-
-        // ceník MATERIÁLU (tabulka Materials)
-        public ObservableCollection<Models.Material> Materials { get; set; } = new();
-        public ObservableCollection<Models.WorkItem> WorkItems { get; set; } = new();
-
-
-        // ---------------------------
+        // =========================
         // 📦 KALKULAČNÍ ŘÁDKY
-        // ---------------------------
+        // =========================
+        public ObservableCollection<CalculationItems> WorkCalcItems { get; set; } = new();
+        public ObservableCollection<CalculationItems> MaterialItems { get; set; } = new();
 
-        private ObservableCollection<CalculationItems> _workItems = new();
-        private ObservableCollection<CalculationItems> _materialItems = new();
+        // =========================
+        // 💰 CELKEM
+        // =========================
+        private double _grandTotal;
+        public double GrandTotal
+        {
+            get => _grandTotal;
+            set
+            {
+                _grandTotal = value;
+                OnPropertyChanged();
+            }
+        }
 
-
-        // ---------------------------
-        // 🏗️ START APLIKACE
-        // ---------------------------
+        // =========================
+        // START
+        // =========================
         public MainWindow()
         {
             InitializeComponent();
 
-            // ⭐ DŮLEŽITÉ PRO BINDING
             DataContext = this;
 
-            // načtení dat z DB
-            LoadPriceItems();
+            LoadWorkItems();
             LoadMaterials();
-
-            // napojení UI
-            SetupUI();
 
             // startovní řádky
             for (int i = 0; i < 5; i++)
             {
-                _workItems.Add(new CalculationItems());
-                _materialItems.Add(new CalculationItems());
+                WorkCalcItems.Add(new CalculationItems());
+                MaterialItems.Add(new CalculationItems());
             }
+
+            // sledování změn kolekcí
+            WorkCalcItems.CollectionChanged += (_, __) => Recalculate();
+            MaterialItems.CollectionChanged += (_, __) => Recalculate();
         }
 
-
-        // ---------------------------
-        // 🔗 PROPOJENÍ UI
-        // ---------------------------
-        private void SetupUI()
+        // =========================
+        // ➕ WORK ITEM
+        // =========================
+        private void AddWorkItem_Click(object sender, RoutedEventArgs e)
         {
-            WorkItemsControl.ItemsSource = _workItems;
-            MaterialItemsControl.ItemsSource = _materialItems;
+            WorkCalcItems.Add(new CalculationItems());
         }
 
-
-        // ---------------------------
-        // 📥 NAČTENÍ PRÁCE (PriceItems)
-        // ---------------------------
-        private void LoadPriceItems()
+        // =========================
+        // ➕ MATERIAL ITEM
+        // =========================
+        private void AddMaterialsItem_Click(object sender, RoutedEventArgs e)
         {
-            _priceItems.Clear();
+            MaterialItems.Add(new CalculationItems());
+        }
 
+        // =========================
+        // 💰 PŘEPočet
+        // =========================
+        private void Recalculate()
+        {
+            GrandTotal =
+                WorkCalcItems.Sum(x => x.Total) +
+                MaterialItems.Sum(x => x.Total);
+        }
+
+        // =========================
+        // 📥 LOAD WORK ITEMS
+        // =========================
+        private void LoadWorkItems()
+        {
             string dbPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "elektrooffer.db");
 
             using var connection = new SqliteConnection($"Data Source={dbPath}");
             connection.Open();
 
             var cmd = connection.CreateCommand();
-
-            cmd.CommandText =
-                @"SELECT Id, BasePrice, Unit, Task, Specification, Material, Location, MaterialCoef, PositionCoef
-                  FROM PriceItems";
+            cmd.CommandText = @"SELECT Id, BasePrice, Unit, Task, MaterialCoef, PositionCoef FROM PriceItems";
 
             using var reader = cmd.ExecuteReader();
 
             while (reader.Read())
             {
-                _priceItems.Add(new PriceItems
+                WorkItemsSource.Add(new PriceItems
                 {
                     Id = reader.GetInt32(0),
                     BasePrice = reader.GetDouble(1),
                     Unit = reader.GetString(2),
                     Task = reader.GetString(3),
-                    Specification = reader.GetString(4),
-                    Material = reader.GetString(5),
-                    Location = reader.GetString(6),
-                    MaterialCoef = reader.GetDouble(7),
-                    PositionCoef = reader.GetDouble(8)
+                    MaterialCoef = reader.GetDouble(4),
+                    PositionCoef = reader.GetDouble(5)
                 });
             }
         }
 
-
-        // ---------------------------
-        // 📥 NAČTENÍ MATERIÁLU (Materials tabulka)
-        // ---------------------------
+        // =========================
+        // 📥 LOAD MATERIALS
+        // =========================
         private void LoadMaterials()
         {
-            Materials.Clear();
-
             string dbPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "elektrooffer.db");
 
             using var connection = new SqliteConnection($"Data Source={dbPath}");
             connection.Open();
 
             var cmd = connection.CreateCommand();
-
-            cmd.CommandText =
-                @"SELECT Id, Name, Price, Unit
-                  FROM Materials";
+            cmd.CommandText = @"SELECT Id, Name, Price, Unit FROM Materials";
 
             using var reader = cmd.ExecuteReader();
 
             while (reader.Read())
             {
-                Materials.Add(new Models.Material
+                Materials.Add(new Material
                 {
                     Id = reader.GetInt32(0),
                     Name = reader.GetString(1),
@@ -136,32 +144,12 @@ namespace ElektroOffer_app
             }
         }
 
+        // =========================
+        // PROPERTY CHANGED
+        // =========================
+        public event PropertyChangedEventHandler? PropertyChanged;
 
-        // ---------------------------
-        // ➕ PŘIDÁNÍ PRÁCE
-        // ---------------------------
-        private void AddWorkItem_Click(object sender, RoutedEventArgs e)
-        {
-            _workItems.Add(new CalculationItems());
-        }
-
-
-        // ---------------------------
-        // ➕ PŘIDÁNÍ MATERIÁLU
-        // ---------------------------
-        private void AddMaterialsItem_Click(object sender, RoutedEventArgs e)
-        {
-            _materialItems.Add(new CalculationItems());
-        }
-
-
-        // ---------------------------
-        // 💰 CELKOVÁ CENA
-        // ---------------------------
-        private double GetGrandTotal()
-        {
-            return _workItems.Sum(x => x.Total)
-                 + _materialItems.Sum(x => x.Total);
-        }
+        private void OnPropertyChanged([CallerMemberName] string? name = null)
+            => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
     }
 }
