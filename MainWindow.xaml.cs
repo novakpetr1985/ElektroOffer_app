@@ -11,21 +11,25 @@ namespace ElektroOffer_app
 {
     public partial class MainWindow : Window, INotifyPropertyChanged
     {
-        // =========================
+        // =========================================================
         // 📦 DATA Z DATABÁZE
-        // =========================
+        // =========================================================
+        // 👉 tyhle kolekce jsou napojené na ComboBoxy v UI
         public ObservableCollection<PriceItems> WorkItemsSource { get; set; } = new();
         public ObservableCollection<Material> Materials { get; set; } = new();
 
-        // =========================
+        // =========================================================
         // 🧮 KALKULAČNÍ ŘÁDKY
-        // =========================
+        // =========================================================
+        // 👉 UI tabulka pro práce
         public ObservableCollection<CalculationItems> WorkCalcItems { get; set; } = new();
+
+        // 👉 UI tabulka pro materiál
         public ObservableCollection<CalculationItems> MaterialItems { get; set; } = new();
 
-        // =========================
+        // =========================================================
         // 💰 CELKOVÁ CENA
-        // =========================
+        // =========================================================
         private double _grandTotal;
 
         public double GrandTotal
@@ -38,9 +42,9 @@ namespace ElektroOffer_app
             }
         }
 
-        // =========================
+        // =========================================================
         // 🚀 START APLIKACE
-        // =========================
+        // =========================================================
         public MainWindow()
         {
             InitializeComponent();
@@ -53,6 +57,7 @@ namespace ElektroOffer_app
             {
                 db.Database.EnsureCreated();
 
+                // ⚠️ TADY JE NAPOJENÍ NA DB TABULKY
                 WorkItemsSource = new ObservableCollection<PriceItems>(
                     db.PriceItems.ToList()
                 );
@@ -71,42 +76,43 @@ namespace ElektroOffer_app
                 MaterialItems.Add(new CalculationItems());
             }
 
-            // =========================
-            // 🔔 SLEDOVÁNÍ ZMĚN
-            // =========================
+            // ⚠️ POZOR:
+            // CollectionChanged NESPUSTÍ přepočet při změně hodnot uvnitř řádku
+            // (jen při přidání/odebrání položky)
             WorkCalcItems.CollectionChanged += (_, __) => Recalculate();
             MaterialItems.CollectionChanged += (_, __) => Recalculate();
         }
 
-        // =========================
+        // =========================================================
         // ➕ PŘIDAT PRÁCI
-        // =========================
+        // =========================================================
         private void AddWorkItem_Click(object sender, RoutedEventArgs e)
         {
             WorkCalcItems.Add(new CalculationItems());
         }
 
-        // =========================
+        // =========================================================
         // ➕ PŘIDAT MATERIÁL
-        // =========================
+        // =========================================================
         private void AddMaterialsItem_Click(object sender, RoutedEventArgs e)
         {
             MaterialItems.Add(new CalculationItems());
         }
 
-        // =========================
+        // =========================================================
         // 💰 PŘEPočet CELKU
-        // =========================
+        // =========================================================
         private void Recalculate()
         {
+            // 👉 součet všech řádků
             GrandTotal =
                 WorkCalcItems.Sum(x => x.Total) +
                 MaterialItems.Sum(x => x.Total);
         }
 
-        // =========================
-        // 🔔 NOTIFIKACE UI
-        // =========================
+        // =========================================================
+        // 🔔 UI NOTIFIKACE
+        // =========================================================
         public event PropertyChangedEventHandler? PropertyChanged;
 
         private void OnPropertyChanged([CallerMemberName] string? name = null)

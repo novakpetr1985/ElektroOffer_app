@@ -4,88 +4,99 @@ using ElektroOffer_app.Models;
 
 namespace ElektroOffer_app
 {
-    // =========================
+    // =========================================================
     // 🧮 KALKULAČNÍ ŘÁDEK
-    // =========================
-    // 👉 Jeden řádek kalkulace (práce nebo materiál)
-    // 👉 Automaticky přepočítává cenu při změnách
-    // =========================
+    // =========================================================
+    // 👉 Jeden řádek kalkulace (PRÁCE nebo MATERIÁL)
+    // 👉 Obsahuje výběr položky + množství + výpočet ceny
+    // 👉 NEUKLÁDÁ se do DB (jen UI model)
+    // =========================================================
     public class CalculationItems : INotifyPropertyChanged
     {
         // =========================
-        // 🔧 PRÁCE (CENÍKOVÁ POLOŽKA)
+        // 🔧 PRÁCE (ceníková položka)
         // =========================
         private PriceItems? _workItem;
 
         // =========================
-        // 📦 MATERIÁL
+        // 📦 MATERIÁL (položka materiálu)
         // =========================
         private Material? _materialItem;
 
         // =========================
-        // 📊 MNOŽSTVÍ
+        // 📊 MNOŽSTVÍ (ks, m, hodiny…)
         // =========================
         private double _quantity;
 
-        // =========================
+        // =========================================================
         // 🔧 VÝBĚR PRÁCE
-        // =========================
+        // =========================================================
         public PriceItems? WorkItem
         {
             get => _workItem;
             set
             {
                 _workItem = value;
+
+                // 👉 přepočet UI
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(Total));
             }
         }
 
-        // =========================
+        // =========================================================
         // 📦 VÝBĚR MATERIÁLU
-        // =========================
+        // =========================================================
         public Material? MaterialItem
         {
             get => _materialItem;
             set
             {
                 _materialItem = value;
+
+                // 👉 přepočet UI
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(Total));
             }
         }
 
-        // =========================
+        // =========================================================
         // 📊 MNOŽSTVÍ
-        // =========================
+        // =========================================================
         public double Quantity
         {
             get => _quantity;
             set
             {
                 _quantity = value;
+
+                // 👉 vždy přepočítat řádek
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(Total));
             }
         }
 
-        // =========================
+        // =========================================================
         // 💰 VÝPOČET ŘÁDKU
-        // =========================
+        // =========================================================
         public double Total
         {
             get
             {
-                // 👉 výpočet práce
+                // =========================
+                // 🧠 PRÁCE
+                // =========================
                 if (WorkItem != null)
                 {
-                    return WorkItem.BasePrice *
-                           WorkItem.MaterialCoef *
-                           WorkItem.PositionCoef *
-                           Quantity;
+                    return WorkItem.BasePrice
+                         * WorkItem.MaterialCoef
+                         * WorkItem.PositionCoef
+                         * Quantity;
                 }
 
-                // 👉 výpočet materiálu
+                // =========================
+                // 🧠 MATERIÁL
+                // =========================
                 if (MaterialItem != null)
                 {
                     return MaterialItem.Price * Quantity;
@@ -95,9 +106,9 @@ namespace ElektroOffer_app
             }
         }
 
-        // =========================
-        // 🔔 NOTIFIKACE UI
-        // =========================
+        // =========================================================
+        // 🔔 UI NOTIFIKACE
+        // =========================================================
         public event PropertyChangedEventHandler? PropertyChanged;
 
         private void OnPropertyChanged([CallerMemberName] string? name = null)

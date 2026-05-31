@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("ElektroOffer_app")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+ce376bd3e6e5752f49b32dc9438df938d4c134ce")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+b6b83d807f9d5fc7148d69abb0cd7cbd89a77f83")]
 [assembly: System.Reflection.AssemblyProductAttribute("ElektroOffer_app")]
 [assembly: System.Reflection.AssemblyTitleAttribute("ElektroOffer_app")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
