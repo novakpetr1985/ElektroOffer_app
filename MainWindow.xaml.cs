@@ -18,7 +18,8 @@ namespace ElektroOffer_app
         private ObservableCollection<PriceItems> _priceItems = new();
 
         // ceník MATERIÁLU (tabulka Materials)
-        private ObservableCollection<Material> _materials = new();
+        public ObservableCollection<Models.Material> Materials { get; set; } = new();
+        public ObservableCollection<Models.WorkItem> WorkItems { get; set; } = new();
 
 
         // ---------------------------
@@ -108,7 +109,7 @@ namespace ElektroOffer_app
         // ---------------------------
         private void LoadMaterials()
         {
-            _materials.Clear();
+            Materials.Clear();
 
             string dbPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "elektrooffer.db");
 
@@ -125,7 +126,7 @@ namespace ElektroOffer_app
 
             while (reader.Read())
             {
-                _materials.Add(new Models.Material
+                Materials.Add(new Models.Material
                 {
                     Id = reader.GetInt32(0),
                     Name = reader.GetString(1),

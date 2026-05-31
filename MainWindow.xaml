@@ -14,9 +14,9 @@
 
                 <!-- výběr položky -->
                 <ComboBox Width="300"
-                      ItemsSource="{Binding _materials}"
-                      DisplayMemberPath="Name"
-                      SelectedItem="{Binding Item}"/>
+                         ItemsSource="{Binding DataContext.Materials, RelativeSource={RelativeSource AncestorType=Window}}"
+                         DisplayMemberPath="Name"
+                         SelectedItem="{Binding Item}"/>
 
                 <!-- množství -->
                 <TextBox Width="70"
