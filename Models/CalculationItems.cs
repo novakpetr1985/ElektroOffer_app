@@ -6,7 +6,6 @@ public class CalculationItems
 
     public double Quantity { get; set; }
 
-    // výpočet jednoho řádku
     public double Total
     {
         get

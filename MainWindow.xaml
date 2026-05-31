@@ -14,9 +14,9 @@
 
                 <!-- výběr položky -->
                 <ComboBox Width="300"
-                          ItemsSource="{Binding DataContext._priceItems, RelativeSource={RelativeSource AncestorType=Window}}"
-                          DisplayMemberPath="FullName"
-                          SelectedItem="{Binding Item}"/>
+                      ItemsSource="{Binding _materials}"
+                      DisplayMemberPath="Name"
+                      SelectedItem="{Binding Item}"/>
 
                 <!-- množství -->
                 <TextBox Width="70"
@@ -25,8 +25,8 @@
 
                 <!-- jednotka (pokud máš v modelu) -->
                 <TextBlock Width="40"
-                           Margin="10,0,0,0"
-                           Text="{Binding Item.Unit}"/>
+                        Margin="10,0,0,0"
+                        Text="{Binding Item.Unit, TargetNullValue=''}"/>
 
                 <!-- cena -->
                 <TextBlock Width="120"
@@ -90,7 +90,7 @@
                 <Button Content="+"
                         Width="30"
                         Margin="10,0,0,0"
-                        Click="AddMaterialItem_Click"/>
+                        Click="AddMaterialsItem_Click"/>
             </StackPanel>
 
             <ItemsControl x:Name="MaterialItemsControl"

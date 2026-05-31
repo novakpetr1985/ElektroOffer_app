@@ -3,16 +3,12 @@
   "WorkspaceRootPath": "D:\\_GitHub\\ElektroOffer_app\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{D8CE3C2E-7BD8-AE34-2666-57AD10DFCE51}|ElektroOffer_app.csproj|d:\\_github\\elektrooffer_app\\models\\calculationitems.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{D8CE3C2E-7BD8-AE34-2666-57AD10DFCE51}|ElektroOffer_app.csproj|solutionrelative:models\\calculationitems.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{D8CE3C2E-7BD8-AE34-2666-57AD10DFCE51}|ElektroOffer_app.csproj|d:\\_github\\elektrooffer_app\\mainwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{D8CE3C2E-7BD8-AE34-2666-57AD10DFCE51}|ElektroOffer_app.csproj|solutionrelative:mainwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{D8CE3C2E-7BD8-AE34-2666-57AD10DFCE51}|ElektroOffer_app.csproj|d:\\_github\\elektrooffer_app\\mainwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
-      "RelativeMoniker": "D:0:0:{D8CE3C2E-7BD8-AE34-2666-57AD10DFCE51}|ElektroOffer_app.csproj|solutionrelative:mainwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+      "AbsoluteMoniker": "D:0:0:{D8CE3C2E-7BD8-AE34-2666-57AD10DFCE51}|ElektroOffer_app.csproj|d:\\_github\\elektrooffer_app\\models\\material.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D8CE3C2E-7BD8-AE34-2666-57AD10DFCE51}|ElektroOffer_app.csproj|solutionrelative:models\\material.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -22,44 +18,31 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 1,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "CalculationItems.cs",
-              "DocumentMoniker": "D:\\_GitHub\\ElektroOffer_app\\Models\\CalculationItems.cs",
-              "RelativeDocumentMoniker": "Models\\CalculationItems.cs",
-              "ToolTip": "D:\\_GitHub\\ElektroOffer_app\\Models\\CalculationItems.cs",
-              "RelativeToolTip": "Models\\CalculationItems.cs",
+              "DocumentIndex": 1,
+              "Title": "Material.cs",
+              "DocumentMoniker": "D:\\_GitHub\\ElektroOffer_app\\Models\\Material.cs",
+              "RelativeDocumentMoniker": "Models\\Material.cs",
+              "ToolTip": "D:\\_GitHub\\ElektroOffer_app\\Models\\Material.cs",
+              "RelativeToolTip": "Models\\Material.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-05-25T16:58:04.572Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-05-25T18:22:36.731Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "MainWindow.xaml",
-              "DocumentMoniker": "D:\\_GitHub\\ElektroOffer_app\\MainWindow.xaml",
-              "RelativeDocumentMoniker": "MainWindow.xaml",
-              "ToolTip": "D:\\_GitHub\\ElektroOffer_app\\MainWindow.xaml",
-              "RelativeToolTip": "MainWindow.xaml",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
-              "WhenOpened": "2026-05-24T00:48:21.026Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 0,
               "Title": "MainWindow.xaml.cs",
               "DocumentMoniker": "D:\\_GitHub\\ElektroOffer_app\\MainWindow.xaml.cs",
               "RelativeDocumentMoniker": "MainWindow.xaml.cs",
               "ToolTip": "D:\\_GitHub\\ElektroOffer_app\\MainWindow.xaml.cs",
               "RelativeToolTip": "MainWindow.xaml.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAJYAAAABAAAAAAAAAA==",
+              "ViewState": "AgIAAHAAAAAAAAAAAAAQwIAAAAAaAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-05-24T00:37:56.543Z",
+              "WhenOpened": "2026-05-25T18:20:21.969Z",
               "EditorCaption": ""
             }
           ]

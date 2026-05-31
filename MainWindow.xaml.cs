@@ -1,43 +1,53 @@
-﻿using System;
+﻿using ElektroOffer_app.Models;
+using Microsoft.Data.Sqlite;
+using System;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Windows;
-using Microsoft.Data.Sqlite;
-using ElektroOffer_app.Models;
-using System.IO;
+using System.Windows.Media.Media3D;
 
 namespace ElektroOffer_app
 {
     public partial class MainWindow : Window
     {
         // ---------------------------
-        // 📦 DATOVÉ KOLEKCE
+        // 📦 CENÍKY
         // ---------------------------
 
-        // Ceník načtený z databáze (Práce + Materiál)
+        // ceník PRÁCE
         private ObservableCollection<PriceItems> _priceItems = new();
 
-        // Řádky pro PRÁCI
-        private ObservableCollection<CalculationItems> _workItems = new();
+        // ceník MATERIÁLU (tabulka Materials)
+        private ObservableCollection<System.Windows.Media.Media3D.Material> _materials = new();
 
-        // Řádky pro MATERIÁL
+
+        // ---------------------------
+        // 📦 KALKULAČNÍ ŘÁDKY
+        // ---------------------------
+
+        private ObservableCollection<CalculationItems> _workItems = new();
         private ObservableCollection<CalculationItems> _materialItems = new();
 
 
         // ---------------------------
-        // 🏗️ KONSTRUKTOR - START APPKY
+        // 🏗️ START APLIKACE
         // ---------------------------
         public MainWindow()
         {
             InitializeComponent();
 
-            // 1) načti ceník z DB
-            LoadPriceItems();
+            // ⭐ DŮLEŽITÉ PRO BINDING
+            DataContext = this;
 
-            // 2) inicializuj UI vazby (ItemsControl)
+            // načtení dat z DB
+            LoadPriceItems();
+            LoadMaterials();
+
+            // napojení UI
             SetupUI();
 
-            // 3) vytvoř startovní prázdné řádky
+            // startovní řádky
             for (int i = 0; i < 5; i++)
             {
                 _workItems.Add(new CalculationItems());
@@ -47,39 +57,29 @@ namespace ElektroOffer_app
 
 
         // ---------------------------
-        // 🔗 PROPOJENÍ UI ↔ DATA
+        // 🔗 PROPOJENÍ UI
         // ---------------------------
         private void SetupUI()
         {
-            // ItemsControl v XAML (PRÁCE)
             WorkItemsControl.ItemsSource = _workItems;
-
-            // ItemsControl v XAML (MATERIÁL)
             MaterialItemsControl.ItemsSource = _materialItems;
         }
 
 
         // ---------------------------
-        // 📥 NAČTENÍ CENÍKU Z DB
+        // 📥 NAČTENÍ PRÁCE (PriceItems)
         // ---------------------------
         private void LoadPriceItems()
         {
             _priceItems.Clear();
 
-            // cesta k SQLite databázi
-            string dbPath =
-                System.IO.Path.Combine(
-                    AppDomain.CurrentDomain.BaseDirectory,
-                    "elektrooffer.db");
+            string dbPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "elektrooffer.db");
 
-            using var connection =
-                new SqliteConnection($"Data Source={dbPath}");
-
+            using var connection = new SqliteConnection($"Data Source={dbPath}");
             connection.Open();
 
             var cmd = connection.CreateCommand();
 
-            // načítáme všechny položky ceníku
             cmd.CommandText =
                 @"SELECT Id, BasePrice, Unit, Task, Specification, Material, Location, MaterialCoef, PositionCoef
                   FROM PriceItems";
@@ -105,7 +105,40 @@ namespace ElektroOffer_app
 
 
         // ---------------------------
-        // ➕ PŘIDÁNÍ PRÁCE (BUTTON +)
+        // 📥 NAČTENÍ MATERIÁLU (Materials tabulka)
+        // ---------------------------
+        private void LoadMaterials()
+        {
+            _materials.Clear();
+
+            string dbPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "elektrooffer.db");
+
+            using var connection = new SqliteConnection($"Data Source={dbPath}");
+            connection.Open();
+
+            var cmd = connection.CreateCommand();
+
+            cmd.CommandText =
+                @"SELECT Id, Name, Price, Unit
+                  FROM Materials";
+
+            using var reader = cmd.ExecuteReader();
+
+            while (reader.Read())
+            {
+                _materials.Add(new Models.Material
+                {
+                    Id = reader.GetInt32(0),
+                    Name = reader.GetString(1),
+                    Price = reader.GetDouble(2),
+                    Unit = reader.GetString(3)
+                });
+            }
+        }
+
+
+        // ---------------------------
+        // ➕ PŘIDÁNÍ PRÁCE
         // ---------------------------
         private void AddWorkItem_Click(object sender, RoutedEventArgs e)
         {
@@ -114,38 +147,21 @@ namespace ElektroOffer_app
 
 
         // ---------------------------
-        // ➕ PŘIDÁNÍ MATERIÁLU (BUTTON +)
+        // ➕ PŘIDÁNÍ MATERIÁLU
         // ---------------------------
-        private void AddMaterialItem_Click(object sender, RoutedEventArgs e)
+        private void AddMaterialsItem_Click(object sender, RoutedEventArgs e)
         {
             _materialItems.Add(new CalculationItems());
         }
 
 
         // ---------------------------
-        // 💰 VÝPOČET CELKOVÉ CENY
+        // 💰 CELKOVÁ CENA
         // ---------------------------
         private double GetGrandTotal()
         {
-            // součet práce
-            double workTotal = _workItems.Sum(x => x.Total);
-
-            // součet materiálu
-            double materialTotal = _materialItems.Sum(x => x.Total);
-
-            return workTotal + materialTotal;
+            return _workItems.Sum(x => x.Total)
+                 + _materialItems.Sum(x => x.Total);
         }
-
-
-        // ---------------------------
-        // 🧠 STARÁ LOGIKA (LEGACY - NEPOUŽÍVÁ SE VE VARIANTĚ 2)
-        // ---------------------------
-        /*
-        private void OnSelectionChanged(...)
-        {
-            // toto je původní single-item logika
-            // ve variantě 2 už se NEPOUŽÍVÁ
-        }
-        */
     }
 }
