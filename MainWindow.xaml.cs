@@ -1,6 +1,7 @@
 ﻿using ElektroOffer_app.Data;
 using ElektroOffer_app.Models;
 using System;
+using System.Collections.Specialized;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
@@ -12,52 +13,52 @@ namespace ElektroOffer_app
     public partial class MainWindow : Window, INotifyPropertyChanged
     {
         // =========================================================
-        // 📦 DATA Z DATABÁZE
+        // 📦 DATA Z DB
         // =========================================================
-        // 👉 tyhle kolekce jsou napojené na ComboBoxy v UI
         public ObservableCollection<PriceItems> WorkItemsSource { get; set; } = new();
         public ObservableCollection<Material> Materials { get; set; } = new();
 
         // =========================================================
-        // 🧮 KALKULAČNÍ ŘÁDKY
+        // 🔧 FILTRY
         // =========================================================
-        // 👉 UI tabulka pro práce
-        public ObservableCollection<CalculationItems> WorkCalcItems { get; set; } = new();
+        public ObservableCollection<string> Tasks { get; set; } = new();
+        public ObservableCollection<string> Specifications { get; set; } = new();
+        public ObservableCollection<string> Material { get; set; } = new();
+        public ObservableCollection<string> Locations { get; set; } = new();
 
-        // 👉 UI tabulka pro materiál
+        // =========================================================
+        // 🧮 KALKULACE
+        // =========================================================
+        public ObservableCollection<CalculationItems> WorkCalcItems { get; set; } = new();
         public ObservableCollection<CalculationItems> MaterialItems { get; set; } = new();
 
         // =========================================================
         // 💰 CELKOVÁ CENA
         // =========================================================
         private double _grandTotal;
-
         public double GrandTotal
         {
             get => _grandTotal;
             set
             {
+                if (Math.Abs(_grandTotal - value) < 0.0001) return;
                 _grandTotal = value;
                 OnPropertyChanged();
             }
         }
 
         // =========================================================
-        // 🚀 START APLIKACE
+        // START
         // =========================================================
         public MainWindow()
         {
             InitializeComponent();
             DataContext = this;
 
-            // =========================
-            // 📥 NAČTENÍ DAT Z DB (EF CORE)
-            // =========================
             using (var db = new AppDbContext())
             {
                 db.Database.EnsureCreated();
 
-                // ⚠️ TADY JE NAPOJENÍ NA DB TABULKY
                 WorkItemsSource = new ObservableCollection<PriceItems>(
                     db.PriceItems.ToList()
                 );
@@ -65,53 +66,110 @@ namespace ElektroOffer_app
                 Materials = new ObservableCollection<Material>(
                     db.Materials.ToList()
                 );
+
+                Tasks = new ObservableCollection<string>(
+                    WorkItemsSource.Select(x => x.Task).Distinct()
+                );
+
+                Specifications = new ObservableCollection<string>(
+                    WorkItemsSource.Select(x => x.Specification).Distinct()
+                );
+
+                Material = new ObservableCollection<string>(
+                    WorkItemsSource.Select(x => x.Material).Distinct()
+                );
+
+                Locations = new ObservableCollection<string>(
+                    WorkItemsSource.Select(x => x.Location).Distinct()
+                );
             }
 
-            // =========================
-            // 🧮 STARTOVNÍ ŘÁDKY
-            // =========================
+            // =====================================================
+            // INIT ŘÁDKŮ
+            // =====================================================
             for (int i = 0; i < 5; i++)
             {
-                WorkCalcItems.Add(new CalculationItems());
-                MaterialItems.Add(new CalculationItems());
+                AddWorkItemInternal();
+                AddMaterialItemInternal();
             }
 
-            // ⚠️ POZOR:
-            // CollectionChanged NESPUSTÍ přepočet při změně hodnot uvnitř řádku
-            // (jen při přidání/odebrání položky)
-            WorkCalcItems.CollectionChanged += (_, __) => Recalculate();
-            MaterialItems.CollectionChanged += (_, __) => Recalculate();
+            // =====================================================
+            // TRACKING KOLEKCÍ
+            // =====================================================
+            WorkCalcItems.CollectionChanged += WorkCalcItems_CollectionChanged;
+            MaterialItems.CollectionChanged += MaterialItems_CollectionChanged;
         }
 
         // =========================================================
-        // ➕ PŘIDAT PRÁCI
+        // ➕ ADD BUTTONY
         // =========================================================
         private void AddWorkItem_Click(object sender, RoutedEventArgs e)
-        {
-            WorkCalcItems.Add(new CalculationItems());
-        }
+            => AddWorkItemInternal();
 
-        // =========================================================
-        // ➕ PŘIDAT MATERIÁL
-        // =========================================================
         private void AddMaterialsItem_Click(object sender, RoutedEventArgs e)
+            => AddMaterialItemInternal();
+
+        private void AddWorkItemInternal()
         {
-            MaterialItems.Add(new CalculationItems());
+            var item = new CalculationItems();
+            item.PropertyChanged += Item_PropertyChanged;
+            WorkCalcItems.Add(item);
+        }
+
+        private void AddMaterialItemInternal()
+        {
+            var item = new CalculationItems();
+            item.PropertyChanged += Item_PropertyChanged;
+            MaterialItems.Add(item);
         }
 
         // =========================================================
-        // 💰 PŘEPočet CELKU
+        // 📌 COLLECTION CHANGE HANDLERS
+        // =========================================================
+        private void WorkCalcItems_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+        {
+            if (e.OldItems != null)
+                foreach (CalculationItems item in e.OldItems)
+                    item.PropertyChanged -= Item_PropertyChanged;
+
+            Recalculate();
+        }
+
+        private void MaterialItems_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+        {
+            if (e.OldItems != null)
+                foreach (CalculationItems item in e.OldItems)
+                    item.PropertyChanged -= Item_PropertyChanged;
+
+            Recalculate();
+        }
+
+        // =========================================================
+        // 🔥 KLÍČOVÝ LIVE UPDATE
+        // =========================================================
+        private void Item_PropertyChanged(object? sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(CalculationItems.Total) ||
+                e.PropertyName == nameof(CalculationItems.Quantity) ||
+                e.PropertyName == nameof(CalculationItems.WorkItem) ||
+                e.PropertyName == nameof(CalculationItems.MaterialItem))
+            {
+                Recalculate();
+            }
+        }
+
+        // =========================================================
+        // 💰 REKALKULACE
         // =========================================================
         private void Recalculate()
         {
-            // 👉 součet všech řádků
             GrandTotal =
                 WorkCalcItems.Sum(x => x.Total) +
                 MaterialItems.Sum(x => x.Total);
         }
 
         // =========================================================
-        // 🔔 UI NOTIFIKACE
+        // PROPERTY CHANGED
         // =========================================================
         public event PropertyChangedEventHandler? PropertyChanged;
 
