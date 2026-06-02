@@ -4,34 +4,39 @@ SELECT * FROM PriceItems;
 
 
 
-INSERT INTO PriceItems
-(Id, BasePrice, Unit, Task, Specification, Material, Location, MaterialCoef, PositionCoef)
-VALUES
-(43, 180.00, 'ks', 'Vrtání', 'El. krabice', 'Omítka - Sádra', 'Stěna', 1.00, 1.00),
-(44, 180.00, 'ks', 'Vrtání', 'El. krabice', 'Cihla', 'Stěna', 1.40, 1.00),
-(45, 180.00, 'ks', 'Vrtání', 'El. krabice', 'Tvárnice', 'Stěna', 1.50, 1.00),
-(46, 180.00, 'ks', 'Vrtání', 'El. krabice', 'Beton', 'Stěna', 2.00, 1.00),
-(47, 180.00, 'ks', 'Vrtání', 'El. krabice', 'Železobeton', 'Stěna', 2.50, 1.00),
-(48, 180.00, 'ks', 'Vrtání', 'El. krabice', 'Omítka - Sádra', 'Nízká (u podlahy)', 1.00, 1.10),
-(49, 180.00, 'ks', 'Vrtání', 'El. krabice', 'Cihla', 'Nízká (u podlahy)', 1.40, 1.10),
-(50, 180.00, 'ks', 'Vrtání', 'El. krabice', 'Tvárnice', 'Nízká (u podlahy)', 1.50, 1.10),
-(51, 180.00, 'ks', 'Vrtání', 'El. krabice', 'Beton', 'Nízká (u podlahy)', 2.00, 1.10),
-(52, 180.00, 'ks', 'Vrtání', 'El. krabice', 'Železobeton', 'Nízká (u podlahy)', 2.50, 1.10),
-(53, 180.00, 'ks', 'Vrtání', 'El. krabice', 'Omítka - Sádra', 'Štafle', 1.00, 1.20),
-(54, 180.00, 'ks', 'Vrtání', 'El. krabice', 'Cihla', 'Štafle', 1.40, 1.20),
-(55, 180.00, 'ks', 'Vrtání', 'El. krabice', 'Tvárnice', 'Štafle', 1.50, 1.20),
-(56, 180.00, 'ks', 'Vrtání', 'El. krabice', 'Beton', 'Štafle', 2.00, 1.20),
-(57, 180.00, 'ks', 'Vrtání', 'El. krabice', 'Železobeton', 'Štafle', 2.50, 1.20),
-(58, 180.00, 'ks', 'Vrtání', 'El. krabice', 'Omítka - Sádra', 'Strop', 1.00, 1.50),
-(59, 180.00, 'ks', 'Vrtání', 'El. krabice', 'Cihla', 'Strop', 1.40, 1.50),
-(60, 180.00, 'ks', 'Vrtání', 'El. krabice', 'Tvárnice', 'Strop', 1.50, 1.50),
-(61, 180.00, 'ks', 'Vrtání', 'El. krabice', 'Beton', 'Strop', 2.00, 1.50),
-(62, 180.00, 'ks', 'Vrtání', 'El. krabice', 'Železobeton', 'Strop', 2.50, 1.50),
-(63, 80.00, 'ks', 'Osazení', 'El. krabice', '-', 'Stěna', 1.00, 1.00),
-(64, 80.00, 'ks', 'Osazení', 'El. krabice', '-', 'Nízká (u podlahy)', 1.00, 1.10),
-(65, 80.00, 'ks', 'Osazení', 'El. krabice', '-', 'Štafle', 1.00, 1.20),
-(66, 80.00, 'ks', 'Osazení', 'El. krabice', '-', 'Strop', 1.00, 1.50),
-(67, 80.00, 'ks', 'Osazení', 'Rozvaděč', '-', 'Stěna', 1.00, 1.00),
-(68, 80.00, 'ks', 'Osazení', 'Rozvaděč', '-', 'Nízká (u podlahy)', 1.00, 1.10),
-(69, 80.00, 'ks', 'Osazení', 'Rozvaděč', '-', 'Štafle', 1.00, 1.20),
-(70, 80.00, 'ks', 'Osazení', 'Rozvaděč', '-', 'Strop', 1.00, 1.50);</sql><current_tab id="0"/></tab_sql></sqlb_project>
+INSERT INTO PriceItems
+(Id, BasePrice, Unit, Task, Specification, Material, Location, MaterialCoef, PositionCoef)
+VALUES
+(43, 180.00, 'ks', 'Vrtání', 'El. krabice', 'Omítka - Sádra', 'Stěna', 1.00, 1.00),
+(44, 180.00, 'ks', 'Vrtání', 'El. krabice', 'Cihla', 'Stěna', 1.40, 1.00),
+(45, 180.00, 'ks', 'Vrtání', 'El. krabice', 'Tvárnice', 'Stěna', 1.50, 1.00),
+(46, 180.00, 'ks', 'Vrtání', 'El. krabice', 'Beton', 'Stěna', 2.00, 1.00),
+(47, 180.00, 'ks', 'Vrtání', 'El. krabice', 'Železobeton', 'Stěna', 2.50, 1.00),
+(48, 180.00, 'ks', 'Vrtání', 'El. krabice', 'Omítka - Sádra', 'Nízká (u podlahy)', 1.00, 1.10),
+(49, 180.00, 'ks', 'Vrtání', 'El. krabice', 'Cihla', 'Nízká (u podlahy)', 1.40, 1.10),
+(50, 180.00, 'ks', 'Vrtání', 'El. krabice', 'Tvárnice', 'Nízká (u podlahy)', 1.50, 1.10),
+(51, 180.00, 'ks', 'Vrtání', 'El. krabice', 'Beton', 'Nízká (u podlahy)', 2.00, 1.10),
+(52, 180.00, 'ks', 'Vrtání', 'El. krabice', 'Železobeton', 'Nízká (u podlahy)', 2.50, 1.10),
+(53, 180.00, 'ks', 'Vrtání', 'El. krabice', 'Omítka - Sádra', 'Štafle', 1.00, 1.20),
+(54, 180.00, 'ks', 'Vrtání', 'El. krabice', 'Cihla', 'Štafle', 1.40, 1.20),
+(55, 180.00, 'ks', 'Vrtání', 'El. krabice', 'Tvárnice', 'Štafle', 1.50, 1.20),
+(56, 180.00, 'ks', 'Vrtání', 'El. krabice', 'Beton', 'Štafle', 2.00, 1.20),
+(57, 180.00, 'ks', 'Vrtání', 'El. krabice', 'Železobeton', 'Štafle', 2.50, 1.20),
+(58, 180.00, 'ks', 'Vrtání', 'El. krabice', 'Omítka - Sádra', 'Strop', 1.00, 1.50),
+(59, 180.00, 'ks', 'Vrtání', 'El. krabice', 'Cihla', 'Strop', 1.40, 1.50),
+(60, 180.00, 'ks', 'Vrtání', 'El. krabice', 'Tvárnice', 'Strop', 1.50, 1.50),
+(61, 180.00, 'ks', 'Vrtání', 'El. krabice', 'Beton', 'Strop', 2.00, 1.50),
+(62, 180.00, 'ks', 'Vrtání', 'El. krabice', 'Železobeton', 'Strop', 2.50, 1.50),
+(63, 80.00, 'ks', 'Osazení', 'El. krabice', '-', 'Stěna', 1.00, 1.00),
+(64, 80.00, 'ks', 'Osazení', 'El. krabice', '-', 'Nízká (u podlahy)', 1.00, 1.10),
+(65, 80.00, 'ks', 'Osazení', 'El. krabice', '-', 'Štafle', 1.00, 1.20),
+(66, 80.00, 'ks', 'Osazení', 'El. krabice', '-', 'Strop', 1.00, 1.50),
+(67, 80.00, 'ks', 'Osazení', 'Rozvaděč', '-', 'Stěna', 1.00, 1.00),
+(68, 80.00, 'ks', 'Osazení', 'Rozvaděč', '-', 'Nízká (u podlahy)', 1.00, 1.10),
+(69, 80.00, 'ks', 'Osazení', 'Rozvaděč', '-', 'Štafle', 1.00, 1.20),
+(70, 80.00, 'ks', 'Osazení', 'Rozvaděč', '-', 'Strop', 1.00, 1.50);
+
+
+UPDATE Materials
+SET Unit = 'ks'
+WHERE Id = 3;</sql><current_tab id="0"/></tab_sql></sqlb_project>
