@@ -73,9 +73,9 @@
 
                             <!-- ========================= -->
                             <!-- 2) SPECIFICATION -->
-                            <!-- ========================= -->
                             <ComboBox Width="150"
                                       Margin="5,0,0,0"
+                                      IsEnabled="{Binding CanSelectSpecification}"
                                       ItemsSource="{Binding DataContext.Specifications, RelativeSource={RelativeSource AncestorType=Window}}"
                                       SelectedItem="{Binding SelectedSpecification, Mode=TwoWay}" />
 
@@ -84,6 +84,7 @@
                             <!-- ========================= -->
                             <ComboBox Width="150"
                                       Margin="5,0,0,0"
+                                      IsEnabled="{Binding CanSelectMaterial}"
                                       ItemsSource="{Binding DataContext.Material, RelativeSource={RelativeSource AncestorType=Window}}"
                                       SelectedItem="{Binding SelectedMaterial, Mode=TwoWay}" />
 
@@ -92,6 +93,7 @@
                             <!-- ========================= -->
                             <ComboBox Width="120"
                                       Margin="5,0,0,0"
+                                      IsEnabled="{Binding CanSelectLocation}"
                                       ItemsSource="{Binding DataContext.Locations, RelativeSource={RelativeSource AncestorType=Window}}"
                                       SelectedItem="{Binding SelectedLocation, Mode=TwoWay}" />
 

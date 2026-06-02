@@ -21,6 +21,13 @@ namespace ElektroOffer_app
         private string? _selectedLocation;
 
         // =========================================================
+        // 🔒 LOCKY PRO KASKÁDU (NOVÉ)
+        // =========================================================
+        public bool CanSelectSpecification => !string.IsNullOrWhiteSpace(SelectedTask);
+        public bool CanSelectMaterial => CanSelectSpecification && !string.IsNullOrWhiteSpace(SelectedSpecification);
+        public bool CanSelectLocation => CanSelectMaterial && !string.IsNullOrWhiteSpace(SelectedMaterial);
+
+        // =========================================================
         // TASK
         // =========================================================
         public string? SelectedTask
@@ -29,8 +36,25 @@ namespace ElektroOffer_app
             set
             {
                 if (_selectedTask == value) return;
+
                 _selectedTask = value;
+
+                // 🔥 reset nižších úrovní
+                _selectedSpecification = null;
+                _selectedMaterial = null;
+                _selectedLocation = null;
+
+                WorkItem = null;
+
                 OnPropertyChanged();
+                OnPropertyChanged(nameof(CanSelectSpecification));
+                OnPropertyChanged(nameof(CanSelectMaterial));
+                OnPropertyChanged(nameof(CanSelectLocation));
+
+                OnPropertyChanged(nameof(SelectedSpecification));
+                OnPropertyChanged(nameof(SelectedMaterial));
+                OnPropertyChanged(nameof(SelectedLocation));
+
                 UpdateWorkItem();
             }
         }
@@ -44,8 +68,22 @@ namespace ElektroOffer_app
             set
             {
                 if (_selectedSpecification == value) return;
+
                 _selectedSpecification = value;
+
+                // reset nižších
+                _selectedMaterial = null;
+                _selectedLocation = null;
+
+                WorkItem = null;
+
                 OnPropertyChanged();
+                OnPropertyChanged(nameof(CanSelectMaterial));
+                OnPropertyChanged(nameof(CanSelectLocation));
+
+                OnPropertyChanged(nameof(SelectedMaterial));
+                OnPropertyChanged(nameof(SelectedLocation));
+
                 UpdateWorkItem();
             }
         }
@@ -59,8 +97,18 @@ namespace ElektroOffer_app
             set
             {
                 if (_selectedMaterial == value) return;
+
                 _selectedMaterial = value;
+
+                // reset location
+                _selectedLocation = null;
+
+                WorkItem = null;
+
                 OnPropertyChanged();
+                OnPropertyChanged(nameof(CanSelectLocation));
+                OnPropertyChanged(nameof(SelectedLocation));
+
                 UpdateWorkItem();
             }
         }
@@ -74,14 +122,30 @@ namespace ElektroOffer_app
             set
             {
                 if (_selectedLocation == value) return;
+
                 _selectedLocation = value;
+
                 OnPropertyChanged();
                 UpdateWorkItem();
             }
         }
 
         // =========================================================
-        // MATERIAL ITEM (samostatná kalkulace)
+        // WORK ITEM
+        // =========================================================
+        public PriceItems? WorkItem
+        {
+            get => _workItem;
+            set
+            {
+                _workItem = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(Total));
+            }
+        }
+
+        // =========================================================
+        // MATERIAL ITEM
         // =========================================================
         public Material? MaterialItem
         {
@@ -111,7 +175,7 @@ namespace ElektroOffer_app
         }
 
         // =========================================================
-        // 💰 TOTAL VÝPOČET
+        // 💰 TOTAL
         // =========================================================
         public double Total
         {
@@ -135,20 +199,6 @@ namespace ElektroOffer_app
         }
 
         // =========================================================
-        // WORK ITEM
-        // =========================================================
-        public PriceItems? WorkItem
-        {
-            get => _workItem;
-            set
-            {
-                _workItem = value;
-                OnPropertyChanged();
-                OnPropertyChanged(nameof(Total));
-            }
-        }
-
-        // =========================================================
         // DB UPDATE LOGIKA
         // =========================================================
         private void UpdateWorkItem()
@@ -157,7 +207,10 @@ namespace ElektroOffer_app
                 string.IsNullOrWhiteSpace(SelectedSpecification) ||
                 string.IsNullOrWhiteSpace(SelectedMaterial) ||
                 string.IsNullOrWhiteSpace(SelectedLocation))
+            {
+                WorkItem = null;
                 return;
+            }
 
             using var db = new AppDbContext();
 
