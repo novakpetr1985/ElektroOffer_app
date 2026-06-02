@@ -107,8 +107,17 @@ namespace ElektroOffer_app
         // ➖ DELETE ROW
         // =========================================================
         // 👉 Handler se odpojuje zde — CollectionChanged ho již NEodpojuje
+        // 👉 Před smazáním se zobrazí potvrzovací dialog
         private void DeleteWorkItem_Click(object sender, RoutedEventArgs e)
         {
+            var result = MessageBox.Show(
+                "Opravdu chcete odebrat položku?",
+                "Potvrzení",
+                MessageBoxButton.OKCancel,
+                MessageBoxImage.Question);
+
+            if (result != MessageBoxResult.OK) return;
+
             if (sender is FrameworkElement fe &&
                 fe.DataContext is CalculationItems item)
             {
@@ -119,6 +128,14 @@ namespace ElektroOffer_app
 
         private void DeleteMaterialItem_Click(object sender, RoutedEventArgs e)
         {
+            var result = MessageBox.Show(
+                "Opravdu chcete odebrat položku?",
+                "Potvrzení",
+                MessageBoxButton.OKCancel,
+                MessageBoxImage.Question);
+
+            if (result != MessageBoxResult.OK) return;
+
             if (sender is FrameworkElement fe &&
                 fe.DataContext is CalculationItems item)
             {
@@ -131,8 +148,17 @@ namespace ElektroOffer_app
         // 🧹 RESET ROW
         // =========================================================
         // 👉 Vymaže obsah řádku, řádek zůstává v tabulce
+        // 👉 Před vymazáním se zobrazí potvrzovací dialog
         private void ResetWorkItem_Click(object sender, RoutedEventArgs e)
         {
+            var result = MessageBox.Show(
+                "Opravdu chcete vymazat výběr?",
+                "Potvrzení",
+                MessageBoxButton.OKCancel,
+                MessageBoxImage.Question);
+
+            if (result != MessageBoxResult.OK) return;
+
             if (sender is FrameworkElement fe &&
                 fe.DataContext is CalculationItems item)
             {
@@ -144,6 +170,14 @@ namespace ElektroOffer_app
 
         private void ResetMaterialItem_Click(object sender, RoutedEventArgs e)
         {
+            var result = MessageBox.Show(
+                "Opravdu chcete vymazat výběr?",
+                "Potvrzení",
+                MessageBoxButton.OKCancel,
+                MessageBoxImage.Question);
+
+            if (result != MessageBoxResult.OK) return;
+
             if (sender is FrameworkElement fe &&
                 fe.DataContext is CalculationItems item)
             {
