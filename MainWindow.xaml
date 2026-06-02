@@ -24,13 +24,11 @@
                    FontWeight="Bold"
                    Foreground="DarkGreen"
                    Margin="0,0,0,20">
-
             <TextBlock.Text>
                 <MultiBinding StringFormat="{}{0:N0} Kč">
                     <Binding Path="GrandTotal"/>
                 </MultiBinding>
             </TextBlock.Text>
-
         </TextBlock>
 
         <!-- ========================================================= -->
@@ -42,11 +40,9 @@
             <!-- HLAVIČKA SEKCE -->
             <!-- ========================= -->
             <StackPanel Orientation="Horizontal">
-
                 <TextBlock Text="PRÁCE"
                            FontSize="18"
                            FontWeight="Bold"/>
-
                 <Button Content="+"
                         Width="30"
                         Margin="10,0,0,0"
@@ -67,22 +63,22 @@
                     <ColumnDefinition Width="60"/>
                     <ColumnDefinition Width="60"/>
                     <ColumnDefinition Width="120"/>
+                    <ColumnDefinition Width="70"/>
                 </Grid.ColumnDefinitions>
 
-                <TextBlock Grid.Column="1" Text="Úkon" FontWeight="Bold"/>
+                <TextBlock Grid.Column="1" Text="Úkon"      FontWeight="Bold"/>
                 <TextBlock Grid.Column="2" Text="Upřesnění" FontWeight="Bold"/>
-                <TextBlock Grid.Column="3" Text="Materiál" FontWeight="Bold"/>
-                <TextBlock Grid.Column="4" Text="Umístění" FontWeight="Bold"/>
-                <TextBlock Grid.Column="5" Text="Množství" FontWeight="Bold"/>
-                <TextBlock Grid.Column="6" Text="MJ" FontWeight="Bold"/>
-                <TextBlock Grid.Column="7" Text="Cena" FontWeight="Bold"/>
+                <TextBlock Grid.Column="3" Text="Materiál"  FontWeight="Bold"/>
+                <TextBlock Grid.Column="4" Text="Umístění"  FontWeight="Bold"/>
+                <TextBlock Grid.Column="5" Text="Množství"  FontWeight="Bold"/>
+                <TextBlock Grid.Column="6" Text="MJ"        FontWeight="Bold"/>
+                <TextBlock Grid.Column="7" Text="Cena"      FontWeight="Bold"/>
             </Grid>
 
             <!-- ========================= -->
             <!-- ITEM LIST: PRÁCE -->
             <!-- ========================= -->
             <ItemsControl ItemsSource="{Binding WorkCalcItems}">
-
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
 
@@ -100,56 +96,63 @@
                                     <ColumnDefinition Width="60"/>
                                     <ColumnDefinition Width="60"/>
                                     <ColumnDefinition Width="120"/>
+                                    <ColumnDefinition Width="70"/>
                                 </Grid.ColumnDefinitions>
 
                                 <!-- ➖ Smazání řádku -->
                                 <Button Grid.Column="0"
                                         Content="−"
-                                        Width="25"
-                                        Height="25"
-                                        Background="#E53935"
-                                        Foreground="White"
+                                        Width="25" Height="25"
+                                        Background="#E53935" Foreground="White"
                                         ToolTip="Smazat řádek"
                                         Click="DeleteWorkItem_Click"/>
 
                                 <!-- ÚKON -->
                                 <ComboBox Grid.Column="1"
                                           ItemsSource="{Binding DataContext.Tasks, RelativeSource={RelativeSource AncestorType=Window}}"
-                                          SelectedItem="{Binding SelectedTask, Mode=TwoWay}" />
+                                          SelectedItem="{Binding SelectedTask, Mode=TwoWay}"/>
 
                                 <!-- UPŘESNĚNÍ -->
                                 <ComboBox Grid.Column="2"
                                           IsEnabled="{Binding CanSelectSpecification}"
                                           ItemsSource="{Binding AvailableSpecifications}"
-                                          SelectedItem="{Binding SelectedSpecification, Mode=TwoWay}" />
+                                          SelectedItem="{Binding SelectedSpecification, Mode=TwoWay}"/>
 
                                 <!-- MATERIÁL -->
                                 <ComboBox Grid.Column="3"
                                           IsEnabled="{Binding CanSelectMaterial}"
                                           ItemsSource="{Binding AvailableMaterials}"
-                                          SelectedItem="{Binding SelectedMaterial, Mode=TwoWay}" />
+                                          SelectedItem="{Binding SelectedMaterial, Mode=TwoWay}"/>
 
                                 <!-- UMÍSTĚNÍ -->
                                 <ComboBox Grid.Column="4"
                                           IsEnabled="{Binding CanSelectLocation}"
                                           ItemsSource="{Binding AvailableLocations}"
-                                          SelectedItem="{Binding SelectedLocation, Mode=TwoWay}" />
+                                          SelectedItem="{Binding SelectedLocation, Mode=TwoWay}"/>
 
                                 <!-- MNOŽSTVÍ -->
                                 <TextBox Grid.Column="5"
-                                         Text="{Binding Quantity, UpdateSourceTrigger=PropertyChanged}" />
+                                         Text="{Binding Quantity, UpdateSourceTrigger=PropertyChanged}"/>
 
                                 <!-- MJ -->
                                 <TextBlock Grid.Column="6"
                                            VerticalAlignment="Center"
                                            Foreground="Gray"
-                                           Text="{Binding WorkUnit}" />
+                                           Text="{Binding WorkUnit}"/>
 
                                 <!-- 💰 CENA PRÁCE -->
                                 <TextBlock Grid.Column="7"
                                            FontWeight="Bold"
                                            Foreground="DarkBlue"
-                                           Text="{Binding Total, StringFormat={}{0:N0} Kč}" />
+                                           Text="{Binding Total, StringFormat={}{0:N0} Kč}"/>
+
+                                <!-- 🔄 Reset řádku (vymaže data, řádek zůstane) -->
+                                <Button Grid.Column="8"
+                                        Content="SMAZAT"
+                                        Background="DarkBlue"
+                                        Foreground="White"
+                                        ToolTip="Vymazat data řádku"
+                                        Click="ResetWorkItem_Click"/>
 
                             </Grid>
 
@@ -166,12 +169,13 @@
         <!-- ========================================================= -->
         <StackPanel Grid.Row="2">
 
-            <!-- HLAVIČKA -->
+            <!-- ========================= -->
+            <!-- HLAVIČKA SEKCE -->
+            <!-- ========================= -->
             <StackPanel Orientation="Horizontal">
                 <TextBlock Text="MATERIÁL"
                            FontSize="18"
                            FontWeight="Bold"/>
-
                 <Button Content="+"
                         Width="30"
                         Margin="10,0,0,0"
@@ -179,7 +183,9 @@
                         ToolTip="Přidat řádek materiálu"/>
             </StackPanel>
 
+            <!-- ========================= -->
             <!-- HLAVIČKA TABULKY -->
+            <!-- ========================= -->
             <Grid Margin="0,8,0,5">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="35"/>
@@ -187,17 +193,19 @@
                     <ColumnDefinition Width="70"/>
                     <ColumnDefinition Width="40"/>
                     <ColumnDefinition Width="120"/>
+                    <ColumnDefinition Width="70"/>
                 </Grid.ColumnDefinitions>
 
-                <TextBlock Grid.Column="1" Text="Název" FontWeight="Bold"/>
+                <TextBlock Grid.Column="1" Text="Název"    FontWeight="Bold"/>
                 <TextBlock Grid.Column="2" Text="Množství" FontWeight="Bold"/>
-                <TextBlock Grid.Column="3" Text="MJ" FontWeight="Bold"/>
-                <TextBlock Grid.Column="4" Text="Cena" FontWeight="Bold"/>
+                <TextBlock Grid.Column="3" Text="MJ"       FontWeight="Bold"/>
+                <TextBlock Grid.Column="4" Text="Cena"     FontWeight="Bold"/>
             </Grid>
 
+            <!-- ========================= -->
             <!-- ITEM LIST: MATERIÁL -->
+            <!-- ========================= -->
             <ItemsControl ItemsSource="{Binding MaterialItems}">
-
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
 
@@ -212,15 +220,14 @@
                                     <ColumnDefinition Width="70"/>
                                     <ColumnDefinition Width="40"/>
                                     <ColumnDefinition Width="120"/>
+                                    <ColumnDefinition Width="70"/>
                                 </Grid.ColumnDefinitions>
 
                                 <!-- ➖ Smazání řádku -->
                                 <Button Grid.Column="0"
                                         Content="−"
-                                        Width="25"
-                                        Height="25"
-                                        Background="#E53935"
-                                        Foreground="White"
+                                        Width="25" Height="25"
+                                        Background="#E53935" Foreground="White"
                                         ToolTip="Smazat řádek"
                                         Click="DeleteMaterialItem_Click"/>
 
@@ -228,20 +235,28 @@
                                 <ComboBox Grid.Column="1"
                                           ItemsSource="{Binding DataContext.Materials, RelativeSource={RelativeSource AncestorType=Window}}"
                                           DisplayMemberPath="Name"
-                                          SelectedItem="{Binding MaterialItem, Mode=TwoWay}" />
+                                          SelectedItem="{Binding MaterialItem, Mode=TwoWay}"/>
 
                                 <!-- Množství -->
                                 <TextBox Grid.Column="2"
-                                         Text="{Binding Quantity, UpdateSourceTrigger=PropertyChanged}" />
+                                         Text="{Binding Quantity, UpdateSourceTrigger=PropertyChanged}"/>
 
                                 <!-- MJ -->
                                 <TextBlock Grid.Column="3"
-                                           Text="{Binding MaterialItem.Unit}" />
+                                           Text="{Binding MaterialItem.Unit}"/>
 
                                 <!-- 💰 CENA MATERIÁLU -->
                                 <TextBlock Grid.Column="4"
                                            FontWeight="Bold"
-                                           Text="{Binding Total, StringFormat={}{0:N0} Kč}" />
+                                           Text="{Binding Total, StringFormat={}{0:N0} Kč}"/>
+
+                                <!-- 🔄 Reset řádku (vymaže data, řádek zůstane) -->
+                                <Button Grid.Column="5"
+                                        Content="SMAZAT"
+                                        Background="DarkBlue"
+                                        Foreground="White"
+                                        ToolTip="Vymazat data řádku"
+                                        Click="ResetMaterialItem_Click"/>
 
                             </Grid>
 

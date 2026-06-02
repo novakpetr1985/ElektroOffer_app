@@ -19,7 +19,6 @@
         // 📏 JEDNOTKA
         // =========================
         public string? Unit { get; set; }
-        public string? UnitDisplay => Unit;
 
         // =========================
         // 🔧 NÁZEV PRÁCE

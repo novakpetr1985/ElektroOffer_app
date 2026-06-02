@@ -1,9 +1,8 @@
 ﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using Microsoft.EntityFrameworkCore;
-using ElektroOffer_app.Models;
 using ElektroOffer_app.Data;
+using ElektroOffer_app.Models;
 
 namespace ElektroOffer_app
 {
@@ -24,7 +23,7 @@ namespace ElektroOffer_app
         private string? _workUnit;
 
         // =========================================================
-        // 📦 DYNAMICKÉ LISTY PRO COMBOBOXY (NOVÉ)
+        // 📦 DYNAMICKÉ LISTY PRO COMBOBOXY
         // =========================================================
         public ObservableCollection<string> AvailableSpecifications { get; set; } = new();
         public ObservableCollection<string> AvailableMaterials { get; set; } = new();
@@ -55,14 +54,14 @@ namespace ElektroOffer_app
             set
             {
                 if (_selectedTask == value) return;
-
                 _selectedTask = value;
 
+                // Reset kaskády níže + načtení nových hodnot
                 ResetBelowTask();
                 LoadWorkUnit();
                 LoadSpecifications();
 
-                OnPropertyChanged(nameof(SelectedTask));
+                OnPropertyChanged();
                 OnPropertyChanged(nameof(CanSelectSpecification));
             }
         }
@@ -76,13 +75,12 @@ namespace ElektroOffer_app
             set
             {
                 if (_selectedSpecification == value) return;
-
                 _selectedSpecification = value;
 
                 ResetBelowSpecification();
                 LoadMaterials();
 
-                OnPropertyChanged(nameof(SelectedSpecification));
+                OnPropertyChanged();
                 OnPropertyChanged(nameof(CanSelectMaterial));
             }
         }
@@ -96,13 +94,12 @@ namespace ElektroOffer_app
             set
             {
                 if (_selectedMaterial == value) return;
-
                 _selectedMaterial = value;
 
                 ResetBelowMaterial();
                 LoadLocations();
 
-                OnPropertyChanged(nameof(SelectedMaterial));
+                OnPropertyChanged();
                 OnPropertyChanged(nameof(CanSelectLocation));
             }
         }
@@ -116,12 +113,11 @@ namespace ElektroOffer_app
             set
             {
                 if (_selectedLocation == value) return;
-
                 _selectedLocation = value;
 
                 UpdateWorkItem();
 
-                OnPropertyChanged(nameof(SelectedLocation));
+                OnPropertyChanged();
             }
         }
 
@@ -286,30 +282,54 @@ namespace ElektroOffer_app
         // =========================================================
         // RESETY
         // =========================================================
+        // 👉 Používají privátní fieldy přímo → nezpůsobí rekurzivní kaskádu
+        // 👉 Kolekce se čistí ručně, notify se posílá cíleně
+
         private void ResetBelowTask()
         {
-            SelectedSpecification = null;
-            SelectedMaterial = null;
-            SelectedLocation = null;
+            // Resetujeme fieldy přímo (ne přes settery) a pak ručně notifikujeme
+            _selectedSpecification = null;
+            _selectedMaterial = null;
+            _selectedLocation = null;
 
             AvailableSpecifications.Clear();
             AvailableMaterials.Clear();
             AvailableLocations.Clear();
+
+            WorkItem = null;
+            WorkUnit = null;
+
+            OnPropertyChanged(nameof(SelectedSpecification));
+            OnPropertyChanged(nameof(SelectedMaterial));
+            OnPropertyChanged(nameof(SelectedLocation));
+            OnPropertyChanged(nameof(CanSelectMaterial));
+            OnPropertyChanged(nameof(CanSelectLocation));
         }
 
         private void ResetBelowSpecification()
         {
-            SelectedMaterial = null;
-            SelectedLocation = null;
+            _selectedMaterial = null;
+            _selectedLocation = null;
 
             AvailableMaterials.Clear();
             AvailableLocations.Clear();
+
+            WorkItem = null;
+
+            OnPropertyChanged(nameof(SelectedMaterial));
+            OnPropertyChanged(nameof(SelectedLocation));
+            OnPropertyChanged(nameof(CanSelectLocation));
         }
 
         private void ResetBelowMaterial()
         {
-            SelectedLocation = null;
+            _selectedLocation = null;
+
             AvailableLocations.Clear();
+
+            WorkItem = null;
+
+            OnPropertyChanged(nameof(SelectedLocation));
         }
 
         // =========================================================

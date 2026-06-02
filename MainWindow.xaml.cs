@@ -1,6 +1,5 @@
 ﻿using ElektroOffer_app.Data;
 using ElektroOffer_app.Models;
-using System;
 using System.Collections.Specialized;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -15,16 +14,13 @@ namespace ElektroOffer_app
         // =========================================================
         // 📦 DATA Z DB
         // =========================================================
-        public ObservableCollection<PriceItems> WorkItemsSource { get; set; } = new();
         public ObservableCollection<Material> Materials { get; set; } = new();
 
         // =========================================================
-        // 🔧 FILTRY
+        // 🔧 GLOBÁLNÍ SEZNAM ÚKONŮ (Task combobox)
         // =========================================================
+        // 👉 Specifications/Material/Locations jsou per-řádek v CalculationItems
         public ObservableCollection<string> Tasks { get; set; } = new();
-        public ObservableCollection<string> Specifications { get; set; } = new();
-        public ObservableCollection<string> Material { get; set; } = new();
-        public ObservableCollection<string> Locations { get; set; } = new();
 
         // =========================================================
         // 🧮 KALKULACE
@@ -59,28 +55,12 @@ namespace ElektroOffer_app
             {
                 db.Database.EnsureCreated();
 
-                WorkItemsSource = new ObservableCollection<PriceItems>(
-                    db.PriceItems.ToList()
-                );
-
                 Materials = new ObservableCollection<Material>(
                     db.Materials.ToList()
                 );
 
                 Tasks = new ObservableCollection<string>(
-                    WorkItemsSource.Select(x => x.Task).Distinct()
-                );
-
-                Specifications = new ObservableCollection<string>(
-                    WorkItemsSource.Select(x => x.Specification).Distinct()
-                );
-
-                Material = new ObservableCollection<string>(
-                    WorkItemsSource.Select(x => x.Material).Distinct()
-                );
-
-                Locations = new ObservableCollection<string>(
-                    WorkItemsSource.Select(x => x.Location).Distinct()
+                    db.PriceItems.Select(x => x.Task).Distinct().ToList()
                 );
             }
 
@@ -126,6 +106,7 @@ namespace ElektroOffer_app
         // =========================================================
         // ➖ DELETE ROW
         // =========================================================
+        // 👉 Handler se odpojuje zde — CollectionChanged ho již NEodpojuje
         private void DeleteWorkItem_Click(object sender, RoutedEventArgs e)
         {
             if (sender is FrameworkElement fe &&
@@ -133,7 +114,6 @@ namespace ElektroOffer_app
             {
                 item.PropertyChanged -= Item_PropertyChanged;
                 WorkCalcItems.Remove(item);
-                Recalculate();
             }
         }
 
@@ -144,24 +124,20 @@ namespace ElektroOffer_app
             {
                 item.PropertyChanged -= Item_PropertyChanged;
                 MaterialItems.Remove(item);
-                Recalculate();
             }
         }
 
         // =========================================================
         // 🧹 RESET ROW
         // =========================================================
+        // 👉 Vymaže obsah řádku, řádek zůstává v tabulce
         private void ResetWorkItem_Click(object sender, RoutedEventArgs e)
         {
             if (sender is FrameworkElement fe &&
                 fe.DataContext is CalculationItems item)
             {
                 item.SelectedTask = null;
-                item.SelectedSpecification = null;
-                item.SelectedMaterial = null;
-                item.SelectedLocation = null;
                 item.Quantity = 0;
-
                 Recalculate();
             }
         }
@@ -173,7 +149,6 @@ namespace ElektroOffer_app
             {
                 item.MaterialItem = null;
                 item.Quantity = 0;
-
                 Recalculate();
             }
         }
@@ -181,23 +156,12 @@ namespace ElektroOffer_app
         // =========================================================
         // 📌 COLLECTION CHANGE HANDLERS
         // =========================================================
+        // 👉 Odpojení handleru řeší Delete metody — zde jen rekalkulace
         private void WorkCalcItems_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
-        {
-            if (e.OldItems != null)
-                foreach (CalculationItems item in e.OldItems)
-                    item.PropertyChanged -= Item_PropertyChanged;
-
-            Recalculate();
-        }
+            => Recalculate();
 
         private void MaterialItems_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
-        {
-            if (e.OldItems != null)
-                foreach (CalculationItems item in e.OldItems)
-                    item.PropertyChanged -= Item_PropertyChanged;
-
-            Recalculate();
-        }
+            => Recalculate();
 
         // =========================================================
         // 🔥 LIVE UPDATE
