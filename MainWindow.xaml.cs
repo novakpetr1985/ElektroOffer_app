@@ -17,9 +17,8 @@ namespace ElektroOffer_app
         public ObservableCollection<Material> Materials { get; set; } = new();
 
         // =========================================================
-        // 🔧 GLOBÁLNÍ SEZNAM ÚKONŮ (Task combobox)
+        // 🔧 GLOBÁLNÍ SEZNAM ÚKONŮ
         // =========================================================
-        // 👉 Specifications/Material/Locations jsou per-řádek v CalculationItems
         public ObservableCollection<string> Tasks { get; set; } = new();
 
         // =========================================================
@@ -27,6 +26,11 @@ namespace ElektroOffer_app
         // =========================================================
         public ObservableCollection<CalculationItems> WorkCalcItems { get; set; } = new();
         public ObservableCollection<CalculationItems> MaterialItems { get; set; } = new();
+
+        // =========================================================
+        // 📊 DETAILNÍ ROZPIS
+        // =========================================================
+        public ObservableCollection<BudgetItem> BudgetItems { get; set; } = new();
 
         // =========================================================
         // 💰 CELKOVÁ CENA
@@ -44,6 +48,33 @@ namespace ElektroOffer_app
         }
 
         // =========================================================
+        // 💰 DÍLČÍ SOUČTY
+        // =========================================================
+        private double _workTotal;
+        public double WorkTotal
+        {
+            get => _workTotal;
+            set
+            {
+                if (Math.Abs(_workTotal - value) < 0.0001) return;
+                _workTotal = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private double _materialTotal;
+        public double MaterialTotal
+        {
+            get => _materialTotal;
+            set
+            {
+                if (Math.Abs(_materialTotal - value) < 0.0001) return;
+                _materialTotal = value;
+                OnPropertyChanged();
+            }
+        }
+
+        // =========================================================
         // START
         // =========================================================
         public MainWindow()
@@ -55,33 +86,25 @@ namespace ElektroOffer_app
             {
                 db.Database.EnsureCreated();
 
-                Materials = new ObservableCollection<Material>(
-                    db.Materials.ToList()
-                );
+                Materials = new ObservableCollection<Material>(db.Materials.ToList());
 
                 Tasks = new ObservableCollection<string>(
                     db.PriceItems.Select(x => x.Task).Distinct().ToList()
                 );
             }
 
-            // =====================================================
-            // INIT ŘÁDKŮ (start UI)
-            // =====================================================
             for (int i = 0; i < 5; i++)
             {
                 AddWorkItemInternal();
                 AddMaterialItemInternal();
             }
 
-            // =====================================================
-            // TRACKING KOLEKCÍ
-            // =====================================================
             WorkCalcItems.CollectionChanged += WorkCalcItems_CollectionChanged;
             MaterialItems.CollectionChanged += MaterialItems_CollectionChanged;
         }
 
         // =========================================================
-        // ➕ ADD BUTTONY
+        // ➕ ADD
         // =========================================================
         private void AddWorkItem_Click(object sender, RoutedEventArgs e)
             => AddWorkItemInternal();
@@ -104,61 +127,43 @@ namespace ElektroOffer_app
         }
 
         // =========================================================
-        // ➖ DELETE ROW
+        // ➖ DELETE
         // =========================================================
-        // 👉 Handler se odpojuje zde — CollectionChanged ho již NEodpojuje
-        // 👉 Před smazáním se zobrazí potvrzovací dialog
         private void DeleteWorkItem_Click(object sender, RoutedEventArgs e)
         {
-            var result = MessageBox.Show(
-                "Opravdu chcete odebrat položku?",
-                "Potvrzení",
-                MessageBoxButton.OKCancel,
-                MessageBoxImage.Question);
-
-            if (result != MessageBoxResult.OK) return;
+            if (MessageBox.Show("Opravdu odebrat?", "Potvrzení",
+                MessageBoxButton.OKCancel, MessageBoxImage.Question) != MessageBoxResult.OK)
+                return;
 
             if (sender is FrameworkElement fe &&
                 fe.DataContext is CalculationItems item)
             {
                 item.PropertyChanged -= Item_PropertyChanged;
                 WorkCalcItems.Remove(item);
+                Recalculate();
             }
         }
 
         private void DeleteMaterialItem_Click(object sender, RoutedEventArgs e)
         {
-            var result = MessageBox.Show(
-                "Opravdu chcete odebrat položku?",
-                "Potvrzení",
-                MessageBoxButton.OKCancel,
-                MessageBoxImage.Question);
-
-            if (result != MessageBoxResult.OK) return;
+            if (MessageBox.Show("Opravdu odebrat?", "Potvrzení",
+                MessageBoxButton.OKCancel, MessageBoxImage.Question) != MessageBoxResult.OK)
+                return;
 
             if (sender is FrameworkElement fe &&
                 fe.DataContext is CalculationItems item)
             {
                 item.PropertyChanged -= Item_PropertyChanged;
                 MaterialItems.Remove(item);
+                Recalculate();
             }
         }
 
         // =========================================================
-        // 🧹 RESET ROW
+        // 🧹 RESET
         // =========================================================
-        // 👉 Vymaže obsah řádku, řádek zůstává v tabulce
-        // 👉 Před vymazáním se zobrazí potvrzovací dialog
         private void ResetWorkItem_Click(object sender, RoutedEventArgs e)
         {
-            var result = MessageBox.Show(
-                "Opravdu chcete vymazat výběr?",
-                "Potvrzení",
-                MessageBoxButton.OKCancel,
-                MessageBoxImage.Question);
-
-            if (result != MessageBoxResult.OK) return;
-
             if (sender is FrameworkElement fe &&
                 fe.DataContext is CalculationItems item)
             {
@@ -170,14 +175,6 @@ namespace ElektroOffer_app
 
         private void ResetMaterialItem_Click(object sender, RoutedEventArgs e)
         {
-            var result = MessageBox.Show(
-                "Opravdu chcete vymazat výběr?",
-                "Potvrzení",
-                MessageBoxButton.OKCancel,
-                MessageBoxImage.Question);
-
-            if (result != MessageBoxResult.OK) return;
-
             if (sender is FrameworkElement fe &&
                 fe.DataContext is CalculationItems item)
             {
@@ -188,18 +185,14 @@ namespace ElektroOffer_app
         }
 
         // =========================================================
-        // 📌 COLLECTION CHANGE HANDLERS
+        // 📌 EVENTS
         // =========================================================
-        // 👉 Odpojení handleru řeší Delete metody — zde jen rekalkulace
         private void WorkCalcItems_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
             => Recalculate();
 
         private void MaterialItems_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
             => Recalculate();
 
-        // =========================================================
-        // 🔥 LIVE UPDATE
-        // =========================================================
         private void Item_PropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName == nameof(CalculationItems.Total) ||
@@ -216,9 +209,34 @@ namespace ElektroOffer_app
         // =========================================================
         private void Recalculate()
         {
-            GrandTotal =
-                WorkCalcItems.Sum(x => x.Total) +
-                MaterialItems.Sum(x => x.Total);
+            WorkTotal = WorkCalcItems.Sum(x => x.Total);
+            MaterialTotal = MaterialItems.Sum(x => x.Total);
+            GrandTotal = WorkTotal + MaterialTotal;
+
+            // =========================
+            // 📊 DETAILNÍ ROZPIS
+            // =========================
+            BudgetItems.Clear();
+
+            foreach (var x in WorkCalcItems.Where(x => x.Total > 0))
+            {
+                BudgetItems.Add(new BudgetItem
+                {
+                    Type = "PRÁCE",
+                    Description = $"{x.SelectedTask} / {x.SelectedSpecification} / {x.SelectedMaterial} / {x.SelectedLocation}",
+                    Price = x.Total
+                });
+            }
+
+            foreach (var x in MaterialItems.Where(x => x.Total > 0 && x.MaterialItem != null))
+            {
+                BudgetItems.Add(new BudgetItem
+                {
+                    Type = "MATERIÁL",
+                    Description = x.MaterialItem?.Name,
+                    Price = x.Total
+                });
+            }
         }
 
         // =========================================================
