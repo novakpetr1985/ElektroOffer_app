@@ -5,23 +5,13 @@
         Height="650"
         Width="900">
 
-    <!-- ========================= -->
-    <!-- HLAVNÍ ROZLOŽENÍ -->
-    <!-- ========================= -->
     <Grid Margin="20">
 
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
-            <!-- CELKOVÁ CENA -->
-
             <RowDefinition Height="Auto"/>
-            <!-- PRÁCE -->
-
             <RowDefinition Height="Auto"/>
-            <!-- MATERIÁL -->
-
             <RowDefinition Height="*"/>
-            <!-- VOLNÝ PROSTOR -->
         </Grid.RowDefinitions>
 
         <!-- ========================= -->
@@ -39,7 +29,6 @@
         <!-- ========================= -->
         <StackPanel Grid.Row="1" Margin="0,0,0,20">
 
-            <!-- HLAVIČKA -->
             <StackPanel Orientation="Horizontal">
                 <TextBlock Text="PRÁCE"
                            FontSize="18"
@@ -51,9 +40,6 @@
                         Click="AddWorkItem_Click"/>
             </StackPanel>
 
-            <!-- ========================= -->
-            <!-- LIST PRÁCE -->
-            <!-- ========================= -->
             <ItemsControl ItemsSource="{Binding WorkCalcItems}">
 
                 <ItemsControl.ItemTemplate>
@@ -61,38 +47,38 @@
 
                         <StackPanel Orientation="Horizontal" Margin="0,5">
 
-                            <!-- 1) TASK -->
+                            <!-- TASK (vždy globální seznam) -->
                             <ComboBox Width="150"
                                       ItemsSource="{Binding DataContext.Tasks, RelativeSource={RelativeSource AncestorType=Window}}"
                                       SelectedItem="{Binding SelectedTask, Mode=TwoWay}" />
 
-                            <!-- 2) SPECIFICATION -->
+                            <!-- SPECIFICATION (FILTROVANÉ Z DB) -->
                             <ComboBox Width="150"
                                       Margin="5,0,0,0"
                                       IsEnabled="{Binding CanSelectSpecification}"
-                                      ItemsSource="{Binding DataContext.Specifications, RelativeSource={RelativeSource AncestorType=Window}}"
+                                      ItemsSource="{Binding AvailableSpecifications}"
                                       SelectedItem="{Binding SelectedSpecification, Mode=TwoWay}" />
 
-                            <!-- 3) MATERIAL -->
+                            <!-- MATERIAL (FILTROVANÉ Z DB) -->
                             <ComboBox Width="150"
                                       Margin="5,0,0,0"
                                       IsEnabled="{Binding CanSelectMaterial}"
-                                      ItemsSource="{Binding DataContext.Material, RelativeSource={RelativeSource AncestorType=Window}}"
+                                      ItemsSource="{Binding AvailableMaterials}"
                                       SelectedItem="{Binding SelectedMaterial, Mode=TwoWay}" />
 
-                            <!-- 4) LOCATION -->
+                            <!-- LOCATION (FILTROVANÉ Z DB) -->
                             <ComboBox Width="120"
                                       Margin="5,0,0,0"
                                       IsEnabled="{Binding CanSelectLocation}"
-                                      ItemsSource="{Binding DataContext.Locations, RelativeSource={RelativeSource AncestorType=Window}}"
+                                      ItemsSource="{Binding AvailableLocations}"
                                       SelectedItem="{Binding SelectedLocation, Mode=TwoWay}" />
 
-                            <!-- 5) MNOŽSTVÍ -->
+                            <!-- MNOŽSTVÍ -->
                             <TextBox Width="60"
                                      Margin="10,0,0,0"
                                      Text="{Binding Quantity, UpdateSourceTrigger=PropertyChanged}" />
 
-                            <!-- 6) JEDNOTKA (TASK UNIT) -->
+                            <!-- UNIT -->
                             <TextBlock Width="60"
                                        Margin="10,0,0,0"
                                        VerticalAlignment="Center"
@@ -100,7 +86,7 @@
                                        Foreground="Gray"
                                        Text="{Binding WorkUnit}" />
 
-                            <!-- 7) CENA -->
+                            <!-- CENA -->
                             <TextBlock Width="120"
                                        Margin="10,0,0,0"
                                        FontWeight="Bold"
@@ -120,7 +106,6 @@
         <!-- ========================= -->
         <StackPanel Grid.Row="2">
 
-            <!-- HLAVIČKA -->
             <StackPanel Orientation="Horizontal">
                 <TextBlock Text="MATERIÁL"
                            FontSize="18"
@@ -132,7 +117,6 @@
                         Click="AddMaterialsItem_Click"/>
             </StackPanel>
 
-            <!-- LIST MATERIÁLU -->
             <ItemsControl ItemsSource="{Binding MaterialItems}">
 
                 <ItemsControl.ItemTemplate>

@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using Microsoft.EntityFrameworkCore;
 using ElektroOffer_app.Models;
@@ -7,7 +8,7 @@ using ElektroOffer_app.Data;
 namespace ElektroOffer_app
 {
     // =========================================================
-    // 🧮 KALKULAČNÍ ŘÁDEK
+    // 🧮 KALKULAČNÍ ŘÁDEK (VIEWMODEL PRO 1 ŘÁDEK TABULKY)
     // =========================================================
     public class CalculationItems : INotifyPropertyChanged
     {
@@ -20,28 +21,30 @@ namespace ElektroOffer_app
         private string? _selectedMaterial;
         private string? _selectedLocation;
 
-        // =========================================================
-        // 📏 UNIT PRO WORK (NOVÉ)
-        // =========================================================
         private string? _workUnit;
 
+        // =========================================================
+        // 📦 DYNAMICKÉ LISTY PRO COMBOBOXY (NOVÉ)
+        // =========================================================
+        public ObservableCollection<string> AvailableSpecifications { get; set; } = new();
+        public ObservableCollection<string> AvailableMaterials { get; set; } = new();
+        public ObservableCollection<string> AvailableLocations { get; set; } = new();
+
+        // =========================================================
+        // 📏 UNIT
+        // =========================================================
         public string? WorkUnit
         {
             get => _workUnit;
-            set
-            {
-                if (_workUnit == value) return;
-                _workUnit = value;
-                OnPropertyChanged();
-            }
+            set { _workUnit = value; OnPropertyChanged(); }
         }
 
         // =========================================================
-        // 🔒 LOCKY PRO KASKÁDU
+        // 🔒 KASKÁDA POVOLENÍ
         // =========================================================
         public bool CanSelectSpecification => !string.IsNullOrWhiteSpace(SelectedTask);
-        public bool CanSelectMaterial => CanSelectSpecification && !string.IsNullOrWhiteSpace(SelectedSpecification);
-        public bool CanSelectLocation => CanSelectMaterial && !string.IsNullOrWhiteSpace(SelectedMaterial);
+        public bool CanSelectMaterial => !string.IsNullOrWhiteSpace(SelectedSpecification);
+        public bool CanSelectLocation => !string.IsNullOrWhiteSpace(SelectedMaterial);
 
         // =========================================================
         // TASK
@@ -55,27 +58,12 @@ namespace ElektroOffer_app
 
                 _selectedTask = value;
 
-                // 🔥 RESET KASKÁDY
-                _selectedSpecification = null;
-                _selectedMaterial = null;
-                _selectedLocation = null;
-
-                WorkItem = null;
-                WorkUnit = null;
-
-                OnPropertyChanged();
-                OnPropertyChanged(nameof(CanSelectSpecification));
-                OnPropertyChanged(nameof(CanSelectMaterial));
-                OnPropertyChanged(nameof(CanSelectLocation));
-
-                OnPropertyChanged(nameof(SelectedSpecification));
-                OnPropertyChanged(nameof(SelectedMaterial));
-                OnPropertyChanged(nameof(SelectedLocation));
-
-                // 🔥 načtení UNIT
+                ResetBelowTask();
                 LoadWorkUnit();
+                LoadSpecifications();
 
-                UpdateWorkItem();
+                OnPropertyChanged(nameof(SelectedTask));
+                OnPropertyChanged(nameof(CanSelectSpecification));
             }
         }
 
@@ -91,19 +79,11 @@ namespace ElektroOffer_app
 
                 _selectedSpecification = value;
 
-                _selectedMaterial = null;
-                _selectedLocation = null;
+                ResetBelowSpecification();
+                LoadMaterials();
 
-                WorkItem = null;
-
-                OnPropertyChanged();
+                OnPropertyChanged(nameof(SelectedSpecification));
                 OnPropertyChanged(nameof(CanSelectMaterial));
-                OnPropertyChanged(nameof(CanSelectLocation));
-
-                OnPropertyChanged(nameof(SelectedMaterial));
-                OnPropertyChanged(nameof(SelectedLocation));
-
-                UpdateWorkItem();
             }
         }
 
@@ -119,15 +99,11 @@ namespace ElektroOffer_app
 
                 _selectedMaterial = value;
 
-                _selectedLocation = null;
+                ResetBelowMaterial();
+                LoadLocations();
 
-                WorkItem = null;
-
-                OnPropertyChanged();
+                OnPropertyChanged(nameof(SelectedMaterial));
                 OnPropertyChanged(nameof(CanSelectLocation));
-                OnPropertyChanged(nameof(SelectedLocation));
-
-                UpdateWorkItem();
             }
         }
 
@@ -143,13 +119,14 @@ namespace ElektroOffer_app
 
                 _selectedLocation = value;
 
-                OnPropertyChanged();
                 UpdateWorkItem();
+
+                OnPropertyChanged(nameof(SelectedLocation));
             }
         }
 
         // =========================================================
-        // 💰 WORK ITEM
+        // WORK ITEM
         // =========================================================
         public PriceItems? WorkItem
         {
@@ -163,7 +140,7 @@ namespace ElektroOffer_app
         }
 
         // =========================================================
-        // 📦 MATERIAL ITEM
+        // MATERIAL ITEM
         // =========================================================
         public Material? MaterialItem
         {
@@ -177,7 +154,7 @@ namespace ElektroOffer_app
         }
 
         // =========================================================
-        // 🔢 MNOŽSTVÍ
+        // QUANTITY
         // =========================================================
         public double Quantity
         {
@@ -193,51 +170,97 @@ namespace ElektroOffer_app
         }
 
         // =========================================================
-        // 💰 TOTAL
+        // TOTAL
         // =========================================================
         public double Total
         {
             get
             {
                 if (WorkItem != null)
-                {
-                    return WorkItem.BasePrice *
-                           WorkItem.MaterialCoef *
-                           WorkItem.PositionCoef *
-                           Quantity;
-                }
+                    return WorkItem.BasePrice * WorkItem.MaterialCoef * WorkItem.PositionCoef * Quantity;
 
                 if (MaterialItem != null)
-                {
                     return MaterialItem.Price * Quantity;
-                }
 
                 return 0;
             }
         }
 
         // =========================================================
-        // 📏 NAČTENÍ UNIT Z TASK
+        // 📏 UNIT LOAD
         // =========================================================
         private void LoadWorkUnit()
         {
-            if (string.IsNullOrWhiteSpace(SelectedTask))
-            {
-                WorkUnit = null;
-                return;
-            }
-
             using var db = new AppDbContext();
 
             WorkUnit = db.PriceItems
-                .AsNoTracking()
                 .Where(x => x.Task == SelectedTask)
                 .Select(x => x.Unit)
                 .FirstOrDefault();
         }
 
         // =========================================================
-        // 🔄 DB UPDATE WORK ITEM
+        // 🔽 FILTER 1: SPECIFICATIONS
+        // =========================================================
+        private void LoadSpecifications()
+        {
+            AvailableSpecifications.Clear();
+
+            using var db = new AppDbContext();
+
+            var list = db.PriceItems
+                .Where(x => x.Task == SelectedTask)
+                .Select(x => x.Specification)
+                .Distinct()
+                .ToList();
+
+            foreach (var item in list)
+                AvailableSpecifications.Add(item);
+        }
+
+        // =========================================================
+        // 🔽 FILTER 2: MATERIALS
+        // =========================================================
+        private void LoadMaterials()
+        {
+            AvailableMaterials.Clear();
+
+            using var db = new AppDbContext();
+
+            var list = db.PriceItems
+                .Where(x => x.Task == SelectedTask &&
+                            x.Specification == SelectedSpecification)
+                .Select(x => x.Material)
+                .Distinct()
+                .ToList();
+
+            foreach (var item in list)
+                AvailableMaterials.Add(item);
+        }
+
+        // =========================================================
+        // 🔽 FILTER 3: LOCATIONS
+        // =========================================================
+        private void LoadLocations()
+        {
+            AvailableLocations.Clear();
+
+            using var db = new AppDbContext();
+
+            var list = db.PriceItems
+                .Where(x => x.Task == SelectedTask &&
+                            x.Specification == SelectedSpecification &&
+                            x.Material == SelectedMaterial)
+                .Select(x => x.Location)
+                .Distinct()
+                .ToList();
+
+            foreach (var item in list)
+                AvailableLocations.Add(item);
+        }
+
+        // =========================================================
+        // UPDATE RESULT
         // =========================================================
         private void UpdateWorkItem()
         {
@@ -253,19 +276,44 @@ namespace ElektroOffer_app
             using var db = new AppDbContext();
 
             WorkItem = db.PriceItems
-                .AsNoTracking()
                 .FirstOrDefault(x =>
                     x.Task == SelectedTask &&
                     x.Specification == SelectedSpecification &&
                     x.Material == SelectedMaterial &&
-                    x.Location == SelectedLocation
-                );
-
-            OnPropertyChanged(nameof(Total));
+                    x.Location == SelectedLocation);
         }
 
         // =========================================================
-        // NOTIFIKACE UI
+        // RESETY
+        // =========================================================
+        private void ResetBelowTask()
+        {
+            SelectedSpecification = null;
+            SelectedMaterial = null;
+            SelectedLocation = null;
+
+            AvailableSpecifications.Clear();
+            AvailableMaterials.Clear();
+            AvailableLocations.Clear();
+        }
+
+        private void ResetBelowSpecification()
+        {
+            SelectedMaterial = null;
+            SelectedLocation = null;
+
+            AvailableMaterials.Clear();
+            AvailableLocations.Clear();
+        }
+
+        private void ResetBelowMaterial()
+        {
+            SelectedLocation = null;
+            AvailableLocations.Clear();
+        }
+
+        // =========================================================
+        // NOTIFY
         // =========================================================
         public event PropertyChangedEventHandler? PropertyChanged;
 
