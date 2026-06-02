@@ -21,7 +21,23 @@ namespace ElektroOffer_app
         private string? _selectedLocation;
 
         // =========================================================
-        // 🔒 LOCKY PRO KASKÁDU (NOVÉ)
+        // 📏 UNIT PRO WORK (NOVÉ)
+        // =========================================================
+        private string? _workUnit;
+
+        public string? WorkUnit
+        {
+            get => _workUnit;
+            set
+            {
+                if (_workUnit == value) return;
+                _workUnit = value;
+                OnPropertyChanged();
+            }
+        }
+
+        // =========================================================
+        // 🔒 LOCKY PRO KASKÁDU
         // =========================================================
         public bool CanSelectSpecification => !string.IsNullOrWhiteSpace(SelectedTask);
         public bool CanSelectMaterial => CanSelectSpecification && !string.IsNullOrWhiteSpace(SelectedSpecification);
@@ -39,12 +55,13 @@ namespace ElektroOffer_app
 
                 _selectedTask = value;
 
-                // 🔥 reset nižších úrovní
+                // 🔥 RESET KASKÁDY
                 _selectedSpecification = null;
                 _selectedMaterial = null;
                 _selectedLocation = null;
 
                 WorkItem = null;
+                WorkUnit = null;
 
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(CanSelectSpecification));
@@ -54,6 +71,9 @@ namespace ElektroOffer_app
                 OnPropertyChanged(nameof(SelectedSpecification));
                 OnPropertyChanged(nameof(SelectedMaterial));
                 OnPropertyChanged(nameof(SelectedLocation));
+
+                // 🔥 načtení UNIT
+                LoadWorkUnit();
 
                 UpdateWorkItem();
             }
@@ -71,7 +91,6 @@ namespace ElektroOffer_app
 
                 _selectedSpecification = value;
 
-                // reset nižších
                 _selectedMaterial = null;
                 _selectedLocation = null;
 
@@ -89,7 +108,7 @@ namespace ElektroOffer_app
         }
 
         // =========================================================
-        // MATERIAL (WORK FILTER)
+        // MATERIAL
         // =========================================================
         public string? SelectedMaterial
         {
@@ -100,7 +119,6 @@ namespace ElektroOffer_app
 
                 _selectedMaterial = value;
 
-                // reset location
                 _selectedLocation = null;
 
                 WorkItem = null;
@@ -131,7 +149,7 @@ namespace ElektroOffer_app
         }
 
         // =========================================================
-        // WORK ITEM
+        // 💰 WORK ITEM
         // =========================================================
         public PriceItems? WorkItem
         {
@@ -145,7 +163,7 @@ namespace ElektroOffer_app
         }
 
         // =========================================================
-        // MATERIAL ITEM
+        // 📦 MATERIAL ITEM
         // =========================================================
         public Material? MaterialItem
         {
@@ -159,7 +177,7 @@ namespace ElektroOffer_app
         }
 
         // =========================================================
-        // MNOŽSTVÍ
+        // 🔢 MNOŽSTVÍ
         // =========================================================
         public double Quantity
         {
@@ -199,7 +217,27 @@ namespace ElektroOffer_app
         }
 
         // =========================================================
-        // DB UPDATE LOGIKA
+        // 📏 NAČTENÍ UNIT Z TASK
+        // =========================================================
+        private void LoadWorkUnit()
+        {
+            if (string.IsNullOrWhiteSpace(SelectedTask))
+            {
+                WorkUnit = null;
+                return;
+            }
+
+            using var db = new AppDbContext();
+
+            WorkUnit = db.PriceItems
+                .AsNoTracking()
+                .Where(x => x.Task == SelectedTask)
+                .Select(x => x.Unit)
+                .FirstOrDefault();
+        }
+
+        // =========================================================
+        // 🔄 DB UPDATE WORK ITEM
         // =========================================================
         private void UpdateWorkItem()
         {

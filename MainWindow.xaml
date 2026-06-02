@@ -35,7 +35,7 @@
                    Text="{Binding GrandTotal, StringFormat=N2}" />
 
         <!-- ========================= -->
-        <!-- 🔧 PRÁCE (ROZŠÍŘENO O KOEFICIENTY) -->
+        <!-- 🔧 PRÁCE -->
         <!-- ========================= -->
         <StackPanel Grid.Row="1" Margin="0,0,0,20">
 
@@ -59,19 +59,13 @@
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
 
-                        <!-- ========================= -->
-                        <!-- JEDEN ŘÁDEK PRÁCE -->
-                        <!-- ========================= -->
                         <StackPanel Orientation="Horizontal" Margin="0,5">
 
-                            <!-- ========================= -->
-                            <!-- 1) TASK (ÚKON) -->
-                            <!-- ========================= -->
+                            <!-- 1) TASK -->
                             <ComboBox Width="150"
                                       ItemsSource="{Binding DataContext.Tasks, RelativeSource={RelativeSource AncestorType=Window}}"
                                       SelectedItem="{Binding SelectedTask, Mode=TwoWay}" />
 
-                            <!-- ========================= -->
                             <!-- 2) SPECIFICATION -->
                             <ComboBox Width="150"
                                       Margin="5,0,0,0"
@@ -79,43 +73,34 @@
                                       ItemsSource="{Binding DataContext.Specifications, RelativeSource={RelativeSource AncestorType=Window}}"
                                       SelectedItem="{Binding SelectedSpecification, Mode=TwoWay}" />
 
-                            <!-- ========================= -->
-                            <!-- 3) MATERIAL (v rámci práce) -->
-                            <!-- ========================= -->
+                            <!-- 3) MATERIAL -->
                             <ComboBox Width="150"
                                       Margin="5,0,0,0"
                                       IsEnabled="{Binding CanSelectMaterial}"
                                       ItemsSource="{Binding DataContext.Material, RelativeSource={RelativeSource AncestorType=Window}}"
                                       SelectedItem="{Binding SelectedMaterial, Mode=TwoWay}" />
 
-                            <!-- ========================= -->
                             <!-- 4) LOCATION -->
-                            <!-- ========================= -->
                             <ComboBox Width="120"
                                       Margin="5,0,0,0"
                                       IsEnabled="{Binding CanSelectLocation}"
                                       ItemsSource="{Binding DataContext.Locations, RelativeSource={RelativeSource AncestorType=Window}}"
                                       SelectedItem="{Binding SelectedLocation, Mode=TwoWay}" />
 
-                            <!-- ========================= -->
                             <!-- 5) MNOŽSTVÍ -->
-                            <!-- ========================= -->
                             <TextBox Width="60"
                                      Margin="10,0,0,0"
                                      Text="{Binding Quantity, UpdateSourceTrigger=PropertyChanged}" />
 
-                            <!-- ========================= -->
-                            <!-- 6) JEDNOTKA (z Task nebo Material) -->
-                            <!-- ========================= -->
-                            <TextBlock Width="50"
+                            <!-- 6) JEDNOTKA (TASK UNIT) -->
+                            <TextBlock Width="60"
                                        Margin="10,0,0,0"
                                        VerticalAlignment="Center"
-                                       Text="{Binding SelectedMaterial.Unit}" />
+                                       FontWeight="SemiBold"
+                                       Foreground="Gray"
+                                       Text="{Binding WorkUnit}" />
 
-                            <!-- ========================= -->
-                            <!-- 7) CENA (KOEFICIENTOVÝ VÝPOČET) -->
-                            <!-- MaterialCoef * PositionCoef -->
-                            <!-- ========================= -->
+                            <!-- 7) CENA -->
                             <TextBlock Width="120"
                                        Margin="10,0,0,0"
                                        FontWeight="Bold"
@@ -131,7 +116,7 @@
         </StackPanel>
 
         <!-- ========================= -->
-        <!-- 📦 MATERIÁL (BEZ ZMĚN LOGIKY) -->
+        <!-- 📦 MATERIÁL -->
         <!-- ========================= -->
         <StackPanel Grid.Row="2">
 
