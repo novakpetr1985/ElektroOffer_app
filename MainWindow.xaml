@@ -16,26 +16,9 @@
         </Grid.RowDefinitions>
 
         <!-- ========================================================= -->
-        <!-- 💰 CELKOVÁ CENA (GRAND TOTAL) -->
-        <!-- ========================================================= -->
-        <!-- ✔ Formát: tisíce + Kč -->
-        <!-- ✔ Bez desetinných míst -->
-        <TextBlock Grid.Row="0"
-                   FontSize="26"
-                   FontWeight="Bold"
-                   Foreground="DarkGreen"
-                   Margin="0,0,0,20">
-            <TextBlock.Text>
-                <MultiBinding StringFormat="{}{0:N0} Kč">
-                    <Binding Path="GrandTotal"/>
-                </MultiBinding>
-            </TextBlock.Text>
-        </TextBlock>
-
-        <!-- ========================================================= -->
         <!-- 🔧 SEKCE: PRÁCE -->
         <!-- ========================================================= -->
-        <StackPanel Grid.Row="1" Margin="0,0,0,20">
+        <StackPanel Grid.Row="0" Margin="0,0,0,20">
 
             <!-- ========================= -->
             <!-- HLAVIČKA SEKCE -->
@@ -187,7 +170,7 @@
         <!-- ========================================================= -->
         <!-- 📦 SEKCE: MATERIÁL -->
         <!-- ========================================================= -->
-        <StackPanel Grid.Row="2" Margin="0,0,0,20">
+        <StackPanel Grid.Row="1" Margin="0,0,0,20">
 
             <!-- ========================= -->
             <!-- HLAVIČKA SEKCE -->
@@ -311,7 +294,7 @@
         <!-- ========================================================= -->
         <!-- 📊 SPOLEČNÝ ROZPIS (PRÁCE + MATERIÁL) -->
         <!-- ========================================================= -->
-        <GroupBox Grid.Row="3"
+        <GroupBox Grid.Row="2"
                   Header="DETAILNÍ ROZPIS (PRÁCE + MATERIÁL)">
 
             <ListView ItemsSource="{Binding BudgetItems}">
@@ -338,6 +321,24 @@
             </ListView>
 
         </GroupBox>
+
+
+        <!-- ========================================================= -->
+        <!-- 💰 CELKOVÁ CENA (GRAND TOTAL) -->
+        <!-- ========================================================= -->
+        <!-- ✔ Formát: tisíce + Kč -->
+        <!-- ✔ Bez desetinných míst -->
+        <TextBlock Grid.Row="3"
+                   FontSize="26"
+                   FontWeight="Bold"
+                   Foreground="DarkGreen"
+                   Margin="0,0,0,20">
+            <TextBlock.Text>
+                <MultiBinding StringFormat="{}{0:N0} Kč">
+                    <Binding Path="GrandTotal"/>
+                </MultiBinding>
+            </TextBlock.Text>
+        </TextBlock>
 
     </Grid>
 </Window>
