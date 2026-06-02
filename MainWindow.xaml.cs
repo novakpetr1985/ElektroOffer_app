@@ -85,7 +85,7 @@ namespace ElektroOffer_app
             }
 
             // =====================================================
-            // INIT ŘÁDKŮ
+            // INIT ŘÁDKŮ (start UI)
             // =====================================================
             for (int i = 0; i < 5; i++)
             {
@@ -124,6 +124,61 @@ namespace ElektroOffer_app
         }
 
         // =========================================================
+        // ➖ DELETE ROW
+        // =========================================================
+        private void DeleteWorkItem_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is FrameworkElement fe &&
+                fe.DataContext is CalculationItems item)
+            {
+                item.PropertyChanged -= Item_PropertyChanged;
+                WorkCalcItems.Remove(item);
+                Recalculate();
+            }
+        }
+
+        private void DeleteMaterialItem_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is FrameworkElement fe &&
+                fe.DataContext is CalculationItems item)
+            {
+                item.PropertyChanged -= Item_PropertyChanged;
+                MaterialItems.Remove(item);
+                Recalculate();
+            }
+        }
+
+        // =========================================================
+        // 🧹 RESET ROW
+        // =========================================================
+        private void ResetWorkItem_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is FrameworkElement fe &&
+                fe.DataContext is CalculationItems item)
+            {
+                item.SelectedTask = null;
+                item.SelectedSpecification = null;
+                item.SelectedMaterial = null;
+                item.SelectedLocation = null;
+                item.Quantity = 0;
+
+                Recalculate();
+            }
+        }
+
+        private void ResetMaterialItem_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is FrameworkElement fe &&
+                fe.DataContext is CalculationItems item)
+            {
+                item.MaterialItem = null;
+                item.Quantity = 0;
+
+                Recalculate();
+            }
+        }
+
+        // =========================================================
         // 📌 COLLECTION CHANGE HANDLERS
         // =========================================================
         private void WorkCalcItems_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
@@ -145,7 +200,7 @@ namespace ElektroOffer_app
         }
 
         // =========================================================
-        // 🔥 KLÍČOVÝ LIVE UPDATE
+        // 🔥 LIVE UPDATE
         // =========================================================
         private void Item_PropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
