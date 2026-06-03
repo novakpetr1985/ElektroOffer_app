@@ -131,7 +131,8 @@ namespace ElektroOffer_app
         // =========================================================
         private void DeleteWorkItem_Click(object sender, RoutedEventArgs e)
         {
-            if (MessageBox.Show("Opravdu odebrat?", "Potvrzení",
+            // potvrzovací dialog
+            if (MessageBox.Show("Opravdu chcete položku odebrat?", "Potvrzení",
                 MessageBoxButton.OKCancel, MessageBoxImage.Question) != MessageBoxResult.OK)
                 return;
 
@@ -146,7 +147,8 @@ namespace ElektroOffer_app
 
         private void DeleteMaterialItem_Click(object sender, RoutedEventArgs e)
         {
-            if (MessageBox.Show("Opravdu odebrat?", "Potvrzení",
+            // potvrzovací dialog
+            if (MessageBox.Show("Opravdu chcete položku odebrat?", "Potvrzení",
                 MessageBoxButton.OKCancel, MessageBoxImage.Question) != MessageBoxResult.OK)
                 return;
 
@@ -164,6 +166,11 @@ namespace ElektroOffer_app
         // =========================================================
         private void ResetWorkItem_Click(object sender, RoutedEventArgs e)
         {
+            // potvrzovací dialog
+            if (MessageBox.Show("Opravdu chcete vymazat hodnoty?", "Potvrzení",
+                MessageBoxButton.OKCancel, MessageBoxImage.Question) != MessageBoxResult.OK)
+                return;
+
             if (sender is FrameworkElement fe &&
                 fe.DataContext is CalculationItems item)
             {
@@ -175,6 +182,11 @@ namespace ElektroOffer_app
 
         private void ResetMaterialItem_Click(object sender, RoutedEventArgs e)
         {
+            // potvrzovací dialog
+            if (MessageBox.Show("Opravdu chcete vymazat hodnoty?", "Potvrzení",
+                MessageBoxButton.OKCancel, MessageBoxImage.Question) != MessageBoxResult.OK)
+                return;
+
             if (sender is FrameworkElement fe &&
                 fe.DataContext is CalculationItems item)
             {
