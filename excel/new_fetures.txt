@@ -1,0 +1,6 @@
+1. Save / Load vs. Export / Import nebo ukládání celého projektu do DB s přepisováním
+2. Export / Tisk z celkového souču do PDF
+3. Naplnění tabulek pro nyní
+4. Změna struktury DB tabulek
+5. Automatizované testy Selenium / Playwright / Cypress
+6. Propojení na testy přes Node.js
