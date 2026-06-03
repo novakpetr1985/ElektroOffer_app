@@ -60,6 +60,22 @@ namespace ElektroOffer_app.Models
         }
 
         // =========================================================
+        // 🔢 QUANTITY - množství
+        // =========================================================
+        private double _quantity;
+
+        public double Quantity
+        {
+            get => _quantity;
+            set
+            {
+                if (Math.Abs(_quantity - value) < 0.0001) return;
+                _quantity = value;
+                OnPropertyChanged();
+            }
+        }
+
+        // =========================================================
         // 💰 PRICE - cena položky
         // =========================================================
         private double _price;

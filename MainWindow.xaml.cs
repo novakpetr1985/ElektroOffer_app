@@ -284,6 +284,9 @@ namespace ElektroOffer_app
                     // měrná jednotka práce (hod, ks, apod.)
                     Unit = x.WorkUnit,
 
+                    // množství
+                    Quantity = x.Quantity,
+
                     // výsledná cena řádku
                     Price = x.Total
                 });
@@ -303,6 +306,9 @@ namespace ElektroOffer_app
 
                     // měrná jednotka materiálu (ks, m, balení, ...)
                     Unit = x.MaterialItem?.Unit ?? "",
+
+                    // množství
+                    Quantity = x.Quantity,
 
                     // výsledná cena řádku
                     Price = x.Total

@@ -339,15 +339,15 @@
             </Border>
 
         </StackPanel>
-
+        
         <!-- ========================================================= -->
         <!-- 📊 SPOLEČNÝ ROZPIS (PRÁCE + MATERIÁL) -->
         <!-- ========================================================= -->
         <GroupBox Grid.Row="2">
             <GroupBox.Header>
                 <TextBlock Text="DETAILNÍ ROZPOČET"
-                   FontSize="18"
-                   FontWeight="Bold"/>
+           FontSize="18"
+           FontWeight="Bold"/>
             </GroupBox.Header>
 
             <ListView ItemsSource="{Binding BudgetItems}">
@@ -356,12 +356,12 @@
                     <GridView>
 
                         <GridViewColumn Header="Typ"
-                                Width="100"
-                                DisplayMemberBinding="{Binding Type}"/>
+                        Width="100"
+                        DisplayMemberBinding="{Binding Type}"/>
 
                         <GridViewColumn Header="Popis"
-                                Width="350"
-                                DisplayMemberBinding="{Binding Description}"/>
+                        Width="350"
+                        DisplayMemberBinding="{Binding Description}"/>
 
                         <!-- ✔ NOVĚ: Množství + MJ -->
                         <GridViewColumn Width="100">
@@ -376,10 +376,17 @@
 
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>
-                                    <TextBlock Text="{Binding Unit}"
-                                        HorizontalAlignment="Right"
-                                        TextAlignment="Right"
-                                        Width="100"/>
+                                    <!-- ✔ OPRAVA: zobrazí "Xm" místo pouhého "m" -->
+                                    <TextBlock HorizontalAlignment="Right"
+                                            TextAlignment="Right"
+                                            Width="100">
+                                        <TextBlock.Text>
+                                            <MultiBinding StringFormat="{}{0:N0}{1}">
+                                                <Binding Path="Quantity"/>
+                                                <Binding Path="Unit"/>
+                                            </MultiBinding>
+                                        </TextBlock.Text>
+                                    </TextBlock>
                                 </DataTemplate>
                             </GridViewColumn.CellTemplate>
                         </GridViewColumn>
@@ -389,19 +396,19 @@
                             <GridViewColumn.HeaderTemplate>
                                 <DataTemplate>
                                     <TextBlock Text="Cena"
-                                       FontWeight="Bold"
-                                       HorizontalAlignment="Right"
-                                       TextAlignment="Right"
-                                       Width="100"/>
+                                        FontWeight="Bold"
+                                        HorizontalAlignment="Right"
+                                        TextAlignment="Right"
+                                        Width="100"/>
                                 </DataTemplate>
                             </GridViewColumn.HeaderTemplate>
 
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>
                                     <TextBlock Text="{Binding Price, StringFormat={}{0:N0} Kč}"
-                                       HorizontalAlignment="Right"
-                                       TextAlignment="Right"
-                                       Width="100"/>
+                                        HorizontalAlignment="Right"
+                                        TextAlignment="Right"
+                                        Width="100"/>
                                 </DataTemplate>
                             </GridViewColumn.CellTemplate>
                         </GridViewColumn>
