@@ -50,13 +50,19 @@
                     <ColumnDefinition Width="70"/>
                 </Grid.ColumnDefinitions>
 
-                <TextBlock Grid.Column="1" Text="Úkon" FontWeight="Bold"/>
+                <TextBlock Grid.Column="1" Text="Úkon"      FontWeight="Bold"/>
                 <TextBlock Grid.Column="2" Text="Upřesnění" FontWeight="Bold"/>
-                <TextBlock Grid.Column="3" Text="Materiál" FontWeight="Bold"/>
-                <TextBlock Grid.Column="4" Text="Umístění" FontWeight="Bold"/>
-                <TextBlock Grid.Column="5" Text="Množství" FontWeight="Bold"/>
-                <TextBlock Grid.Column="6" Text="MJ" FontWeight="Bold"/>
-                <TextBlock Grid.Column="7" Text="Cena" FontWeight="Bold"/>
+                <TextBlock Grid.Column="3" Text="Materiál"  FontWeight="Bold"/>
+                <TextBlock Grid.Column="4" Text="Umístění"  FontWeight="Bold"/>
+
+                <!-- 🔴 ZMĚNA: číselné sloupce zarovnány shodně s obsahem -->
+                <TextBlock Grid.Column="5" Text="Množství"  FontWeight="Bold"
+                           HorizontalAlignment="Right" TextAlignment="Right"/>
+                <TextBlock Grid.Column="6" Text="MJ"        FontWeight="Bold"
+                           HorizontalAlignment="Center" TextAlignment="Center"/>
+                <TextBlock Grid.Column="7" Text="Cena"      FontWeight="Bold"
+                           HorizontalAlignment="Right" TextAlignment="Right"/>
+
             </Grid>
 
             <!-- ========================= -->
@@ -117,12 +123,17 @@
                                           SelectedItem="{Binding SelectedLocation, Mode=TwoWay}"/>
 
                                 <!-- MNOŽSTVÍ -->
+                                <!-- 🔴 ZMĚNA: číslo zarovnáno doprava -->
                                 <TextBox Grid.Column="5"
+                                         TextAlignment="Right"
                                          Text="{Binding Quantity, UpdateSourceTrigger=PropertyChanged}"/>
 
                                 <!-- MJ -->
+                                <!-- 🔴 ZMĚNA: jednotka vycentrována -->
                                 <TextBlock Grid.Column="6"
                                            VerticalAlignment="Center"
+                                           HorizontalAlignment="Center"
+                                           TextAlignment="Center"
                                            Foreground="Gray"
                                            Text="{Binding WorkUnit}"/>
 
@@ -131,6 +142,7 @@
                                 <TextBlock Grid.Column="7"
                                            FontWeight="Bold"
                                            Foreground="DarkBlue"
+                                           VerticalAlignment="Center"
                                            HorizontalAlignment="Right"
                                            TextAlignment="Right"
                                            Text="{Binding Total, StringFormat={}{0:N0} Kč}"/>
@@ -152,7 +164,7 @@
             </ItemsControl>
 
             <!-- ========================================================= -->
-            <!-- ➕ NOVÉ: SOUČET PRÁCE -->
+            <!-- ➕ SOUČET PRÁCE -->
             <!-- ========================================================= -->
             <!-- 🔴 ZMĚNA: StackPanel -> Grid kvůli zarovnání -->
             <Border Margin="0,10,0,0"
@@ -174,7 +186,8 @@
                                FontSize="16"
                                FontWeight="Bold"
                                Foreground="DarkBlue"
-                               HorizontalAlignment="Right"/>
+                               HorizontalAlignment="Right"
+                               TextAlignment="Right"/>
                 </Grid>
 
             </Border>
@@ -213,10 +226,16 @@
                     <ColumnDefinition Width="70"/>
                 </Grid.ColumnDefinitions>
 
-                <TextBlock Grid.Column="1" Text="Název" FontWeight="Bold"/>
-                <TextBlock Grid.Column="2" Text="Množství" FontWeight="Bold"/>
-                <TextBlock Grid.Column="3" Text="MJ" FontWeight="Bold"/>
-                <TextBlock Grid.Column="4" Text="Cena" FontWeight="Bold"/>
+                <TextBlock Grid.Column="1" Text="Název"    FontWeight="Bold"/>
+
+                <!-- 🔴 ZMĚNA: číselné sloupce zarovnány shodně s obsahem -->
+                <TextBlock Grid.Column="2" Text="Množství" FontWeight="Bold"
+                           HorizontalAlignment="Right" TextAlignment="Right"/>
+                <TextBlock Grid.Column="3" Text="MJ"       FontWeight="Bold"
+                           HorizontalAlignment="Center" TextAlignment="Center"/>
+                <TextBlock Grid.Column="4" Text="Cena"     FontWeight="Bold"
+                           HorizontalAlignment="Right" TextAlignment="Right"/>
+
             </Grid>
 
             <!-- ========================= -->
@@ -254,15 +273,22 @@
                                           DisplayMemberPath="Name"
                                           SelectedItem="{Binding MaterialItem, Mode=TwoWay}"/>
 
+                                <!-- 🔴 ZMĚNA: číslo zarovnáno doprava -->
                                 <TextBox Grid.Column="2"
+                                         TextAlignment="Right"
                                          Text="{Binding Quantity, UpdateSourceTrigger=PropertyChanged}"/>
 
+                                <!-- 🔴 ZMĚNA: jednotka vycentrována -->
                                 <TextBlock Grid.Column="3"
+                                           VerticalAlignment="Center"
+                                           HorizontalAlignment="Center"
+                                           TextAlignment="Center"
                                            Text="{Binding MaterialItem.Unit}"/>
 
                                 <!-- 🔴 ZMĚNA: cena doprava -->
                                 <TextBlock Grid.Column="4"
                                            FontWeight="Bold"
+                                           VerticalAlignment="Center"
                                            HorizontalAlignment="Right"
                                            TextAlignment="Right"
                                            Text="{Binding Total, StringFormat={}{0:N0} Kč}"/>
@@ -283,7 +309,7 @@
             </ItemsControl>
 
             <!-- ========================================================= -->
-            <!-- ➕ NOVÉ: SOUČET MATERIÁLU -->
+            <!-- ➕ SOUČET MATERIÁLU -->
             <!-- ========================================================= -->
             <!-- 🔴 ZMĚNA: StackPanel -> Grid -->
             <Border Margin="0,10,0,0"
@@ -300,11 +326,14 @@
                     <TextBlock Text="Součet materiálu"
                                FontWeight="Bold"/>
 
+                    <!-- 🔴 ZMĚNA: chybějící HorizontalAlignment="Right" doplněn -->
                     <TextBlock Grid.Column="1"
                                Text="{Binding MaterialTotal, StringFormat={}{0:N0} Kč}"
                                FontSize="16"
                                FontWeight="Bold"
-                               Foreground="DarkBlue"/>
+                               Foreground="DarkBlue"
+                               HorizontalAlignment="Right"
+                               TextAlignment="Right"/>
                 </Grid>
 
             </Border>
@@ -330,9 +359,26 @@
                                         Width="400"
                                         DisplayMemberBinding="{Binding Description}"/>
 
-                        <GridViewColumn Header="Cena"
-                                        Width="120"
-                                        DisplayMemberBinding="{Binding Price, StringFormat={}{0:N0} Kč}"/>
+                        <!-- 🔴 ZMĚNA: sloupec Cena zarovnán doprava přes CellTemplate -->
+                        <GridViewColumn Width="120">
+                            <GridViewColumn.HeaderTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="Cena"
+                                               FontWeight="Bold"
+                                               HorizontalAlignment="Right"
+                                               TextAlignment="Right"
+                                               Width="100"/>
+                                </DataTemplate>
+                            </GridViewColumn.HeaderTemplate>
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Price, StringFormat={}{0:N0} Kč}"
+                                               HorizontalAlignment="Right"
+                                               TextAlignment="Right"
+                                               Width="100"/>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
 
                     </GridView>
 
@@ -363,7 +409,8 @@
                        FontWeight="Bold"
                        Foreground="DarkGreen"
                        Text="{Binding GrandTotal, StringFormat={}{0:N0} Kč}"
-                       HorizontalAlignment="Right"/>
+                       HorizontalAlignment="Right"
+                       TextAlignment="Right"/>
 
         </Grid>
 
