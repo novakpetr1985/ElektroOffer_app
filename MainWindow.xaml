@@ -344,7 +344,7 @@
         <!-- 📊 SPOLEČNÝ ROZPIS (PRÁCE + MATERIÁL) -->
         <!-- ========================================================= -->
         <GroupBox Grid.Row="2"
-                  Header="DETAILNÍ ROZPIS (PRÁCE + MATERIÁL)">
+                  Header="DETAILNÍ ROZPOČET">
 
             <ListView ItemsSource="{Binding BudgetItems}">
 
