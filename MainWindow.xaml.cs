@@ -281,7 +281,7 @@ namespace ElektroOffer_app
                 BudgetItems.Add(new BudgetItem
                 {
                     Type = "MATERIÁL",
-                    Description = x.MaterialItem?.Name,
+                    Description = x.MaterialItem!.Name,
                     Price = x.Total
                 });
             }
