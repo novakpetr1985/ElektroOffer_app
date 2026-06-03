@@ -162,36 +162,72 @@ namespace ElektroOffer_app
         }
 
         // =========================================================
-        // 🧹 RESET
+        // 🧹 RESET WORK ITEM
         // =========================================================
         private void ResetWorkItem_Click(object sender, RoutedEventArgs e)
         {
-            // potvrzovací dialog
-            if (MessageBox.Show("Opravdu chcete vymazat hodnoty?", "Potvrzení",
-                MessageBoxButton.OKCancel, MessageBoxImage.Question) != MessageBoxResult.OK)
-                return;
-
             if (sender is FrameworkElement fe &&
                 fe.DataContext is CalculationItems item)
             {
+                // zjištění, zda má řádek nějaká data
+                bool isFilled =
+                    item.SelectedTask != null ||
+                    item.SelectedSpecification != null ||
+                    item.SelectedMaterial != null ||
+                    item.SelectedLocation != null ||
+                    item.Quantity > 0;
+
+                // potvrzení jen pokud je řádek vyplněný
+                if (isFilled)
+                {
+                    if (MessageBox.Show(
+                        "Opravdu chcete vymazat vyplněný řádek práce?",
+                        "Potvrzení",
+                        MessageBoxButton.OKCancel,
+                        MessageBoxImage.Question) != MessageBoxResult.OK)
+                        return;
+                }
+
+                // reset hodnot
                 item.SelectedTask = null;
+                item.SelectedSpecification = null;
+                item.SelectedMaterial = null;
+                item.SelectedLocation = null;
                 item.Quantity = 0;
+
                 Recalculate();
             }
         }
 
+
+        // =========================================================
+        // 🧹 RESET MATERIAL ITEM
+        // =========================================================
         private void ResetMaterialItem_Click(object sender, RoutedEventArgs e)
         {
-            // potvrzovací dialog
-            if (MessageBox.Show("Opravdu chcete vymazat hodnoty?", "Potvrzení",
-                MessageBoxButton.OKCancel, MessageBoxImage.Question) != MessageBoxResult.OK)
-                return;
-
             if (sender is FrameworkElement fe &&
                 fe.DataContext is CalculationItems item)
             {
+                // zjištění, zda je řádek vyplněný
+                bool isFilled =
+                    item.MaterialItem != null ||
+                    item.Quantity > 0;
+
+                // potvrzení jen pokud má data
+                if (isFilled)
+                {
+                    if (MessageBox.Show(
+                        "Opravdu chcete vymazat vyplněný řádek materiálu?",
+                        "Potvrzení",
+                        MessageBoxButton.OKCancel,
+                        MessageBoxImage.Question) != MessageBoxResult.OK)
+                        return;
+                }
+
+                // reset hodnot
                 item.MaterialItem = null;
                 item.Quantity = 0;
+
                 Recalculate();
             }
         }
