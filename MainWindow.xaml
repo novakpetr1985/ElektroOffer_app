@@ -343,8 +343,12 @@
         <!-- ========================================================= -->
         <!-- 📊 SPOLEČNÝ ROZPIS (PRÁCE + MATERIÁL) -->
         <!-- ========================================================= -->
-        <GroupBox Grid.Row="2"
-                  Header="DETAILNÍ ROZPOČET">
+        <GroupBox Grid.Row="2">
+            <GroupBox.Header>
+                <TextBlock Text="DETAILNÍ ROZPOČET"
+                   FontSize="18"
+                   FontWeight="Bold"/>
+            </GroupBox.Header>
 
             <ListView ItemsSource="{Binding BudgetItems}">
 
@@ -352,36 +356,57 @@
                     <GridView>
 
                         <GridViewColumn Header="Typ"
-                                        Width="100"
-                                        DisplayMemberBinding="{Binding Type}"/>
+                                Width="100"
+                                DisplayMemberBinding="{Binding Type}"/>
 
                         <GridViewColumn Header="Popis"
-                                        Width="400"
-                                        DisplayMemberBinding="{Binding Description}"/>
+                                Width="350"
+                                DisplayMemberBinding="{Binding Description}"/>
 
-                        <!-- 🔴 ZMĚNA: sloupec Cena zarovnán doprava přes CellTemplate -->
+                        <!-- ✔ NOVĚ: Množství + MJ -->
+                        <GridViewColumn Width="100">
+                            <GridViewColumn.HeaderTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="Množství (MJ)"
+                                        HorizontalAlignment="Center"
+                                        TextAlignment="Center"
+                                        Width="100"/>
+                                </DataTemplate>
+                            </GridViewColumn.HeaderTemplate>
+
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Unit}"
+                                        HorizontalAlignment="Right"
+                                        TextAlignment="Right"
+                                        Width="100"/>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+
+                        <!-- Cena -->
                         <GridViewColumn Width="120">
                             <GridViewColumn.HeaderTemplate>
                                 <DataTemplate>
                                     <TextBlock Text="Cena"
-                                               FontWeight="Bold"
-                                               HorizontalAlignment="Right"
-                                               TextAlignment="Right"
-                                               Width="100"/>
+                                       FontWeight="Bold"
+                                       HorizontalAlignment="Right"
+                                       TextAlignment="Right"
+                                       Width="100"/>
                                 </DataTemplate>
                             </GridViewColumn.HeaderTemplate>
+
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>
                                     <TextBlock Text="{Binding Price, StringFormat={}{0:N0} Kč}"
-                                               HorizontalAlignment="Right"
-                                               TextAlignment="Right"
-                                               Width="100"/>
+                                       HorizontalAlignment="Right"
+                                       TextAlignment="Right"
+                                       Width="100"/>
                                 </DataTemplate>
                             </GridViewColumn.CellTemplate>
                         </GridViewColumn>
 
                     </GridView>
-
                 </ListView.View>
 
             </ListView>

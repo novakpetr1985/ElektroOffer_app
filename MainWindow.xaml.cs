@@ -253,35 +253,58 @@ namespace ElektroOffer_app
         }
 
         // =========================================================
-        // 💰 REKALKULACE
+        // 💰 REKALKULACE CEN A ROZPISU
         // =========================================================
         private void Recalculate()
         {
+            // =========================
+            // 💰 CELKOVÉ SOUČTY
+            // =========================
             WorkTotal = WorkCalcItems.Sum(x => x.Total);
             MaterialTotal = MaterialItems.Sum(x => x.Total);
             GrandTotal = WorkTotal + MaterialTotal;
 
             // =========================
-            // 📊 DETAILNÍ ROZPIS
+            // 📊 VYČIŠTĚNÍ ROZPISU
             // =========================
             BudgetItems.Clear();
 
+            // =========================
+            // 🔧 PRÁCE
+            // =========================
             foreach (var x in WorkCalcItems.Where(x => x.Total > 0))
             {
                 BudgetItems.Add(new BudgetItem
                 {
                     Type = "PRÁCE",
+
+                    // popis sestavený z vybraných hodnot
                     Description = $"{x.SelectedTask} / {x.SelectedSpecification} / {x.SelectedMaterial} / {x.SelectedLocation}",
+
+                    // měrná jednotka práce (hod, ks, apod.)
+                    Unit = x.WorkUnit,
+
+                    // výsledná cena řádku
                     Price = x.Total
                 });
             }
 
+            // =========================
+            // 📦 MATERIÁL
+            // =========================
             foreach (var x in MaterialItems.Where(x => x.Total > 0 && x.MaterialItem != null))
             {
                 BudgetItems.Add(new BudgetItem
                 {
                     Type = "MATERIÁL",
+
+                    // název materiálu
                     Description = x.MaterialItem!.Name,
+
+                    // měrná jednotka materiálu (ks, m, balení, ...)
+                    Unit = x.MaterialItem?.Unit ?? "",
+
+                    // výsledná cena řádku
                     Price = x.Total
                 });
             }
