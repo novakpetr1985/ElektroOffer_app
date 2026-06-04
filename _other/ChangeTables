@@ -1,0 +1,218 @@
+-----------------------------------------------------------
+--TASK
+-----------------------------------------------------------
+--CREATE
+CREATE TABLE Tasks (
+    Id INTEGER PRIMARY KEY AUTOINCREMENT,
+    Name TEXT NOT NULL UNIQUE
+);
+
+--MIGRATION
+INSERT INTO Tasks (Name)
+SELECT DISTINCT TRIM(Task)
+FROM PriceItems
+WHERE Task IS NOT NULL;
+
+SELECT * FROM Tasks;
+
+    -----------------------------------------------------------
+    --PRICEMATRIX
+    -----------------------------------------------------------
+    --ZALOŽENÍ
+    CREATE TABLE PriceMatrix (
+        Id INTEGER PRIMARY KEY AUTOINCREMENT,
+        TaskId INTEGER NOT NULL,
+        BasePrice REAL,
+        Unit TEXT,
+        Specification TEXT,
+        MaterialCoef REAL,
+        PositionCoef REAL,
+        FOREIGN KEY (TaskId) REFERENCES Tasks(Id)
+    );
+
+    --PRICEMATRIX MIGRATION
+    INSERT INTO PriceMatrix (
+        TaskId,
+        BasePrice,
+        Unit,
+        Specification,
+        MaterialCoef,
+        PositionCoef
+    )
+    SELECT DISTINCT
+        t.Id,
+        p.BasePrice,
+        p.Unit,
+        p.Specification,
+        p.MaterialCoef,
+        p.PositionCoef
+    FROM PriceItems p
+    JOIN Tasks t ON TRIM(t.Name) = TRIM(p.Task);
+
+    SELECT * FROM PriceMatrix;
+
+-----------------------------------------------------------
+--BASEMATERIALS
+-----------------------------------------------------------
+--CREATE
+CREATE TABLE BaseMaterials (
+    Id INTEGER PRIMARY KEY AUTOINCREMENT,
+    Name TEXT NOT NULL UNIQUE
+);
+
+--MIGRATION
+INSERT INTO BaseMaterials (Name)
+SELECT DISTINCT TRIM(Material)
+FROM PriceItems
+WHERE Material IS NOT NULL;
+
+SELECT * FROM BaseMaterials;
+
+    -----------------------------------------------------------
+    --PRICEMATRIX
+    -----------------------------------------------------------
+    --REFRESH
+    INSERT INTO PriceMatrix (
+        TaskId,
+        BasePrice,
+        Unit,
+        Specification,
+        MaterialCoef,
+        PositionCoef
+    )
+    SELECT DISTINCT
+        t.Id,
+        p.BasePrice,
+        p.Unit,
+        p.Specification,
+        p.MaterialCoef,
+        p.PositionCoef
+    FROM PriceItems p
+    JOIN Tasks t ON TRIM(t.Name) = TRIM(p.Task)
+    JOIN BaseMaterials b ON TRIM(b.Name) = TRIM(p.Material);
+
+    SELECT * FROM PriceMatrix;
+
+-----------------------------------------------------------
+--POSITIONS
+-----------------------------------------------------------
+--CREATE
+CREATE TABLE Positions (
+    Id INTEGER PRIMARY KEY AUTOINCREMENT,
+    Name TEXT NOT NULL UNIQUE
+);
+
+--MIGRATION
+INSERT INTO Positions (Name)
+SELECT DISTINCT TRIM(Location)
+FROM PriceItems
+WHERE Location IS NOT NULL;
+
+SELECT * FROM Positions;
+
+    -----------------------------------------------------------
+    --PRICEMATRIX
+    -----------------------------------------------------------
+    --DELETE
+    DELETE FROM PriceMatrix;
+    
+    --REFRESH
+    INSERT INTO PriceMatrix (
+        TaskId,
+        BasePrice,
+        Unit,
+        Specification,
+        MaterialCoef,
+        PositionCoef
+    )
+    SELECT DISTINCT
+        t.Id,
+        p.BasePrice,
+        p.Unit,
+        p.Specification,
+        p.MaterialCoef,
+        p.PositionCoef
+    FROM PriceItems p
+    JOIN Tasks t ON TRIM(t.Name) = TRIM(p.Task)
+    JOIN BaseMaterials b ON TRIM(b.Name) = TRIM(p.Material)
+    JOIN Positions pz ON TRIM(pz.Name) = TRIM(p.Location);
+
+    SELECT * FROM PriceMatrix;
+
+-----------------------------------------------------------
+--SPECIFICATIONS
+-----------------------------------------------------------
+--CREATE
+CREATE TABLE Specifications (
+    Id INTEGER PRIMARY KEY AUTOINCREMENT,
+    Name TEXT NOT NULL UNIQUE
+);
+
+--MIGRATION
+INSERT INTO Specifications (Name)
+SELECT DISTINCT TRIM(Specification)
+FROM PriceItems
+WHERE Specification IS NOT NULL;
+
+SELECT * FROM Specifications;
+
+    -----------------------------------------------------------
+    --PRICEMATRIX
+    -----------------------------------------------------------
+    --DELETE
+    DELETE FROM PriceMatrix;
+    
+    --REFRESH
+    INSERT INTO PriceMatrix (
+        TaskId,
+        BasePrice,
+        Unit,
+        Specification,
+        MaterialCoef,
+        PositionCoef
+    )
+    SELECT DISTINCT
+        t.Id,
+        p.BasePrice,
+        p.Unit,
+        p.Specification,
+        p.MaterialCoef,
+        p.PositionCoef
+    FROM PriceItems p
+    JOIN Tasks t ON TRIM(t.Name) = TRIM(p.Task)
+    JOIN BaseMaterials b ON TRIM(b.Name) = TRIM(p.Material)
+    JOIN Positions pz ON TRIM(pz.Name) = TRIM(p.Location)
+    JOIN Specifications s ON TRIM(s.Name) = TRIM(p.Specification);
+
+    SELECT * FROM PriceMatrix;
+
+---------------------------------------------------------------
+
+--PRICE MATRIX (HLAVNÍ LOGIKA)
+CREATE TABLE PriceMatrix (
+    Id INTEGER PRIMARY KEY AUTOINCREMENT,
+
+    TaskId INTEGER NOT NULL,
+    MaterialId INTEGER NOT NULL,
+    PositionId INTEGER NOT NULL,
+
+    IsActive INTEGER DEFAULT 1,
+
+    FOREIGN KEY (TaskId) REFERENCES Tasks(Id),
+    FOREIGN KEY (MaterialId) REFERENCES Materials(Id),
+    FOREIGN KEY (PositionId) REFERENCES Positions(Id)
+);
+
+--NEPOUŽITO, TABULKA STÁLE EXITUJE
+--PRICEITEMS BACKUP
+CREATE TABLE PriceItems (
+    Id INTEGER PRIMARY KEY AUTOINCREMENT,
+    BasePrice REAL,
+    Unit TEXT,
+    Task TEXT,
+    Specification TEXT,
+    Material TEXT,
+    Location TEXT,
+    MaterialCoef REAL,
+    PositionCoef REAL
+);
