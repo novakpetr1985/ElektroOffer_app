@@ -1,0 +1,57 @@
+-- =========================
+-- TASKS
+-- =========================
+INSERT INTO Tasks (Name, BasePrice, Unit)
+SELECT DISTINCT
+    Task,
+    BasePrice,
+    Unit
+FROM PriceItems;
+
+
+-- =========================
+-- BASE MATERIALS
+-- =========================
+INSERT INTO BaseMaterials (Name, Coef)
+SELECT DISTINCT
+    Material,
+    MaterialCoef
+FROM PriceItems
+WHERE Material IS NOT NULL AND MaterialCoef IS NOT NULL;
+
+
+-- =========================
+-- POSITIONS
+-- =========================
+INSERT INTO Positions (Name, Coef)
+SELECT DISTINCT
+    Location,
+    PositionCoef
+FROM PriceItems
+WHERE Location IS NOT NULL AND PositionCoef IS NOT NULL;
+
+
+-- =========================
+-- SPECIFICATIONS
+-- =========================
+INSERT INTO Specifications (TaskId, Name)
+SELECT DISTINCT
+    t.Id,
+    p.Specification
+FROM PriceItems p
+JOIN Tasks t ON t.Name = p.Task
+WHERE p.Specification IS NOT NULL;
+
+
+-- =========================
+-- PRICE MATRIX (HLAVNÍ LOGIKA)
+-- =========================
+INSERT INTO PriceMatrix (TaskId, MaterialId, PositionId)
+SELECT DISTINCT
+    t.Id,
+    m.Id,
+    pz.Id
+FROM PriceItems p
+JOIN Tasks t ON TRIM(t.Name) = TRIM(p.Task)
+JOIN BaseMaterials m ON TRIM(m.Name) = TRIM(p.Material)
+JOIN Positions pz ON TRIM(pz.Name) = TRIM(p.Location);
