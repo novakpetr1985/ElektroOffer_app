@@ -17,7 +17,8 @@ CREATE TABLE PriceMatrix (
     MaterialCoef REAL,
     PositionCoef REAL
 );
-
+
+DELETE FROM PriceMatrix;
 INSERT INTO PriceMatrix
 (
     TaskId,
@@ -91,12 +92,172 @@ SELECT * FROM Specifications;
 UPDATE Specifications SET Unit = 'm'  WHERE Id = 1;
 UPDATE Specifications SET Unit = 'ks' WHERE Id = 2;
 UPDATE Specifications SET Unit = 'ks' WHERE Id = 3;
-UPDATE Specifications SET Unit = 'ks' WHERE Id = 4;
+UPDATE Specifications SET Unit = 'ks' WHERE Id = 4;
+
+--------------------------------------
+SELECT * FROM PriceItems;
+
+DELETE FROM PriceItems;
+
+INSERT INTO PriceItems
+(
+    BasePrice,
+    Unit,
+    Task,
+    Specification,
+    Material,
+    Location,
+    MaterialCoef,
+    PositionCoef
+)
+SELECT
+    pm.BasePrice,
+    pm.Unit,
+    t.Name,
+    s.Name,
+    bm.Name,
+    p.Name,
+    pm.MaterialCoef,
+    pm.PositionCoef
+FROM PriceMatrix pm
+JOIN Tasks t ON t.Id = pm.TaskId
+JOIN Specifications s ON s.Id = pm.SpecificationId
+JOIN BaseMaterials bm ON bm.Id = pm.BaseMaterialId
+JOIN Positions p ON p.Id = pm.PositionId;
+
+
+UPDATE Tasks
+SET name = 'Vrtání průraz'
+WHERE Id = 2;
+
+
+
+-------------------------------------------------
+PRAGMA foreign_keys = OFF;
+
+DROP TABLE IF EXISTS Materials;
+CREATE TABLE Materials (
+    Id INTEGER PRIMARY KEY AUTOINCREMENT,
+    Name NVARCHAR(100) NOT NULL,
+    Price DECIMAL(10,2),
+    Unit NVARCHAR(10)
+);
+INSERT INTO Materials (Name, Price, Unit) VALUES
+    ('Chránička',        90,  'ks'),
+    ('Kabel - Typ1',     110, 'm'),
+    ('Kabel - Typ2',     115, 'm'),
+    ('Pojistková skříň', 500, 'ks');
+
+DROP TABLE IF EXISTS BaseMaterials;
+CREATE TABLE BaseMaterials (
+    Id INTEGER PRIMARY KEY AUTOINCREMENT,
+    Name NVARCHAR(100) NOT NULL,
+    MaterialCoef DECIMAL(10,2)
+);
+INSERT INTO BaseMaterials (Name, MaterialCoef) VALUES
+    ('-',              1),
+    ('Beton',          2),
+    ('Cihla',          1.4),
+    ('Dlažba',         1.2),
+    ('Omítka - Sádra', 1),
+    ('Tvárnice',       1.5),
+    ('Železobeton',    2.5);
+
+DROP TABLE IF EXISTS Tasks;
+CREATE TABLE Tasks (
+    Id INTEGER PRIMARY KEY AUTOINCREMENT,
+    Name NVARCHAR(100) NOT NULL,
+    BasePrice DECIMAL(10,2)
+);
+INSERT INTO Tasks (Name, BasePrice) VALUES
+    ('Drážkování',     80),
+    ('Osazení',        80),
+    ('Vrtání otvor',   180),
+    ('Vrtání průrazu', 60);
+
+DROP TABLE IF EXISTS Specifications;
+CREATE TABLE Specifications (
+    Id INTEGER PRIMARY KEY AUTOINCREMENT,
+    Name NVARCHAR(100) NOT NULL,
+    Unit NVARCHAR(10)
+);
+INSERT INTO Specifications (Name, Unit) VALUES
+    ('El. krabice',    'ks'),
+    ('Průchozí díra',  'ks'),
+    ('Rozvaděč',       'ks'),
+    ('Spára',          'm');
+
+PRAGMA foreign_keys = ON;
+----------------------------------------------------
+
+
+
+DROP TABLE IF EXISTS Materials;
+CREATE TABLE Materials (
+    Id INTEGER PRIMARY KEY AUTOINCREMENT,
+    Name NVARCHAR(100) NOT NULL,
+    Price DECIMAL(10,2),
+    Unit NVARCHAR(10)
+);
+INSERT INTO Materials (Name, Price, Unit) VALUES
+    ('Chránička',        90,  'ks'),
+    ('Kabel - Typ1',     110, 'm'),
+    ('Kabel - Typ2',     115, 'm'),
+    ('Pojistková skříň', 500, 'ks');
+	
+	
+	
+	
+	
+	DROP TABLE IF EXISTS Positions;
+CREATE TABLE Positions (
+    Id INTEGER PRIMARY KEY AUTOINCREMENT,
+    Name NVARCHAR(100) NOT NULL,
+    PositionCoef DECIMAL(10,2)
+);
+INSERT INTO Positions (Name, PositionCoef) VALUES
+    ('Nízká (u podlahy)', 1.1),
+    ('Strop',             1.5),
+    ('Stěna',             1),
+    ('Štafle',            1.2);
+	
+	
+----------------------------------------------------------
+GENERATE PriceItems, PriceMatrix
 
---------------------------------------
 SELECT * FROM PriceItems;
-
+SELECT * FROM PriceMatrix;
+----------------------------------------------------------
 DELETE FROM PriceItems;
+DELETE FROM PriceMatrix;
+
+INSERT INTO PriceMatrix
+(
+    TaskId,
+    BasePrice,
+    SpecificationId,
+    Unit,
+    MaterialId,
+    BaseMaterialId,
+    PositionId,
+    MaterialCoef,
+    PositionCoef
+)
+SELECT
+    t.Id,
+    t.BasePrice,
+    s.Id,
+    s.Unit,
+    m.Id,
+    b.Id,
+    p.Id,
+    b.MaterialCoef,
+    p.PositionCoef
+FROM Tasks t
+CROSS JOIN Specifications s
+CROSS JOIN Materials m
+CROSS JOIN BaseMaterials b
+CROSS JOIN Positions p;
 
 INSERT INTO PriceItems
 (
@@ -122,100 +283,4 @@ FROM PriceMatrix pm
 JOIN Tasks t ON t.Id = pm.TaskId
 JOIN Specifications s ON s.Id = pm.SpecificationId
 JOIN BaseMaterials bm ON bm.Id = pm.BaseMaterialId
-JOIN Positions p ON p.Id = pm.PositionId;
-
-
-UPDATE Tasks
-SET name = 'Vrtání průraz'
-WHERE Id = 2;
-
-
-
--------------------------------------------------
-PRAGMA foreign_keys = OFF;
-
-DROP TABLE IF EXISTS Materials;
-CREATE TABLE Materials (
-    Id INTEGER PRIMARY KEY AUTOINCREMENT,
-    Name NVARCHAR(100) NOT NULL,
-    Price DECIMAL(10,2),
-    Unit NVARCHAR(10)
-);
-INSERT INTO Materials (Name, Price, Unit) VALUES
-    ('Chránička',        90,  'ks'),
-    ('Kabel - Typ1',     110, 'm'),
-    ('Kabel - Typ2',     115, 'm'),
-    ('Pojistková skříň', 500, 'ks');
-
-DROP TABLE IF EXISTS BaseMaterials;
-CREATE TABLE BaseMaterials (
-    Id INTEGER PRIMARY KEY AUTOINCREMENT,
-    Name NVARCHAR(100) NOT NULL,
-    MaterialCoef DECIMAL(10,2)
-);
-INSERT INTO BaseMaterials (Name, MaterialCoef) VALUES
-    ('-',              1),
-    ('Beton',          2),
-    ('Cihla',          1.4),
-    ('Dlažba',         1.2),
-    ('Omítka - Sádra', 1),
-    ('Tvárnice',       1.5),
-    ('Železobeton',    2.5);
-
-DROP TABLE IF EXISTS Tasks;
-CREATE TABLE Tasks (
-    Id INTEGER PRIMARY KEY AUTOINCREMENT,
-    Name NVARCHAR(100) NOT NULL,
-    BasePrice DECIMAL(10,2)
-);
-INSERT INTO Tasks (Name, BasePrice) VALUES
-    ('Drážkování',     80),
-    ('Osazení',        80),
-    ('Vrtání otvor',   180),
-    ('Vrtání průrazu', 60);
-
-DROP TABLE IF EXISTS Specifications;
-CREATE TABLE Specifications (
-    Id INTEGER PRIMARY KEY AUTOINCREMENT,
-    Name NVARCHAR(100) NOT NULL,
-    Unit NVARCHAR(10)
-);
-INSERT INTO Specifications (Name, Unit) VALUES
-    ('El. krabice',    'ks'),
-    ('Průchozí díra',  'ks'),
-    ('Rozvaděč',       'ks'),
-    ('Spára',          'm');
-
-PRAGMA foreign_keys = ON;
-----------------------------------------------------
-
-
-
-DROP TABLE IF EXISTS Materials;
-CREATE TABLE Materials (
-    Id INTEGER PRIMARY KEY AUTOINCREMENT,
-    Name NVARCHAR(100) NOT NULL,
-    Price DECIMAL(10,2),
-    Unit NVARCHAR(10)
-);
-INSERT INTO Materials (Name, Price, Unit) VALUES
-    ('Chránička',        90,  'ks'),
-    ('Kabel - Typ1',     110, 'm'),
-    ('Kabel - Typ2',     115, 'm'),
-    ('Pojistková skříň', 500, 'ks');
-	
-	
-	
-	
-	
-	DROP TABLE IF EXISTS Positions;
-CREATE TABLE Positions (
-    Id INTEGER PRIMARY KEY AUTOINCREMENT,
-    Name NVARCHAR(100) NOT NULL,
-    PositionCoef DECIMAL(10,2)
-);
-INSERT INTO Positions (Name, PositionCoef) VALUES
-    ('Nízká (u podlahy)', 1.1),
-    ('Strop',             1.5),
-    ('Stěna',             1),
-    ('Štafle',            1.2);</sql><current_tab id="0"/></tab_sql></sqlb_project>
+JOIN Positions p ON p.Id = pm.PositionId;</sql><current_tab id="0"/></tab_sql></sqlb_project>
