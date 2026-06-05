@@ -1,50 +1,50 @@
-<?xml version="1.0" encoding="UTF-8"?><sqlb_project><db path="elektrooffer.db" readonly="0" foreign_keys="1" case_sensitive_like="0" temp_store="0" wal_autocheckpoint="1000" synchronous="2"/><attached/><window><main_tabs open="structure browser pragmas query" current="3"/></window><tab_structure><column_width id="0" width="300"/><column_width id="1" width="0"/><column_width id="2" width="100"/><column_width id="3" width="1853"/><column_width id="4" width="0"/><expanded_item id="0" parent="1"/><expanded_item id="1" parent="1"/><expanded_item id="2" parent="1"/><expanded_item id="3" parent="1"/></tab_structure><tab_browse><table title="Materials" custom_title="0" dock_id="1" table="4,9:mainMaterials"/><dock_state state="000000ff00000000fd00000001000000020000022f00000292fc0100000001fb000000160064006f0063006b00420072006f007700730065003101000000000000022f0000012300ffffff0000022f0000000000000004000000040000000800000008fc00000000"/><default_encoding codec=""/><browse_table_settings><table schema="main" name="Materials" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_" freeze_columns="0"><sort/><column_widths><column index="1" value="29"/><column index="2" value="132"/><column index="3" value="36"/><column index="4" value="32"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table></browse_table_settings></tab_browse><tab_sql><sql name="SQL 1*">SELECT * FROM PriceMatrix;
- 
-DELETE FROM PriceMatrix;
-DELETE FROM sqlite_sequence WHERE name = 'PriceMatrix';
-
-DROP TABLE IF EXISTS PriceMatrix;
-
-CREATE TABLE PriceMatrix (
-    Id INTEGER PRIMARY KEY AUTOINCREMENT,
-    TaskId INTEGER NOT NULL,
-    BasePrice REAL NOT NULL,
-    SpecificationId INTEGER NOT NULL,
-	Unit TEXT,
-    MaterialId INTEGER NOT NULL,
-    BaseMaterialId INTEGER NOT NULL,
-    PositionId INTEGER NOT NULL,
-    MaterialCoef REAL,
-    PositionCoef REAL
-);
-
-INSERT INTO PriceMatrix
-(
-    TaskId,
-    BasePrice,
-    SpecificationId,
-    Unit,
-    MaterialId,
-    BaseMaterialId,
-    PositionId,
-    MaterialCoef,
-    PositionCoef
-)
-SELECT
-    t.Id,
-    t.BasePrice,
-    s.Id,
-    s.Unit,
-    m.Id,
-    b.Id,
-    p.Id,
-    b.MaterialCoef,
-    p.PositionCoef
-FROM Tasks t
-CROSS JOIN Specifications s
-CROSS JOIN Materials m
-CROSS JOIN BaseMaterials b
-CROSS JOIN Positions p;
+<?xml version="1.0" encoding="UTF-8"?><sqlb_project><db path="elektrooffer.db" readonly="0" foreign_keys="0" case_sensitive_like="0" temp_store="0" wal_autocheckpoint="1000" synchronous="2"/><attached/><window><main_tabs open="structure browser pragmas query" current="3"/></window><tab_structure><column_width id="0" width="300"/><column_width id="1" width="0"/><column_width id="2" width="100"/><column_width id="3" width="1853"/><column_width id="4" width="0"/><expanded_item id="0" parent="1"/><expanded_item id="1" parent="1"/><expanded_item id="2" parent="1"/><expanded_item id="3" parent="1"/></tab_structure><tab_browse><table title="Materials" custom_title="0" dock_id="1" table="4,9:mainMaterials"/><dock_state state="000000ff00000000fd00000001000000020000022f00000290fc0100000001fb000000160064006f0063006b00420072006f007700730065003101000000000000022f0000015c00ffffff0000022f0000000000000004000000040000000800000008fc00000000"/><default_encoding codec=""/><browse_table_settings><table schema="main" name="Materials" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_" freeze_columns="0"><sort/><column_widths><column index="1" value="29"/><column index="2" value="132"/><column index="3" value="36"/><column index="4" value="32"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table></browse_table_settings></tab_browse><tab_sql><sql name="SQL 1*">SELECT * FROM PriceMatrix;
+ 
+DELETE FROM PriceMatrix;
+DELETE FROM sqlite_sequence WHERE name = 'PriceMatrix';
+
+DROP TABLE IF EXISTS PriceMatrix;
+
+CREATE TABLE PriceMatrix (
+    Id INTEGER PRIMARY KEY AUTOINCREMENT,
+    TaskId INTEGER NOT NULL,
+    BasePrice REAL NOT NULL,
+    SpecificationId INTEGER NOT NULL,
+	Unit TEXT,
+    MaterialId INTEGER NOT NULL,
+    BaseMaterialId INTEGER NOT NULL,
+    PositionId INTEGER NOT NULL,
+    MaterialCoef REAL,
+    PositionCoef REAL
+);
+
+INSERT INTO PriceMatrix
+(
+    TaskId,
+    BasePrice,
+    SpecificationId,
+    Unit,
+    MaterialId,
+    BaseMaterialId,
+    PositionId,
+    MaterialCoef,
+    PositionCoef
+)
+SELECT
+    t.Id,
+    t.BasePrice,
+    s.Id,
+    s.Unit,
+    m.Id,
+    b.Id,
+    p.Id,
+    b.MaterialCoef,
+    p.PositionCoef
+FROM Tasks t
+CROSS JOIN Specifications s
+CROSS JOIN Materials m
+CROSS JOIN BaseMaterials b
+CROSS JOIN Positions p;
 
 ----------------------------------------------------- 
  
@@ -91,5 +91,131 @@ SELECT * FROM Specifications;
 UPDATE Specifications SET Unit = 'm'  WHERE Id = 1;
 UPDATE Specifications SET Unit = 'ks' WHERE Id = 2;
 UPDATE Specifications SET Unit = 'ks' WHERE Id = 3;
-UPDATE Specifications SET Unit = 'ks' WHERE Id = 4;
-</sql><current_tab id="0"/></tab_sql></sqlb_project>
+UPDATE Specifications SET Unit = 'ks' WHERE Id = 4;
+
+--------------------------------------
+SELECT * FROM PriceItems;
+
+DELETE FROM PriceItems;
+
+INSERT INTO PriceItems
+(
+    BasePrice,
+    Unit,
+    Task,
+    Specification,
+    Material,
+    Location,
+    MaterialCoef,
+    PositionCoef
+)
+SELECT
+    pm.BasePrice,
+    pm.Unit,
+    t.Name,
+    s.Name,
+    bm.Name,
+    p.Name,
+    pm.MaterialCoef,
+    pm.PositionCoef
+FROM PriceMatrix pm
+JOIN Tasks t ON t.Id = pm.TaskId
+JOIN Specifications s ON s.Id = pm.SpecificationId
+JOIN BaseMaterials bm ON bm.Id = pm.BaseMaterialId
+JOIN Positions p ON p.Id = pm.PositionId;
+
+
+UPDATE Tasks
+SET name = 'Vrtání průraz'
+WHERE Id = 2;
+
+
+
+-------------------------------------------------
+PRAGMA foreign_keys = OFF;
+
+DROP TABLE IF EXISTS Materials;
+CREATE TABLE Materials (
+    Id INTEGER PRIMARY KEY AUTOINCREMENT,
+    Name NVARCHAR(100) NOT NULL,
+    Price DECIMAL(10,2),
+    Unit NVARCHAR(10)
+);
+INSERT INTO Materials (Name, Price, Unit) VALUES
+    ('Chránička',        90,  'ks'),
+    ('Kabel - Typ1',     110, 'm'),
+    ('Kabel - Typ2',     115, 'm'),
+    ('Pojistková skříň', 500, 'ks');
+
+DROP TABLE IF EXISTS BaseMaterials;
+CREATE TABLE BaseMaterials (
+    Id INTEGER PRIMARY KEY AUTOINCREMENT,
+    Name NVARCHAR(100) NOT NULL,
+    MaterialCoef DECIMAL(10,2)
+);
+INSERT INTO BaseMaterials (Name, MaterialCoef) VALUES
+    ('-',              1),
+    ('Beton',          2),
+    ('Cihla',          1.4),
+    ('Dlažba',         1.2),
+    ('Omítka - Sádra', 1),
+    ('Tvárnice',       1.5),
+    ('Železobeton',    2.5);
+
+DROP TABLE IF EXISTS Tasks;
+CREATE TABLE Tasks (
+    Id INTEGER PRIMARY KEY AUTOINCREMENT,
+    Name NVARCHAR(100) NOT NULL,
+    BasePrice DECIMAL(10,2)
+);
+INSERT INTO Tasks (Name, BasePrice) VALUES
+    ('Drážkování',     80),
+    ('Osazení',        80),
+    ('Vrtání otvor',   180),
+    ('Vrtání průrazu', 60);
+
+DROP TABLE IF EXISTS Specifications;
+CREATE TABLE Specifications (
+    Id INTEGER PRIMARY KEY AUTOINCREMENT,
+    Name NVARCHAR(100) NOT NULL,
+    Unit NVARCHAR(10)
+);
+INSERT INTO Specifications (Name, Unit) VALUES
+    ('El. krabice',    'ks'),
+    ('Průchozí díra',  'ks'),
+    ('Rozvaděč',       'ks'),
+    ('Spára',          'm');
+
+PRAGMA foreign_keys = ON;
+----------------------------------------------------
+
+
+
+DROP TABLE IF EXISTS Materials;
+CREATE TABLE Materials (
+    Id INTEGER PRIMARY KEY AUTOINCREMENT,
+    Name NVARCHAR(100) NOT NULL,
+    Price DECIMAL(10,2),
+    Unit NVARCHAR(10)
+);
+INSERT INTO Materials (Name, Price, Unit) VALUES
+    ('Chránička',        90,  'ks'),
+    ('Kabel - Typ1',     110, 'm'),
+    ('Kabel - Typ2',     115, 'm'),
+    ('Pojistková skříň', 500, 'ks');
+	
+	
+	
+	
+	
+	DROP TABLE IF EXISTS Positions;
+CREATE TABLE Positions (
+    Id INTEGER PRIMARY KEY AUTOINCREMENT,
+    Name NVARCHAR(100) NOT NULL,
+    PositionCoef DECIMAL(10,2)
+);
+INSERT INTO Positions (Name, PositionCoef) VALUES
+    ('Nízká (u podlahy)', 1.1),
+    ('Strop',             1.5),
+    ('Stěna',             1),
+    ('Štafle',            1.2);</sql><current_tab id="0"/></tab_sql></sqlb_project>
