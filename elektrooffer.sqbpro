@@ -17,7 +17,7 @@ CREATE TABLE PriceMatrix (
     MaterialCoef REAL,
     PositionCoef REAL
 );
-
+
 DELETE FROM PriceMatrix;
 INSERT INTO PriceMatrix
 (
@@ -219,68 +219,70 @@ INSERT INTO Positions (Name, PositionCoef) VALUES
     ('Nízká (u podlahy)', 1.1),
     ('Strop',             1.5),
     ('Stěna',             1),
-    ('Štafle',            1.2);
-	
-	
-----------------------------------------------------------
-GENERATE PriceItems, PriceMatrix
-
-SELECT * FROM PriceItems;
-SELECT * FROM PriceMatrix;
-----------------------------------------------------------
-DELETE FROM PriceItems;
+    ('Štafle',            1.2);
+	
+	
+----------------------------------------------------------
+GENERATE PriceItems, PriceMatrix
+
+SELECT * FROM PriceItems;
+SELECT * FROM PriceMatrix;
+----------------------------------------------------------
+DELETE FROM PriceItems;
 DELETE FROM PriceMatrix;
-
-INSERT INTO PriceMatrix
-(
-    TaskId,
-    BasePrice,
-    SpecificationId,
-    Unit,
-    MaterialId,
-    BaseMaterialId,
-    PositionId,
-    MaterialCoef,
-    PositionCoef
-)
-SELECT
-    t.Id,
-    t.BasePrice,
-    s.Id,
-    s.Unit,
-    m.Id,
-    b.Id,
-    p.Id,
-    b.MaterialCoef,
-    p.PositionCoef
-FROM Tasks t
-CROSS JOIN Specifications s
-CROSS JOIN Materials m
-CROSS JOIN BaseMaterials b
-CROSS JOIN Positions p;
-
-INSERT INTO PriceItems
-(
-    BasePrice,
-    Unit,
-    Task,
-    Specification,
-    Material,
-    Location,
-    MaterialCoef,
-    PositionCoef
-)
-SELECT
-    pm.BasePrice,
-    pm.Unit,
-    t.Name,
-    s.Name,
-    bm.Name,
-    p.Name,
-    pm.MaterialCoef,
-    pm.PositionCoef
-FROM PriceMatrix pm
-JOIN Tasks t ON t.Id = pm.TaskId
-JOIN Specifications s ON s.Id = pm.SpecificationId
-JOIN BaseMaterials bm ON bm.Id = pm.BaseMaterialId
+DELETE FROM sqlite_sequence WHERE name = 'PriceItems';
+DELETE FROM sqlite_sequence WHERE name = 'PriceMatrix';
+
+INSERT INTO PriceMatrix
+(
+    TaskId,
+    BasePrice,
+    SpecificationId,
+    Unit,
+    MaterialId,
+    BaseMaterialId,
+    PositionId,
+    MaterialCoef,
+    PositionCoef
+)
+SELECT
+    t.Id,
+    t.BasePrice,
+    s.Id,
+    s.Unit,
+    m.Id,
+    b.Id,
+    p.Id,
+    b.MaterialCoef,
+    p.PositionCoef
+FROM Tasks t
+CROSS JOIN Specifications s
+CROSS JOIN Materials m
+CROSS JOIN BaseMaterials b
+CROSS JOIN Positions p;
+
+INSERT INTO PriceItems
+(
+    BasePrice,
+    Unit,
+    Task,
+    Specification,
+    Material,
+    Location,
+    MaterialCoef,
+    PositionCoef
+)
+SELECT
+    pm.BasePrice,
+    pm.Unit,
+    t.Name,
+    s.Name,
+    bm.Name,
+    p.Name,
+    pm.MaterialCoef,
+    pm.PositionCoef
+FROM PriceMatrix pm
+JOIN Tasks t ON t.Id = pm.TaskId
+JOIN Specifications s ON s.Id = pm.SpecificationId
+JOIN BaseMaterials bm ON bm.Id = pm.BaseMaterialId
 JOIN Positions p ON p.Id = pm.PositionId;</sql><current_tab id="0"/></tab_sql></sqlb_project>
