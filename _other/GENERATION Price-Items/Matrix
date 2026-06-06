@@ -1,7 +1,7 @@
 DELETE FROM PriceItems;
-DELETE FROM PriceMatrix;
+DELETE FROM PriceCatalog;
 
-INSERT INTO PriceMatrix
+INSERT INTO PriceCatalog
 (
     TaskId,
     BasePrice,
@@ -49,7 +49,7 @@ SELECT
     p.Name,
     pm.MaterialCoef,
     pm.PositionCoef
-FROM PriceMatrix pm
+FROM PriceCatalog pm
 JOIN Tasks t ON t.Id = pm.TaskId
 JOIN Specifications s ON s.Id = pm.SpecificationId
 JOIN BaseMaterials bm ON bm.Id = pm.BaseMaterialId

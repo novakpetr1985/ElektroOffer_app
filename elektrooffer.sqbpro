@@ -1,11 +1,11 @@
-<?xml version="1.0" encoding="UTF-8"?><sqlb_project><db path="elektrooffer.db" readonly="0" foreign_keys="0" case_sensitive_like="0" temp_store="0" wal_autocheckpoint="1000" synchronous="2"/><attached/><window><main_tabs open="structure browser pragmas query" current="3"/></window><tab_structure><column_width id="0" width="300"/><column_width id="1" width="0"/><column_width id="2" width="100"/><column_width id="3" width="1853"/><column_width id="4" width="0"/><expanded_item id="0" parent="1"/><expanded_item id="1" parent="1"/><expanded_item id="2" parent="1"/><expanded_item id="3" parent="1"/></tab_structure><tab_browse><table title="Materials" custom_title="0" dock_id="1" table="4,9:mainMaterials"/><dock_state state="000000ff00000000fd00000001000000020000022f00000290fc0100000001fb000000160064006f0063006b00420072006f007700730065003101000000000000022f0000015c00ffffff0000022f0000000000000004000000040000000800000008fc00000000"/><default_encoding codec=""/><browse_table_settings><table schema="main" name="Materials" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_" freeze_columns="0"><sort/><column_widths><column index="1" value="29"/><column index="2" value="132"/><column index="3" value="36"/><column index="4" value="32"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table></browse_table_settings></tab_browse><tab_sql><sql name="SQL 1*">SELECT * FROM PriceMatrix;
+<?xml version="1.0" encoding="UTF-8"?><sqlb_project><db path="elektrooffer.db" readonly="0" foreign_keys="0" case_sensitive_like="0" temp_store="0" wal_autocheckpoint="1000" synchronous="2"/><attached/><window><main_tabs open="structure browser pragmas query" current="3"/></window><tab_structure><column_width id="0" width="300"/><column_width id="1" width="0"/><column_width id="2" width="100"/><column_width id="3" width="1853"/><column_width id="4" width="0"/><expanded_item id="0" parent="1"/><expanded_item id="1" parent="1"/><expanded_item id="2" parent="1"/><expanded_item id="3" parent="1"/></tab_structure><tab_browse><table title="Materials" custom_title="0" dock_id="1" table="4,9:mainMaterials"/><dock_state state="000000ff00000000fd00000001000000020000022f00000290fc0100000001fb000000160064006f0063006b00420072006f007700730065003101000000000000022f0000015c00ffffff0000022f0000000000000004000000040000000800000008fc00000000"/><default_encoding codec=""/><browse_table_settings><table schema="main" name="Materials" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_" freeze_columns="0"><sort/><column_widths><column index="1" value="29"/><column index="2" value="132"/><column index="3" value="36"/><column index="4" value="32"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table></browse_table_settings></tab_browse><tab_sql><sql name="SQL 1*">SELECT * FROM PriceCatalog;
  
-DELETE FROM PriceMatrix;
-DELETE FROM sqlite_sequence WHERE name = 'PriceMatrix';
+DELETE FROM PriceCatalog;
+DELETE FROM sqlite_sequence WHERE name = 'PriceCatalog';
 
-DROP TABLE IF EXISTS PriceMatrix;
+DROP TABLE IF EXISTS PriceCatalog;
 
-CREATE TABLE PriceMatrix (
+CREATE TABLE PriceCatalog (
     Id INTEGER PRIMARY KEY AUTOINCREMENT,
     TaskId INTEGER NOT NULL,
     BasePrice REAL NOT NULL,
@@ -18,8 +18,8 @@ CREATE TABLE PriceMatrix (
     PositionCoef REAL
 );
 
-DELETE FROM PriceMatrix;
-INSERT INTO PriceMatrix
+DELETE FROM PriceCatalog;
+INSERT INTO PriceCatalog
 (
     TaskId,
     BasePrice,
@@ -119,7 +119,7 @@ SELECT
     p.Name,
     pm.MaterialCoef,
     pm.PositionCoef
-FROM PriceMatrix pm
+FROM PriceCatalog pm
 JOIN Tasks t ON t.Id = pm.TaskId
 JOIN Specifications s ON s.Id = pm.SpecificationId
 JOIN BaseMaterials bm ON bm.Id = pm.BaseMaterialId
@@ -223,17 +223,17 @@ INSERT INTO Positions (Name, PositionCoef) VALUES
 	
 	
 ----------------------------------------------------------
-GENERATE PriceItems, PriceMatrix
+GENERATE PriceItems, PriceCatalog
 
 SELECT * FROM PriceItems;
-SELECT * FROM PriceMatrix;
+SELECT * FROM PriceCatalog;
 ----------------------------------------------------------
 DELETE FROM PriceItems;
-DELETE FROM PriceMatrix;
+DELETE FROM PriceCatalog;
 DELETE FROM sqlite_sequence WHERE name = 'PriceItems';
-DELETE FROM sqlite_sequence WHERE name = 'PriceMatrix';
+DELETE FROM sqlite_sequence WHERE name = 'PriceCatalog';
 
-INSERT INTO PriceMatrix
+INSERT INTO PriceCatalog
 (
     TaskId,
     BasePrice,
@@ -281,7 +281,7 @@ SELECT
     p.Name,
     pm.MaterialCoef,
     pm.PositionCoef
-FROM PriceMatrix pm
+FROM PriceCatalog pm
 JOIN Tasks t ON t.Id = pm.TaskId
 JOIN Specifications s ON s.Id = pm.SpecificationId
 JOIN BaseMaterials bm ON bm.Id = pm.BaseMaterialId

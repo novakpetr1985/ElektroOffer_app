@@ -16,10 +16,10 @@ WHERE Task IS NOT NULL;
 SELECT * FROM Tasks;
 
     -----------------------------------------------------------
-    --PRICEMATRIX
+    --PriceCatalog
     -----------------------------------------------------------
     --ZALOŽENÍ
-    CREATE TABLE PriceMatrix (
+    CREATE TABLE PriceCatalog (
         Id INTEGER PRIMARY KEY AUTOINCREMENT,
         TaskId INTEGER NOT NULL,
         BasePrice REAL,
@@ -30,8 +30,8 @@ SELECT * FROM Tasks;
         FOREIGN KEY (TaskId) REFERENCES Tasks(Id)
     );
 
-    --PRICEMATRIX MIGRATION
-    INSERT INTO PriceMatrix (
+    --PriceCatalog MIGRATION
+    INSERT INTO PriceCatalog (
         TaskId,
         BasePrice,
         Unit,
@@ -49,7 +49,7 @@ SELECT * FROM Tasks;
     FROM PriceItems p
     JOIN Tasks t ON TRIM(t.Name) = TRIM(p.Task);
 
-    SELECT * FROM PriceMatrix;
+    SELECT * FROM PriceCatalog;
 
 -----------------------------------------------------------
 --BASEMATERIALS
@@ -69,10 +69,10 @@ WHERE Material IS NOT NULL;
 SELECT * FROM BaseMaterials;
 
     -----------------------------------------------------------
-    --PRICEMATRIX
+    --PriceCatalog
     -----------------------------------------------------------
     --REFRESH
-    INSERT INTO PriceMatrix (
+    INSERT INTO PriceCatalog (
         TaskId,
         BasePrice,
         Unit,
@@ -91,7 +91,7 @@ SELECT * FROM BaseMaterials;
     JOIN Tasks t ON TRIM(t.Name) = TRIM(p.Task)
     JOIN BaseMaterials b ON TRIM(b.Name) = TRIM(p.Material);
 
-    SELECT * FROM PriceMatrix;
+    SELECT * FROM PriceCatalog;
 
 -----------------------------------------------------------
 --POSITIONS
@@ -111,13 +111,13 @@ WHERE Location IS NOT NULL;
 SELECT * FROM Positions;
 
     -----------------------------------------------------------
-    --PRICEMATRIX
+    --PriceCatalog
     -----------------------------------------------------------
     --DELETE
-    DELETE FROM PriceMatrix;
+    DELETE FROM PriceCatalog;
     
     --REFRESH
-    INSERT INTO PriceMatrix (
+    INSERT INTO PriceCatalog (
         TaskId,
         BasePrice,
         Unit,
@@ -137,7 +137,7 @@ SELECT * FROM Positions;
     JOIN BaseMaterials b ON TRIM(b.Name) = TRIM(p.Material)
     JOIN Positions pz ON TRIM(pz.Name) = TRIM(p.Location);
 
-    SELECT * FROM PriceMatrix;
+    SELECT * FROM PriceCatalog;
 
 -----------------------------------------------------------
 --SPECIFICATIONS
@@ -157,13 +157,13 @@ WHERE Specification IS NOT NULL;
 SELECT * FROM Specifications;
 
     -----------------------------------------------------------
-    --PRICEMATRIX
+    --PriceCatalog
     -----------------------------------------------------------
     --DELETE
-    DELETE FROM PriceMatrix;
+    DELETE FROM PriceCatalog;
     
     --REFRESH
-    INSERT INTO PriceMatrix (
+    INSERT INTO PriceCatalog (
         TaskId,
         BasePrice,
         Unit,
@@ -184,12 +184,12 @@ SELECT * FROM Specifications;
     JOIN Positions pz ON TRIM(pz.Name) = TRIM(p.Location)
     JOIN Specifications s ON TRIM(s.Name) = TRIM(p.Specification);
 
-    SELECT * FROM PriceMatrix;
+    SELECT * FROM PriceCatalog;
 
 ---------------------------------------------------------------
 
 --PRICE MATRIX (HLAVNÍ LOGIKA)
-CREATE TABLE PriceMatrix (
+CREATE TABLE PriceCatalog (
     Id INTEGER PRIMARY KEY AUTOINCREMENT,
 
     TaskId INTEGER NOT NULL,
