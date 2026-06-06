@@ -1,0 +1,13 @@
+goals PRO VERZI 2.0
+
+Kompletní workflow
+- PRÁCE
+- MATERIÁLY
+- CELKOVÁ CENA
+DATABÁZE napojená na novou logiku
+- tabulky zvlášť
+- generování do 
+	PriceItems - generování komplet logiky do -> CENÍK JMENOVITÝ
+	PriceMatrix - generování komplet logiky do -> CENÍK ID
+Save/Load
+Import/Export
