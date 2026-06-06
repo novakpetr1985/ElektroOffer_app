@@ -3,8 +3,20 @@
   "WorkspaceRootPath": "D:\\_GitHub\\ElektroOffer_app\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{D8CE3C2E-7BD8-AE34-2666-57AD10DFCE51}|ElektroOffer_app.csproj|d:\\_github\\elektrooffer_app\\models\\calculationitems.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{D8CE3C2E-7BD8-AE34-2666-57AD10DFCE51}|ElektroOffer_app.csproj|solutionrelative:models\\calculationitems.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{D8CE3C2E-7BD8-AE34-2666-57AD10DFCE51}|ElektroOffer_app.csproj|d:\\_github\\elektrooffer_app\\mainwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D8CE3C2E-7BD8-AE34-2666-57AD10DFCE51}|ElektroOffer_app.csproj|solutionrelative:mainwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D8CE3C2E-7BD8-AE34-2666-57AD10DFCE51}|ElektroOffer_app.csproj|d:\\_github\\elektrooffer_app\\mainwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{D8CE3C2E-7BD8-AE34-2666-57AD10DFCE51}|ElektroOffer_app.csproj|solutionrelative:mainwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D8CE3C2E-7BD8-AE34-2666-57AD10DFCE51}|ElektroOffer_app.csproj|d:\\_github\\elektrooffer_app\\models\\projectdata.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D8CE3C2E-7BD8-AE34-2666-57AD10DFCE51}|ElektroOffer_app.csproj|solutionrelative:models\\projectdata.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D8CE3C2E-7BD8-AE34-2666-57AD10DFCE51}|ElektroOffer_app.csproj|d:\\_github\\elektrooffer_app\\services\\projectservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D8CE3C2E-7BD8-AE34-2666-57AD10DFCE51}|ElektroOffer_app.csproj|solutionrelative:services\\projectservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -14,19 +26,57 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 2,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "CalculationItems.cs",
-              "DocumentMoniker": "D:\\_GitHub\\ElektroOffer_app\\Models\\CalculationItems.cs",
-              "RelativeDocumentMoniker": "Models\\CalculationItems.cs",
-              "ToolTip": "D:\\_GitHub\\ElektroOffer_app\\Models\\CalculationItems.cs",
-              "RelativeToolTip": "Models\\CalculationItems.cs",
-              "ViewState": "AgIAAKcAAAAAAAAAAAAYwMMAAAAJAAAAAAAAAA==",
+              "DocumentIndex": 3,
+              "Title": "ProjectService.cs",
+              "DocumentMoniker": "D:\\_GitHub\\ElektroOffer_app\\Services\\ProjectService.cs",
+              "RelativeDocumentMoniker": "Services\\ProjectService.cs",
+              "ToolTip": "D:\\_GitHub\\ElektroOffer_app\\Services\\ProjectService.cs",
+              "RelativeToolTip": "Services\\ProjectService.cs",
+              "ViewState": "AgIAAJgAAAAAAAAAAAAwwMIAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-06-06T21:40:56.525Z",
+              "WhenOpened": "2026-06-06T23:02:28.082Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "ProjectData.cs",
+              "DocumentMoniker": "D:\\_GitHub\\ElektroOffer_app\\Models\\ProjectData.cs",
+              "RelativeDocumentMoniker": "Models\\ProjectData.cs",
+              "ToolTip": "D:\\_GitHub\\ElektroOffer_app\\Models\\ProjectData.cs",
+              "RelativeToolTip": "Models\\ProjectData.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAFsAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-06T23:01:23.564Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "MainWindow.xaml.cs",
+              "DocumentMoniker": "D:\\_GitHub\\ElektroOffer_app\\MainWindow.xaml.cs",
+              "RelativeDocumentMoniker": "MainWindow.xaml.cs",
+              "ToolTip": "D:\\_GitHub\\ElektroOffer_app\\MainWindow.xaml.cs",
+              "RelativeToolTip": "MainWindow.xaml.cs",
+              "ViewState": "AgIAAMICAAAAAAAAAADwv9sCAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-06T23:00:22.514Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "MainWindow.xaml",
+              "DocumentMoniker": "D:\\_GitHub\\ElektroOffer_app\\MainWindow.xaml",
+              "RelativeDocumentMoniker": "MainWindow.xaml",
+              "ToolTip": "D:\\_GitHub\\ElektroOffer_app\\MainWindow.xaml",
+              "RelativeToolTip": "MainWindow.xaml",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2026-06-06T22:59:41.619Z",
               "EditorCaption": ""
             }
           ]

@@ -1,5 +1,6 @@
 ﻿using ElektroOffer_app.Data;
 using ElektroOffer_app.Models;
+using ElektroOffer_app.Services;
 using System.Collections.Specialized;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -75,6 +76,48 @@ namespace ElektroOffer_app
         }
 
         // =========================================================
+        // 💾 STAV ULOŽENÍ — správa souboru a neuložených změn
+        // =========================================================
+
+        /// <summary>
+        /// Servisní třída pro Save/Load logiku.
+        /// Oddělena od UI — MainWindow jen volá její metody.
+        /// </summary>
+        private readonly ProjectService _projectService = new();
+
+        /// <summary>
+        /// Aktuální cesta k otevřenému souboru.
+        /// Null = projekt ještě nebyl uložen (nový projekt).
+        /// </summary>
+        private string? _currentFilePath = null;
+
+        /// <summary>
+        /// Příznak neuložených změn.
+        /// True = data byla změněna od posledního uložení.
+        /// Používá se při zavírání okna nebo "Nový projekt".
+        /// </summary>
+        private bool _hasUnsavedChanges = false;
+
+        // =========================================================
+        // 📌 STAVOVÝ ŘÁDEK — text zobrazený dole v okně
+        // =========================================================
+
+        private string _statusText = "Nový projekt";
+        /// <summary>
+        /// Text zobrazený ve StatusBaru dole.
+        /// Ukazuje název souboru nebo stav projektu.
+        /// </summary>
+        public string StatusText
+        {
+            get => _statusText;
+            set
+            {
+                _statusText = value;
+                OnPropertyChanged();
+            }
+        }
+
+        // =========================================================
         // START
         // =========================================================
         public MainWindow()
@@ -101,6 +144,330 @@ namespace ElektroOffer_app
 
             WorkCalcItems.CollectionChanged += WorkCalcItems_CollectionChanged;
             MaterialItems.CollectionChanged += MaterialItems_CollectionChanged;
+
+            // Klávesové zkratky pro Save/Load
+            // Ctrl+S, Ctrl+Shift+S, Ctrl+O, Ctrl+N
+            RegisterKeyboardShortcuts();
+        }
+
+        // =========================================================
+        // ⌨️ KLÁVESOVÉ ZKRATKY
+        // =========================================================
+
+        /// <summary>
+        /// Registrace klávesových zkratek přes CommandBindings.
+        /// Tímto způsobem zkratky fungují i bez zaměření na konkrétní prvek UI.
+        /// </summary>
+        private void RegisterKeyboardShortcuts()
+        {
+            // Ctrl+S → Uložit
+            var saveBinding = new System.Windows.Input.KeyBinding(
+                new RelayCommand(_ => MenuSave_Click(this, new RoutedEventArgs())),
+                System.Windows.Input.Key.S,
+                System.Windows.Input.ModifierKeys.Control);
+
+            // Ctrl+Shift+S → Uložit jako
+            var saveAsBinding = new System.Windows.Input.KeyBinding(
+                new RelayCommand(_ => MenuSaveAs_Click(this, new RoutedEventArgs())),
+                System.Windows.Input.Key.S,
+                System.Windows.Input.ModifierKeys.Control | System.Windows.Input.ModifierKeys.Shift);
+
+            // Ctrl+O → Otevřít
+            var openBinding = new System.Windows.Input.KeyBinding(
+                new RelayCommand(_ => MenuLoad_Click(this, new RoutedEventArgs())),
+                System.Windows.Input.Key.O,
+                System.Windows.Input.ModifierKeys.Control);
+
+            // Ctrl+N → Nový projekt
+            var newBinding = new System.Windows.Input.KeyBinding(
+                new RelayCommand(_ => MenuNewProject_Click(this, new RoutedEventArgs())),
+                System.Windows.Input.Key.N,
+                System.Windows.Input.ModifierKeys.Control);
+
+            InputBindings.Add(saveBinding);
+            InputBindings.Add(saveAsBinding);
+            InputBindings.Add(openBinding);
+            InputBindings.Add(newBinding);
+        }
+
+        // =========================================================
+        // 📋 MENU — AKCE
+        // =========================================================
+
+        /// <summary>
+        /// Menu: Soubor → Nový projekt
+        /// Zeptá se na uložení změn, pak resetuje celou kalkulaci.
+        /// </summary>
+        private void MenuNewProject_Click(object sender, RoutedEventArgs e)
+        {
+            // Sestaví aktuální data projektu (potřeba pro případné uložení)
+            var currentData = BuildProjectData();
+
+            // Zkontroluje neuložené změny — pokud uživatel zruší, nic neděláme
+            if (!_projectService.ConfirmNewProject(currentData, _currentFilePath, _hasUnsavedChanges))
+                return;
+
+            // Reset aplikace do počátečního stavu
+            ResetToNewProject();
+        }
+
+        /// <summary>
+        /// Menu: Soubor → Otevřít
+        /// Načte projekt z .eof souboru a naplní UI daty.
+        /// </summary>
+        private void MenuLoad_Click(object sender, RoutedEventArgs e)
+        {
+            // Pokud jsou neuložené změny → zeptáme se před načtením
+            if (_hasUnsavedChanges)
+            {
+                var result = MessageBox.Show(
+                    "Máte neuložené změny. Chcete je uložit před načtením jiného projektu?",
+                    "Neuložené změny",
+                    MessageBoxButton.YesNoCancel,
+                    MessageBoxImage.Warning);
+
+                if (result == MessageBoxResult.Cancel) return;
+                if (result == MessageBoxResult.Yes)
+                {
+                    var saved = _projectService.Save(BuildProjectData(), _currentFilePath);
+                    if (saved == null) return; // uložení selhalo nebo bylo zrušeno
+                }
+            }
+
+            // Otevření dialogu a načtení dat
+            var (data, path) = _projectService.Load();
+            if (data == null) return; // uživatel zrušil nebo chyba
+
+            // Naplnění UI načtenými daty
+            ApplyProjectData(data, path!);
+        }
+
+        /// <summary>
+        /// Menu: Soubor → Uložit (Ctrl+S)
+        /// Uloží na aktuální cestu, nebo vyvolá Save As dialog.
+        /// </summary>
+        private void MenuSave_Click(object sender, RoutedEventArgs e)
+        {
+            var data = BuildProjectData();
+            var savedPath = _projectService.Save(data, _currentFilePath);
+
+            if (savedPath != null)
+                OnProjectSaved(savedPath);
+        }
+
+        /// <summary>
+        /// Menu: Soubor → Uložit jako (Ctrl+Shift+S)
+        /// Vždy otevře dialog pro výběr nového umístění.
+        /// </summary>
+        private void MenuSaveAs_Click(object sender, RoutedEventArgs e)
+        {
+            var data = BuildProjectData();
+            var savedPath = _projectService.SaveAs(data);
+
+            if (savedPath != null)
+                OnProjectSaved(savedPath);
+        }
+
+        /// <summary>
+        /// Menu: Soubor → Export PDF (kalkulace)
+        /// Exportuje celkový rozpočet do PDF pro zákazníka.
+        /// TODO: Implementovat po přidání QuestPDF nebo iText7.
+        /// </summary>
+        private void MenuExportPdf_Click(object sender, RoutedEventArgs e)
+        {
+            // 🚧 PLACEHOLDER — implementace přijde v další fázi
+            MessageBox.Show(
+                "Export PDF kalkulace bude implementován v další fázi projektu.\n\nPlánovaná knihovna: QuestPDF",
+                "Připravuje se",
+                MessageBoxButton.OK,
+                MessageBoxImage.Information);
+        }
+
+        /// <summary>
+        /// Menu: Soubor → Export PDF (ceník)
+        /// Exportuje seznam položek z PriceItems do PDF.
+        /// TODO: Implementovat po přidání QuestPDF nebo iText7.
+        /// </summary>
+        private void MenuExportPricePdf_Click(object sender, RoutedEventArgs e)
+        {
+            // 🚧 PLACEHOLDER — implementace přijde v další fázi
+            MessageBox.Show(
+                "Export PDF ceníku bude implementován v další fázi projektu.\n\nPlánovaná knihovna: QuestPDF",
+                "Připravuje se",
+                MessageBoxButton.OK,
+                MessageBoxImage.Information);
+        }
+
+        // =========================================================
+        // 🛠️ POMOCNÉ METODY — Save/Load logika
+        // =========================================================
+
+        /// <summary>
+        /// Sestaví objekt ProjectData z aktuálního stavu UI.
+        /// Volá se před každým uložením.
+        /// </summary>
+        private ProjectData BuildProjectData()
+        {
+            return new ProjectData
+            {
+                // Metadata
+                ProjectName = _currentFilePath != null
+                    ? System.IO.Path.GetFileNameWithoutExtension(_currentFilePath)
+                    : "Nový projekt",
+                SavedAt = DateTime.Now,
+
+                // Sekce PRÁCE — uložíme vybrané hodnoty každého řádku
+                WorkItems = WorkCalcItems.Select(x => new WorkItemData
+                {
+                    SelectedTask = x.SelectedTask,
+                    SelectedSpecification = x.SelectedSpecification,
+                    SelectedMaterial = x.SelectedMaterial,
+                    SelectedLocation = x.SelectedLocation,
+                    Quantity = x.Quantity
+                }).ToList(),
+
+                // Sekce MATERIÁL — uložíme název materiálu a množství
+                MaterialItems = MaterialItems.Select(x => new MaterialItemData
+                {
+                    MaterialName = x.MaterialItem?.Name,
+                    Quantity = x.Quantity
+                }).ToList()
+            };
+        }
+
+        /// <summary>
+        /// Aplikuje načtená data (ProjectData) do UI.
+        /// Zavolá se po úspěšném Load.
+        /// </summary>
+        private void ApplyProjectData(ProjectData data, string path)
+        {
+            // Nejdříve vyprázdníme stávající UI
+            ClearAllItems();
+
+            // ========================= //
+            // 🔧 OBNOVENÍ SEKCE: PRÁCE  //
+            // ========================= //
+            foreach (var saved in data.WorkItems)
+            {
+                var item = new CalculationItems();
+                item.PropertyChanged += Item_PropertyChanged;
+
+                // Obnovení vybraných hodnot
+                item.SelectedTask = saved.SelectedTask;
+                item.SelectedSpecification = saved.SelectedSpecification;
+                item.SelectedMaterial = saved.SelectedMaterial;
+                item.SelectedLocation = saved.SelectedLocation;
+                item.Quantity = saved.Quantity;
+
+                WorkCalcItems.Add(item);
+            }
+
+            // =========================== //
+            // 📦 OBNOVENÍ SEKCE: MATERIÁL //
+            // =========================== //
+            foreach (var saved in data.MaterialItems)
+            {
+                var item = new CalculationItems();
+                item.PropertyChanged += Item_PropertyChanged;
+
+                // Dohledání objektu Material z DB podle názvu
+                // (ukládáme název, ne ID → nezávislé na DB)
+                item.MaterialItem = Materials.FirstOrDefault(m => m.Name == saved.MaterialName);
+                item.Quantity = saved.Quantity;
+
+                MaterialItems.Add(item);
+            }
+
+            // Uložíme cestu a resetujeme příznak změn
+            _currentFilePath = path;
+            _hasUnsavedChanges = false;
+
+            // Aktualizace titulku a stavového řádku
+            UpdateWindowTitle(path);
+            Recalculate();
+        }
+
+        /// <summary>
+        /// Zavolá se po úspěšném uložení.
+        /// Aktualizuje cestu, příznak změn, titulek a status.
+        /// </summary>
+        private void OnProjectSaved(string path)
+        {
+            _currentFilePath = path;
+            _hasUnsavedChanges = false;
+            UpdateWindowTitle(path);
+        }
+
+        /// <summary>
+        /// Resetuje aplikaci do stavu "nový projekt".
+        /// Vymaže všechny řádky a přidá výchozí prázdné řádky.
+        /// </summary>
+        private void ResetToNewProject()
+        {
+            ClearAllItems();
+
+            // Přidání výchozích prázdných řádků jako při startu
+            for (int i = 0; i < 5; i++)
+            {
+                AddWorkItemInternal();
+                AddMaterialItemInternal();
+            }
+
+            _currentFilePath = null;
+            _hasUnsavedChanges = false;
+
+            // Reset titulku a stavového řádku
+            Title = "Elektro Offer - Kalkulace";
+            StatusText = "Nový projekt";
+        }
+
+        /// <summary>
+        /// Vymaže všechny řádky z obou sekcí (PRÁCE + MATERIÁL).
+        /// Odhlásí event handlery před odebráním, aby nedošlo k memory leaku.
+        /// </summary>
+        private void ClearAllItems()
+        {
+            // Odhlášení event handlerů — důležité pro správnou správu paměti
+            foreach (var item in WorkCalcItems)
+                item.PropertyChanged -= Item_PropertyChanged;
+
+            foreach (var item in MaterialItems)
+                item.PropertyChanged -= Item_PropertyChanged;
+
+            WorkCalcItems.Clear();
+            MaterialItems.Clear();
+            BudgetItems.Clear();
+        }
+
+        /// <summary>
+        /// Aktualizuje titulek okna a text ve StatusBaru.
+        /// Konvence v IT: "*" v titulku = neuložené změny.
+        /// </summary>
+        private void UpdateWindowTitle(string path)
+        {
+            var fileName = System.IO.Path.GetFileNameWithoutExtension(path);
+
+            // Titulek okna: "NázevSouboru - Elektro Offer"
+            Title = $"{fileName} - Elektro Offer";
+
+            // StatusBar: celá cesta k souboru
+            StatusText = path;
+        }
+
+        /// <summary>
+        /// Označí projekt jako "má neuložené změny".
+        /// Volá se při každé změně dat v UI.
+        /// </summary>
+        private void MarkAsChanged()
+        {
+            if (!_hasUnsavedChanges)
+            {
+                _hasUnsavedChanges = true;
+
+                // Přidá hvězdičku do titulku (konvence: * = neuložené změny)
+                if (!Title.StartsWith("*"))
+                    Title = "* " + Title;
+            }
         }
 
         // =========================================================
@@ -199,7 +566,6 @@ namespace ElektroOffer_app
             }
         }
 
-
         // =========================================================
         // 🧹 RESET MATERIAL ITEM
         // =========================================================
@@ -236,10 +602,16 @@ namespace ElektroOffer_app
         // 📌 EVENTS
         // =========================================================
         private void WorkCalcItems_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
-            => Recalculate();
+        {
+            MarkAsChanged(); // každá změna kolekce = neuložená změna
+            Recalculate();
+        }
 
         private void MaterialItems_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
-            => Recalculate();
+        {
+            MarkAsChanged(); // každá změna kolekce = neuložená změna
+            Recalculate();
+        }
 
         private void Item_PropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
@@ -248,6 +620,7 @@ namespace ElektroOffer_app
                 e.PropertyName == nameof(CalculationItems.WorkItem) ||
                 e.PropertyName == nameof(CalculationItems.MaterialItem))
             {
+                MarkAsChanged(); // každá změna hodnoty = neuložená změna
                 Recalculate();
             }
         }
@@ -282,7 +655,8 @@ namespace ElektroOffer_app
                     Description = $"{x.SelectedTask} / {x.SelectedSpecification} / {x.SelectedMaterial} / {x.SelectedLocation}",
 
                     // měrná jednotka práce (hod, ks, apod.)
-                    Unit = x.WorkUnit,
+                    // ?? "" = fallback na prázdný string pokud WorkUnit vrátí null
+                    Unit = x.WorkUnit ?? "",
 
                     // množství
                     Quantity = x.Quantity,
@@ -323,5 +697,35 @@ namespace ElektroOffer_app
 
         private void OnPropertyChanged([CallerMemberName] string? name = null)
             => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+    }
+
+    // =============================================================
+    // ⌨️ RELAY COMMAND — pomocná třída pro klávesové zkratky
+    // =============================================================
+
+    /// <summary>
+    /// Jednoduchá implementace ICommand pro použití v KeyBinding.
+    /// Umožňuje předat lambda funkci jako příkaz bez nutnosti
+    /// vytvářet celou třídu Command pro každou akci zvlášť.
+    /// </summary>
+    public class RelayCommand : System.Windows.Input.ICommand
+    {
+        private readonly Action<object?> _execute;
+
+        public RelayCommand(Action<object?> execute) => _execute = execute;
+
+        // CanExecute = vždy true (příkaz je vždy dostupný)
+        public bool CanExecute(object? parameter) => true;
+
+        public void Execute(object? parameter) => _execute(parameter);
+
+        // Napojení na WPF CommandManager — standardní pattern pro RelayCommand.
+        // CommandManager.RequerySuggested se spustí, když WPF zjistí změnu stavu UI.
+        // add/remove přes CommandManager eliminuje warning CS0067 (event se "používá").
+        public event EventHandler? CanExecuteChanged
+        {
+            add => System.Windows.Input.CommandManager.RequerySuggested += value;
+            remove => System.Windows.Input.CommandManager.RequerySuggested -= value;
+        }
     }
 }
