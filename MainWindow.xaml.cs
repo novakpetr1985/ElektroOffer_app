@@ -8,6 +8,8 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows;
 
+// ADD-COMENT pro dohledání EXPORT PDF
+
 namespace ElektroOffer_app
 {
     public partial class MainWindow : Window, INotifyPropertyChanged
@@ -268,11 +270,10 @@ namespace ElektroOffer_app
                 OnProjectSaved(savedPath);
         }
 
-        /// <summary>
-        /// Menu: Soubor → Export PDF (kalkulace)
-        /// Exportuje celkový rozpočet do PDF pro zákazníka.
-        /// TODO: Implementovat po přidání QuestPDF nebo iText7.
-        /// </summary>
+        // ADD-KOMENT: PDF export metody — odkomentovat až bude QuestPDF nainstalován a struktura dokumentu finální
+        // ADD-KOMENT: Instalace: NuGet → Install-Package QuestPDF
+        // ADD-KOMENT: Docs: https://www.questpdf.com/documentation/getting-started.html
+        /*
         private void MenuExportPdf_Click(object sender, RoutedEventArgs e)
         {
             // 🚧 PLACEHOLDER — implementace přijde v další fázi
@@ -283,11 +284,6 @@ namespace ElektroOffer_app
                 MessageBoxImage.Information);
         }
 
-        /// <summary>
-        /// Menu: Soubor → Export PDF (ceník)
-        /// Exportuje seznam položek z PriceItems do PDF.
-        /// TODO: Implementovat po přidání QuestPDF nebo iText7.
-        /// </summary>
         private void MenuExportPricePdf_Click(object sender, RoutedEventArgs e)
         {
             // 🚧 PLACEHOLDER — implementace přijde v další fázi
@@ -297,6 +293,7 @@ namespace ElektroOffer_app
                 MessageBoxButton.OK,
                 MessageBoxImage.Information);
         }
+        */
 
         // =========================================================
         // 🛠️ POMOCNÉ METODY — Save/Load logika

@@ -9,6 +9,7 @@
     <!-- HLAVNÍ LAYOUT: Menu + Toolbar + Obsah                        -->
     <!-- DockPanel umožňuje menu a toolbar "přilepit" nahoru a        -->
     <!-- obsahu nechat zbytek prostoru (LastChildFill=True)           -->
+    <!-- ADD-KOMENT pro dohledání EXPORT PDF                          -->
     <!-- =========================================================== -->
     <DockPanel LastChildFill="True">
 
@@ -48,13 +49,15 @@
 
                 <Separator/>
 
-                <!-- Export PDF — výsledná kalkulace pro zákazníka -->
+                <!-- ADD-KOMENT: PDF export — implementovat až bude finální struktura dokumentu (sekce zákazníka) -->
+                <!-- ADD-KOMENT: Plánovaná knihovna: QuestPDF — nainstalovat přes NuGet: Install-Package QuestPDF -->
+                <!--
                 <MenuItem Header="Export _PDF (kalkulace)"
                           Click="MenuExportPdf_Click"/>
 
-                <!-- Export PDF ceníku — přehled položek z PriceItems -->
                 <MenuItem Header="Export PDF (_ceník)"
                           Click="MenuExportPricePdf_Click"/>
+                -->
 
             </MenuItem>
 
@@ -93,19 +96,20 @@
                         Click="MenuSaveAs_Click"
                         Margin="2"/>
 
+                <!-- ADD-KOMENT: PDF tlačítka v toolbaru — odkomentovat až bude PDF export implementován -->
+                <!--
                 <Separator/>
 
-                <!-- Export PDF kalkulace -->
                 <Button Content="📄 PDF kalkulace"
                         ToolTip="Exportovat kalkulaci do PDF"
                         Click="MenuExportPdf_Click"
                         Margin="2"/>
 
-                <!-- Export PDF ceníku -->
                 <Button Content="📄 PDF ceník"
                         ToolTip="Exportovat ceník do PDF"
                         Click="MenuExportPricePdf_Click"
                         Margin="2"/>
+                -->
 
             </ToolBar>
         </ToolBarTray>
