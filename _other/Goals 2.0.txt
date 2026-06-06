@@ -1,6 +1,6 @@
 goals PRO VERZI 2.0
 
-Kompletní workflow
+Kompletní workflow - možnost výběru pouze daných potřeba, spíše generování SQL pravidla pro neplatné kombinace
 - PRÁCE
 - MATERIÁLY
 - CELKOVÁ CENA

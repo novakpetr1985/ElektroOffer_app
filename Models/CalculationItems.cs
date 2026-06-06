@@ -58,7 +58,6 @@ namespace ElektroOffer_app
 
                 // Reset kaskády níže + načtení nových hodnot
                 ResetBelowTask();
-                LoadWorkUnit();
                 LoadSpecifications();
 
                 OnPropertyChanged();
@@ -78,6 +77,7 @@ namespace ElektroOffer_app
                 _selectedSpecification = value;
 
                 ResetBelowSpecification();
+                LoadWorkUnit();
                 LoadMaterials();
 
                 OnPropertyChanged();
@@ -190,7 +190,7 @@ namespace ElektroOffer_app
             using var db = new AppDbContext();
 
             WorkUnit = db.PriceItems
-                .Where(x => x.Task == SelectedTask)
+                .Where(x => x.Specification == SelectedSpecification)
                 .Select(x => x.Unit)
                 .FirstOrDefault();
         }
