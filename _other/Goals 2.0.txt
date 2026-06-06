@@ -16,3 +16,9 @@ DOKUMENTACE
 
 AUTOMATIZOVANÉ TESTY PŘI MERGE do DEV a MAIN větve
 
+Tisk do PDF nebo čistě TISK celkového součtu
+
+Přidání vlastních položek pro vyplnění - další menu pro položky
+
+
+
