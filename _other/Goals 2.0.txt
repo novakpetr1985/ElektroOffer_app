@@ -11,3 +11,8 @@ DATABÁZE napojená na novou logiku
 	PriceMatrix - generování komplet logiky do -> CENÍK ID
 Save/Load
 Import/Export
+
+DOKUMENTACE
+
+AUTOMATIZOVANÉ TESTY PŘI MERGE do DEV a MAIN větve
+
