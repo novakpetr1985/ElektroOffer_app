@@ -145,3 +145,5 @@ D:\_GitHub\ElektroOffer_app\obj\Debug\net10.0-windows\ElektroO.329A0C93.Up2Date
 D:\_GitHub\ElektroOffer_app\obj\Debug\net10.0-windows\ElektroOffer_app.sourcelink.json
 D:\_GitHub\ElektroOffer_app\bin\Debug\net10.0-windows\elektrooffer.db
 D:\_GitHub\ElektroOffer_app\obj\Debug\net10.0-windows\ElektroOffer_app_Content.g.cs
+D:\_GitHub\ElektroOffer_app\obj\Debug\net10.0-windows\AboutWindow.baml
+D:\_GitHub\ElektroOffer_app\obj\Debug\net10.0-windows\AboutWindow.g.cs

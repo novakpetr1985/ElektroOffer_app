@@ -6,9 +6,11 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
+	<Version>1.1.1</Version>
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Assets\LOGO.jpg" />
     <None Remove="elektrooffer.db" />
   </ItemGroup>
 
@@ -29,6 +31,10 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Assets\LOGO.jpg" />
   </ItemGroup>
 
 </Project>

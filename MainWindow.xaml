@@ -9,7 +9,6 @@
     <!-- HLAVNÍ LAYOUT: Menu + Toolbar + Obsah                        -->
     <!-- DockPanel umožňuje menu a toolbar "přilepit" nahoru a        -->
     <!-- obsahu nechat zbytek prostoru (LastChildFill=True)           -->
-    <!-- ADD-KOMENT pro dohledání EXPORT PDF                          -->
     <!-- =========================================================== -->
     <DockPanel LastChildFill="True">
 
@@ -49,6 +48,16 @@
 
                 <Separator/>
 
+                <!-- Import JSON — načte ceník/data z externího JSON souboru -->
+                <MenuItem Header="_Importovat JSON..."
+                          Click="MenuImportJson_Click"/>
+
+                <!-- Export JSON — uloží ceník/data do externího JSON souboru -->
+                <MenuItem Header="_Exportovat JSON..."
+                          Click="MenuExportJson_Click"/>
+
+                <Separator/>
+
                 <!-- ADD-KOMENT: PDF export — implementovat až bude finální struktura dokumentu (sekce zákazníka) -->
                 <!-- ADD-KOMENT: Plánovaná knihovna: QuestPDF — nainstalovat přes NuGet: Install-Package QuestPDF -->
                 <!--
@@ -58,6 +67,24 @@
                 <MenuItem Header="Export PDF (_ceník)"
                           Click="MenuExportPricePdf_Click"/>
                 -->
+
+                <Separator/>
+
+                <!-- Konec — ukončí aplikaci (zeptá se na uložení) -->
+                <MenuItem Header="_Konec"
+                          InputGestureText="Alt+F4"
+                          Click="MenuExit_Click"/>
+
+            </MenuItem>
+
+            <!-- ===================== -->
+            <!-- NÁPOVĚDA             -->
+            <!-- ===================== -->
+            <MenuItem Header="_Nápověda">
+
+                <!-- O aplikaci — zobrazí logo, verzi a autora -->
+                <MenuItem Header="_O aplikaci..."
+                          Click="MenuAbout_Click"/>
 
             </MenuItem>
 
@@ -94,6 +121,20 @@
                 <Button Content="💾 Uložit jako"
                         ToolTip="Uložit jako... (Ctrl+Shift+S)"
                         Click="MenuSaveAs_Click"
+                        Margin="2"/>
+
+                <Separator/>
+
+                <!-- Import JSON — načtení dat z externího JSON souboru -->
+                <Button Content="📥 Import JSON"
+                        ToolTip="Importovat data z JSON souboru"
+                        Click="MenuImportJson_Click"
+                        Margin="2"/>
+
+                <!-- Export JSON — uložení dat do externího JSON souboru -->
+                <Button Content="📤 Export JSON"
+                        ToolTip="Exportovat data do JSON souboru"
+                        Click="MenuExportJson_Click"
                         Margin="2"/>
 
                 <!-- ADD-KOMENT: PDF tlačítka v toolbaru — odkomentovat až bude PDF export implementován -->

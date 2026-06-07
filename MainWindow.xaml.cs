@@ -8,8 +8,6 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows;
 
-// ADD-COMENT pro dohledání EXPORT PDF
-
 namespace ElektroOffer_app
 {
     public partial class MainWindow : Window, INotifyPropertyChanged
@@ -268,6 +266,114 @@ namespace ElektroOffer_app
 
             if (savedPath != null)
                 OnProjectSaved(savedPath);
+        }
+
+        // =========================================================
+        // 📥 IMPORT / 📤 EXPORT JSON
+        // =========================================================
+
+        /// <summary>
+        /// Menu: Soubor → Importovat JSON
+        /// Načte data ceníku (PriceItems) z externího JSON souboru.
+        /// Slouží pro přenos ceníku mezi instalacemi nebo jako záloha.
+        /// POZOR: Import přepíše stávající data v DB — uživatel je upozorněn.
+        /// </summary>
+        private void MenuImportJson_Click(object sender, RoutedEventArgs e)
+        {
+            // Upozornění před importem — přepíše data v DB
+            var confirm = MessageBox.Show(
+                "Import JSON přepíše stávající data ceníku (PriceItems) v databázi.\n\nChcete pokračovat?",
+                "Import JSON — upozornění",
+                MessageBoxButton.YesNo,
+                MessageBoxImage.Warning);
+
+            if (confirm != MessageBoxResult.Yes) return;
+
+            // ADD-KOMENT: Implementovat logiku importu JSON do DB (PriceItems)
+            // ADD-KOMENT: Postup:
+            // ADD-KOMENT: 1. Otevřít OpenFileDialog s filtrem *.json
+            // ADD-KOMENT: 2. Načíst JSON soubor (File.ReadAllText)
+            // ADD-KOMENT: 3. Deserializovat do List<PriceItem> (JsonSerializer.Deserialize)
+            // ADD-KOMENT: 4. Uložit do DB přes AppDbContext (db.PriceItems.AddRange / SaveChanges)
+            // ADD-KOMENT: 5. Znovu načíst Tasks a Materials do ObservableCollection
+            MessageBox.Show(
+                "Import JSON bude implementován v další fázi.\n\nBude načítat data ceníku z externího JSON souboru do databáze.",
+                "Připravuje se",
+                MessageBoxButton.OK,
+                MessageBoxImage.Information);
+        }
+
+        /// <summary>
+        /// Menu: Soubor → Exportovat JSON
+        /// Uloží data ceníku (PriceItems) do externího JSON souboru.
+        /// Slouží pro zálohu ceníku nebo přenos mezi instalacemi.
+        /// </summary>
+        private void MenuExportJson_Click(object sender, RoutedEventArgs e)
+        {
+            // ADD-KOMENT: Implementovat logiku exportu PriceItems z DB do JSON souboru
+            // ADD-KOMENT: Postup:
+            // ADD-KOMENT: 1. Načíst všechny záznamy z DB (db.PriceItems.ToList())
+            // ADD-KOMENT: 2. Otevřít SaveFileDialog s filtrem *.json
+            // ADD-KOMENT: 3. Serializovat do JSON (JsonSerializer.Serialize s WriteIndented=true)
+            // ADD-KOMENT: 4. Zapsat na disk (File.WriteAllText)
+            MessageBox.Show(
+                "Export JSON bude implementován v další fázi.\n\nBude exportovat data ceníku z databáze do JSON souboru.",
+                "Připravuje se",
+                MessageBoxButton.OK,
+                MessageBoxImage.Information);
+        }
+
+        // =========================================================
+        // ❓ NÁPOVĚDA
+        // =========================================================
+
+        /// <summary>
+        /// Menu: Nápověda → O aplikaci
+        /// Otevře modální okno s logem, verzí a autorem aplikace.
+        /// Owner = this zajistí centrování okna vůči MainWindow.
+        /// </summary>
+        private void MenuAbout_Click(object sender, RoutedEventArgs e)
+        {
+            var aboutWindow = new AboutWindow
+            {
+                // Owner zajistí správné centrování a chování modálního okna
+                Owner = this
+            };
+
+            // ShowDialog = modální okno (nelze klikat na MainWindow dokud je otevřené)
+            aboutWindow.ShowDialog();
+        }
+
+        // =========================================================
+        // 🚪 KONEC
+        // =========================================================
+
+        /// <summary>
+        /// Menu: Soubor → Konec
+        /// Zeptá se na uložení neuložených změn, pak ukončí aplikaci.
+        /// </summary>
+        private void MenuExit_Click(object sender, RoutedEventArgs e)
+        {
+            // Pokud jsou neuložené změny → zeptáme se před ukončením
+            if (_hasUnsavedChanges)
+            {
+                var result = MessageBox.Show(
+                    "Máte neuložené změny. Chcete je uložit před ukončením?",
+                    "Neuložené změny",
+                    MessageBoxButton.YesNoCancel,
+                    MessageBoxImage.Warning);
+
+                if (result == MessageBoxResult.Cancel) return;
+
+                if (result == MessageBoxResult.Yes)
+                {
+                    var saved = _projectService.Save(BuildProjectData(), _currentFilePath);
+                    if (saved == null) return; // uložení selhalo nebo bylo zrušeno
+                }
+            }
+
+            // Ukončení aplikace
+            Application.Current.Shutdown();
         }
 
         // ADD-KOMENT: PDF export metody — odkomentovat až bude QuestPDF nainstalován a struktura dokumentu finální
