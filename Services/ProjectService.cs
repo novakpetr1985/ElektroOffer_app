@@ -162,6 +162,108 @@ namespace ElektroOffer_app.Services
         }
 
         // =========================================================
+        // 📤 EXPORT CENÍKU — PriceItems + Materials do JSON
+        // =========================================================
+
+        /// <summary>
+        /// Exportuje ceník práce (PriceItems) a materiálu (Materials) do JSON souboru.
+        /// Otevře dialog pro výběr cesty a uloží data ve formátu .eofcat.
+        /// </summary>
+        /// <param name="data">Připravená exportní data (sestavená v MainWindow)</param>
+        /// <returns>True = export proběhl úspěšně, False = zrušeno nebo chyba</returns>
+        public bool ExportCatalog(CatalogExportData data)
+        {
+            // Otevření dialogu pro uložení souboru
+            var dialog = new SaveFileDialog
+            {
+                Title = "Exportovat ceník",
+                Filter = "Ceník ElektroOffer (*.eofcat)|*.eofcat|Všechny soubory (*.*)|*.*",
+                DefaultExt = ".eofcat",
+                FileName = $"cenik_export_{DateTime.Now:yyyy-MM-dd}"
+            };
+
+            // Pokud uživatel zruší dialog → vrátíme false
+            if (dialog.ShowDialog() != true)
+                return false;
+
+            try
+            {
+                // Aktualizace času exportu
+                data.ExportedAt = DateTime.Now;
+
+                // Serializace do čitelného JSON
+                var json = JsonSerializer.Serialize(data, _jsonOptions);
+
+                // Zápis na disk
+                File.WriteAllText(dialog.FileName, json);
+
+                MessageBox.Show(
+                    $"Ceník byl úspěšně exportován.\n\n" +
+                    $"Položky práce: {data.PriceItems.Count}\n" +
+                    $"Položky materiálu: {data.Materials.Count}\n\n" +
+                    $"Soubor: {dialog.FileName}",
+                    "Export dokončen",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Information);
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Chyba při exportu ceníku:\n{ex.Message}",
+                    "Chyba exportu", MessageBoxButton.OK, MessageBoxImage.Error);
+                return false;
+            }
+        }
+
+        // =========================================================
+        // 📥 IMPORT CENÍKU — PriceItems + Materials z JSON
+        // =========================================================
+
+        /// <summary>
+        /// Importuje ceník ze souboru .eofcat (JSON).
+        /// Otevře dialog pro výběr souboru a vrátí načtená data.
+        /// Samotný zápis do DB provádí MainWindow (má přístup k AppDbContext).
+        /// </summary>
+        /// <returns>Načtená data ceníku, nebo null při zrušení/chybě</returns>
+        public CatalogExportData? ImportCatalog()
+        {
+            // Otevření dialogu pro výběr souboru
+            var dialog = new OpenFileDialog
+            {
+                Title = "Importovat ceník",
+                Filter = "Ceník ElektroOffer (*.eofcat)|*.eofcat|Všechny soubory (*.*)|*.*"
+            };
+
+            // Pokud uživatel zruší dialog → vrátíme null
+            if (dialog.ShowDialog() != true)
+                return null;
+
+            try
+            {
+                // Přečtení a deserializace JSON souboru
+                var json = File.ReadAllText(dialog.FileName);
+                var data = JsonSerializer.Deserialize<CatalogExportData>(json, _jsonOptions);
+
+                if (data == null)
+                {
+                    MessageBox.Show(
+                        "Soubor nelze načíst — pravděpodobně poškozený nebo neplatný formát.",
+                        "Chyba importu", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return null;
+                }
+
+                return data;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Chyba při importu ceníku:\n{ex.Message}",
+                    "Chyba", MessageBoxButton.OK, MessageBoxImage.Error);
+                return null;
+            }
+        }
+
+        // =========================================================
         // 🔒 PRIVÁTNÍ: Zápis JSON na disk
         // =========================================================
 
