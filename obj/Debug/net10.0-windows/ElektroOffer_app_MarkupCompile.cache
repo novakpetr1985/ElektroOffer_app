@@ -1,5 +1,5 @@
 ﻿ElektroOffer_app
-
+1.1.1.0
 
 winexe
 C#
@@ -12,7 +12,7 @@ TRACE;DEBUG;NET;NET10_0;NETCOREAPP;WINDOWS;WINDOWS7_0;NET5_0_OR_GREATER;NET6_0_O
 D:\_GitHub\ElektroOffer_app\App.xaml
 2-1671400824
 1857514100
-16-1684246412
+18719071795
 224-820089393
 AboutWindow.xaml;MainWindow.xaml;
 

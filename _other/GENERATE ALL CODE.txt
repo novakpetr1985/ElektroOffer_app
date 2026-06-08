@@ -1,7 +1,8 @@
 POWERSHELL ----------------------------------------------------------------------------------
 
+////////////////////////// ALL //////////////////////////
 $root = "D:\_GitHub\ElektroOffer_app"
-$output = Join-Path $root "_other\_SPOJENO.txt"
+$output = Join-Path $root "_other\_SPOJENO-ALL.txt"
 
 if (Test-Path $output) { Remove-Item $output }
 
@@ -38,8 +39,89 @@ foreach ($file in $files) {
     Add-Content $output "`n"
 }
 
-Write-Host "Hotovo – soubory byly spojeny do _other\_SPOJENO.txt"
+Write-Host "Hotovo – soubory byly spojeny do _other\_SPOJENO-ALL.txt"
+////////////////////////// ALL //////////////////////////
 
+
+///////////////////// MOJE SOUBORY /////////////////////
+Elektrooffer_app/Data/AppDbContext.cs 
+Elektrooffer_app/Docs/README.md 
+Elektrooffer_app/Models/BudgetItems.cs 
+Elektrooffer_app/Models/CalculationsItems.cs 
+Elektrooffer_app/Models/CatalogExportData.cs 
+Elektrooffer_app/Models/Material.cs 
+Elektrooffer_app/Models/PriceItems.cs 
+Elektrooffer_app/Models/ProjectData.cs 
+Elektrooffer_app/Services/ProjectService.cs 
+Elektrooffer_app/AboutWindow.xaml 
+Elektrooffer_app/AboutWindow.xaml.cs 
+Elektrooffer_app/App.xaml 
+Elektrooffer_app/App.xaml.cs 
+Elektrooffer_app/AssemblyInfo.cs 
+Elektrooffer_app/MainWindows.xaml 
+Elektrooffer_app/MainWindows.xaml.cs 
+
+$root = "D:\_GitHub\ElektroOffer_app"
+$output = Join-Path $root "_other\_SPOJENO-CHOICE.txt"
+
+if (Test-Path $output) { Remove-Item $output }
+
+# 1) Struktura projektu
+$structure = Get-ChildItem -Recurse $root | 
+    Select-Object FullName |
+    ForEach-Object { $_.FullName.Replace($root, "") }
+
+Add-Content $output "Struktura projektu ($root)"
+Add-Content $output "------------------------------------------------------------"
+$structure | Add-Content $output
+Add-Content $output "------------------------------------------------------------`n`n"
+
+# 2) Jen vybrané soubory
+$selectedFiles = @(
+    "Data\AppDbContext.cs",
+    "Docs\README.md",
+    "Models\BudgetItems.cs",
+    "Models\CalculationsItems.cs",
+    "Models\CatalogExportData.cs",
+    "Models\Material.cs",
+    "Models\PriceItems.cs",
+    "Models\ProjectData.cs",
+    "Services\ProjectService.cs",
+    "AboutWindow.xaml",
+    "AboutWindow.xaml.cs",
+    "App.xaml",
+    "App.xaml.cs",
+    "AssemblyInfo.cs",
+    "MainWindows.xaml",
+    "MainWindows.xaml.cs"
+)
+
+$currentFolder = ""
+
+foreach ($fileRel in $selectedFiles) {
+    $filePath = Join-Path $root $fileRel
+
+    if (-not (Test-Path $filePath)) {
+        Add-Content $output "`n===== SOUBOR NENALEZEN: $fileRel =====`n"
+        continue
+    }
+
+    $folder = Split-Path $fileRel
+
+    if ($folder -ne $currentFolder) {
+        Add-Content $output "`n===== SLOŽKA: $folder =====`n"
+        $currentFolder = $folder
+    }
+
+    Add-Content $output "--- Soubor: $(Split-Path $fileRel -Leaf)"
+    Add-Content $output "--- Cesta: $fileRel"
+    Add-Content $output "----------------------------------------"
+    Get-Content $filePath | Add-Content $output
+    Add-Content $output "`n"
+}
+
+Write-Host "Hotovo – soubory byly spojeny do _other\_SPOJENO-CHOICE.txt"
+///////////////////// MOJE SOUBORY /////////////////////
 
 
 
@@ -73,12 +155,13 @@ cd D:\_GitHub\ElektroOffer_app\_other
 Spusť skript:
 
 Kód
-python combine.py
+python combine-all.py
+python combine-choice.py
 4) Výsledek
 Po spuštění se automaticky vytvoří soubor:
 
 Kód
-D:\_GitHub\ElektroOffer_app\_other\_SPOJENO.txt
+D:\_GitHub\ElektroOffer_app\_other\_SPOJENO-ALL.txt / _SPOJENO-CHOICE
 Tento soubor obsahuje:
 
 strukturu celého projektu,
@@ -91,16 +174,16 @@ u každého souboru název, relativní cestu a obsah.
 Kdykoli chceš aktualizovat výstup, stačí znovu spustit:
 
 Kód
-python combine.py
-Pokud chceš, připravím ti i verzi combine.py přesně na míru, aby byla 100% čistá a přehledná.
+python combine-all.py
+python combine-choice.py
 
 
-
+////////////////////////// ALL //////////////////////////
 import os
 
 root = r"D:\_GitHub\ElektroOffer_app"
 output_dir = os.path.join(root, "_other")
-output_file = os.path.join(output_dir, "_SPOJENO.txt")
+output_file = os.path.join(output_dir, "_SPOJENO-ALL.txt")
 
 os.makedirs(output_dir, exist_ok=True)
 
@@ -147,4 +230,95 @@ with open(output_file, "w", encoding="utf-8") as out:
 
         out.write("\n\n")
 
-print("Hotovo – soubory byly spojeny do _other/_SPOJENO.txt")
+print("Hotovo – soubory byly spojeny do _other/_SPOJENO-ALL.txt")
+
+
+///////////////////// MOJE SOUBORY /////////////////////
+Elektrooffer_app/Data/AppDbContext.cs 
+Elektrooffer_app/Docs/README.md 
+Elektrooffer_app/Models/BudgetItems.cs 
+Elektrooffer_app/Models/CalculationsItems.cs 
+Elektrooffer_app/Models/CatalogExportData.cs 
+Elektrooffer_app/Models/Material.cs 
+Elektrooffer_app/Models/PriceItems.cs 
+Elektrooffer_app/Models/ProjectData.cs 
+Elektrooffer_app/Services/ProjectService.cs 
+Elektrooffer_app/AboutWindow.xaml 
+Elektrooffer_app/AboutWindow.xaml.cs 
+Elektrooffer_app/App.xaml 
+Elektrooffer_app/App.xaml.cs 
+Elektrooffer_app/AssemblyInfo.cs 
+Elektrooffer_app/MainWindows.xaml 
+Elektrooffer_app/MainWindows.xaml.cs
+
+
+import os
+
+root = r"D:\_GitHub\ElektroOffer_app"
+output_dir = os.path.join(root, "_other")
+output_file = os.path.join(output_dir, "_SPOJENO-CHOICE.txt")
+
+os.makedirs(output_dir, exist_ok=True)
+
+# 1) Struktura projektu
+structure_lines = []
+for path, dirs, files in os.walk(root):
+    rel = path.replace(root, "")
+    structure_lines.append(rel if rel else "/")
+    for f in files:
+        structure_lines.append(os.path.join(rel, f))
+
+with open(output_file, "w", encoding="utf-8") as out:
+    out.write(f"Struktura projektu ({root})\n")
+    out.write("------------------------------------------------------------\n")
+    for line in structure_lines:
+        out.write(line + "\n")
+    out.write("------------------------------------------------------------\n\n")
+
+# 2) Jen vybrané soubory
+selected_files = [
+    r"Data\AppDbContext.cs",
+    r"Docs\README.md",
+    r"Models\BudgetItems.cs",
+    r"Models\CalculationsItems.cs",
+    r"Models\CatalogExportData.cs",
+    r"Models\Material.cs",
+    r"Models\PriceItems.cs",
+    r"Models\ProjectData.cs",
+    r"Services\ProjectService.cs",
+    r"AboutWindow.xaml",
+    r"AboutWindow.xaml.cs",
+    r"App.xaml",
+    r"App.xaml.cs",
+    r"AssemblyInfo.cs",
+    r"MainWindows.xaml",
+    r"MainWindows.xaml.cs"
+]
+
+current_folder = ""
+
+with open(output_file, "a", encoding="utf-8") as out:
+    for rel in selected_files:
+        file_path = os.path.join(root, rel)
+
+        if not os.path.exists(file_path):
+            out.write(f"\n===== SOUBOR NENALEZEN: {rel} =====\n")
+            continue
+
+        folder = os.path.dirname(rel)
+
+        if folder != current_folder:
+            out.write(f"\n===== SLOŽKA: {folder} =====\n")
+            current_folder = folder
+
+        out.write(f"--- Soubor: {os.path.basename(rel)}\n")
+        out.write(f"--- Cesta: {rel}\n")
+        out.write("----------------------------------------\n")
+
+        with open(file_path, "r", encoding="utf-8") as f:
+            out.write(f.read())
+
+        out.write("\n\n")
+
+print("Hotovo – soubory byly spojeny do _other/_SPOJENO-CHOICE.txt")
+///////////////////// MOJE SOUBORY /////////////////////

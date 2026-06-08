@@ -3974,13 +3974,15 @@ MainWindow.xaml.cs
 \Services\ProjectService.cs
 \_other
 \_other\ChangeTables
-\_other\combine.py
+\_other\combine-all.py
+\_other\combine-choice.py
 \_other\GENERATE ALL CODE.txt
 \_other\GITbranches1.png
 \_other\GITbranches2.png
 \_other\Goals 2.0.txt
 \_other\new_fetures.txt
 \_other\STAVBY - DB.xlsx
+\_other\_SPOJENO-ALL.txt
 \_other\_SPOJENO.txt
 \_other\DB-CSV
 \_other\DB-CSV\ALL_CODE-1.1.1

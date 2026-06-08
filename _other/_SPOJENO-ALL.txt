@@ -3974,13 +3974,16 @@ MainWindow.xaml.cs
 \Services\ProjectService.cs
 \_other
 \_other\ChangeTables
-\_other\combine.py
+\_other\combine-all.py
+\_other\combine-choice.py
 \_other\GENERATE ALL CODE.txt
 \_other\GITbranches1.png
 \_other\GITbranches2.png
 \_other\Goals 2.0.txt
 \_other\new_fetures.txt
 \_other\STAVBY - DB.xlsx
+\_other\_SPOJENO-ALL.txt
+\_other\_SPOJENO-CHOICE.txt
 \_other\_SPOJENO.txt
 \_other\DB-CSV
 \_other\DB-CSV\ALL_CODE-1.1.1
@@ -3996,9 +3999,201 @@ MainWindow.xaml.cs
 ------------------------------------------------------------
 
 
-===== SLOŽKA: Data =====
+===== SLOŽKA: \ =====
+--- Soubor: AboutWindow.xaml
+--- Cesta: \AboutWindow.xaml
+----------------------------------------
+﻿<Window x:Class="ElektroOffer_app.AboutWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="O aplikaci"
+        Width="420"
+        MinHeight="300"
+        MaxHeight="600"
+        ResizeMode="NoResize"
+        WindowStartupLocation="CenterOwner"
+        ShowInTaskbar="False">
+
+    <!-- =========================================================== -->
+    <!-- HLAVNÍ LAYOUT: ScrollViewer pro případ velkého obsahu        -->
+    <!-- =========================================================== -->
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+
+        <StackPanel Margin="30"
+                    HorizontalAlignment="Center">
+
+            <!-- ======================================================= -->
+            <!-- 🖼️ LOGO APLIKACE                                        -->
+            <!-- Obrázek se načítá ze složky Assets/ v projektu.         -->
+            <!-- Build Action musí být nastaven na "Resource" ve VS.     -->
+            <!-- ======================================================= -->
+            <Image Source="/Assets/logo.jpg"
+                   Width="180"
+                   Height="180"
+                   Stretch="Uniform"
+                   HorizontalAlignment="Center"
+                   Margin="0,0,0,20"/>
+
+            <!-- ======================================================= -->
+            <!-- 📛 NÁZEV APLIKACE                                        -->
+            <!-- ======================================================= -->
+            <TextBlock Text="ElektroOffer"
+                       FontSize="24"
+                       FontWeight="Bold"
+                       HorizontalAlignment="Center"
+                       TextAlignment="Center"
+                       Margin="0,0,0,6"/>
+
+            <!-- ======================================================= -->
+            <!-- 🔢 VERZE — načítá se z .csproj přes AssemblyInfo        -->
+            <!-- Text se nastavuje z code-behind při otevření okna       -->
+            <!-- ======================================================= -->
+            <TextBlock x:Name="VersionText"
+                       FontSize="14"
+                       Foreground="Gray"
+                       HorizontalAlignment="Center"
+                       TextAlignment="Center"
+                       Margin="0,0,0,20"/>
+
+            <!-- ======================================================= -->
+            <!-- ODDĚLOVAČ                                                -->
+            <!-- ======================================================= -->
+            <Separator Margin="0,0,0,20"/>
+
+            <!-- ======================================================= -->
+            <!-- 👤 AUTOR                                                 -->
+            <!-- ======================================================= -->
+            <TextBlock Text="Vyrobeno"
+                       FontSize="13"
+                       Foreground="Gray"
+                       HorizontalAlignment="Center"
+                       TextAlignment="Center"
+                       Margin="0,0,0,4"/>
+
+            <TextBlock Text="Nowimusic"
+                       FontSize="16"
+                       FontWeight="SemiBold"
+                       HorizontalAlignment="Center"
+                       TextAlignment="Center"
+                       Margin="0,0,0,30"/>
+
+            <!-- ======================================================= -->
+            <!-- ✅ TLAČÍTKO ZAVŘÍT                                       -->
+            <!-- ======================================================= -->
+            <Button Content="Zavřít"
+                    Width="100"
+                    HorizontalAlignment="Center"
+                    Click="CloseButton_Click"/>
+
+        </StackPanel>
+
+    </ScrollViewer>
+
+</Window>
+
+
+--- Soubor: AboutWindow.xaml.cs
+--- Cesta: \AboutWindow.xaml.cs
+----------------------------------------
+﻿using System.Reflection;
+using System.Windows;
+
+namespace ElektroOffer_app
+{
+    /// <summary>
+    /// Okno "O aplikaci" — zobrazí logo, verzi a autora.
+    /// Otevírá se z menu Nápověda → O aplikaci.
+    /// </summary>
+    public partial class AboutWindow : Window
+    {
+        public AboutWindow()
+        {
+            InitializeComponent();
+
+            // =========================================================
+            // 🔢 NAČTENÍ VERZE Z ASSEMBLY
+            // =========================================================
+            // Verze se čte automaticky z .csproj souboru (<Version>x.x.x</Version>).
+            // Stačí tedy měnit verzi jen na jednom místě — v .csproj.
+            // Formát: "Verze 1.0.0" — major.minor.patch
+            // =========================================================
+
+            var version = Assembly
+                .GetExecutingAssembly()
+                .GetName()
+                .Version;
+
+            // Zobrazíme jen major.minor.patch (bez revision čísla za poslední tečkou)
+            VersionText.Text = version != null
+                ? $"Verze {version.Major}.{version.Minor}.{version.Build}"
+                : "Verze neznámá";
+        }
+
+        // =========================================================
+        // ✅ ZAVŘENÍ OKNA
+        // =========================================================
+
+        /// <summary>
+        /// Tlačítko Zavřít — zavře okno O aplikaci.
+        /// </summary>
+        private void CloseButton_Click(object sender, RoutedEventArgs e)
+            => Close();
+    }
+}
+
+
+--- Soubor: App.xaml
+--- Cesta: \App.xaml
+----------------------------------------
+﻿<Application x:Class="ElektroOffer_app.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:ElektroOffer_app"
+             StartupUri="MainWindow.xaml">
+    <Application.Resources>
+         
+    </Application.Resources>
+</Application>
+
+
+--- Soubor: App.xaml.cs
+--- Cesta: \App.xaml.cs
+----------------------------------------
+﻿using System.Configuration;
+using System.Data;
+using System.Windows;
+
+namespace ElektroOffer_app
+{
+    /// <summary>
+    /// Interaction logic for App.xaml
+    /// </summary>
+    public partial class App : Application
+    {
+    }
+
+}
+
+
+--- Soubor: AssemblyInfo.cs
+--- Cesta: \AssemblyInfo.cs
+----------------------------------------
+using System.Windows;
+
+[assembly: ThemeInfo(
+    ResourceDictionaryLocation.None,            //where theme specific resource dictionaries are located
+                                                //(used if a resource is not found in the page,
+                                                // or application resource dictionaries)
+    ResourceDictionaryLocation.SourceAssembly   //where the generic resource dictionary is located
+                                                //(used if a resource is not found in the page,
+                                                // app, or any theme specific resource dictionaries)
+)]
+
+
+
+===== SLOŽKA: \Data =====
 --- Soubor: AppDbContext.cs
---- Cesta: Data\AppDbContext.cs
+--- Cesta: \Data\AppDbContext.cs
 ----------------------------------------
 ﻿using Microsoft.EntityFrameworkCore;
 using ElektroOffer_app.Models;
@@ -4038,20 +4233,2014 @@ namespace ElektroOffer_app.Data
 
 
 
-===== SLOŽKA: Docs =====
+===== SLOŽKA: \Docs =====
 --- Soubor: README.md
---- Cesta: Docs\README.md
+--- Cesta: \Docs\README.md
 ----------------------------------------
 
 
 
-===== SOUBOR NENALEZEN: Models\BudgetItems.cs =====
+===== SLOŽKA: \ =====
+--- Soubor: MainWindow.xaml
+--- Cesta: \MainWindow.xaml
+----------------------------------------
+﻿<Window x:Class="ElektroOffer_app.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Elektro Offer - Kalkulace"
+        Height="1000"
+        Width="1000">
 
-===== SOUBOR NENALEZEN: Models\CalculationsItems.cs =====
+    <!-- =========================================================== -->
+    <!-- HLAVNÍ LAYOUT: Menu + Toolbar + Obsah                        -->
+    <!-- DockPanel umožňuje menu a toolbar "přilepit" nahoru a        -->
+    <!-- obsahu nechat zbytek prostoru (LastChildFill=True)           -->
+    <!-- =========================================================== -->
+    <DockPanel LastChildFill="True">
 
-===== SLOŽKA: Models =====
+        <!-- ======================================================= -->
+        <!-- 📋 MENU — klasické menu nahoře (File | ...)             -->
+        <!-- ======================================================= -->
+        <Menu DockPanel.Dock="Top">
+
+            <!-- ===================== -->
+            <!-- SOUBOR                -->
+            <!-- ===================== -->
+            <MenuItem Header="_Soubor">
+
+                <!-- Nový projekt — resetuje celou kalkulaci -->
+                <MenuItem Header="_Nový projekt"
+                          InputGestureText="Ctrl+N"
+                          Click="MenuNewProject_Click"/>
+
+                <Separator/>
+
+                <!-- Otevřít — načte projekt z .eof souboru -->
+                <MenuItem Header="_Otevřít..."
+                          InputGestureText="Ctrl+O"
+                          Click="MenuLoad_Click"/>
+
+                <Separator/>
+
+                <!-- Uložit — uloží na aktuální cestu (nebo vyvolá Save As) -->
+                <MenuItem Header="_Uložit"
+                          InputGestureText="Ctrl+S"
+                          Click="MenuSave_Click"/>
+
+                <!-- Uložit jako — vždy otevře dialog pro výběr cesty -->
+                <MenuItem Header="Uložit _jako..."
+                          InputGestureText="Ctrl+Shift+S"
+                          Click="MenuSaveAs_Click"/>
+
+                <!-- ADD-KOMENT: PDF export — implementovat až bude finální struktura dokumentu (sekce zákazníka) -->
+                <!-- ADD-KOMENT: Plánovaná knihovna: QuestPDF — nainstalovat přes NuGet: Install-Package QuestPDF -->
+                <!--
+                <MenuItem Header="Export _PDF (kalkulace)"
+                          Click="MenuExportPdf_Click"/>
+
+                <MenuItem Header="Export PDF (_ceník)"
+                          Click="MenuExportPricePdf_Click"/>
+                -->
+
+                <!-- Konec — ukončí aplikaci (zeptá se na uložení) -->
+                <MenuItem Header="_Konec"
+                          InputGestureText="Alt+F4"
+                          Click="MenuExit_Click"/>
+
+            </MenuItem>
+
+            <!-- ===================== -->
+            <!-- NÁPOVĚDA             -->
+            <!-- ===================== -->
+            <MenuItem Header="_Nápověda">
+
+                <!-- O aplikaci — zobrazí logo, verzi a autora -->
+                <MenuItem Header="_O aplikaci..."
+                          Click="MenuAbout_Click"/>
+
+            </MenuItem>
+
+        </Menu>
+
+        <!-- ======================================================= -->
+        <!-- 🔧 TOOLBAR — tlačítka pod menu pro rychlý přístup       -->
+        <!-- ToolBar.Band / BandIndex řídí řazení na toolbaru        -->
+        <!-- ======================================================= -->
+        <ToolBarTray DockPanel.Dock="Top">
+            <ToolBar>
+
+                <!-- Nový projekt -->
+                <Button Content="🆕 Nový"
+                        ToolTip="Nový projekt (Ctrl+N)"
+                        Click="MenuNewProject_Click"
+                        Margin="2"/>
+
+                <Separator/>
+
+                <!-- Otevřít -->
+                <Button Content="📂 Otevřít"
+                        ToolTip="Načíst projekt (Ctrl+O)"
+                        Click="MenuLoad_Click"
+                        Margin="2"/>
+
+                <!-- Uložit -->
+                <Button Content="💾 Uložit"
+                        ToolTip="Uložit projekt (Ctrl+S)"
+                        Click="MenuSave_Click"
+                        Margin="2"/>
+
+                <!-- Uložit jako -->
+                <Button Content="💾 Uložit jako"
+                        ToolTip="Uložit jako... (Ctrl+Shift+S)"
+                        Click="MenuSaveAs_Click"
+                        Margin="2"/>
+
+                <Separator/>
+
+                <!-- ADD-KOMENT: PDF tlačítka v toolbaru — odkomentovat až bude PDF export implementován -->
+                <!--
+                <Separator/>
+
+                <Button Content="📄 PDF kalkulace"
+                        ToolTip="Exportovat kalkulaci do PDF"
+                        Click="MenuExportPdf_Click"
+                        Margin="2"/>
+
+                <Button Content="📄 PDF ceník"
+                        ToolTip="Exportovat ceník do PDF"
+                        Click="MenuExportPricePdf_Click"
+                        Margin="2"/>
+                -->
+
+            </ToolBar>
+        </ToolBarTray>
+
+        <!-- ======================================================= -->
+        <!-- 📌 STAVOVÝ ŘÁDEK — název projektu + stav uložení        -->
+        <!-- Zobrazuje aktuální název souboru a zda jsou neuložené    -->
+        <!-- změny (hvězdička * v titulku je běžná konvence v IT)    -->
+        <!-- ======================================================= -->
+        <StatusBar DockPanel.Dock="Bottom">
+            <StatusBarItem>
+                <TextBlock Text="{Binding StatusText}"
+                           Foreground="Gray"
+                           FontSize="12"/>
+            </StatusBarItem>
+        </StatusBar>
+
+        <!-- ======================================================= -->
+        <!-- 📄 HLAVNÍ OBSAH — původní Grid s kalkulací              -->
+        <!-- Přesunut dovnitř DockPanelu, jinak vše stejné           -->
+        <!-- ======================================================= -->
+        <ScrollViewer VerticalScrollBarVisibility="Auto">
+            <Grid Margin="20">
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <!-- ========================================================= -->
+                <!-- 🔧 SEKCE: PRÁCE -->
+                <!-- ========================================================= -->
+                <StackPanel Grid.Row="0" Margin="0,0,0,20">
+
+                    <!-- ========================= -->
+                    <!-- HLAVIČKA SEKCE -->
+                    <!-- ========================= -->
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="PRÁCE"
+                                   FontSize="18"
+                                   FontWeight="Bold"/>
+                        <Button Content="+"
+                                Width="30"
+                                Margin="10,0,0,0"
+                                Click="AddWorkItem_Click"
+                                ToolTip="Přidat řádek práce"/>
+                    </StackPanel>
+
+                    <!-- ========================= -->
+                    <!-- HLAVIČKA TABULKY -->
+                    <!-- ========================= -->
+                    <Grid Margin="0,8,0,5">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="35"/>
+                            <ColumnDefinition Width="150"/>
+                            <ColumnDefinition Width="150"/>
+                            <ColumnDefinition Width="150"/>
+                            <ColumnDefinition Width="120"/>
+                            <ColumnDefinition Width="60"/>
+                            <ColumnDefinition Width="60"/>
+                            <ColumnDefinition Width="120"/>
+                            <ColumnDefinition Width="70"/>
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Grid.Column="1" Text="Úkon"      FontWeight="Bold"/>
+                        <TextBlock Grid.Column="2" Text="Upřesnění" FontWeight="Bold"/>
+                        <TextBlock Grid.Column="3" Text="Materiál"  FontWeight="Bold"/>
+                        <TextBlock Grid.Column="4" Text="Umístění"  FontWeight="Bold"/>
+
+                        <!-- 🔴 ZMĚNA: číselné sloupce zarovnány shodně s obsahem -->
+                        <TextBlock Grid.Column="5" Text="Množství"  FontWeight="Bold"
+                                   HorizontalAlignment="Right" TextAlignment="Right"/>
+                        <TextBlock Grid.Column="6" Text="MJ"        FontWeight="Bold"
+                                   HorizontalAlignment="Center" TextAlignment="Center"/>
+                        <TextBlock Grid.Column="7" Text="Cena"      FontWeight="Bold"
+                                   HorizontalAlignment="Right" TextAlignment="Right"/>
+
+                    </Grid>
+
+                    <!-- ========================= -->
+                    <!-- ITEM LIST: PRÁCE -->
+                    <!-- ========================= -->
+                    <ItemsControl ItemsSource="{Binding WorkCalcItems}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+
+                                <Border BorderBrush="#E0E0E0"
+                                        BorderThickness="0,0,0,1"
+                                        Padding="0,5">
+
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="35"/>
+                                            <ColumnDefinition Width="150"/>
+                                            <ColumnDefinition Width="150"/>
+                                            <ColumnDefinition Width="150"/>
+                                            <ColumnDefinition Width="120"/>
+                                            <ColumnDefinition Width="60"/>
+                                            <ColumnDefinition Width="60"/>
+                                            <ColumnDefinition Width="120"/>
+                                            <ColumnDefinition Width="70"/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <!-- ➖ Smazání řádku -->
+                                        <Button Grid.Column="0"
+                                                Content="−"
+                                                Width="25"
+                                                Height="25"
+                                                Background="#E53935"
+                                                Foreground="White"
+                                                ToolTip="Smazat řádek"
+                                                Click="DeleteWorkItem_Click"/>
+
+                                        <!-- ÚKON -->
+                                        <ComboBox Grid.Column="1"
+                                                  ItemsSource="{Binding DataContext.Tasks, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                  SelectedItem="{Binding SelectedTask, Mode=TwoWay}"/>
+
+                                        <!-- UPŘESNĚNÍ -->
+                                        <ComboBox Grid.Column="2"
+                                                  IsEnabled="{Binding CanSelectSpecification}"
+                                                  ItemsSource="{Binding AvailableSpecifications}"
+                                                  SelectedItem="{Binding SelectedSpecification, Mode=TwoWay}"/>
+
+                                        <!-- MATERIÁL -->
+                                        <ComboBox Grid.Column="3"
+                                                  IsEnabled="{Binding CanSelectMaterial}"
+                                                  ItemsSource="{Binding AvailableMaterials}"
+                                                  SelectedItem="{Binding SelectedMaterial, Mode=TwoWay}"/>
+
+                                        <!-- UMÍSTĚNÍ -->
+                                        <ComboBox Grid.Column="4"
+                                                  IsEnabled="{Binding CanSelectLocation}"
+                                                  ItemsSource="{Binding AvailableLocations}"
+                                                  SelectedItem="{Binding SelectedLocation, Mode=TwoWay}"/>
+
+                                        <!-- MNOŽSTVÍ -->
+                                        <!-- 🔴 ZMĚNA: číslo zarovnáno doprava -->
+                                        <TextBox Grid.Column="5"
+                                                 TextAlignment="Right"
+                                                 Text="{Binding Quantity, UpdateSourceTrigger=PropertyChanged}"/>
+
+                                        <!-- MJ -->
+                                        <!-- 🔴 ZMĚNA: jednotka vycentrována -->
+                                        <TextBlock Grid.Column="6"
+                                                   VerticalAlignment="Center"
+                                                   HorizontalAlignment="Center"
+                                                   TextAlignment="Center"
+                                                   Foreground="Gray"
+                                                   Text="{Binding WorkUnit}"/>
+
+                                        <!-- 💰 CENA PRÁCE -->
+                                        <!-- 🔴 ZMĚNA: zarovnání doprava -->
+                                        <TextBlock Grid.Column="7"
+                                                   FontWeight="Bold"
+                                                   Foreground="DarkBlue"
+                                                   VerticalAlignment="Center"
+                                                   HorizontalAlignment="Right"
+                                                   TextAlignment="Right"
+                                                   Text="{Binding Total, StringFormat={}{0:N0} Kč}"/>
+
+                                        <!-- 🔄 RESET ŘÁDKU -->
+                                        <Button Grid.Column="8"
+                                                Content="SMAZAT"
+                                                Background="DarkBlue"
+                                                Foreground="White"
+                                                ToolTip="Vymazat data řádku"
+                                                Click="ResetWorkItem_Click"/>
+
+                                    </Grid>
+
+                                </Border>
+
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+
+                    <!-- ========================================================= -->
+                    <!-- ➕ SOUČET PRÁCE -->
+                    <!-- ========================================================= -->
+                    <!-- 🔴 ZMĚNA: StackPanel -> Grid kvůli zarovnání -->
+                    <Border Margin="0,10,0,0"
+                            Padding="10"
+                            BorderBrush="Gray"
+                            BorderThickness="1">
+
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock Text="Součet práce"
+                                       FontWeight="Bold"/>
+
+                            <TextBlock Grid.Column="1"
+                                       Text="{Binding WorkTotal, StringFormat={}{0:N0} Kč}"
+                                       FontSize="16"
+                                       FontWeight="Bold"
+                                       Foreground="DarkBlue"
+                                       HorizontalAlignment="Right"
+                                       TextAlignment="Right"/>
+                        </Grid>
+
+                    </Border>
+
+                </StackPanel>
+
+                <!-- ========================================================= -->
+                <!-- 📦 SEKCE: MATERIÁL -->
+                <!-- ========================================================= -->
+                <StackPanel Grid.Row="1" Margin="0,0,0,20">
+
+                    <!-- ========================= -->
+                    <!-- HLAVIČKA SEKCE -->
+                    <!-- ========================= -->
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="MATERIÁL"
+                                   FontSize="18"
+                                   FontWeight="Bold"/>
+                        <Button Content="+"
+                                Width="30"
+                                Margin="10,0,0,0"
+                                Click="AddMaterialsItem_Click"
+                                ToolTip="Přidat řádek materiálu"/>
+                    </StackPanel>
+
+                    <!-- ========================= -->
+                    <!-- HLAVIČKA TABULKY -->
+                    <!-- ========================= -->
+                    <Grid Margin="0,8,0,5">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="35"/>
+                            <ColumnDefinition Width="300"/>
+                            <ColumnDefinition Width="70"/>
+                            <ColumnDefinition Width="40"/>
+                            <ColumnDefinition Width="120"/>
+                            <ColumnDefinition Width="70"/>
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Grid.Column="1" Text="Název"    FontWeight="Bold"/>
+
+                        <!-- 🔴 ZMĚNA: číselné sloupce zarovnány shodně s obsahem -->
+                        <TextBlock Grid.Column="2" Text="Množství" FontWeight="Bold"
+                                   HorizontalAlignment="Right" TextAlignment="Right"/>
+                        <TextBlock Grid.Column="3" Text="MJ"       FontWeight="Bold"
+                                   HorizontalAlignment="Center" TextAlignment="Center"/>
+                        <TextBlock Grid.Column="4" Text="Cena"     FontWeight="Bold"
+                                   HorizontalAlignment="Right" TextAlignment="Right"/>
+
+                    </Grid>
+
+                    <!-- ========================= -->
+                    <!-- ITEM LIST: MATERIÁL -->
+                    <!-- ========================= -->
+                    <ItemsControl ItemsSource="{Binding MaterialItems}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+
+                                <Border BorderBrush="#E0E0E0"
+                                        BorderThickness="0,0,0,1"
+                                        Padding="0,5">
+
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="35"/>
+                                            <ColumnDefinition Width="300"/>
+                                            <ColumnDefinition Width="70"/>
+                                            <ColumnDefinition Width="40"/>
+                                            <ColumnDefinition Width="120"/>
+                                            <ColumnDefinition Width="70"/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <Button Grid.Column="0"
+                                                Content="−"
+                                                Width="25"
+                                                Height="25"
+                                                Background="#E53935"
+                                                Foreground="White"
+                                                ToolTip="Smazat řádek"
+                                                Click="DeleteMaterialItem_Click"/>
+
+                                        <ComboBox Grid.Column="1"
+                                                  ItemsSource="{Binding DataContext.Materials, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                  DisplayMemberPath="Name"
+                                                  SelectedItem="{Binding MaterialItem, Mode=TwoWay}"/>
+
+                                        <!-- 🔴 ZMĚNA: číslo zarovnáno doprava -->
+                                        <TextBox Grid.Column="2"
+                                                 TextAlignment="Right"
+                                                 Text="{Binding Quantity, UpdateSourceTrigger=PropertyChanged}"/>
+
+                                        <!-- 🔴 ZMĚNA: jednotka vycentrována -->
+                                        <TextBlock Grid.Column="3"
+                                                   VerticalAlignment="Center"
+                                                   HorizontalAlignment="Center"
+                                                   TextAlignment="Center"
+                                                   Text="{Binding MaterialItem.Unit}"/>
+
+                                        <!-- 🔴 ZMĚNA: cena doprava -->
+                                        <TextBlock Grid.Column="4"
+                                                   FontWeight="Bold"
+                                                   VerticalAlignment="Center"
+                                                   HorizontalAlignment="Right"
+                                                   TextAlignment="Right"
+                                                   Text="{Binding Total, StringFormat={}{0:N0} Kč}"/>
+
+                                        <Button Grid.Column="5"
+                                                Content="SMAZAT"
+                                                Background="DarkBlue"
+                                                Foreground="White"
+                                                ToolTip="Vymazat data řádku"
+                                                Click="ResetMaterialItem_Click"/>
+
+                                    </Grid>
+
+                                </Border>
+
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+
+                    <!-- ========================================================= -->
+                    <!-- ➕ SOUČET MATERIÁLU -->
+                    <!-- ========================================================= -->
+                    <!-- 🔴 ZMĚNA: StackPanel -> Grid -->
+                    <Border Margin="0,10,0,0"
+                            Padding="10"
+                            BorderBrush="Gray"
+                            BorderThickness="1">
+
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock Text="Součet materiálu"
+                                       FontWeight="Bold"/>
+
+                            <!-- 🔴 ZMĚNA: chybějící HorizontalAlignment="Right" doplněn -->
+                            <TextBlock Grid.Column="1"
+                                       Text="{Binding MaterialTotal, StringFormat={}{0:N0} Kč}"
+                                       FontSize="16"
+                                       FontWeight="Bold"
+                                       Foreground="DarkBlue"
+                                       HorizontalAlignment="Right"
+                                       TextAlignment="Right"/>
+                        </Grid>
+
+                    </Border>
+
+                </StackPanel>
+
+                <!-- ========================================================= -->
+                <!-- 📊 SPOLEČNÝ ROZPIS (PRÁCE + MATERIÁL) -->
+                <!-- ========================================================= -->
+                <GroupBox Grid.Row="2">
+                    <GroupBox.Header>
+                        <TextBlock Text="DETAILNÍ ROZPOČET"
+                                   FontSize="18"
+                                   FontWeight="Bold"/>
+                    </GroupBox.Header>
+
+                    <ListView ItemsSource="{Binding BudgetItems}">
+
+                        <ListView.View>
+                            <GridView>
+
+                                <GridViewColumn Header="Typ"
+                                                Width="100"
+                                                DisplayMemberBinding="{Binding Type}"/>
+
+                                <GridViewColumn Header="Popis"
+                                                Width="350"
+                                                DisplayMemberBinding="{Binding Description}"/>
+
+                                <!-- ✔ NOVĚ: Množství + MJ -->
+                                <GridViewColumn Width="100">
+                                    <GridViewColumn.HeaderTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="Množství (MJ)"
+                                                       HorizontalAlignment="Center"
+                                                       TextAlignment="Center"
+                                                       Width="100"/>
+                                        </DataTemplate>
+                                    </GridViewColumn.HeaderTemplate>
+
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <!-- ✔ OPRAVA: zobrazí "Xm" místo pouhého "m" -->
+                                            <TextBlock HorizontalAlignment="Right"
+                                                       TextAlignment="Right"
+                                                       Width="100">
+                                                <TextBlock.Text>
+                                                    <MultiBinding StringFormat="{}{0:N0}{1}">
+                                                        <Binding Path="Quantity"/>
+                                                        <Binding Path="Unit"/>
+                                                    </MultiBinding>
+                                                </TextBlock.Text>
+                                            </TextBlock>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+
+                                <!-- Cena -->
+                                <GridViewColumn Width="120">
+                                    <GridViewColumn.HeaderTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="Cena"
+                                                       FontWeight="Bold"
+                                                       HorizontalAlignment="Right"
+                                                       TextAlignment="Right"
+                                                       Width="100"/>
+                                        </DataTemplate>
+                                    </GridViewColumn.HeaderTemplate>
+
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding Price, StringFormat={}{0:N0} Kč}"
+                                                       HorizontalAlignment="Right"
+                                                       TextAlignment="Right"
+                                                       Width="100"/>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+
+                            </GridView>
+                        </ListView.View>
+
+                    </ListView>
+
+                </GroupBox>
+
+                <!-- ========================================================= -->
+                <!-- 💰 CELKOVÁ CENA (GRAND TOTAL) -->
+                <!-- ========================================================= -->
+                <!-- 🔴 ZMĚNA: StackPanel -> Grid kvůli zarovnání -->
+                <Grid Grid.Row="3"
+                      Margin="0,10,0,20">
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Text="Celková cena nabídky:"
+                               FontSize="20"
+                               FontWeight="SemiBold"/>
+
+                    <TextBlock Grid.Column="1"
+                               FontSize="26"
+                               FontWeight="Bold"
+                               Foreground="DarkGreen"
+                               Text="{Binding GrandTotal, StringFormat={}{0:N0} Kč}"
+                               HorizontalAlignment="Right"
+                               TextAlignment="Right"/>
+
+                </Grid>
+
+            </Grid>
+        </ScrollViewer>
+
+    </DockPanel>
+</Window>
+
+
+--- Soubor: MainWindow.xaml.cs
+--- Cesta: \MainWindow.xaml.cs
+----------------------------------------
+﻿using ElektroOffer_app.Data;
+using ElektroOffer_app.Models;
+using ElektroOffer_app.Services;
+using System.Collections.Specialized;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Windows;
+
+namespace ElektroOffer_app
+{
+    public partial class MainWindow : Window, INotifyPropertyChanged
+    {
+        // =========================================================
+        // 📦 DATA Z DB
+        // =========================================================
+        public ObservableCollection<Material> Materials { get; set; } = new();
+
+        // =========================================================
+        // 🔧 GLOBÁLNÍ SEZNAM ÚKONŮ
+        // =========================================================
+        public ObservableCollection<string> Tasks { get; set; } = new();
+
+        // =========================================================
+        // 🧮 KALKULACE
+        // =========================================================
+        public ObservableCollection<CalculationItems> WorkCalcItems { get; set; } = new();
+        public ObservableCollection<CalculationItems> MaterialItems { get; set; } = new();
+
+        // =========================================================
+        // 📊 DETAILNÍ ROZPIS
+        // =========================================================
+        public ObservableCollection<BudgetItem> BudgetItems { get; set; } = new();
+
+        // =========================================================
+        // 💰 CELKOVÁ CENA
+        // =========================================================
+        private double _grandTotal;
+        public double GrandTotal
+        {
+            get => _grandTotal;
+            set
+            {
+                if (Math.Abs(_grandTotal - value) < 0.0001) return;
+                _grandTotal = value;
+                OnPropertyChanged();
+            }
+        }
+
+        // =========================================================
+        // 💰 DÍLČÍ SOUČTY
+        // =========================================================
+        private double _workTotal;
+        public double WorkTotal
+        {
+            get => _workTotal;
+            set
+            {
+                if (Math.Abs(_workTotal - value) < 0.0001) return;
+                _workTotal = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private double _materialTotal;
+        public double MaterialTotal
+        {
+            get => _materialTotal;
+            set
+            {
+                if (Math.Abs(_materialTotal - value) < 0.0001) return;
+                _materialTotal = value;
+                OnPropertyChanged();
+            }
+        }
+
+        // =========================================================
+        // 💾 STAV ULOŽENÍ — správa souboru a neuložených změn
+        // =========================================================
+
+        /// <summary>
+        /// Servisní třída pro Save/Load logiku.
+        /// Oddělena od UI — MainWindow jen volá její metody.
+        /// </summary>
+        private readonly ProjectService _projectService = new();
+
+        /// <summary>
+        /// Aktuální cesta k otevřenému souboru.
+        /// Null = projekt ještě nebyl uložen (nový projekt).
+        /// </summary>
+        private string? _currentFilePath = null;
+
+        /// <summary>
+        /// Příznak neuložených změn.
+        /// True = data byla změněna od posledního uložení.
+        /// Používá se při zavírání okna nebo "Nový projekt".
+        /// </summary>
+        private bool _hasUnsavedChanges = false;
+
+        // =========================================================
+        // 📌 STAVOVÝ ŘÁDEK — text zobrazený dole v okně
+        // =========================================================
+
+        private string _statusText = "Nový projekt";
+        /// <summary>
+        /// Text zobrazený ve StatusBaru dole.
+        /// Ukazuje název souboru nebo stav projektu.
+        /// </summary>
+        public string StatusText
+        {
+            get => _statusText;
+            set
+            {
+                _statusText = value;
+                OnPropertyChanged();
+            }
+        }
+
+        // =========================================================
+        // START
+        // =========================================================
+        public MainWindow()
+        {
+            InitializeComponent();
+            DataContext = this;
+
+            using (var db = new AppDbContext())
+            {
+                db.Database.EnsureCreated();
+            }
+
+            // 🔄 SPRÁVNÉ NAČTENÍ DAT PRO WPF
+            LoadCatalogDataFromDb();
+
+            for (int i = 0; i < 5; i++)
+            {
+                AddWorkItemInternal();
+                AddMaterialItemInternal();
+            }
+
+            WorkCalcItems.CollectionChanged += WorkCalcItems_CollectionChanged;
+            MaterialItems.CollectionChanged += MaterialItems_CollectionChanged;
+
+            // Klávesové zkratky pro Save/Load
+            // Ctrl+S, Ctrl+Shift+S, Ctrl+O, Ctrl+N
+            RegisterKeyboardShortcuts();
+        }
+
+        // =========================================================
+        // 🔄 NAČTENÍ DAT PRO UI (KLÍČOVÁ OPRAVA)
+        // =========================================================
+        private void LoadCatalogDataFromDb()
+        {
+            using var db = new AppDbContext();
+
+            Tasks.Clear();
+            foreach (var task in db.PriceItems.Select(x => x.Task).Distinct().ToList())
+                Tasks.Add(task);
+
+            Materials.Clear();
+            foreach (var mat in db.Materials.ToList())
+                Materials.Add(mat);
+        }
+
+        // =========================================================
+        // ⌨️ KLÁVESOVÉ ZKRATKY
+        // =========================================================
+
+        /// <summary>
+        /// Registrace klávesových zkratek přes CommandBindings.
+        /// Tímto způsobem zkratky fungují i bez zaměření na konkrétní prvek UI.
+        /// </summary>
+        private void RegisterKeyboardShortcuts()
+        {
+            // Ctrl+S → Uložit
+            var saveBinding = new System.Windows.Input.KeyBinding(
+                new RelayCommand(_ => MenuSave_Click(this, new RoutedEventArgs())),
+                System.Windows.Input.Key.S,
+                System.Windows.Input.ModifierKeys.Control);
+
+            // Ctrl+Shift+S → Uložit jako
+            var saveAsBinding = new System.Windows.Input.KeyBinding(
+                new RelayCommand(_ => MenuSaveAs_Click(this, new RoutedEventArgs())),
+                System.Windows.Input.Key.S,
+                System.Windows.Input.ModifierKeys.Control | System.Windows.Input.ModifierKeys.Shift);
+
+            // Ctrl+O → Otevřít
+            var openBinding = new System.Windows.Input.KeyBinding(
+                new RelayCommand(_ => MenuLoad_Click(this, new RoutedEventArgs())),
+                System.Windows.Input.Key.O,
+                System.Windows.Input.ModifierKeys.Control);
+
+            // Ctrl+N → Nový projekt
+            var newBinding = new System.Windows.Input.KeyBinding(
+                new RelayCommand(_ => MenuNewProject_Click(this, new RoutedEventArgs())),
+                System.Windows.Input.Key.N,
+                System.Windows.Input.ModifierKeys.Control);
+
+            InputBindings.Add(saveBinding);
+            InputBindings.Add(saveAsBinding);
+            InputBindings.Add(openBinding);
+            InputBindings.Add(newBinding);
+        }
+
+        // =========================================================
+        // 📋 MENU — AKCE
+        // =========================================================
+
+        /// <summary>
+        /// Menu: Soubor → Nový projekt
+        /// Zeptá se na uložení změn, pak resetuje celou kalkulaci.
+        /// </summary>
+        private void MenuNewProject_Click(object sender, RoutedEventArgs e)
+        {
+            // Sestaví aktuální data projektu (potřeba pro případné uložení)
+            var currentData = BuildProjectData();
+
+            // Zkontroluje neuložené změny — pokud uživatel zruší, nic neděláme
+            if (!_projectService.ConfirmNewProject(currentData, _currentFilePath, _hasUnsavedChanges))
+                return;
+
+            // Reset aplikace do počátečního stavu
+            ResetToNewProject();
+        }
+
+        /// <summary>
+        /// Menu: Soubor → Otevřít
+        /// Načte projekt z .eof souboru a naplní UI daty.
+        /// </summary>
+        private void MenuLoad_Click(object sender, RoutedEventArgs e)
+        {
+            // Pokud jsou neuložené změny → zeptáme se před načtením
+            if (_hasUnsavedChanges)
+            {
+                var result = MessageBox.Show(
+                    "Máte neuložené změny. Chcete je uložit před načtením jiného projektu?",
+                    "Neuložené změny",
+                    MessageBoxButton.YesNoCancel,
+                    MessageBoxImage.Warning);
+
+                if (result == MessageBoxResult.Cancel) return;
+                if (result == MessageBoxResult.Yes)
+                {
+                    var saved = _projectService.Save(BuildProjectData(), _currentFilePath);
+                    if (saved == null) return; // uložení selhalo nebo bylo zrušeno
+                }
+            }
+
+            // Otevření dialogu a načtení dat
+            var (data, path) = _projectService.Load();
+            if (data == null) return; // uživatel zrušil nebo chyba
+
+            // Naplnění UI načtenými daty
+            ApplyProjectData(data, path!);
+        }
+
+        /// <summary>
+        /// Menu: Soubor → Uložit (Ctrl+S)
+        /// Uloží na aktuální cestu, nebo vyvolá Save As dialog.
+        /// </summary>
+        private void MenuSave_Click(object sender, RoutedEventArgs e)
+        {
+            var data = BuildProjectData();
+            var savedPath = _projectService.Save(data, _currentFilePath);
+
+            if (savedPath != null)
+                OnProjectSaved(savedPath);
+        }
+
+        /// <summary>
+        /// Menu: Soubor → Uložit jako (Ctrl+Shift+S)
+        /// Vždy otevře dialog pro výběr nového umístění.
+        /// </summary>
+        private void MenuSaveAs_Click(object sender, RoutedEventArgs e)
+        {
+            var data = BuildProjectData();
+            var savedPath = _projectService.SaveAs(data);
+
+            if (savedPath != null)
+                OnProjectSaved(savedPath);
+        }
+
+        // =========================================================
+        // ❓ NÁPOVĚDA
+        // =========================================================
+
+        /// <summary>
+        /// Menu: Nápověda → O aplikaci
+        /// Otevře modální okno s logem, verzí a autorem aplikace.
+        /// Owner = this zajistí centrování okna vůči MainWindow.
+        /// </summary>
+        private void MenuAbout_Click(object sender, RoutedEventArgs e)
+        {
+            var aboutWindow = new AboutWindow
+            {
+                // Owner zajistí správné centrování a chování modálního okna
+                Owner = this
+            };
+
+            // ShowDialog = modální okno (nelze klikat na MainWindow dokud je otevřené)
+            aboutWindow.ShowDialog();
+        }
+
+        // =========================================================
+        // 🚪 KONEC
+        // =========================================================
+
+        /// <summary>
+        /// Menu: Soubor → Konec
+        /// Zeptá se na uložení neuložených změn, pak ukončí aplikaci.
+        /// </summary>
+        private void MenuExit_Click(object sender, RoutedEventArgs e)
+        {
+            // Pokud jsou neuložené změny → zeptáme se před ukončením
+            if (_hasUnsavedChanges)
+            {
+                var result = MessageBox.Show(
+                    "Máte neuložené změny. Chcete je uložit před ukončením?",
+                    "Neuložené změny",
+                    MessageBoxButton.YesNoCancel,
+                    MessageBoxImage.Warning);
+
+                if (result == MessageBoxResult.Cancel) return;
+
+                if (result == MessageBoxResult.Yes)
+                {
+                    var saved = _projectService.Save(BuildProjectData(), _currentFilePath);
+                    if (saved == null) return; // uložení selhalo nebo bylo zrušeno
+                }
+            }
+
+            // Ukončení aplikace
+            Application.Current.Shutdown();
+        }
+
+        // ADD-KOMENT: PDF export metody — odkomentovat až bude QuestPDF nainstalován a struktura dokumentu finální
+        // ADD-KOMENT: Instalace: NuGet → Install-Package QuestPDF
+        // ADD-KOMENT: Docs: https://www.questpdf.com/documentation/getting-started.html
+        /*
+        private void MenuExportPdf_Click(object sender, RoutedEventArgs e)
+        {
+            // 🚧 PLACEHOLDER — implementace přijde v další fázi
+            MessageBox.Show(
+                "Export PDF kalkulace bude implementován v další fázi projektu.\n\nPlánovaná knihovna: QuestPDF",
+                "Připravuje se",
+                MessageBoxButton.OK,
+                MessageBoxImage.Information);
+        }
+
+        private void MenuExportPricePdf_Click(object sender, RoutedEventArgs e)
+        {
+            // 🚧 PLACEHOLDER — implementace přijde v další fázi
+            MessageBox.Show(
+                "Export PDF ceníku bude implementován v další fázi projektu.\n\nPlánovaná knihovna: QuestPDF",
+                "Připravuje se",
+                MessageBoxButton.OK,
+                MessageBoxImage.Information);
+        }
+        */
+
+        // =========================================================
+        // 🛠️ POMOCNÉ METODY — Save/Load logika
+        // =========================================================
+
+        /// <summary>
+        /// Sestaví objekt ProjectData z aktuálního stavu UI.
+        /// Volá se před každým uložením.
+        /// </summary>
+        private ProjectData BuildProjectData()
+        {
+            return new ProjectData
+            {
+                // Metadata
+                ProjectName = _currentFilePath != null
+                    ? System.IO.Path.GetFileNameWithoutExtension(_currentFilePath)
+                    : "Nový projekt",
+                SavedAt = DateTime.Now,
+
+                // Sekce PRÁCE — uložíme vybrané hodnoty každého řádku
+                WorkItems = WorkCalcItems.Select(x => new WorkItemData
+                {
+                    SelectedTask = x.SelectedTask,
+                    SelectedSpecification = x.SelectedSpecification,
+                    SelectedMaterial = x.SelectedMaterial,
+                    SelectedLocation = x.SelectedLocation,
+                    Quantity = x.Quantity
+                }).ToList(),
+
+                // Sekce MATERIÁL — uložíme název materiálu a množství
+                MaterialItems = MaterialItems.Select(x => new MaterialItemData
+                {
+                    MaterialName = x.MaterialItem?.Name,
+                    Quantity = x.Quantity
+                }).ToList()
+            };
+        }
+
+        /// <summary>
+        /// Aplikuje načtená data (ProjectData) do UI.
+        /// Zavolá se po úspěšném Load.
+        /// </summary>
+        private void ApplyProjectData(ProjectData data, string path)
+        {
+            // Nejdříve vyprázdníme stávající UI
+            ClearAllItems();
+
+            // ========================= //
+            // 🔧 OBNOVENÍ SEKCE: PRÁCE  //
+            // ========================= //
+            foreach (var saved in data.WorkItems)
+            {
+                var item = new CalculationItems();
+                item.PropertyChanged += Item_PropertyChanged;
+
+                // Obnovení vybraných hodnot
+                item.SelectedTask = saved.SelectedTask;
+                item.SelectedSpecification = saved.SelectedSpecification;
+                item.SelectedMaterial = saved.SelectedMaterial;
+                item.SelectedLocation = saved.SelectedLocation;
+                item.Quantity = saved.Quantity;
+
+                WorkCalcItems.Add(item);
+            }
+
+            // =========================== //
+            // 📦 OBNOVENÍ SEKCE: MATERIÁL //
+            // =========================== //
+            foreach (var saved in data.MaterialItems)
+            {
+                var item = new CalculationItems();
+                item.PropertyChanged += Item_PropertyChanged;
+
+                // Dohledání objektu Material z DB podle názvu
+                // (ukládáme název, ne ID → nezávislé na DB)
+                item.MaterialItem = Materials.FirstOrDefault(m => m.Name == saved.MaterialName);
+                item.Quantity = saved.Quantity;
+
+                MaterialItems.Add(item);
+            }
+
+            // Uložíme cestu a resetujeme příznak změn
+            _currentFilePath = path;
+            _hasUnsavedChanges = false;
+
+            // Aktualizace titulku a stavového řádku
+            UpdateWindowTitle(path);
+            Recalculate();
+        }
+
+        /// <summary>
+        /// Zavolá se po úspěšném uložení.
+        /// Aktualizuje cestu, příznak změn, titulek a status.
+        /// </summary>
+        private void OnProjectSaved(string path)
+        {
+            _currentFilePath = path;
+            _hasUnsavedChanges = false;
+            UpdateWindowTitle(path);
+        }
+
+        /// <summary>
+        /// Resetuje aplikaci do stavu "nový projekt".
+        /// Vymaže všechny řádky a přidá výchozí prázdné řádky.
+        /// </summary>
+        private void ResetToNewProject()
+        {
+            ClearAllItems();
+
+            // Přidání výchozích prázdných řádků jako při startu
+            for (int i = 0; i < 5; i++)
+            {
+                AddWorkItemInternal();
+                AddMaterialItemInternal();
+            }
+
+            _currentFilePath = null;
+            _hasUnsavedChanges = false;
+
+            // Reset titulku a stavového řádku
+            Title = "Elektro Offer - Kalkulace";
+            StatusText = "Nový projekt";
+        }
+
+        /// <summary>
+        /// Vymaže všechny řádky z obou sekcí (PRÁCE + MATERIÁL).
+        /// Odhlásí event handlery před odebráním, aby nedošlo k memory leaku.
+        /// </summary>
+        private void ClearAllItems()
+        {
+            // Odhlášení event handlerů — důležité pro správnou správu paměti
+            foreach (var item in WorkCalcItems)
+                item.PropertyChanged -= Item_PropertyChanged;
+
+            foreach (var item in MaterialItems)
+                item.PropertyChanged -= Item_PropertyChanged;
+
+            WorkCalcItems.Clear();
+            MaterialItems.Clear();
+            BudgetItems.Clear();
+        }
+
+        /// <summary>
+        /// Aktualizuje titulek okna a text ve StatusBaru.
+        /// Konvence v IT: "*" v titulku = neuložené změny.
+        /// </summary>
+        private void UpdateWindowTitle(string path)
+        {
+            var fileName = System.IO.Path.GetFileNameWithoutExtension(path);
+
+            // Titulek okna: "NázevSouboru - Elektro Offer"
+            Title = $"{fileName} - Elektro Offer";
+
+            // StatusBar: celá cesta k souboru
+            StatusText = path;
+        }
+
+        /// <summary>
+        /// Označí projekt jako "má neuložené změny".
+        /// Volá se při každé změně dat v UI.
+        /// </summary>
+        private void MarkAsChanged()
+        {
+            if (!_hasUnsavedChanges)
+            {
+                _hasUnsavedChanges = true;
+
+                // Přidá hvězdičku do titulku (konvence: * = neuložené změny)
+                if (!Title.StartsWith("*"))
+                    Title = "* " + Title;
+            }
+        }
+
+        // =========================================================
+        // ➕ ADD
+        // =========================================================
+        private void AddWorkItem_Click(object sender, RoutedEventArgs e)
+            => AddWorkItemInternal();
+
+        private void AddMaterialsItem_Click(object sender, RoutedEventArgs e)
+            => AddMaterialItemInternal();
+
+        private void AddWorkItemInternal()
+        {
+            var item = new CalculationItems();
+            item.PropertyChanged += Item_PropertyChanged;
+            WorkCalcItems.Add(item);
+        }
+
+        private void AddMaterialItemInternal()
+        {
+            var item = new CalculationItems();
+            item.PropertyChanged += Item_PropertyChanged;
+            MaterialItems.Add(item);
+        }
+
+        // =========================================================
+        // ➖ DELETE
+        // =========================================================
+        private void DeleteWorkItem_Click(object sender, RoutedEventArgs e)
+        {
+            // potvrzovací dialog
+            if (MessageBox.Show("Opravdu chcete položku odebrat?", "Potvrzení",
+                MessageBoxButton.OKCancel, MessageBoxImage.Question) != MessageBoxResult.OK)
+                return;
+
+            if (sender is FrameworkElement fe &&
+                fe.DataContext is CalculationItems item)
+            {
+                item.PropertyChanged -= Item_PropertyChanged;
+                WorkCalcItems.Remove(item);
+                Recalculate();
+            }
+        }
+
+        private void DeleteMaterialItem_Click(object sender, RoutedEventArgs e)
+        {
+            // potvrzovací dialog
+            if (MessageBox.Show("Opravdu chcete položku odebrat?", "Potvrzení",
+                MessageBoxButton.OKCancel, MessageBoxImage.Question) != MessageBoxResult.OK)
+                return;
+
+            if (sender is FrameworkElement fe &&
+                fe.DataContext is CalculationItems item)
+            {
+                item.PropertyChanged -= Item_PropertyChanged;
+                MaterialItems.Remove(item);
+                Recalculate();
+            }
+        }
+
+        // =========================================================
+        // 🧹 RESET WORK ITEM
+        // =========================================================
+        private void ResetWorkItem_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is FrameworkElement fe &&
+                fe.DataContext is CalculationItems item)
+            {
+                // zjištění, zda má řádek nějaká data
+                bool isFilled =
+                    item.SelectedTask != null ||
+                    item.SelectedSpecification != null ||
+                    item.SelectedMaterial != null ||
+                    item.SelectedLocation != null ||
+                    item.Quantity > 0;
+
+                // potvrzení jen pokud je řádek vyplněný
+                if (isFilled)
+                {
+                    if (MessageBox.Show(
+                        "Opravdu chcete vymazat vyplněný řádek práce?",
+                        "Potvrzení",
+                        MessageBoxButton.OKCancel,
+                        MessageBoxImage.Question) != MessageBoxResult.OK)
+                        return;
+                }
+
+                // reset hodnot
+                item.SelectedTask = null;
+                item.SelectedSpecification = null;
+                item.SelectedMaterial = null;
+                item.SelectedLocation = null;
+                item.Quantity = 0;
+
+                Recalculate();
+            }
+        }
+
+        // =========================================================
+        // 🧹 RESET MATERIAL ITEM
+        // =========================================================
+        private void ResetMaterialItem_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is FrameworkElement fe &&
+                fe.DataContext is CalculationItems item)
+            {
+                // zjištění, zda je řádek vyplněný
+                bool isFilled =
+                    item.MaterialItem != null ||
+                    item.Quantity > 0;
+
+                // potvrzení jen pokud má data
+                if (isFilled)
+                {
+                    if (MessageBox.Show(
+                        "Opravdu chcete vymazat vyplněný řádek materiálu?",
+                        "Potvrzení",
+                        MessageBoxButton.OKCancel,
+                        MessageBoxImage.Question) != MessageBoxResult.OK)
+                        return;
+                }
+
+                // reset hodnot
+                item.MaterialItem = null;
+                item.Quantity = 0;
+
+                Recalculate();
+            }
+        }
+
+        // =========================================================
+        // 📌 EVENTS
+        // =========================================================
+        private void WorkCalcItems_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+        {
+            MarkAsChanged(); // každá změna kolekce = neuložená změna
+            Recalculate();
+        }
+
+        private void MaterialItems_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+        {
+            MarkAsChanged(); // každá změna kolekce = neuložená změna
+            Recalculate();
+        }
+
+        private void Item_PropertyChanged(object? sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(CalculationItems.Total) ||
+                e.PropertyName == nameof(CalculationItems.Quantity) ||
+                e.PropertyName == nameof(CalculationItems.WorkItem) ||
+                e.PropertyName == nameof(CalculationItems.MaterialItem))
+            {
+                MarkAsChanged(); // každá změna hodnoty = neuložená změna
+                Recalculate();
+            }
+        }
+
+        // =========================================================
+        // 💰 REKALKULACE CEN A ROZPISU
+        // =========================================================
+        private void Recalculate()
+        {
+            // =========================
+            // 💰 CELKOVÉ SOUČTY
+            // =========================
+            WorkTotal = WorkCalcItems.Sum(x => x.Total);
+            MaterialTotal = MaterialItems.Sum(x => x.Total);
+            GrandTotal = WorkTotal + MaterialTotal;
+
+            // =========================
+            // 📊 VYČIŠTĚNÍ ROZPISU
+            // =========================
+            BudgetItems.Clear();
+
+            // =========================
+            // 🔧 PRÁCE
+            // =========================
+            foreach (var x in WorkCalcItems.Where(x => x.Total > 0))
+            {
+                BudgetItems.Add(new BudgetItem
+                {
+                    Type = "PRÁCE",
+
+                    // popis sestavený z vybraných hodnot
+                    Description = $"{x.SelectedTask} / {x.SelectedSpecification} / {x.SelectedMaterial} / {x.SelectedLocation}",
+
+                    // měrná jednotka práce (hod, ks, apod.)
+                    // ?? "" = fallback na prázdný string pokud WorkUnit vrátí null
+                    Unit = x.WorkUnit ?? "",
+
+                    // množství
+                    Quantity = x.Quantity,
+
+                    // výsledná cena řádku
+                    Price = x.Total
+                });
+            }
+
+            // =========================
+            // 📦 MATERIÁL
+            // =========================
+            foreach (var x in MaterialItems.Where(x => x.Total > 0 && x.MaterialItem != null))
+            {
+                BudgetItems.Add(new BudgetItem
+                {
+                    Type = "MATERIÁL",
+
+                    // název materiálu
+                    Description = x.MaterialItem!.Name,
+
+                    // měrná jednotka materiálu (ks, m, balení, ...)
+                    Unit = x.MaterialItem?.Unit ?? "",
+
+                    // množství
+                    Quantity = x.Quantity,
+
+                    // výsledná cena řádku
+                    Price = x.Total
+                });
+            }
+        }
+
+        // =========================================================
+        // PROPERTY CHANGED
+        // =========================================================
+        public event PropertyChangedEventHandler? PropertyChanged;
+
+        private void OnPropertyChanged([CallerMemberName] string? name = null)
+            => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+    }
+
+    // =============================================================
+    // ⌨️ RELAY COMMAND — pomocná třída pro klávesové zkratky
+    // =============================================================
+
+    /// <summary>
+    /// Jednoduchá implementace ICommand pro použití v KeyBinding.
+    /// Umožňuje předat lambda funkci jako příkaz bez nutnosti
+    /// vytvářet celou třídu Command pro každou akci zvlášť.
+    /// </summary>
+    public class RelayCommand : System.Windows.Input.ICommand
+    {
+        private readonly Action<object?> _execute;
+
+        public RelayCommand(Action<object?> execute) => _execute = execute;
+
+        // CanExecute = vždy true (příkaz je vždy dostupný)
+        public bool CanExecute(object? parameter) => true;
+
+        public void Execute(object? parameter) => _execute(parameter);
+
+        // Napojení na WPF CommandManager — standardní pattern pro RelayCommand.
+        // CommandManager.RequerySuggested se spustí, když WPF zjistí změnu stavu UI.
+        // add/remove přes CommandManager eliminuje warning CS0067 (event se "používá").
+        public event EventHandler? CanExecuteChanged
+        {
+            add => System.Windows.Input.CommandManager.RequerySuggested += value;
+            remove => System.Windows.Input.CommandManager.RequerySuggested -= value;
+        }
+    }
+}
+
+
+
+===== SLOŽKA: \Migrations =====
+--- Soubor: 20260521205633_InitialCreate.Designer.cs
+--- Cesta: \Migrations\20260521205633_InitialCreate.Designer.cs
+----------------------------------------
+﻿// <auto-generated />
+using ElektroOffer_app.Data;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+
+#nullable disable
+
+namespace ElektroOffer_app.Migrations
+{
+    [DbContext(typeof(AppDbContext))]
+    [Migration("20260521205633_InitialCreate")]
+    partial class InitialCreate
+    {
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        {
+#pragma warning disable 612, 618
+            modelBuilder.HasAnnotation("ProductVersion", "10.0.8");
+
+            modelBuilder.Entity("ElektroOffer_app.Models.WorkItem", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<decimal>("PricePerUnit")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Unit")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("WorkItems");
+                });
+#pragma warning restore 612, 618
+        }
+    }
+}
+
+
+--- Soubor: 20260521205633_InitialCreate.cs
+--- Cesta: \Migrations\20260521205633_InitialCreate.cs
+----------------------------------------
+﻿using Microsoft.EntityFrameworkCore.Migrations;
+
+#nullable disable
+
+namespace ElektroOffer_app.Migrations
+{
+    /// <inheritdoc />
+    public partial class InitialCreate : Migration
+    {
+        /// <inheritdoc />
+        protected override void Up(MigrationBuilder migrationBuilder)
+        {
+            migrationBuilder.CreateTable(
+                name: "WorkItems",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Name = table.Column<string>(type: "TEXT", nullable: false),
+                    PricePerUnit = table.Column<decimal>(type: "TEXT", nullable: false),
+                    Unit = table.Column<string>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_WorkItems", x => x.Id);
+                });
+        }
+
+        /// <inheritdoc />
+        protected override void Down(MigrationBuilder migrationBuilder)
+        {
+            migrationBuilder.DropTable(
+                name: "WorkItems");
+        }
+    }
+}
+
+
+--- Soubor: AppDbContextModelSnapshot.cs
+--- Cesta: \Migrations\AppDbContextModelSnapshot.cs
+----------------------------------------
+﻿// <auto-generated />
+using ElektroOffer_app.Data;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+
+#nullable disable
+
+namespace ElektroOffer_app.Migrations
+{
+    [DbContext(typeof(AppDbContext))]
+    partial class AppDbContextModelSnapshot : ModelSnapshot
+    {
+        protected override void BuildModel(ModelBuilder modelBuilder)
+        {
+#pragma warning disable 612, 618
+            modelBuilder.HasAnnotation("ProductVersion", "10.0.8");
+
+            modelBuilder.Entity("ElektroOffer_app.Models.WorkItem", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<decimal>("PricePerUnit")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Unit")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("WorkItems");
+                });
+#pragma warning restore 612, 618
+        }
+    }
+}
+
+
+
+===== SLOŽKA: \Models =====
+--- Soubor: BudgetItem.cs
+--- Cesta: \Models\BudgetItem.cs
+----------------------------------------
+﻿using System.ComponentModel;
+using System.Runtime.CompilerServices;
+
+namespace ElektroOffer_app.Models
+{
+    // =========================================================
+    // 📊 POLOŽKA DO DETAILNÍHO ROZPISU
+    // =========================================================
+    public class BudgetItem : INotifyPropertyChanged
+    {
+        // =========================================================
+        // 🧩 TYPE - typ položky (PRÁCE / MATERIÁL)
+        // =========================================================
+        private string _type = "";
+
+        public string Type
+        {
+            get => _type;
+            set
+            {
+                if (_type == value) return;
+
+                _type = value;
+                OnPropertyChanged();
+            }
+        }
+
+        // =========================================================
+        // 🧾 DESCRIPTION - popis položky
+        // =========================================================
+        private string _description = "";
+
+        public string Description
+        {
+            get => _description;
+            set
+            {
+                if (_description == value) return;
+
+                _description = value;
+                OnPropertyChanged();
+            }
+        }
+
+        // =========================================================
+        // 📏 UNIT - měrná jednotka (MJ)
+        // =========================================================
+        private string _unit = "";
+
+        public string Unit
+        {
+            get => _unit;
+            set
+            {
+                if (_unit == value) return;
+
+                _unit = value;
+                OnPropertyChanged();
+            }
+        }
+
+        // =========================================================
+        // 🔢 QUANTITY - množství
+        // =========================================================
+        private double _quantity;
+
+        public double Quantity
+        {
+            get => _quantity;
+            set
+            {
+                if (Math.Abs(_quantity - value) < 0.0001) return;
+                _quantity = value;
+                OnPropertyChanged();
+            }
+        }
+
+        // =========================================================
+        // 💰 PRICE - cena položky
+        // =========================================================
+        private double _price;
+
+        public double Price
+        {
+            get => _price;
+            set
+            {
+                if (Math.Abs(_price - value) < 0.0001) return;
+
+                _price = value;
+                OnPropertyChanged();
+            }
+        }
+
+        // =========================================================
+        // 🔔 INotifyPropertyChanged IMPLEMENTACE
+        // =========================================================
+        public event PropertyChangedEventHandler? PropertyChanged;
+
+        protected void OnPropertyChanged([CallerMemberName] string? propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+    }
+}
+
+--- Soubor: CalculationItems.cs
+--- Cesta: \Models\CalculationItems.cs
+----------------------------------------
+﻿using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
+using ElektroOffer_app.Data;
+using ElektroOffer_app.Models;
+
+namespace ElektroOffer_app
+{
+    // =========================================================
+    // 🧮 KALKULAČNÍ ŘÁDEK (VIEWMODEL PRO 1 ŘÁDEK TABULKY)
+    // =========================================================
+    public class CalculationItems : INotifyPropertyChanged
+    {
+        private PriceItems? _workItem;
+        private Material? _materialItem;
+        private double _quantity;
+
+        private string? _selectedTask;
+        private string? _selectedSpecification;
+        private string? _selectedMaterial;
+        private string? _selectedLocation;
+
+        private string? _workUnit;
+
+        // =========================================================
+        // 📦 DYNAMICKÉ LISTY PRO COMBOBOXY
+        // =========================================================
+        public ObservableCollection<string> AvailableSpecifications { get; set; } = new();
+        public ObservableCollection<string> AvailableMaterials { get; set; } = new();
+        public ObservableCollection<string> AvailableLocations { get; set; } = new();
+
+        // =========================================================
+        // 📏 UNIT
+        // =========================================================
+        public string? WorkUnit
+        {
+            get => _workUnit;
+            set { _workUnit = value; OnPropertyChanged(); }
+        }
+
+        // =========================================================
+        // 🔒 KASKÁDA POVOLENÍ
+        // =========================================================
+        public bool CanSelectSpecification => !string.IsNullOrWhiteSpace(SelectedTask);
+        public bool CanSelectMaterial => !string.IsNullOrWhiteSpace(SelectedSpecification);
+        public bool CanSelectLocation => !string.IsNullOrWhiteSpace(SelectedMaterial);
+
+        // =========================================================
+        // TASK
+        // =========================================================
+        public string? SelectedTask
+        {
+            get => _selectedTask;
+            set
+            {
+                if (_selectedTask == value) return;
+                _selectedTask = value;
+
+                // Reset kaskády níže + načtení nových hodnot
+                ResetBelowTask();
+                LoadSpecifications();
+
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(CanSelectSpecification));
+            }
+        }
+
+        // =========================================================
+        // SPECIFICATION
+        // =========================================================
+        public string? SelectedSpecification
+        {
+            get => _selectedSpecification;
+            set
+            {
+                if (_selectedSpecification == value) return;
+                _selectedSpecification = value;
+
+                ResetBelowSpecification();
+                LoadWorkUnit();
+                LoadMaterials();
+
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(CanSelectMaterial));
+            }
+        }
+
+        // =========================================================
+        // MATERIAL
+        // =========================================================
+        public string? SelectedMaterial
+        {
+            get => _selectedMaterial;
+            set
+            {
+                if (_selectedMaterial == value) return;
+                _selectedMaterial = value;
+
+                ResetBelowMaterial();
+                LoadLocations();
+
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(CanSelectLocation));
+            }
+        }
+
+        // =========================================================
+        // LOCATION
+        // =========================================================
+        public string? SelectedLocation
+        {
+            get => _selectedLocation;
+            set
+            {
+                if (_selectedLocation == value) return;
+                _selectedLocation = value;
+
+                UpdateWorkItem();
+
+                OnPropertyChanged();
+            }
+        }
+
+        // =========================================================
+        // WORK ITEM
+        // =========================================================
+        public PriceItems? WorkItem
+        {
+            get => _workItem;
+            set
+            {
+                _workItem = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(Total));
+            }
+        }
+
+        // =========================================================
+        // MATERIAL ITEM
+        // =========================================================
+        public Material? MaterialItem
+        {
+            get => _materialItem;
+            set
+            {
+                _materialItem = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(Total));
+            }
+        }
+
+        // =========================================================
+        // QUANTITY
+        // =========================================================
+        public double Quantity
+        {
+            get => _quantity;
+            set
+            {
+                if (Math.Abs(_quantity - value) < 0.0001) return;
+                _quantity = value;
+
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(Total));
+            }
+        }
+
+        // =========================================================
+        // TOTAL
+        // =========================================================
+        public double Total
+        {
+            get
+            {
+                if (WorkItem != null)
+                    return WorkItem.BasePrice * WorkItem.MaterialCoef * WorkItem.PositionCoef * Quantity;
+
+                if (MaterialItem != null)
+                    return MaterialItem.Price * Quantity;
+
+                return 0;
+            }
+        }
+
+        // =========================================================
+        // 📏 UNIT LOAD
+        // =========================================================
+        private void LoadWorkUnit()
+        {
+            using var db = new AppDbContext();
+
+            WorkUnit = db.PriceItems
+                .Where(x => x.Specification == SelectedSpecification)
+                .Select(x => x.Unit)
+                .FirstOrDefault();
+        }
+
+        // =========================================================
+        // 🔽 FILTER 1: SPECIFICATIONS
+        // =========================================================
+        private void LoadSpecifications()
+        {
+            AvailableSpecifications.Clear();
+
+            using var db = new AppDbContext();
+
+            var list = db.PriceItems
+                .Where(x => x.Task == SelectedTask)
+                .Select(x => x.Specification)
+                .Distinct()
+                .ToList();
+
+            foreach (var item in list)
+                AvailableSpecifications.Add(item);
+        }
+
+        // =========================================================
+        // 🔽 FILTER 2: MATERIALS
+        // =========================================================
+        private void LoadMaterials()
+        {
+            AvailableMaterials.Clear();
+
+            using var db = new AppDbContext();
+
+            var list = db.PriceItems
+                .Where(x => x.Task == SelectedTask &&
+                            x.Specification == SelectedSpecification)
+                .Select(x => x.Material)
+                .Distinct()
+                .ToList();
+
+            foreach (var item in list)
+                AvailableMaterials.Add(item);
+        }
+
+        // =========================================================
+        // 🔽 FILTER 3: LOCATIONS
+        // =========================================================
+        private void LoadLocations()
+        {
+            AvailableLocations.Clear();
+
+            using var db = new AppDbContext();
+
+            var list = db.PriceItems
+                .Where(x => x.Task == SelectedTask &&
+                            x.Specification == SelectedSpecification &&
+                            x.Material == SelectedMaterial)
+                .Select(x => x.Location)
+                .Distinct()
+                .ToList();
+
+            foreach (var item in list)
+                AvailableLocations.Add(item);
+        }
+
+        // =========================================================
+        // UPDATE RESULT
+        // =========================================================
+        private void UpdateWorkItem()
+        {
+            if (string.IsNullOrWhiteSpace(SelectedTask) ||
+                string.IsNullOrWhiteSpace(SelectedSpecification) ||
+                string.IsNullOrWhiteSpace(SelectedMaterial) ||
+                string.IsNullOrWhiteSpace(SelectedLocation))
+            {
+                WorkItem = null;
+                return;
+            }
+
+            using var db = new AppDbContext();
+
+            WorkItem = db.PriceItems
+                .FirstOrDefault(x =>
+                    x.Task == SelectedTask &&
+                    x.Specification == SelectedSpecification &&
+                    x.Material == SelectedMaterial &&
+                    x.Location == SelectedLocation);
+        }
+
+        // =========================================================
+        // RESETY
+        // =========================================================
+        // 👉 Používají privátní fieldy přímo → nezpůsobí rekurzivní kaskádu
+        // 👉 Kolekce se čistí ručně, notify se posílá cíleně
+
+        private void ResetBelowTask()
+        {
+            // Resetujeme fieldy přímo (ne přes settery) a pak ručně notifikujeme
+            _selectedSpecification = null;
+            _selectedMaterial = null;
+            _selectedLocation = null;
+
+            AvailableSpecifications.Clear();
+            AvailableMaterials.Clear();
+            AvailableLocations.Clear();
+
+            WorkItem = null;
+            WorkUnit = null;
+
+            OnPropertyChanged(nameof(SelectedSpecification));
+            OnPropertyChanged(nameof(SelectedMaterial));
+            OnPropertyChanged(nameof(SelectedLocation));
+            OnPropertyChanged(nameof(CanSelectMaterial));
+            OnPropertyChanged(nameof(CanSelectLocation));
+        }
+
+        private void ResetBelowSpecification()
+        {
+            _selectedMaterial = null;
+            _selectedLocation = null;
+
+            AvailableMaterials.Clear();
+            AvailableLocations.Clear();
+
+            WorkItem = null;
+
+            OnPropertyChanged(nameof(SelectedMaterial));
+            OnPropertyChanged(nameof(SelectedLocation));
+            OnPropertyChanged(nameof(CanSelectLocation));
+        }
+
+        private void ResetBelowMaterial()
+        {
+            _selectedLocation = null;
+
+            AvailableLocations.Clear();
+
+            WorkItem = null;
+
+            OnPropertyChanged(nameof(SelectedLocation));
+        }
+
+        // =========================================================
+        // NOTIFY
+        // =========================================================
+        public event PropertyChangedEventHandler? PropertyChanged;
+
+        private void OnPropertyChanged([CallerMemberName] string? name = null)
+            => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+    }
+}
+
+
 --- Soubor: CatalogExportData.cs
---- Cesta: Models\CatalogExportData.cs
+--- Cesta: \Models\CatalogExportData.cs
 ----------------------------------------
 ﻿namespace ElektroOffer_app.Models
 {
@@ -4148,7 +6337,7 @@ namespace ElektroOffer_app.Data
 
 
 --- Soubor: Material.cs
---- Cesta: Models\Material.cs
+--- Cesta: \Models\Material.cs
 ----------------------------------------
 ﻿namespace ElektroOffer_app.Models
 {
@@ -4181,7 +6370,7 @@ namespace ElektroOffer_app.Data
 
 
 --- Soubor: PriceItems.cs
---- Cesta: Models\PriceItems.cs
+--- Cesta: \Models\PriceItems.cs
 ----------------------------------------
 ﻿namespace ElektroOffer_app.Models
 {
@@ -4245,7 +6434,7 @@ namespace ElektroOffer_app.Data
 
 
 --- Soubor: ProjectData.cs
---- Cesta: Models\ProjectData.cs
+--- Cesta: \Models\ProjectData.cs
 ----------------------------------------
 ﻿using ElektroOffer_app.Models;
 
@@ -4341,9 +6530,9 @@ namespace ElektroOffer_app.Models
 
 
 
-===== SLOŽKA: Services =====
+===== SLOŽKA: \Services =====
 --- Soubor: ProjectService.cs
---- Cesta: Services\ProjectService.cs
+--- Cesta: \Services\ProjectService.cs
 ----------------------------------------
 ﻿using ElektroOffer_app.Models;
 using Microsoft.Win32;
@@ -4644,198 +6833,2360 @@ namespace ElektroOffer_app.Services
 
 
 
-===== SLOŽKA:  =====
---- Soubor: AboutWindow.xaml
---- Cesta: AboutWindow.xaml
+===== SLOŽKA: \obj\Debug\net10.0-windows =====
+--- Soubor: .NETCoreApp,Version=v10.0.AssemblyAttributes.cs
+--- Cesta: \obj\Debug\net10.0-windows\.NETCoreApp,Version=v10.0.AssemblyAttributes.cs
 ----------------------------------------
-﻿<Window x:Class="ElektroOffer_app.AboutWindow"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="O aplikaci"
-        Width="420"
-        MinHeight="300"
-        MaxHeight="600"
-        ResizeMode="NoResize"
-        WindowStartupLocation="CenterOwner"
-        ShowInTaskbar="False">
-
-    <!-- =========================================================== -->
-    <!-- HLAVNÍ LAYOUT: ScrollViewer pro případ velkého obsahu        -->
-    <!-- =========================================================== -->
-    <ScrollViewer VerticalScrollBarVisibility="Auto">
-
-        <StackPanel Margin="30"
-                    HorizontalAlignment="Center">
-
-            <!-- ======================================================= -->
-            <!-- 🖼️ LOGO APLIKACE                                        -->
-            <!-- Obrázek se načítá ze složky Assets/ v projektu.         -->
-            <!-- Build Action musí být nastaven na "Resource" ve VS.     -->
-            <!-- ======================================================= -->
-            <Image Source="/Assets/logo.jpg"
-                   Width="180"
-                   Height="180"
-                   Stretch="Uniform"
-                   HorizontalAlignment="Center"
-                   Margin="0,0,0,20"/>
-
-            <!-- ======================================================= -->
-            <!-- 📛 NÁZEV APLIKACE                                        -->
-            <!-- ======================================================= -->
-            <TextBlock Text="ElektroOffer"
-                       FontSize="24"
-                       FontWeight="Bold"
-                       HorizontalAlignment="Center"
-                       TextAlignment="Center"
-                       Margin="0,0,0,6"/>
-
-            <!-- ======================================================= -->
-            <!-- 🔢 VERZE — načítá se z .csproj přes AssemblyInfo        -->
-            <!-- Text se nastavuje z code-behind při otevření okna       -->
-            <!-- ======================================================= -->
-            <TextBlock x:Name="VersionText"
-                       FontSize="14"
-                       Foreground="Gray"
-                       HorizontalAlignment="Center"
-                       TextAlignment="Center"
-                       Margin="0,0,0,20"/>
-
-            <!-- ======================================================= -->
-            <!-- ODDĚLOVAČ                                                -->
-            <!-- ======================================================= -->
-            <Separator Margin="0,0,0,20"/>
-
-            <!-- ======================================================= -->
-            <!-- 👤 AUTOR                                                 -->
-            <!-- ======================================================= -->
-            <TextBlock Text="Vyrobeno"
-                       FontSize="13"
-                       Foreground="Gray"
-                       HorizontalAlignment="Center"
-                       TextAlignment="Center"
-                       Margin="0,0,0,4"/>
-
-            <TextBlock Text="Nowimusic"
-                       FontSize="16"
-                       FontWeight="SemiBold"
-                       HorizontalAlignment="Center"
-                       TextAlignment="Center"
-                       Margin="0,0,0,30"/>
-
-            <!-- ======================================================= -->
-            <!-- ✅ TLAČÍTKO ZAVŘÍT                                       -->
-            <!-- ======================================================= -->
-            <Button Content="Zavřít"
-                    Width="100"
-                    HorizontalAlignment="Center"
-                    Click="CloseButton_Click"/>
-
-        </StackPanel>
-
-    </ScrollViewer>
-
-</Window>
+// <autogenerated />
+using System;
+using System.Reflection;
+[assembly: global::System.Runtime.Versioning.TargetFrameworkAttribute(".NETCoreApp,Version=v10.0", FrameworkDisplayName = ".NET 10.0")]
 
 
---- Soubor: AboutWindow.xaml.cs
---- Cesta: AboutWindow.xaml.cs
+--- Soubor: AboutWindow .g.i.cs
+--- Cesta: \obj\Debug\net10.0-windows\AboutWindow .g.i.cs
 ----------------------------------------
-﻿using System.Reflection;
+﻿#pragma checksum "..\..\..\AboutWindow .xaml" "{ff1816ec-aa5e-4d10-87f7-6f4963833460}" "C113AE4E154962D66376316721E86B6B167A79CC"
+//------------------------------------------------------------------------------
+// <auto-generated>
+//     Tento kód byl generován nástrojem.
+//     Verze modulu runtime:4.0.30319.42000
+//
+//     Změny tohoto souboru mohou způsobit nesprávné chování a budou ztraceny,
+//     dojde-li k novému generování kódu.
+// </auto-generated>
+//------------------------------------------------------------------------------
+
+using System;
+using System.Diagnostics;
 using System.Windows;
+using System.Windows.Automation;
+using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
+using System.Windows.Controls.Ribbon;
+using System.Windows.Data;
+using System.Windows.Documents;
+using System.Windows.Ink;
+using System.Windows.Input;
+using System.Windows.Markup;
+using System.Windows.Media;
+using System.Windows.Media.Animation;
+using System.Windows.Media.Effects;
+using System.Windows.Media.Imaging;
+using System.Windows.Media.Media3D;
+using System.Windows.Media.TextFormatting;
+using System.Windows.Navigation;
+using System.Windows.Shapes;
+using System.Windows.Shell;
 
-namespace ElektroOffer_app
-{
+
+namespace ElektroOffer_app {
+    
+    
     /// <summary>
-    /// Okno "O aplikaci" — zobrazí logo, verzi a autora.
-    /// Otevírá se z menu Nápověda → O aplikaci.
+    /// MainWindow
     /// </summary>
-    public partial class AboutWindow : Window
-    {
-        public AboutWindow()
-        {
-            InitializeComponent();
-
-            // =========================================================
-            // 🔢 NAČTENÍ VERZE Z ASSEMBLY
-            // =========================================================
-            // Verze se čte automaticky z .csproj souboru (<Version>x.x.x</Version>).
-            // Stačí tedy měnit verzi jen na jednom místě — v .csproj.
-            // Formát: "Verze 1.0.0" — major.minor.patch
-            // =========================================================
-
-            var version = Assembly
-                .GetExecutingAssembly()
-                .GetName()
-                .Version;
-
-            // Zobrazíme jen major.minor.patch (bez revision čísla za poslední tečkou)
-            VersionText.Text = version != null
-                ? $"Verze {version.Major}.{version.Minor}.{version.Build}"
-                : "Verze neznámá";
-        }
-
-        // =========================================================
-        // ✅ ZAVŘENÍ OKNA
-        // =========================================================
-
+    public partial class MainWindow : System.Windows.Window, System.Windows.Markup.IComponentConnector, System.Windows.Markup.IStyleConnector {
+        
+        private bool _contentLoaded;
+        
         /// <summary>
-        /// Tlačítko Zavřít — zavře okno O aplikaci.
+        /// InitializeComponent
         /// </summary>
-        private void CloseButton_Click(object sender, RoutedEventArgs e)
-            => Close();
+        [System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [System.CodeDom.Compiler.GeneratedCodeAttribute("PresentationBuildTasks", "10.0.8.0")]
+        public void InitializeComponent() {
+            if (_contentLoaded) {
+                return;
+            }
+            _contentLoaded = true;
+            System.Uri resourceLocater = new System.Uri("/ElektroOffer_app;V1.0.0.0;component/aboutwindow%20.xaml", System.UriKind.Relative);
+            
+            #line 1 "..\..\..\AboutWindow .xaml"
+            System.Windows.Application.LoadComponent(this, resourceLocater);
+            
+            #line default
+            #line hidden
+        }
+        
+        [System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [System.CodeDom.Compiler.GeneratedCodeAttribute("PresentationBuildTasks", "10.0.8.0")]
+        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Never)]
+        [System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1800:DoNotCastUnnecessarily")]
+        void System.Windows.Markup.IComponentConnector.Connect(int connectionId, object target) {
+            switch (connectionId)
+            {
+            case 1:
+            
+            #line 29 "..\..\..\AboutWindow .xaml"
+            ((System.Windows.Controls.MenuItem)(target)).Click += new System.Windows.RoutedEventHandler(this.MenuNewProject_Click);
+            
+            #line default
+            #line hidden
+            return;
+            case 2:
+            
+            #line 36 "..\..\..\AboutWindow .xaml"
+            ((System.Windows.Controls.MenuItem)(target)).Click += new System.Windows.RoutedEventHandler(this.MenuLoad_Click);
+            
+            #line default
+            #line hidden
+            return;
+            case 3:
+            
+            #line 43 "..\..\..\AboutWindow .xaml"
+            ((System.Windows.Controls.MenuItem)(target)).Click += new System.Windows.RoutedEventHandler(this.MenuSave_Click);
+            
+            #line default
+            #line hidden
+            return;
+            case 4:
+            
+            #line 48 "..\..\..\AboutWindow .xaml"
+            ((System.Windows.Controls.MenuItem)(target)).Click += new System.Windows.RoutedEventHandler(this.MenuSaveAs_Click);
+            
+            #line default
+            #line hidden
+            return;
+            case 5:
+            
+            #line 76 "..\..\..\AboutWindow .xaml"
+            ((System.Windows.Controls.Button)(target)).Click += new System.Windows.RoutedEventHandler(this.MenuNewProject_Click);
+            
+            #line default
+            #line hidden
+            return;
+            case 6:
+            
+            #line 84 "..\..\..\AboutWindow .xaml"
+            ((System.Windows.Controls.Button)(target)).Click += new System.Windows.RoutedEventHandler(this.MenuLoad_Click);
+            
+            #line default
+            #line hidden
+            return;
+            case 7:
+            
+            #line 90 "..\..\..\AboutWindow .xaml"
+            ((System.Windows.Controls.Button)(target)).Click += new System.Windows.RoutedEventHandler(this.MenuSave_Click);
+            
+            #line default
+            #line hidden
+            return;
+            case 8:
+            
+            #line 96 "..\..\..\AboutWindow .xaml"
+            ((System.Windows.Controls.Button)(target)).Click += new System.Windows.RoutedEventHandler(this.MenuSaveAs_Click);
+            
+            #line default
+            #line hidden
+            return;
+            case 9:
+            
+            #line 160 "..\..\..\AboutWindow .xaml"
+            ((System.Windows.Controls.Button)(target)).Click += new System.Windows.RoutedEventHandler(this.AddWorkItem_Click);
+            
+            #line default
+            #line hidden
+            return;
+            case 12:
+            
+            #line 339 "..\..\..\AboutWindow .xaml"
+            ((System.Windows.Controls.Button)(target)).Click += new System.Windows.RoutedEventHandler(this.AddMaterialsItem_Click);
+            
+            #line default
+            #line hidden
+            return;
+            }
+            this._contentLoaded = true;
+        }
+        
+        [System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [System.CodeDom.Compiler.GeneratedCodeAttribute("PresentationBuildTasks", "10.0.8.0")]
+        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Never)]
+        [System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1800:DoNotCastUnnecessarily")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
+        void System.Windows.Markup.IStyleConnector.Connect(int connectionId, object target) {
+            switch (connectionId)
+            {
+            case 10:
+            
+            #line 227 "..\..\..\AboutWindow .xaml"
+            ((System.Windows.Controls.Button)(target)).Click += new System.Windows.RoutedEventHandler(this.DeleteWorkItem_Click);
+            
+            #line default
+            #line hidden
+            break;
+            case 11:
+            
+            #line 283 "..\..\..\AboutWindow .xaml"
+            ((System.Windows.Controls.Button)(target)).Click += new System.Windows.RoutedEventHandler(this.ResetWorkItem_Click);
+            
+            #line default
+            #line hidden
+            break;
+            case 13:
+            
+            #line 396 "..\..\..\AboutWindow .xaml"
+            ((System.Windows.Controls.Button)(target)).Click += new System.Windows.RoutedEventHandler(this.DeleteMaterialItem_Click);
+            
+            #line default
+            #line hidden
+            break;
+            case 14:
+            
+            #line 428 "..\..\..\AboutWindow .xaml"
+            ((System.Windows.Controls.Button)(target)).Click += new System.Windows.RoutedEventHandler(this.ResetMaterialItem_Click);
+            
+            #line default
+            #line hidden
+            break;
+            }
+        }
     }
 }
 
 
---- Soubor: App.xaml
---- Cesta: App.xaml
-----------------------------------------
-﻿<Application x:Class="ElektroOffer_app.App"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:ElektroOffer_app"
-             StartupUri="MainWindow.xaml">
-    <Application.Resources>
-         
-    </Application.Resources>
-</Application>
 
-
---- Soubor: App.xaml.cs
---- Cesta: App.xaml.cs
+--- Soubor: AboutWindow.g.cs
+--- Cesta: \obj\Debug\net10.0-windows\AboutWindow.g.cs
 ----------------------------------------
-﻿using System.Configuration;
-using System.Data;
+﻿#pragma checksum "..\..\..\AboutWindow.xaml" "{ff1816ec-aa5e-4d10-87f7-6f4963833460}" "760BCFC13BC24D9F8937A3E66291643BA2F5865E"
+//------------------------------------------------------------------------------
+// <auto-generated>
+//     This code was generated by a tool.
+//
+//     Changes to this file may cause incorrect behavior and will be lost if
+//     the code is regenerated.
+// </auto-generated>
+//------------------------------------------------------------------------------
+
+using System;
+using System.Diagnostics;
 using System.Windows;
+using System.Windows.Automation;
+using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
+using System.Windows.Controls.Ribbon;
+using System.Windows.Data;
+using System.Windows.Documents;
+using System.Windows.Ink;
+using System.Windows.Input;
+using System.Windows.Markup;
+using System.Windows.Media;
+using System.Windows.Media.Animation;
+using System.Windows.Media.Effects;
+using System.Windows.Media.Imaging;
+using System.Windows.Media.Media3D;
+using System.Windows.Media.TextFormatting;
+using System.Windows.Navigation;
+using System.Windows.Shapes;
+using System.Windows.Shell;
 
-namespace ElektroOffer_app
-{
+
+namespace ElektroOffer_app {
+    
+    
     /// <summary>
-    /// Interaction logic for App.xaml
+    /// AboutWindow
     /// </summary>
-    public partial class App : Application
-    {
+    public partial class AboutWindow : System.Windows.Window, System.Windows.Markup.IComponentConnector {
+        
+        
+        #line 46 "..\..\..\AboutWindow.xaml"
+        [System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1823:AvoidUnusedPrivateFields")]
+        internal System.Windows.Controls.TextBlock VersionText;
+        
+        #line default
+        #line hidden
+        
+        private bool _contentLoaded;
+        
+        /// <summary>
+        /// InitializeComponent
+        /// </summary>
+        [System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [System.CodeDom.Compiler.GeneratedCodeAttribute("PresentationBuildTasks", "10.0.8.0")]
+        public void InitializeComponent() {
+            if (_contentLoaded) {
+                return;
+            }
+            _contentLoaded = true;
+            System.Uri resourceLocater = new System.Uri("/ElektroOffer_app;V1.1.1.0;component/aboutwindow.xaml", System.UriKind.Relative);
+            
+            #line 1 "..\..\..\AboutWindow.xaml"
+            System.Windows.Application.LoadComponent(this, resourceLocater);
+            
+            #line default
+            #line hidden
+        }
+        
+        [System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [System.CodeDom.Compiler.GeneratedCodeAttribute("PresentationBuildTasks", "10.0.8.0")]
+        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Never)]
+        [System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1800:DoNotCastUnnecessarily")]
+        void System.Windows.Markup.IComponentConnector.Connect(int connectionId, object target) {
+            switch (connectionId)
+            {
+            case 1:
+            this.VersionText = ((System.Windows.Controls.TextBlock)(target));
+            return;
+            case 2:
+            
+            #line 81 "..\..\..\AboutWindow.xaml"
+            ((System.Windows.Controls.Button)(target)).Click += new System.Windows.RoutedEventHandler(this.CloseButton_Click);
+            
+            #line default
+            #line hidden
+            return;
+            }
+            this._contentLoaded = true;
+        }
     }
-
 }
 
 
---- Soubor: AssemblyInfo.cs
---- Cesta: AssemblyInfo.cs
+
+--- Soubor: AboutWindow.g.i.cs
+--- Cesta: \obj\Debug\net10.0-windows\AboutWindow.g.i.cs
 ----------------------------------------
+﻿#pragma checksum "..\..\..\AboutWindow.xaml" "{ff1816ec-aa5e-4d10-87f7-6f4963833460}" "760BCFC13BC24D9F8937A3E66291643BA2F5865E"
+//------------------------------------------------------------------------------
+// <auto-generated>
+//     Tento kód byl generován nástrojem.
+//     Verze modulu runtime:4.0.30319.42000
+//
+//     Změny tohoto souboru mohou způsobit nesprávné chování a budou ztraceny,
+//     dojde-li k novému generování kódu.
+// </auto-generated>
+//------------------------------------------------------------------------------
+
+using System;
+using System.Diagnostics;
 using System.Windows;
+using System.Windows.Automation;
+using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
+using System.Windows.Controls.Ribbon;
+using System.Windows.Data;
+using System.Windows.Documents;
+using System.Windows.Ink;
+using System.Windows.Input;
+using System.Windows.Markup;
+using System.Windows.Media;
+using System.Windows.Media.Animation;
+using System.Windows.Media.Effects;
+using System.Windows.Media.Imaging;
+using System.Windows.Media.Media3D;
+using System.Windows.Media.TextFormatting;
+using System.Windows.Navigation;
+using System.Windows.Shapes;
+using System.Windows.Shell;
 
-[assembly: ThemeInfo(
-    ResourceDictionaryLocation.None,            //where theme specific resource dictionaries are located
-                                                //(used if a resource is not found in the page,
-                                                // or application resource dictionaries)
-    ResourceDictionaryLocation.SourceAssembly   //where the generic resource dictionary is located
-                                                //(used if a resource is not found in the page,
-                                                // app, or any theme specific resource dictionaries)
-)]
+
+namespace ElektroOffer_app {
+    
+    
+    /// <summary>
+    /// AboutWindow
+    /// </summary>
+    public partial class AboutWindow : System.Windows.Window, System.Windows.Markup.IComponentConnector {
+        
+        
+        #line 46 "..\..\..\AboutWindow.xaml"
+        [System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1823:AvoidUnusedPrivateFields")]
+        internal System.Windows.Controls.TextBlock VersionText;
+        
+        #line default
+        #line hidden
+        
+        private bool _contentLoaded;
+        
+        /// <summary>
+        /// InitializeComponent
+        /// </summary>
+        [System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [System.CodeDom.Compiler.GeneratedCodeAttribute("PresentationBuildTasks", "10.0.8.0")]
+        public void InitializeComponent() {
+            if (_contentLoaded) {
+                return;
+            }
+            _contentLoaded = true;
+            System.Uri resourceLocater = new System.Uri("/ElektroOffer_app;component/aboutwindow.xaml", System.UriKind.Relative);
+            
+            #line 1 "..\..\..\AboutWindow.xaml"
+            System.Windows.Application.LoadComponent(this, resourceLocater);
+            
+            #line default
+            #line hidden
+        }
+        
+        [System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [System.CodeDom.Compiler.GeneratedCodeAttribute("PresentationBuildTasks", "10.0.8.0")]
+        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Never)]
+        [System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1800:DoNotCastUnnecessarily")]
+        void System.Windows.Markup.IComponentConnector.Connect(int connectionId, object target) {
+            switch (connectionId)
+            {
+            case 1:
+            this.VersionText = ((System.Windows.Controls.TextBlock)(target));
+            return;
+            case 2:
+            
+            #line 81 "..\..\..\AboutWindow.xaml"
+            ((System.Windows.Controls.Button)(target)).Click += new System.Windows.RoutedEventHandler(this.CloseButton_Click);
+            
+            #line default
+            #line hidden
+            return;
+            }
+            this._contentLoaded = true;
+        }
+    }
+}
 
 
 
-===== SOUBOR NENALEZEN: MainWindows.xaml =====
+--- Soubor: App.g.cs
+--- Cesta: \obj\Debug\net10.0-windows\App.g.cs
+----------------------------------------
+﻿#pragma checksum "..\..\..\App.xaml" "{ff1816ec-aa5e-4d10-87f7-6f4963833460}" "8099DFCC852467C67C8395C431A7C5270E416888"
+//------------------------------------------------------------------------------
+// <auto-generated>
+//     This code was generated by a tool.
+//
+//     Changes to this file may cause incorrect behavior and will be lost if
+//     the code is regenerated.
+// </auto-generated>
+//------------------------------------------------------------------------------
 
-===== SOUBOR NENALEZEN: MainWindows.xaml.cs =====
+using ElektroOffer_app;
+using System;
+using System.Diagnostics;
+using System.Windows;
+using System.Windows.Automation;
+using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
+using System.Windows.Controls.Ribbon;
+using System.Windows.Data;
+using System.Windows.Documents;
+using System.Windows.Ink;
+using System.Windows.Input;
+using System.Windows.Markup;
+using System.Windows.Media;
+using System.Windows.Media.Animation;
+using System.Windows.Media.Effects;
+using System.Windows.Media.Imaging;
+using System.Windows.Media.Media3D;
+using System.Windows.Media.TextFormatting;
+using System.Windows.Navigation;
+using System.Windows.Shapes;
+using System.Windows.Shell;
+
+
+namespace ElektroOffer_app {
+    
+    
+    /// <summary>
+    /// App
+    /// </summary>
+    public partial class App : System.Windows.Application {
+        
+        /// <summary>
+        /// InitializeComponent
+        /// </summary>
+        [System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [System.CodeDom.Compiler.GeneratedCodeAttribute("PresentationBuildTasks", "10.0.8.0")]
+        public void InitializeComponent() {
+            
+            #line 5 "..\..\..\App.xaml"
+            this.StartupUri = new System.Uri("MainWindow.xaml", System.UriKind.Relative);
+            
+            #line default
+            #line hidden
+        }
+        
+        /// <summary>
+        /// Application Entry Point.
+        /// </summary>
+        [System.STAThreadAttribute()]
+        [System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [System.CodeDom.Compiler.GeneratedCodeAttribute("PresentationBuildTasks", "10.0.8.0")]
+        public static void Main() {
+            ElektroOffer_app.App app = new ElektroOffer_app.App();
+            app.InitializeComponent();
+            app.Run();
+        }
+    }
+}
+
+
+
+--- Soubor: App.g.i.cs
+--- Cesta: \obj\Debug\net10.0-windows\App.g.i.cs
+----------------------------------------
+﻿#pragma checksum "..\..\..\App.xaml" "{ff1816ec-aa5e-4d10-87f7-6f4963833460}" "8099DFCC852467C67C8395C431A7C5270E416888"
+//------------------------------------------------------------------------------
+// <auto-generated>
+//     Tento kód byl generován nástrojem.
+//     Verze modulu runtime:4.0.30319.42000
+//
+//     Změny tohoto souboru mohou způsobit nesprávné chování a budou ztraceny,
+//     dojde-li k novému generování kódu.
+// </auto-generated>
+//------------------------------------------------------------------------------
+
+using ElektroOffer_app;
+using System;
+using System.Diagnostics;
+using System.Windows;
+using System.Windows.Automation;
+using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
+using System.Windows.Controls.Ribbon;
+using System.Windows.Data;
+using System.Windows.Documents;
+using System.Windows.Ink;
+using System.Windows.Input;
+using System.Windows.Markup;
+using System.Windows.Media;
+using System.Windows.Media.Animation;
+using System.Windows.Media.Effects;
+using System.Windows.Media.Imaging;
+using System.Windows.Media.Media3D;
+using System.Windows.Media.TextFormatting;
+using System.Windows.Navigation;
+using System.Windows.Shapes;
+using System.Windows.Shell;
+
+
+namespace ElektroOffer_app {
+    
+    
+    /// <summary>
+    /// App
+    /// </summary>
+    public partial class App : System.Windows.Application {
+        
+        /// <summary>
+        /// InitializeComponent
+        /// </summary>
+        [System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [System.CodeDom.Compiler.GeneratedCodeAttribute("PresentationBuildTasks", "10.0.8.0")]
+        public void InitializeComponent() {
+            
+            #line 5 "..\..\..\App.xaml"
+            this.StartupUri = new System.Uri("MainWindow.xaml", System.UriKind.Relative);
+            
+            #line default
+            #line hidden
+        }
+        
+        /// <summary>
+        /// Application Entry Point.
+        /// </summary>
+        [System.STAThreadAttribute()]
+        [System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [System.CodeDom.Compiler.GeneratedCodeAttribute("PresentationBuildTasks", "10.0.8.0")]
+        public static void Main() {
+            ElektroOffer_app.App app = new ElektroOffer_app.App();
+            app.InitializeComponent();
+            app.Run();
+        }
+    }
+}
+
+
+
+--- Soubor: ElektroOffer_app.AssemblyInfo.cs
+--- Cesta: \obj\Debug\net10.0-windows\ElektroOffer_app.AssemblyInfo.cs
+----------------------------------------
+//------------------------------------------------------------------------------
+// <auto-generated>
+//     This code was generated by a tool.
+//
+//     Changes to this file may cause incorrect behavior and will be lost if
+//     the code is regenerated.
+// </auto-generated>
+//------------------------------------------------------------------------------
+
+using System;
+using System.Reflection;
+
+[assembly: System.Reflection.AssemblyCompanyAttribute("ElektroOffer_app")]
+[assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
+[assembly: System.Reflection.AssemblyFileVersionAttribute("1.1.1.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.1.1+3da5dfec884573b4a0101dfccaba9184f06d87f7")]
+[assembly: System.Reflection.AssemblyProductAttribute("ElektroOffer_app")]
+[assembly: System.Reflection.AssemblyTitleAttribute("ElektroOffer_app")]
+[assembly: System.Reflection.AssemblyVersionAttribute("1.1.1.0")]
+[assembly: System.Runtime.Versioning.TargetPlatformAttribute("Windows7.0")]
+[assembly: System.Runtime.Versioning.SupportedOSPlatformAttribute("Windows7.0")]
+
+// Generated by the MSBuild WriteCodeFragment class.
+
+
+
+--- Soubor: ElektroOffer_app.GlobalUsings.g.cs
+--- Cesta: \obj\Debug\net10.0-windows\ElektroOffer_app.GlobalUsings.g.cs
+----------------------------------------
+// <auto-generated/>
+global using System;
+global using System.Collections.Generic;
+global using System.Linq;
+global using System.Threading;
+global using System.Threading.Tasks;
+
+
+--- Soubor: ElektroOffer_app_5vtnqcho_wpftmp.AssemblyInfo.cs
+--- Cesta: \obj\Debug\net10.0-windows\ElektroOffer_app_5vtnqcho_wpftmp.AssemblyInfo.cs
+----------------------------------------
+//------------------------------------------------------------------------------
+// <auto-generated>
+//     Tento kód byl generován nástrojem.
+//     Verze modulu runtime:4.0.30319.42000
+//
+//     Změny tohoto souboru mohou způsobit nesprávné chování a budou ztraceny,
+//     dojde-li k novému generování kódu.
+// </auto-generated>
+//------------------------------------------------------------------------------
+
+using System;
+using System.Reflection;
+
+[assembly: System.Reflection.AssemblyCompanyAttribute("ElektroOffer_app")]
+[assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
+[assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+2cf559bdb8cc3e88c55f0fcd6a5b569235c7bdf4")]
+[assembly: System.Reflection.AssemblyProductAttribute("ElektroOffer_app")]
+[assembly: System.Reflection.AssemblyTitleAttribute("ElektroOffer_app")]
+[assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
+[assembly: System.Runtime.Versioning.TargetPlatformAttribute("Windows7.0")]
+[assembly: System.Runtime.Versioning.SupportedOSPlatformAttribute("Windows7.0")]
+
+// Generated by the MSBuild WriteCodeFragment class.
+
+
+
+--- Soubor: ElektroOffer_app_5vtnqcho_wpftmp.GlobalUsings.g.cs
+--- Cesta: \obj\Debug\net10.0-windows\ElektroOffer_app_5vtnqcho_wpftmp.GlobalUsings.g.cs
+----------------------------------------
+// <auto-generated/>
+global using System;
+global using System.Collections.Generic;
+global using System.Linq;
+global using System.Threading;
+global using System.Threading.Tasks;
+
+
+--- Soubor: ElektroOffer_app_Content.g.cs
+--- Cesta: \obj\Debug\net10.0-windows\ElektroOffer_app_Content.g.cs
+----------------------------------------
+﻿//------------------------------------------------------------------------------
+// <auto-generated>
+//     This code was generated by a tool.
+//
+//     Changes to this file may cause incorrect behavior and will be lost if
+//     the code is regenerated.
+// </auto-generated>
+//------------------------------------------------------------------------------
+
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("elektrooffer.db")]
+
+
+
+
+--- Soubor: ElektroOffer_app_Content.g.i.cs
+--- Cesta: \obj\Debug\net10.0-windows\ElektroOffer_app_Content.g.i.cs
+----------------------------------------
+﻿//------------------------------------------------------------------------------
+// <auto-generated>
+//     Tento kód byl generován nástrojem.
+//     Verze modulu runtime:4.0.30319.42000
+//
+//     Změny tohoto souboru mohou způsobit nesprávné chování a budou ztraceny,
+//     dojde-li k novému generování kódu.
+// </auto-generated>
+//------------------------------------------------------------------------------
+
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("elektrooffer.db")]
+
+
+
+
+--- Soubor: ElektroOffer_app_cudzg5g2_wpftmp.AssemblyInfo.cs
+--- Cesta: \obj\Debug\net10.0-windows\ElektroOffer_app_cudzg5g2_wpftmp.AssemblyInfo.cs
+----------------------------------------
+//------------------------------------------------------------------------------
+// <auto-generated>
+//     Tento kód byl generován nástrojem.
+//     Verze modulu runtime:4.0.30319.42000
+//
+//     Změny tohoto souboru mohou způsobit nesprávné chování a budou ztraceny,
+//     dojde-li k novému generování kódu.
+// </auto-generated>
+//------------------------------------------------------------------------------
+
+using System;
+using System.Reflection;
+
+[assembly: System.Reflection.AssemblyCompanyAttribute("ElektroOffer_app")]
+[assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
+[assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+2cf559bdb8cc3e88c55f0fcd6a5b569235c7bdf4")]
+[assembly: System.Reflection.AssemblyProductAttribute("ElektroOffer_app")]
+[assembly: System.Reflection.AssemblyTitleAttribute("ElektroOffer_app")]
+[assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
+[assembly: System.Runtime.Versioning.TargetPlatformAttribute("Windows7.0")]
+[assembly: System.Runtime.Versioning.SupportedOSPlatformAttribute("Windows7.0")]
+
+// Generated by the MSBuild WriteCodeFragment class.
+
+
+
+--- Soubor: ElektroOffer_app_cudzg5g2_wpftmp.GlobalUsings.g.cs
+--- Cesta: \obj\Debug\net10.0-windows\ElektroOffer_app_cudzg5g2_wpftmp.GlobalUsings.g.cs
+----------------------------------------
+// <auto-generated/>
+global using System;
+global using System.Collections.Generic;
+global using System.Linq;
+global using System.Threading;
+global using System.Threading.Tasks;
+
+
+--- Soubor: ElektroOffer_app_fjxvjii5_wpftmp.AssemblyInfo.cs
+--- Cesta: \obj\Debug\net10.0-windows\ElektroOffer_app_fjxvjii5_wpftmp.AssemblyInfo.cs
+----------------------------------------
+//------------------------------------------------------------------------------
+// <auto-generated>
+//     Tento kód byl generován nástrojem.
+//     Verze modulu runtime:4.0.30319.42000
+//
+//     Změny tohoto souboru mohou způsobit nesprávné chování a budou ztraceny,
+//     dojde-li k novému generování kódu.
+// </auto-generated>
+//------------------------------------------------------------------------------
+
+using System;
+using System.Reflection;
+
+[assembly: System.Reflection.AssemblyCompanyAttribute("ElektroOffer_app")]
+[assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
+[assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+f189d14f5c8eac5593bd56b780b04892ce6d9f8e")]
+[assembly: System.Reflection.AssemblyProductAttribute("ElektroOffer_app")]
+[assembly: System.Reflection.AssemblyTitleAttribute("ElektroOffer_app")]
+[assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
+[assembly: System.Runtime.Versioning.TargetPlatformAttribute("Windows7.0")]
+[assembly: System.Runtime.Versioning.SupportedOSPlatformAttribute("Windows7.0")]
+
+// Generated by the MSBuild WriteCodeFragment class.
+
+
+
+--- Soubor: ElektroOffer_app_fjxvjii5_wpftmp.GlobalUsings.g.cs
+--- Cesta: \obj\Debug\net10.0-windows\ElektroOffer_app_fjxvjii5_wpftmp.GlobalUsings.g.cs
+----------------------------------------
+// <auto-generated/>
+global using System;
+global using System.Collections.Generic;
+global using System.Linq;
+global using System.Threading;
+global using System.Threading.Tasks;
+
+
+--- Soubor: ElektroOffer_app_gqv30c2a_wpftmp.AssemblyInfo.cs
+--- Cesta: \obj\Debug\net10.0-windows\ElektroOffer_app_gqv30c2a_wpftmp.AssemblyInfo.cs
+----------------------------------------
+//------------------------------------------------------------------------------
+// <auto-generated>
+//     Tento kód byl generován nástrojem.
+//     Verze modulu runtime:4.0.30319.42000
+//
+//     Změny tohoto souboru mohou způsobit nesprávné chování a budou ztraceny,
+//     dojde-li k novému generování kódu.
+// </auto-generated>
+//------------------------------------------------------------------------------
+
+using System;
+using System.Reflection;
+
+[assembly: System.Reflection.AssemblyCompanyAttribute("ElektroOffer_app")]
+[assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
+[assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyProductAttribute("ElektroOffer_app")]
+[assembly: System.Reflection.AssemblyTitleAttribute("ElektroOffer_app")]
+[assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
+[assembly: System.Runtime.Versioning.TargetPlatformAttribute("Windows7.0")]
+[assembly: System.Runtime.Versioning.SupportedOSPlatformAttribute("Windows7.0")]
+
+// Generated by the MSBuild WriteCodeFragment class.
+
+
+
+--- Soubor: ElektroOffer_app_gqv30c2a_wpftmp.GlobalUsings.g.cs
+--- Cesta: \obj\Debug\net10.0-windows\ElektroOffer_app_gqv30c2a_wpftmp.GlobalUsings.g.cs
+----------------------------------------
+// <auto-generated/>
+global using System;
+global using System.Collections.Generic;
+global using System.Linq;
+global using System.Threading;
+global using System.Threading.Tasks;
+
+
+--- Soubor: ElektroOffer_app_hyg42c0p_wpftmp.AssemblyInfo.cs
+--- Cesta: \obj\Debug\net10.0-windows\ElektroOffer_app_hyg42c0p_wpftmp.AssemblyInfo.cs
+----------------------------------------
+//------------------------------------------------------------------------------
+// <auto-generated>
+//     Tento kód byl generován nástrojem.
+//     Verze modulu runtime:4.0.30319.42000
+//
+//     Změny tohoto souboru mohou způsobit nesprávné chování a budou ztraceny,
+//     dojde-li k novému generování kódu.
+// </auto-generated>
+//------------------------------------------------------------------------------
+
+using System;
+using System.Reflection;
+
+[assembly: System.Reflection.AssemblyCompanyAttribute("ElektroOffer_app")]
+[assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
+[assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+26c9b80a519ff14ee13d474f4cddb9ceefd7c88c")]
+[assembly: System.Reflection.AssemblyProductAttribute("ElektroOffer_app")]
+[assembly: System.Reflection.AssemblyTitleAttribute("ElektroOffer_app")]
+[assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
+[assembly: System.Runtime.Versioning.TargetPlatformAttribute("Windows7.0")]
+[assembly: System.Runtime.Versioning.SupportedOSPlatformAttribute("Windows7.0")]
+
+// Generated by the MSBuild WriteCodeFragment class.
+
+
+
+--- Soubor: ElektroOffer_app_hyg42c0p_wpftmp.GlobalUsings.g.cs
+--- Cesta: \obj\Debug\net10.0-windows\ElektroOffer_app_hyg42c0p_wpftmp.GlobalUsings.g.cs
+----------------------------------------
+// <auto-generated/>
+global using System;
+global using System.Collections.Generic;
+global using System.Linq;
+global using System.Threading;
+global using System.Threading.Tasks;
+
+
+--- Soubor: ElektroOffer_app_mwi44kbo_wpftmp.AssemblyInfo.cs
+--- Cesta: \obj\Debug\net10.0-windows\ElektroOffer_app_mwi44kbo_wpftmp.AssemblyInfo.cs
+----------------------------------------
+//------------------------------------------------------------------------------
+// <auto-generated>
+//     Tento kód byl generován nástrojem.
+//     Verze modulu runtime:4.0.30319.42000
+//
+//     Změny tohoto souboru mohou způsobit nesprávné chování a budou ztraceny,
+//     dojde-li k novému generování kódu.
+// </auto-generated>
+//------------------------------------------------------------------------------
+
+using System;
+using System.Reflection;
+
+[assembly: System.Reflection.AssemblyCompanyAttribute("ElektroOffer_app")]
+[assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
+[assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+7f4b9667d54ff5f28afdd24208776c1198ebe967")]
+[assembly: System.Reflection.AssemblyProductAttribute("ElektroOffer_app")]
+[assembly: System.Reflection.AssemblyTitleAttribute("ElektroOffer_app")]
+[assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
+[assembly: System.Runtime.Versioning.TargetPlatformAttribute("Windows7.0")]
+[assembly: System.Runtime.Versioning.SupportedOSPlatformAttribute("Windows7.0")]
+
+// Generated by the MSBuild WriteCodeFragment class.
+
+
+
+--- Soubor: ElektroOffer_app_mwi44kbo_wpftmp.GlobalUsings.g.cs
+--- Cesta: \obj\Debug\net10.0-windows\ElektroOffer_app_mwi44kbo_wpftmp.GlobalUsings.g.cs
+----------------------------------------
+// <auto-generated/>
+global using System;
+global using System.Collections.Generic;
+global using System.Linq;
+global using System.Threading;
+global using System.Threading.Tasks;
+
+
+--- Soubor: ElektroOffer_app_opiofbph_wpftmp.AssemblyInfo.cs
+--- Cesta: \obj\Debug\net10.0-windows\ElektroOffer_app_opiofbph_wpftmp.AssemblyInfo.cs
+----------------------------------------
+//------------------------------------------------------------------------------
+// <auto-generated>
+//     Tento kód byl generován nástrojem.
+//     Verze modulu runtime:4.0.30319.42000
+//
+//     Změny tohoto souboru mohou způsobit nesprávné chování a budou ztraceny,
+//     dojde-li k novému generování kódu.
+// </auto-generated>
+//------------------------------------------------------------------------------
+
+using System;
+using System.Reflection;
+
+[assembly: System.Reflection.AssemblyCompanyAttribute("ElektroOffer_app")]
+[assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
+[assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyProductAttribute("ElektroOffer_app")]
+[assembly: System.Reflection.AssemblyTitleAttribute("ElektroOffer_app")]
+[assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
+[assembly: System.Runtime.Versioning.TargetPlatformAttribute("Windows7.0")]
+[assembly: System.Runtime.Versioning.SupportedOSPlatformAttribute("Windows7.0")]
+
+// Generated by the MSBuild WriteCodeFragment class.
+
+
+
+--- Soubor: ElektroOffer_app_opiofbph_wpftmp.GlobalUsings.g.cs
+--- Cesta: \obj\Debug\net10.0-windows\ElektroOffer_app_opiofbph_wpftmp.GlobalUsings.g.cs
+----------------------------------------
+// <auto-generated/>
+global using System;
+global using System.Collections.Generic;
+global using System.Linq;
+global using System.Threading;
+global using System.Threading.Tasks;
+
+
+--- Soubor: ElektroOffer_app_q4ojtrtn_wpftmp.AssemblyInfo.cs
+--- Cesta: \obj\Debug\net10.0-windows\ElektroOffer_app_q4ojtrtn_wpftmp.AssemblyInfo.cs
+----------------------------------------
+//------------------------------------------------------------------------------
+// <auto-generated>
+//     Tento kód byl generován nástrojem.
+//     Verze modulu runtime:4.0.30319.42000
+//
+//     Změny tohoto souboru mohou způsobit nesprávné chování a budou ztraceny,
+//     dojde-li k novému generování kódu.
+// </auto-generated>
+//------------------------------------------------------------------------------
+
+using System;
+using System.Reflection;
+
+[assembly: System.Reflection.AssemblyCompanyAttribute("ElektroOffer_app")]
+[assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
+[assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+fe56436af88b3edab4f94d049f925e01048a876d")]
+[assembly: System.Reflection.AssemblyProductAttribute("ElektroOffer_app")]
+[assembly: System.Reflection.AssemblyTitleAttribute("ElektroOffer_app")]
+[assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
+[assembly: System.Runtime.Versioning.TargetPlatformAttribute("Windows7.0")]
+[assembly: System.Runtime.Versioning.SupportedOSPlatformAttribute("Windows7.0")]
+
+// Generated by the MSBuild WriteCodeFragment class.
+
+
+
+--- Soubor: ElektroOffer_app_q4ojtrtn_wpftmp.GlobalUsings.g.cs
+--- Cesta: \obj\Debug\net10.0-windows\ElektroOffer_app_q4ojtrtn_wpftmp.GlobalUsings.g.cs
+----------------------------------------
+// <auto-generated/>
+global using System;
+global using System.Collections.Generic;
+global using System.Linq;
+global using System.Threading;
+global using System.Threading.Tasks;
+
+
+--- Soubor: ElektroOffer_app_rkmaihg1_wpftmp.AssemblyInfo.cs
+--- Cesta: \obj\Debug\net10.0-windows\ElektroOffer_app_rkmaihg1_wpftmp.AssemblyInfo.cs
+----------------------------------------
+//------------------------------------------------------------------------------
+// <auto-generated>
+//     Tento kód byl generován nástrojem.
+//     Verze modulu runtime:4.0.30319.42000
+//
+//     Změny tohoto souboru mohou způsobit nesprávné chování a budou ztraceny,
+//     dojde-li k novému generování kódu.
+// </auto-generated>
+//------------------------------------------------------------------------------
+
+using System;
+using System.Reflection;
+
+[assembly: System.Reflection.AssemblyCompanyAttribute("ElektroOffer_app")]
+[assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
+[assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+2cf559bdb8cc3e88c55f0fcd6a5b569235c7bdf4")]
+[assembly: System.Reflection.AssemblyProductAttribute("ElektroOffer_app")]
+[assembly: System.Reflection.AssemblyTitleAttribute("ElektroOffer_app")]
+[assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
+[assembly: System.Runtime.Versioning.TargetPlatformAttribute("Windows7.0")]
+[assembly: System.Runtime.Versioning.SupportedOSPlatformAttribute("Windows7.0")]
+
+// Generated by the MSBuild WriteCodeFragment class.
+
+
+
+--- Soubor: ElektroOffer_app_rkmaihg1_wpftmp.GlobalUsings.g.cs
+--- Cesta: \obj\Debug\net10.0-windows\ElektroOffer_app_rkmaihg1_wpftmp.GlobalUsings.g.cs
+----------------------------------------
+// <auto-generated/>
+global using System;
+global using System.Collections.Generic;
+global using System.Linq;
+global using System.Threading;
+global using System.Threading.Tasks;
+
+
+--- Soubor: ElektroOffer_app_vygcuer1_wpftmp.AssemblyInfo.cs
+--- Cesta: \obj\Debug\net10.0-windows\ElektroOffer_app_vygcuer1_wpftmp.AssemblyInfo.cs
+----------------------------------------
+//------------------------------------------------------------------------------
+// <auto-generated>
+//     Tento kód byl generován nástrojem.
+//     Verze modulu runtime:4.0.30319.42000
+//
+//     Změny tohoto souboru mohou způsobit nesprávné chování a budou ztraceny,
+//     dojde-li k novému generování kódu.
+// </auto-generated>
+//------------------------------------------------------------------------------
+
+using System;
+using System.Reflection;
+
+[assembly: System.Reflection.AssemblyCompanyAttribute("ElektroOffer_app")]
+[assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
+[assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+2cf559bdb8cc3e88c55f0fcd6a5b569235c7bdf4")]
+[assembly: System.Reflection.AssemblyProductAttribute("ElektroOffer_app")]
+[assembly: System.Reflection.AssemblyTitleAttribute("ElektroOffer_app")]
+[assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
+[assembly: System.Runtime.Versioning.TargetPlatformAttribute("Windows7.0")]
+[assembly: System.Runtime.Versioning.SupportedOSPlatformAttribute("Windows7.0")]
+
+// Generated by the MSBuild WriteCodeFragment class.
+
+
+
+--- Soubor: ElektroOffer_app_vygcuer1_wpftmp.GlobalUsings.g.cs
+--- Cesta: \obj\Debug\net10.0-windows\ElektroOffer_app_vygcuer1_wpftmp.GlobalUsings.g.cs
+----------------------------------------
+// <auto-generated/>
+global using System;
+global using System.Collections.Generic;
+global using System.Linq;
+global using System.Threading;
+global using System.Threading.Tasks;
+
+
+--- Soubor: ElektroOffer_app_xmp3cul0_wpftmp.AssemblyInfo.cs
+--- Cesta: \obj\Debug\net10.0-windows\ElektroOffer_app_xmp3cul0_wpftmp.AssemblyInfo.cs
+----------------------------------------
+//------------------------------------------------------------------------------
+// <auto-generated>
+//     Tento kód byl generován nástrojem.
+//     Verze modulu runtime:4.0.30319.42000
+//
+//     Změny tohoto souboru mohou způsobit nesprávné chování a budou ztraceny,
+//     dojde-li k novému generování kódu.
+// </auto-generated>
+//------------------------------------------------------------------------------
+
+using System;
+using System.Reflection;
+
+[assembly: System.Reflection.AssemblyCompanyAttribute("ElektroOffer_app")]
+[assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
+[assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+2cf559bdb8cc3e88c55f0fcd6a5b569235c7bdf4")]
+[assembly: System.Reflection.AssemblyProductAttribute("ElektroOffer_app")]
+[assembly: System.Reflection.AssemblyTitleAttribute("ElektroOffer_app")]
+[assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
+[assembly: System.Runtime.Versioning.TargetPlatformAttribute("Windows7.0")]
+[assembly: System.Runtime.Versioning.SupportedOSPlatformAttribute("Windows7.0")]
+
+// Generated by the MSBuild WriteCodeFragment class.
+
+
+
+--- Soubor: ElektroOffer_app_xmp3cul0_wpftmp.GlobalUsings.g.cs
+--- Cesta: \obj\Debug\net10.0-windows\ElektroOffer_app_xmp3cul0_wpftmp.GlobalUsings.g.cs
+----------------------------------------
+// <auto-generated/>
+global using System;
+global using System.Collections.Generic;
+global using System.Linq;
+global using System.Threading;
+global using System.Threading.Tasks;
+
+
+--- Soubor: ElektroOffer_app_ynd115gf_wpftmp.AssemblyInfo.cs
+--- Cesta: \obj\Debug\net10.0-windows\ElektroOffer_app_ynd115gf_wpftmp.AssemblyInfo.cs
+----------------------------------------
+//------------------------------------------------------------------------------
+// <auto-generated>
+//     Tento kód byl generován nástrojem.
+//     Verze modulu runtime:4.0.30319.42000
+//
+//     Změny tohoto souboru mohou způsobit nesprávné chování a budou ztraceny,
+//     dojde-li k novému generování kódu.
+// </auto-generated>
+//------------------------------------------------------------------------------
+
+using System;
+using System.Reflection;
+
+[assembly: System.Reflection.AssemblyCompanyAttribute("ElektroOffer_app")]
+[assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
+[assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+fe56436af88b3edab4f94d049f925e01048a876d")]
+[assembly: System.Reflection.AssemblyProductAttribute("ElektroOffer_app")]
+[assembly: System.Reflection.AssemblyTitleAttribute("ElektroOffer_app")]
+[assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
+[assembly: System.Runtime.Versioning.TargetPlatformAttribute("Windows7.0")]
+[assembly: System.Runtime.Versioning.SupportedOSPlatformAttribute("Windows7.0")]
+
+// Generated by the MSBuild WriteCodeFragment class.
+
+
+
+--- Soubor: ElektroOffer_app_ynd115gf_wpftmp.GlobalUsings.g.cs
+--- Cesta: \obj\Debug\net10.0-windows\ElektroOffer_app_ynd115gf_wpftmp.GlobalUsings.g.cs
+----------------------------------------
+// <auto-generated/>
+global using System;
+global using System.Collections.Generic;
+global using System.Linq;
+global using System.Threading;
+global using System.Threading.Tasks;
+
+
+--- Soubor: ElektroOffer_app_znnstfnn_wpftmp.AssemblyInfo.cs
+--- Cesta: \obj\Debug\net10.0-windows\ElektroOffer_app_znnstfnn_wpftmp.AssemblyInfo.cs
+----------------------------------------
+//------------------------------------------------------------------------------
+// <auto-generated>
+//     Tento kód byl generován nástrojem.
+//     Verze modulu runtime:4.0.30319.42000
+//
+//     Změny tohoto souboru mohou způsobit nesprávné chování a budou ztraceny,
+//     dojde-li k novému generování kódu.
+// </auto-generated>
+//------------------------------------------------------------------------------
+
+using System;
+using System.Reflection;
+
+[assembly: System.Reflection.AssemblyCompanyAttribute("ElektroOffer_app")]
+[assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
+[assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+7f4b9667d54ff5f28afdd24208776c1198ebe967")]
+[assembly: System.Reflection.AssemblyProductAttribute("ElektroOffer_app")]
+[assembly: System.Reflection.AssemblyTitleAttribute("ElektroOffer_app")]
+[assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
+[assembly: System.Runtime.Versioning.TargetPlatformAttribute("Windows7.0")]
+[assembly: System.Runtime.Versioning.SupportedOSPlatformAttribute("Windows7.0")]
+
+// Generated by the MSBuild WriteCodeFragment class.
+
+
+
+--- Soubor: ElektroOffer_app_znnstfnn_wpftmp.GlobalUsings.g.cs
+--- Cesta: \obj\Debug\net10.0-windows\ElektroOffer_app_znnstfnn_wpftmp.GlobalUsings.g.cs
+----------------------------------------
+// <auto-generated/>
+global using System;
+global using System.Collections.Generic;
+global using System.Linq;
+global using System.Threading;
+global using System.Threading.Tasks;
+
+
+--- Soubor: MainWindow - Kopie.g.i.cs
+--- Cesta: \obj\Debug\net10.0-windows\MainWindow - Kopie.g.i.cs
+----------------------------------------
+﻿#pragma checksum "..\..\..\MainWindow - Kopie.xaml" "{ff1816ec-aa5e-4d10-87f7-6f4963833460}" "C113AE4E154962D66376316721E86B6B167A79CC"
+//------------------------------------------------------------------------------
+// <auto-generated>
+//     Tento kód byl generován nástrojem.
+//     Verze modulu runtime:4.0.30319.42000
+//
+//     Změny tohoto souboru mohou způsobit nesprávné chování a budou ztraceny,
+//     dojde-li k novému generování kódu.
+// </auto-generated>
+//------------------------------------------------------------------------------
+
+using System;
+using System.Diagnostics;
+using System.Windows;
+using System.Windows.Automation;
+using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
+using System.Windows.Controls.Ribbon;
+using System.Windows.Data;
+using System.Windows.Documents;
+using System.Windows.Ink;
+using System.Windows.Input;
+using System.Windows.Markup;
+using System.Windows.Media;
+using System.Windows.Media.Animation;
+using System.Windows.Media.Effects;
+using System.Windows.Media.Imaging;
+using System.Windows.Media.Media3D;
+using System.Windows.Media.TextFormatting;
+using System.Windows.Navigation;
+using System.Windows.Shapes;
+using System.Windows.Shell;
+
+
+namespace ElektroOffer_app {
+    
+    
+    /// <summary>
+    /// MainWindow
+    /// </summary>
+    public partial class MainWindow : System.Windows.Window, System.Windows.Markup.IComponentConnector, System.Windows.Markup.IStyleConnector {
+        
+        private bool _contentLoaded;
+        
+        /// <summary>
+        /// InitializeComponent
+        /// </summary>
+        [System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [System.CodeDom.Compiler.GeneratedCodeAttribute("PresentationBuildTasks", "10.0.8.0")]
+        public void InitializeComponent() {
+            if (_contentLoaded) {
+                return;
+            }
+            _contentLoaded = true;
+            System.Uri resourceLocater = new System.Uri("/ElektroOffer_app;V1.0.0.0;component/mainwindow%20-%20kopie.xaml", System.UriKind.Relative);
+            
+            #line 1 "..\..\..\MainWindow - Kopie.xaml"
+            System.Windows.Application.LoadComponent(this, resourceLocater);
+            
+            #line default
+            #line hidden
+        }
+        
+        [System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [System.CodeDom.Compiler.GeneratedCodeAttribute("PresentationBuildTasks", "10.0.8.0")]
+        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Never)]
+        [System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1800:DoNotCastUnnecessarily")]
+        void System.Windows.Markup.IComponentConnector.Connect(int connectionId, object target) {
+            switch (connectionId)
+            {
+            case 1:
+            
+            #line 29 "..\..\..\MainWindow - Kopie.xaml"
+            ((System.Windows.Controls.MenuItem)(target)).Click += new System.Windows.RoutedEventHandler(this.MenuNewProject_Click);
+            
+            #line default
+            #line hidden
+            return;
+            case 2:
+            
+            #line 36 "..\..\..\MainWindow - Kopie.xaml"
+            ((System.Windows.Controls.MenuItem)(target)).Click += new System.Windows.RoutedEventHandler(this.MenuLoad_Click);
+            
+            #line default
+            #line hidden
+            return;
+            case 3:
+            
+            #line 43 "..\..\..\MainWindow - Kopie.xaml"
+            ((System.Windows.Controls.MenuItem)(target)).Click += new System.Windows.RoutedEventHandler(this.MenuSave_Click);
+            
+            #line default
+            #line hidden
+            return;
+            case 4:
+            
+            #line 48 "..\..\..\MainWindow - Kopie.xaml"
+            ((System.Windows.Controls.MenuItem)(target)).Click += new System.Windows.RoutedEventHandler(this.MenuSaveAs_Click);
+            
+            #line default
+            #line hidden
+            return;
+            case 5:
+            
+            #line 76 "..\..\..\MainWindow - Kopie.xaml"
+            ((System.Windows.Controls.Button)(target)).Click += new System.Windows.RoutedEventHandler(this.MenuNewProject_Click);
+            
+            #line default
+            #line hidden
+            return;
+            case 6:
+            
+            #line 84 "..\..\..\MainWindow - Kopie.xaml"
+            ((System.Windows.Controls.Button)(target)).Click += new System.Windows.RoutedEventHandler(this.MenuLoad_Click);
+            
+            #line default
+            #line hidden
+            return;
+            case 7:
+            
+            #line 90 "..\..\..\MainWindow - Kopie.xaml"
+            ((System.Windows.Controls.Button)(target)).Click += new System.Windows.RoutedEventHandler(this.MenuSave_Click);
+            
+            #line default
+            #line hidden
+            return;
+            case 8:
+            
+            #line 96 "..\..\..\MainWindow - Kopie.xaml"
+            ((System.Windows.Controls.Button)(target)).Click += new System.Windows.RoutedEventHandler(this.MenuSaveAs_Click);
+            
+            #line default
+            #line hidden
+            return;
+            case 9:
+            
+            #line 160 "..\..\..\MainWindow - Kopie.xaml"
+            ((System.Windows.Controls.Button)(target)).Click += new System.Windows.RoutedEventHandler(this.AddWorkItem_Click);
+            
+            #line default
+            #line hidden
+            return;
+            case 12:
+            
+            #line 339 "..\..\..\MainWindow - Kopie.xaml"
+            ((System.Windows.Controls.Button)(target)).Click += new System.Windows.RoutedEventHandler(this.AddMaterialsItem_Click);
+            
+            #line default
+            #line hidden
+            return;
+            }
+            this._contentLoaded = true;
+        }
+        
+        [System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [System.CodeDom.Compiler.GeneratedCodeAttribute("PresentationBuildTasks", "10.0.8.0")]
+        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Never)]
+        [System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1800:DoNotCastUnnecessarily")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
+        void System.Windows.Markup.IStyleConnector.Connect(int connectionId, object target) {
+            switch (connectionId)
+            {
+            case 10:
+            
+            #line 227 "..\..\..\MainWindow - Kopie.xaml"
+            ((System.Windows.Controls.Button)(target)).Click += new System.Windows.RoutedEventHandler(this.DeleteWorkItem_Click);
+            
+            #line default
+            #line hidden
+            break;
+            case 11:
+            
+            #line 283 "..\..\..\MainWindow - Kopie.xaml"
+            ((System.Windows.Controls.Button)(target)).Click += new System.Windows.RoutedEventHandler(this.ResetWorkItem_Click);
+            
+            #line default
+            #line hidden
+            break;
+            case 13:
+            
+            #line 396 "..\..\..\MainWindow - Kopie.xaml"
+            ((System.Windows.Controls.Button)(target)).Click += new System.Windows.RoutedEventHandler(this.DeleteMaterialItem_Click);
+            
+            #line default
+            #line hidden
+            break;
+            case 14:
+            
+            #line 428 "..\..\..\MainWindow - Kopie.xaml"
+            ((System.Windows.Controls.Button)(target)).Click += new System.Windows.RoutedEventHandler(this.ResetMaterialItem_Click);
+            
+            #line default
+            #line hidden
+            break;
+            }
+        }
+    }
+}
+
+
+
+--- Soubor: MainWindow.g.cs
+--- Cesta: \obj\Debug\net10.0-windows\MainWindow.g.cs
+----------------------------------------
+﻿#pragma checksum "..\..\..\MainWindow.xaml" "{ff1816ec-aa5e-4d10-87f7-6f4963833460}" "1A1966A4C7A38B7E327CEF04A68417736DBFE759"
+//------------------------------------------------------------------------------
+// <auto-generated>
+//     This code was generated by a tool.
+//
+//     Changes to this file may cause incorrect behavior and will be lost if
+//     the code is regenerated.
+// </auto-generated>
+//------------------------------------------------------------------------------
+
+using System;
+using System.Diagnostics;
+using System.Windows;
+using System.Windows.Automation;
+using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
+using System.Windows.Controls.Ribbon;
+using System.Windows.Data;
+using System.Windows.Documents;
+using System.Windows.Ink;
+using System.Windows.Input;
+using System.Windows.Markup;
+using System.Windows.Media;
+using System.Windows.Media.Animation;
+using System.Windows.Media.Effects;
+using System.Windows.Media.Imaging;
+using System.Windows.Media.Media3D;
+using System.Windows.Media.TextFormatting;
+using System.Windows.Navigation;
+using System.Windows.Shapes;
+using System.Windows.Shell;
+
+
+namespace ElektroOffer_app {
+    
+    
+    /// <summary>
+    /// MainWindow
+    /// </summary>
+    public partial class MainWindow : System.Windows.Window, System.Windows.Markup.IComponentConnector, System.Windows.Markup.IStyleConnector {
+        
+        private bool _contentLoaded;
+        
+        /// <summary>
+        /// InitializeComponent
+        /// </summary>
+        [System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [System.CodeDom.Compiler.GeneratedCodeAttribute("PresentationBuildTasks", "10.0.8.0")]
+        public void InitializeComponent() {
+            if (_contentLoaded) {
+                return;
+            }
+            _contentLoaded = true;
+            System.Uri resourceLocater = new System.Uri("/ElektroOffer_app;V1.1.1.0;component/mainwindow.xaml", System.UriKind.Relative);
+            
+            #line 1 "..\..\..\MainWindow.xaml"
+            System.Windows.Application.LoadComponent(this, resourceLocater);
+            
+            #line default
+            #line hidden
+        }
+        
+        [System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [System.CodeDom.Compiler.GeneratedCodeAttribute("PresentationBuildTasks", "10.0.8.0")]
+        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Never)]
+        [System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1800:DoNotCastUnnecessarily")]
+        void System.Windows.Markup.IComponentConnector.Connect(int connectionId, object target) {
+            switch (connectionId)
+            {
+            case 1:
+            
+            #line 28 "..\..\..\MainWindow.xaml"
+            ((System.Windows.Controls.MenuItem)(target)).Click += new System.Windows.RoutedEventHandler(this.MenuNewProject_Click);
+            
+            #line default
+            #line hidden
+            return;
+            case 2:
+            
+            #line 35 "..\..\..\MainWindow.xaml"
+            ((System.Windows.Controls.MenuItem)(target)).Click += new System.Windows.RoutedEventHandler(this.MenuLoad_Click);
+            
+            #line default
+            #line hidden
+            return;
+            case 3:
+            
+            #line 42 "..\..\..\MainWindow.xaml"
+            ((System.Windows.Controls.MenuItem)(target)).Click += new System.Windows.RoutedEventHandler(this.MenuSave_Click);
+            
+            #line default
+            #line hidden
+            return;
+            case 4:
+            
+            #line 47 "..\..\..\MainWindow.xaml"
+            ((System.Windows.Controls.MenuItem)(target)).Click += new System.Windows.RoutedEventHandler(this.MenuSaveAs_Click);
+            
+            #line default
+            #line hidden
+            return;
+            case 5:
+            
+            #line 62 "..\..\..\MainWindow.xaml"
+            ((System.Windows.Controls.MenuItem)(target)).Click += new System.Windows.RoutedEventHandler(this.MenuExit_Click);
+            
+            #line default
+            #line hidden
+            return;
+            case 6:
+            
+            #line 73 "..\..\..\MainWindow.xaml"
+            ((System.Windows.Controls.MenuItem)(target)).Click += new System.Windows.RoutedEventHandler(this.MenuAbout_Click);
+            
+            #line default
+            #line hidden
+            return;
+            case 7:
+            
+            #line 89 "..\..\..\MainWindow.xaml"
+            ((System.Windows.Controls.Button)(target)).Click += new System.Windows.RoutedEventHandler(this.MenuNewProject_Click);
+            
+            #line default
+            #line hidden
+            return;
+            case 8:
+            
+            #line 97 "..\..\..\MainWindow.xaml"
+            ((System.Windows.Controls.Button)(target)).Click += new System.Windows.RoutedEventHandler(this.MenuLoad_Click);
+            
+            #line default
+            #line hidden
+            return;
+            case 9:
+            
+            #line 103 "..\..\..\MainWindow.xaml"
+            ((System.Windows.Controls.Button)(target)).Click += new System.Windows.RoutedEventHandler(this.MenuSave_Click);
+            
+            #line default
+            #line hidden
+            return;
+            case 10:
+            
+            #line 109 "..\..\..\MainWindow.xaml"
+            ((System.Windows.Controls.Button)(target)).Click += new System.Windows.RoutedEventHandler(this.MenuSaveAs_Click);
+            
+            #line default
+            #line hidden
+            return;
+            case 11:
+            
+            #line 175 "..\..\..\MainWindow.xaml"
+            ((System.Windows.Controls.Button)(target)).Click += new System.Windows.RoutedEventHandler(this.AddWorkItem_Click);
+            
+            #line default
+            #line hidden
+            return;
+            case 14:
+            
+            #line 354 "..\..\..\MainWindow.xaml"
+            ((System.Windows.Controls.Button)(target)).Click += new System.Windows.RoutedEventHandler(this.AddMaterialsItem_Click);
+            
+            #line default
+            #line hidden
+            return;
+            }
+            this._contentLoaded = true;
+        }
+        
+        [System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [System.CodeDom.Compiler.GeneratedCodeAttribute("PresentationBuildTasks", "10.0.8.0")]
+        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Never)]
+        [System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1800:DoNotCastUnnecessarily")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
+        void System.Windows.Markup.IStyleConnector.Connect(int connectionId, object target) {
+            switch (connectionId)
+            {
+            case 12:
+            
+            #line 242 "..\..\..\MainWindow.xaml"
+            ((System.Windows.Controls.Button)(target)).Click += new System.Windows.RoutedEventHandler(this.DeleteWorkItem_Click);
+            
+            #line default
+            #line hidden
+            break;
+            case 13:
+            
+            #line 298 "..\..\..\MainWindow.xaml"
+            ((System.Windows.Controls.Button)(target)).Click += new System.Windows.RoutedEventHandler(this.ResetWorkItem_Click);
+            
+            #line default
+            #line hidden
+            break;
+            case 15:
+            
+            #line 411 "..\..\..\MainWindow.xaml"
+            ((System.Windows.Controls.Button)(target)).Click += new System.Windows.RoutedEventHandler(this.DeleteMaterialItem_Click);
+            
+            #line default
+            #line hidden
+            break;
+            case 16:
+            
+            #line 443 "..\..\..\MainWindow.xaml"
+            ((System.Windows.Controls.Button)(target)).Click += new System.Windows.RoutedEventHandler(this.ResetMaterialItem_Click);
+            
+            #line default
+            #line hidden
+            break;
+            }
+        }
+    }
+}
+
+
+
+--- Soubor: MainWindow.g.i.cs
+--- Cesta: \obj\Debug\net10.0-windows\MainWindow.g.i.cs
+----------------------------------------
+﻿#pragma checksum "..\..\..\MainWindow.xaml" "{ff1816ec-aa5e-4d10-87f7-6f4963833460}" "1A1966A4C7A38B7E327CEF04A68417736DBFE759"
+//------------------------------------------------------------------------------
+// <auto-generated>
+//     Tento kód byl generován nástrojem.
+//     Verze modulu runtime:4.0.30319.42000
+//
+//     Změny tohoto souboru mohou způsobit nesprávné chování a budou ztraceny,
+//     dojde-li k novému generování kódu.
+// </auto-generated>
+//------------------------------------------------------------------------------
+
+using System;
+using System.Diagnostics;
+using System.Windows;
+using System.Windows.Automation;
+using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
+using System.Windows.Controls.Ribbon;
+using System.Windows.Data;
+using System.Windows.Documents;
+using System.Windows.Ink;
+using System.Windows.Input;
+using System.Windows.Markup;
+using System.Windows.Media;
+using System.Windows.Media.Animation;
+using System.Windows.Media.Effects;
+using System.Windows.Media.Imaging;
+using System.Windows.Media.Media3D;
+using System.Windows.Media.TextFormatting;
+using System.Windows.Navigation;
+using System.Windows.Shapes;
+using System.Windows.Shell;
+
+
+namespace ElektroOffer_app {
+    
+    
+    /// <summary>
+    /// MainWindow
+    /// </summary>
+    public partial class MainWindow : System.Windows.Window, System.Windows.Markup.IComponentConnector, System.Windows.Markup.IStyleConnector {
+        
+        private bool _contentLoaded;
+        
+        /// <summary>
+        /// InitializeComponent
+        /// </summary>
+        [System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [System.CodeDom.Compiler.GeneratedCodeAttribute("PresentationBuildTasks", "10.0.8.0")]
+        public void InitializeComponent() {
+            if (_contentLoaded) {
+                return;
+            }
+            _contentLoaded = true;
+            System.Uri resourceLocater = new System.Uri("/ElektroOffer_app;component/mainwindow.xaml", System.UriKind.Relative);
+            
+            #line 1 "..\..\..\MainWindow.xaml"
+            System.Windows.Application.LoadComponent(this, resourceLocater);
+            
+            #line default
+            #line hidden
+        }
+        
+        [System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [System.CodeDom.Compiler.GeneratedCodeAttribute("PresentationBuildTasks", "10.0.8.0")]
+        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Never)]
+        [System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1800:DoNotCastUnnecessarily")]
+        void System.Windows.Markup.IComponentConnector.Connect(int connectionId, object target) {
+            switch (connectionId)
+            {
+            case 1:
+            
+            #line 28 "..\..\..\MainWindow.xaml"
+            ((System.Windows.Controls.MenuItem)(target)).Click += new System.Windows.RoutedEventHandler(this.MenuNewProject_Click);
+            
+            #line default
+            #line hidden
+            return;
+            case 2:
+            
+            #line 35 "..\..\..\MainWindow.xaml"
+            ((System.Windows.Controls.MenuItem)(target)).Click += new System.Windows.RoutedEventHandler(this.MenuLoad_Click);
+            
+            #line default
+            #line hidden
+            return;
+            case 3:
+            
+            #line 42 "..\..\..\MainWindow.xaml"
+            ((System.Windows.Controls.MenuItem)(target)).Click += new System.Windows.RoutedEventHandler(this.MenuSave_Click);
+            
+            #line default
+            #line hidden
+            return;
+            case 4:
+            
+            #line 47 "..\..\..\MainWindow.xaml"
+            ((System.Windows.Controls.MenuItem)(target)).Click += new System.Windows.RoutedEventHandler(this.MenuSaveAs_Click);
+            
+            #line default
+            #line hidden
+            return;
+            case 5:
+            
+            #line 62 "..\..\..\MainWindow.xaml"
+            ((System.Windows.Controls.MenuItem)(target)).Click += new System.Windows.RoutedEventHandler(this.MenuExit_Click);
+            
+            #line default
+            #line hidden
+            return;
+            case 6:
+            
+            #line 73 "..\..\..\MainWindow.xaml"
+            ((System.Windows.Controls.MenuItem)(target)).Click += new System.Windows.RoutedEventHandler(this.MenuAbout_Click);
+            
+            #line default
+            #line hidden
+            return;
+            case 7:
+            
+            #line 89 "..\..\..\MainWindow.xaml"
+            ((System.Windows.Controls.Button)(target)).Click += new System.Windows.RoutedEventHandler(this.MenuNewProject_Click);
+            
+            #line default
+            #line hidden
+            return;
+            case 8:
+            
+            #line 97 "..\..\..\MainWindow.xaml"
+            ((System.Windows.Controls.Button)(target)).Click += new System.Windows.RoutedEventHandler(this.MenuLoad_Click);
+            
+            #line default
+            #line hidden
+            return;
+            case 9:
+            
+            #line 103 "..\..\..\MainWindow.xaml"
+            ((System.Windows.Controls.Button)(target)).Click += new System.Windows.RoutedEventHandler(this.MenuSave_Click);
+            
+            #line default
+            #line hidden
+            return;
+            case 10:
+            
+            #line 109 "..\..\..\MainWindow.xaml"
+            ((System.Windows.Controls.Button)(target)).Click += new System.Windows.RoutedEventHandler(this.MenuSaveAs_Click);
+            
+            #line default
+            #line hidden
+            return;
+            case 11:
+            
+            #line 175 "..\..\..\MainWindow.xaml"
+            ((System.Windows.Controls.Button)(target)).Click += new System.Windows.RoutedEventHandler(this.AddWorkItem_Click);
+            
+            #line default
+            #line hidden
+            return;
+            case 14:
+            
+            #line 354 "..\..\..\MainWindow.xaml"
+            ((System.Windows.Controls.Button)(target)).Click += new System.Windows.RoutedEventHandler(this.AddMaterialsItem_Click);
+            
+            #line default
+            #line hidden
+            return;
+            }
+            this._contentLoaded = true;
+        }
+        
+        [System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [System.CodeDom.Compiler.GeneratedCodeAttribute("PresentationBuildTasks", "10.0.8.0")]
+        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Never)]
+        [System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1800:DoNotCastUnnecessarily")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
+        void System.Windows.Markup.IStyleConnector.Connect(int connectionId, object target) {
+            switch (connectionId)
+            {
+            case 12:
+            
+            #line 242 "..\..\..\MainWindow.xaml"
+            ((System.Windows.Controls.Button)(target)).Click += new System.Windows.RoutedEventHandler(this.DeleteWorkItem_Click);
+            
+            #line default
+            #line hidden
+            break;
+            case 13:
+            
+            #line 298 "..\..\..\MainWindow.xaml"
+            ((System.Windows.Controls.Button)(target)).Click += new System.Windows.RoutedEventHandler(this.ResetWorkItem_Click);
+            
+            #line default
+            #line hidden
+            break;
+            case 15:
+            
+            #line 411 "..\..\..\MainWindow.xaml"
+            ((System.Windows.Controls.Button)(target)).Click += new System.Windows.RoutedEventHandler(this.DeleteMaterialItem_Click);
+            
+            #line default
+            #line hidden
+            break;
+            case 16:
+            
+            #line 443 "..\..\..\MainWindow.xaml"
+            ((System.Windows.Controls.Button)(target)).Click += new System.Windows.RoutedEventHandler(this.ResetMaterialItem_Click);
+            
+            #line default
+            #line hidden
+            break;
+            }
+        }
+    }
+}
+
+
+
+
+===== SLOŽKA: \obj\Release\net10.0-windows =====
+--- Soubor: .NETCoreApp,Version=v10.0.AssemblyAttributes.cs
+--- Cesta: \obj\Release\net10.0-windows\.NETCoreApp,Version=v10.0.AssemblyAttributes.cs
+----------------------------------------
+// <autogenerated />
+using System;
+using System.Reflection;
+[assembly: global::System.Runtime.Versioning.TargetFrameworkAttribute(".NETCoreApp,Version=v10.0", FrameworkDisplayName = ".NET 10.0")]
+
+
+--- Soubor: App.g.cs
+--- Cesta: \obj\Release\net10.0-windows\App.g.cs
+----------------------------------------
+﻿#pragma checksum "..\..\..\App.xaml" "{ff1816ec-aa5e-4d10-87f7-6f4963833460}" "8099DFCC852467C67C8395C431A7C5270E416888"
+//------------------------------------------------------------------------------
+// <auto-generated>
+//     Tento kód byl generován nástrojem.
+//     Verze modulu runtime:4.0.30319.42000
+//
+//     Změny tohoto souboru mohou způsobit nesprávné chování a budou ztraceny,
+//     dojde-li k novému generování kódu.
+// </auto-generated>
+//------------------------------------------------------------------------------
+
+using ElektroOffer_app;
+using System;
+using System.Diagnostics;
+using System.Windows;
+using System.Windows.Automation;
+using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
+using System.Windows.Controls.Ribbon;
+using System.Windows.Data;
+using System.Windows.Documents;
+using System.Windows.Ink;
+using System.Windows.Input;
+using System.Windows.Markup;
+using System.Windows.Media;
+using System.Windows.Media.Animation;
+using System.Windows.Media.Effects;
+using System.Windows.Media.Imaging;
+using System.Windows.Media.Media3D;
+using System.Windows.Media.TextFormatting;
+using System.Windows.Navigation;
+using System.Windows.Shapes;
+using System.Windows.Shell;
+
+
+namespace ElektroOffer_app {
+    
+    
+    /// <summary>
+    /// App
+    /// </summary>
+    public partial class App : System.Windows.Application {
+        
+        /// <summary>
+        /// InitializeComponent
+        /// </summary>
+        [System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [System.CodeDom.Compiler.GeneratedCodeAttribute("PresentationBuildTasks", "10.0.8.0")]
+        public void InitializeComponent() {
+            
+            #line 5 "..\..\..\App.xaml"
+            this.StartupUri = new System.Uri("MainWindow.xaml", System.UriKind.Relative);
+            
+            #line default
+            #line hidden
+        }
+        
+        /// <summary>
+        /// Application Entry Point.
+        /// </summary>
+        [System.STAThreadAttribute()]
+        [System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [System.CodeDom.Compiler.GeneratedCodeAttribute("PresentationBuildTasks", "10.0.8.0")]
+        public static void Main() {
+            ElektroOffer_app.App app = new ElektroOffer_app.App();
+            app.InitializeComponent();
+            app.Run();
+        }
+    }
+}
+
+
+
+--- Soubor: App.g.i.cs
+--- Cesta: \obj\Release\net10.0-windows\App.g.i.cs
+----------------------------------------
+﻿#pragma checksum "..\..\..\App.xaml" "{ff1816ec-aa5e-4d10-87f7-6f4963833460}" "8099DFCC852467C67C8395C431A7C5270E416888"
+//------------------------------------------------------------------------------
+// <auto-generated>
+//     Tento kód byl generován nástrojem.
+//     Verze modulu runtime:4.0.30319.42000
+//
+//     Změny tohoto souboru mohou způsobit nesprávné chování a budou ztraceny,
+//     dojde-li k novému generování kódu.
+// </auto-generated>
+//------------------------------------------------------------------------------
+
+using ElektroOffer_app;
+using System;
+using System.Diagnostics;
+using System.Windows;
+using System.Windows.Automation;
+using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
+using System.Windows.Controls.Ribbon;
+using System.Windows.Data;
+using System.Windows.Documents;
+using System.Windows.Ink;
+using System.Windows.Input;
+using System.Windows.Markup;
+using System.Windows.Media;
+using System.Windows.Media.Animation;
+using System.Windows.Media.Effects;
+using System.Windows.Media.Imaging;
+using System.Windows.Media.Media3D;
+using System.Windows.Media.TextFormatting;
+using System.Windows.Navigation;
+using System.Windows.Shapes;
+using System.Windows.Shell;
+
+
+namespace ElektroOffer_app {
+    
+    
+    /// <summary>
+    /// App
+    /// </summary>
+    public partial class App : System.Windows.Application {
+        
+        /// <summary>
+        /// InitializeComponent
+        /// </summary>
+        [System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [System.CodeDom.Compiler.GeneratedCodeAttribute("PresentationBuildTasks", "10.0.8.0")]
+        public void InitializeComponent() {
+            
+            #line 5 "..\..\..\App.xaml"
+            this.StartupUri = new System.Uri("MainWindow.xaml", System.UriKind.Relative);
+            
+            #line default
+            #line hidden
+        }
+        
+        /// <summary>
+        /// Application Entry Point.
+        /// </summary>
+        [System.STAThreadAttribute()]
+        [System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [System.CodeDom.Compiler.GeneratedCodeAttribute("PresentationBuildTasks", "10.0.8.0")]
+        public static void Main() {
+            ElektroOffer_app.App app = new ElektroOffer_app.App();
+            app.InitializeComponent();
+            app.Run();
+        }
+    }
+}
+
+
+
+--- Soubor: ElektroOffer_app.AssemblyInfo.cs
+--- Cesta: \obj\Release\net10.0-windows\ElektroOffer_app.AssemblyInfo.cs
+----------------------------------------
+//------------------------------------------------------------------------------
+// <auto-generated>
+//     Tento kód byl generován nástrojem.
+//     Verze modulu runtime:4.0.30319.42000
+//
+//     Změny tohoto souboru mohou způsobit nesprávné chování a budou ztraceny,
+//     dojde-li k novému generování kódu.
+// </auto-generated>
+//------------------------------------------------------------------------------
+
+using System;
+using System.Reflection;
+
+[assembly: System.Reflection.AssemblyCompanyAttribute("ElektroOffer_app")]
+[assembly: System.Reflection.AssemblyConfigurationAttribute("Release")]
+[assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+9467275f80ac69776e6e4bf8c7625fe745f3379f")]
+[assembly: System.Reflection.AssemblyProductAttribute("ElektroOffer_app")]
+[assembly: System.Reflection.AssemblyTitleAttribute("ElektroOffer_app")]
+[assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
+[assembly: System.Runtime.Versioning.TargetPlatformAttribute("Windows7.0")]
+[assembly: System.Runtime.Versioning.SupportedOSPlatformAttribute("Windows7.0")]
+
+// Generated by the MSBuild WriteCodeFragment class.
+
+
+
+--- Soubor: ElektroOffer_app.GlobalUsings.g.cs
+--- Cesta: \obj\Release\net10.0-windows\ElektroOffer_app.GlobalUsings.g.cs
+----------------------------------------
+// <auto-generated/>
+global using System;
+global using System.Collections.Generic;
+global using System.Linq;
+global using System.Threading;
+global using System.Threading.Tasks;
+
+
+--- Soubor: ElektroOffer_app_Content.g.cs
+--- Cesta: \obj\Release\net10.0-windows\ElektroOffer_app_Content.g.cs
+----------------------------------------
+﻿//------------------------------------------------------------------------------
+// <auto-generated>
+//     Tento kód byl generován nástrojem.
+//     Verze modulu runtime:4.0.30319.42000
+//
+//     Změny tohoto souboru mohou způsobit nesprávné chování a budou ztraceny,
+//     dojde-li k novému generování kódu.
+// </auto-generated>
+//------------------------------------------------------------------------------
+
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("elektrooffer.db")]
+
+
+
+
+--- Soubor: ElektroOffer_app_Content.g.i.cs
+--- Cesta: \obj\Release\net10.0-windows\ElektroOffer_app_Content.g.i.cs
+----------------------------------------
+﻿//------------------------------------------------------------------------------
+// <auto-generated>
+//     Tento kód byl generován nástrojem.
+//     Verze modulu runtime:4.0.30319.42000
+//
+//     Změny tohoto souboru mohou způsobit nesprávné chování a budou ztraceny,
+//     dojde-li k novému generování kódu.
+// </auto-generated>
+//------------------------------------------------------------------------------
+
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("elektrooffer.db")]
+
+
+
+
+--- Soubor: MainWindow.g.cs
+--- Cesta: \obj\Release\net10.0-windows\MainWindow.g.cs
+----------------------------------------
+﻿#pragma checksum "..\..\..\MainWindow.xaml" "{ff1816ec-aa5e-4d10-87f7-6f4963833460}" "DF339D2E7E98605A91E7E4570A8B8D83D766C2BF"
+//------------------------------------------------------------------------------
+// <auto-generated>
+//     Tento kód byl generován nástrojem.
+//     Verze modulu runtime:4.0.30319.42000
+//
+//     Změny tohoto souboru mohou způsobit nesprávné chování a budou ztraceny,
+//     dojde-li k novému generování kódu.
+// </auto-generated>
+//------------------------------------------------------------------------------
+
+using System;
+using System.Diagnostics;
+using System.Windows;
+using System.Windows.Automation;
+using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
+using System.Windows.Controls.Ribbon;
+using System.Windows.Data;
+using System.Windows.Documents;
+using System.Windows.Ink;
+using System.Windows.Input;
+using System.Windows.Markup;
+using System.Windows.Media;
+using System.Windows.Media.Animation;
+using System.Windows.Media.Effects;
+using System.Windows.Media.Imaging;
+using System.Windows.Media.Media3D;
+using System.Windows.Media.TextFormatting;
+using System.Windows.Navigation;
+using System.Windows.Shapes;
+using System.Windows.Shell;
+
+
+namespace ElektroOffer_app {
+    
+    
+    /// <summary>
+    /// MainWindow
+    /// </summary>
+    public partial class MainWindow : System.Windows.Window, System.Windows.Markup.IComponentConnector, System.Windows.Markup.IStyleConnector {
+        
+        private bool _contentLoaded;
+        
+        /// <summary>
+        /// InitializeComponent
+        /// </summary>
+        [System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [System.CodeDom.Compiler.GeneratedCodeAttribute("PresentationBuildTasks", "10.0.8.0")]
+        public void InitializeComponent() {
+            if (_contentLoaded) {
+                return;
+            }
+            _contentLoaded = true;
+            System.Uri resourceLocater = new System.Uri("/ElektroOffer_app;component/mainwindow.xaml", System.UriKind.Relative);
+            
+            #line 1 "..\..\..\MainWindow.xaml"
+            System.Windows.Application.LoadComponent(this, resourceLocater);
+            
+            #line default
+            #line hidden
+        }
+        
+        [System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [System.CodeDom.Compiler.GeneratedCodeAttribute("PresentationBuildTasks", "10.0.8.0")]
+        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Never)]
+        [System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1800:DoNotCastUnnecessarily")]
+        void System.Windows.Markup.IComponentConnector.Connect(int connectionId, object target) {
+            switch (connectionId)
+            {
+            case 1:
+            
+            #line 33 "..\..\..\MainWindow.xaml"
+            ((System.Windows.Controls.Button)(target)).Click += new System.Windows.RoutedEventHandler(this.AddWorkItem_Click);
+            
+            #line default
+            #line hidden
+            return;
+            case 4:
+            
+            #line 185 "..\..\..\MainWindow.xaml"
+            ((System.Windows.Controls.Button)(target)).Click += new System.Windows.RoutedEventHandler(this.AddMaterialsItem_Click);
+            
+            #line default
+            #line hidden
+            return;
+            }
+            this._contentLoaded = true;
+        }
+        
+        [System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [System.CodeDom.Compiler.GeneratedCodeAttribute("PresentationBuildTasks", "10.0.8.0")]
+        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Never)]
+        [System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1800:DoNotCastUnnecessarily")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
+        void System.Windows.Markup.IStyleConnector.Connect(int connectionId, object target) {
+            switch (connectionId)
+            {
+            case 2:
+            
+            #line 93 "..\..\..\MainWindow.xaml"
+            ((System.Windows.Controls.Button)(target)).Click += new System.Windows.RoutedEventHandler(this.DeleteWorkItem_Click);
+            
+            #line default
+            #line hidden
+            break;
+            case 3:
+            
+            #line 140 "..\..\..\MainWindow.xaml"
+            ((System.Windows.Controls.Button)(target)).Click += new System.Windows.RoutedEventHandler(this.ResetWorkItem_Click);
+            
+            #line default
+            #line hidden
+            break;
+            case 5:
+            
+            #line 237 "..\..\..\MainWindow.xaml"
+            ((System.Windows.Controls.Button)(target)).Click += new System.Windows.RoutedEventHandler(this.DeleteMaterialItem_Click);
+            
+            #line default
+            #line hidden
+            break;
+            case 6:
+            
+            #line 264 "..\..\..\MainWindow.xaml"
+            ((System.Windows.Controls.Button)(target)).Click += new System.Windows.RoutedEventHandler(this.ResetMaterialItem_Click);
+            
+            #line default
+            #line hidden
+            break;
+            }
+        }
+    }
+}
+
+
+
+--- Soubor: MainWindow.g.i.cs
+--- Cesta: \obj\Release\net10.0-windows\MainWindow.g.i.cs
+----------------------------------------
+﻿#pragma checksum "..\..\..\MainWindow.xaml" "{ff1816ec-aa5e-4d10-87f7-6f4963833460}" "DF339D2E7E98605A91E7E4570A8B8D83D766C2BF"
+//------------------------------------------------------------------------------
+// <auto-generated>
+//     Tento kód byl generován nástrojem.
+//     Verze modulu runtime:4.0.30319.42000
+//
+//     Změny tohoto souboru mohou způsobit nesprávné chování a budou ztraceny,
+//     dojde-li k novému generování kódu.
+// </auto-generated>
+//------------------------------------------------------------------------------
+
+using System;
+using System.Diagnostics;
+using System.Windows;
+using System.Windows.Automation;
+using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
+using System.Windows.Controls.Ribbon;
+using System.Windows.Data;
+using System.Windows.Documents;
+using System.Windows.Ink;
+using System.Windows.Input;
+using System.Windows.Markup;
+using System.Windows.Media;
+using System.Windows.Media.Animation;
+using System.Windows.Media.Effects;
+using System.Windows.Media.Imaging;
+using System.Windows.Media.Media3D;
+using System.Windows.Media.TextFormatting;
+using System.Windows.Navigation;
+using System.Windows.Shapes;
+using System.Windows.Shell;
+
+
+namespace ElektroOffer_app {
+    
+    
+    /// <summary>
+    /// MainWindow
+    /// </summary>
+    public partial class MainWindow : System.Windows.Window, System.Windows.Markup.IComponentConnector, System.Windows.Markup.IStyleConnector {
+        
+        private bool _contentLoaded;
+        
+        /// <summary>
+        /// InitializeComponent
+        /// </summary>
+        [System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [System.CodeDom.Compiler.GeneratedCodeAttribute("PresentationBuildTasks", "10.0.8.0")]
+        public void InitializeComponent() {
+            if (_contentLoaded) {
+                return;
+            }
+            _contentLoaded = true;
+            System.Uri resourceLocater = new System.Uri("/ElektroOffer_app;component/mainwindow.xaml", System.UriKind.Relative);
+            
+            #line 1 "..\..\..\MainWindow.xaml"
+            System.Windows.Application.LoadComponent(this, resourceLocater);
+            
+            #line default
+            #line hidden
+        }
+        
+        [System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [System.CodeDom.Compiler.GeneratedCodeAttribute("PresentationBuildTasks", "10.0.8.0")]
+        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Never)]
+        [System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1800:DoNotCastUnnecessarily")]
+        void System.Windows.Markup.IComponentConnector.Connect(int connectionId, object target) {
+            switch (connectionId)
+            {
+            case 1:
+            
+            #line 33 "..\..\..\MainWindow.xaml"
+            ((System.Windows.Controls.Button)(target)).Click += new System.Windows.RoutedEventHandler(this.AddWorkItem_Click);
+            
+            #line default
+            #line hidden
+            return;
+            case 4:
+            
+            #line 185 "..\..\..\MainWindow.xaml"
+            ((System.Windows.Controls.Button)(target)).Click += new System.Windows.RoutedEventHandler(this.AddMaterialsItem_Click);
+            
+            #line default
+            #line hidden
+            return;
+            }
+            this._contentLoaded = true;
+        }
+        
+        [System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [System.CodeDom.Compiler.GeneratedCodeAttribute("PresentationBuildTasks", "10.0.8.0")]
+        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Never)]
+        [System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1800:DoNotCastUnnecessarily")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
+        void System.Windows.Markup.IStyleConnector.Connect(int connectionId, object target) {
+            switch (connectionId)
+            {
+            case 2:
+            
+            #line 93 "..\..\..\MainWindow.xaml"
+            ((System.Windows.Controls.Button)(target)).Click += new System.Windows.RoutedEventHandler(this.DeleteWorkItem_Click);
+            
+            #line default
+            #line hidden
+            break;
+            case 3:
+            
+            #line 140 "..\..\..\MainWindow.xaml"
+            ((System.Windows.Controls.Button)(target)).Click += new System.Windows.RoutedEventHandler(this.ResetWorkItem_Click);
+            
+            #line default
+            #line hidden
+            break;
+            case 5:
+            
+            #line 237 "..\..\..\MainWindow.xaml"
+            ((System.Windows.Controls.Button)(target)).Click += new System.Windows.RoutedEventHandler(this.DeleteMaterialItem_Click);
+            
+            #line default
+            #line hidden
+            break;
+            case 6:
+            
+            #line 264 "..\..\..\MainWindow.xaml"
+            ((System.Windows.Controls.Button)(target)).Click += new System.Windows.RoutedEventHandler(this.ResetMaterialItem_Click);
+            
+            #line default
+            #line hidden
+            break;
+            }
+        }
+    }
+}
+
+
+
