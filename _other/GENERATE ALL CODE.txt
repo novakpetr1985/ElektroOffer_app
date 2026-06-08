@@ -58,8 +58,8 @@ Elektrooffer_app/AboutWindow.xaml.cs
 Elektrooffer_app/App.xaml 
 Elektrooffer_app/App.xaml.cs 
 Elektrooffer_app/AssemblyInfo.cs 
-Elektrooffer_app/MainWindows.xaml 
-Elektrooffer_app/MainWindows.xaml.cs 
+Elektrooffer_app/MainWindow.xaml 
+Elektrooffer_app/MainWindow.xaml.cs 
 
 $root = "D:\_GitHub\ElektroOffer_app"
 $output = Join-Path $root "_other\_SPOJENO-CHOICE.txt"
@@ -248,8 +248,8 @@ Elektrooffer_app/AboutWindow.xaml.cs
 Elektrooffer_app/App.xaml 
 Elektrooffer_app/App.xaml.cs 
 Elektrooffer_app/AssemblyInfo.cs 
-Elektrooffer_app/MainWindows.xaml 
-Elektrooffer_app/MainWindows.xaml.cs
+Elektrooffer_app/MainWindow.xaml 
+Elektrooffer_app/MainWindow.xaml.cs
 
 
 import os

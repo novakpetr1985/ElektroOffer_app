@@ -350,6 +350,7 @@ MainWindow.xaml.cs
 \.git\objects\16\72d8bde3a2f911299d286badc7cd525cc74156
 \.git\objects\16\7919089ec9c4f4a21e00d6d0df53ca86f861f7
 \.git\objects\16\9820bdab3a3bb7ef4b20bf138bbae79e3c7fb2
+\.git\objects\16\a179098299f0ee6bb4a617c46be37d70ede1fd
 \.git\objects\16\a2843b220335b972360e24d684127e4dea70da
 \.git\objects\16\e349ffd13b4e04cf77943f0a09fbe10df70279
 \.git\objects\16\ec9fcf87a9cc4d2b394499aabb9e74b29899ef
@@ -452,6 +453,7 @@ MainWindow.xaml.cs
 \.git\objects\1f\7c7f929cbbcaf15bc0e7dc7429f8e5d8874ab8
 \.git\objects\1f\9252784cb87b3b92e6e6c1f33127fce7afd315
 \.git\objects\1f\93b32baa6aa9a5d93b2b171f2d68fc1f434349
+\.git\objects\1f\a7e33e8f53be7201b2e658e68e9060d40731de
 \.git\objects\1f\b38dff721ee8af61b279a7f8674dd4c8efe89b
 \.git\objects\1f\d10f61d1d56b2cba12cd06476ddcaf3c567cc8
 \.git\objects\20
@@ -551,6 +553,7 @@ MainWindow.xaml.cs
 \.git\objects\27\3362c7a99410416b5893cbf9511c11bf102d93
 \.git\objects\27\58a99bcb7f9ddfab1b1b12798b53b39c84c739
 \.git\objects\27\6a5cd3c8d50888417a4470a9c33b957a258d30
+\.git\objects\27\770f315059827521b04216a914a0b3428cb2ac
 \.git\objects\27\be34526c2dd9c8cfbdfd84b08c2892a46d4560
 \.git\objects\27\d4dd25ba710f489e43fdc75bef925e487107d5
 \.git\objects\27\f1d2ceac87082581f63cae560ebb1ea1adf903
@@ -828,6 +831,7 @@ MainWindow.xaml.cs
 \.git\objects\3c\d766f8e2fe0f6c7658909b517d73979cbaaeb1
 \.git\objects\3d
 \.git\objects\3d\1b487397e933f161f256bd51c44db979c28820
+\.git\objects\3d\39869c3ce8302e43a3b4c083c3ba46bbbdc3c7
 \.git\objects\3d\59bf878b2df6d0db9cf28eee94697846ecb2e9
 \.git\objects\3d\764c0bf5e85f73f33e63dfd6edc2cd64abab46
 \.git\objects\3d\8c911c7003bf44dffea63e292f3d1dfb77fcd2
@@ -925,6 +929,7 @@ MainWindow.xaml.cs
 \.git\objects\43\f8ac21cd0d88fded32eaade2a608b0d1fe91b1
 \.git\objects\44
 \.git\objects\44\5ee55809ed05f82bffea2f282395c9e966cb49
+\.git\objects\44\7f9f2ca86ffe58397cc022b319496bd2a6f444
 \.git\objects\44\87dc7a8d81462d5938c9f6ce40893112546fc5
 \.git\objects\44\9b2acd5707d232e27969645fa9669bf976a164
 \.git\objects\44\a60bae0cd657542a9a8a536222d65583595307
@@ -1096,6 +1101,7 @@ MainWindow.xaml.cs
 \.git\objects\52\4dc27ff095ddeaebe219b3cc82ab29ec86a8bd
 \.git\objects\52\5d74b2f674bfcd334df362eb649b7690907372
 \.git\objects\52\7921844f53c813967c35a3596a79e9fb440c76
+\.git\objects\52\86667f87b5f4570bff04f6e8f71a807ec9f7fd
 \.git\objects\52\8ac70ed62f848e19450d7c5836ea0a1ea2ebb5
 \.git\objects\52\8cc4c6cde3a8dda0ea32542e0974e71c9e5126
 \.git\objects\52\8e473ac7dea87c123db59f8ebc023220c661bc
@@ -1345,6 +1351,7 @@ MainWindow.xaml.cs
 \.git\objects\66\daf24c3c9b48c47957b9a4162487ec1b343992
 \.git\objects\66\de5325e1d9ea94e7ae77a764ab253dfc677525
 \.git\objects\66\e1ac1493e6963d2b7bffc4a58c38a00a1e68a0
+\.git\objects\66\ede5c740320e149700943b6d60d94ffd0a7a86
 \.git\objects\66\ef9e5c4ca2b4d2769d77e12f9394bf07bfaec9
 \.git\objects\67
 \.git\objects\67\048194ccd541ec840f4a83c48c5e3cd3871beb
@@ -1365,8 +1372,10 @@ MainWindow.xaml.cs
 \.git\objects\68\20771e57a296a43324efb12fb20e0d073e82bd
 \.git\objects\68\4693cf441b03daaa707dec2faf766194dfcd1c
 \.git\objects\68\77d82fb2eded428c0ed84f8b7ad49527cc9d08
+\.git\objects\68\7e619d4aba1a236d367b6606bbc35166e3a94c
 \.git\objects\68\8004f30143877ca3e3b2471c661e72b4c972ec
 \.git\objects\68\92beb0ea0b7601f765ec51734e2f87e037c1c8
+\.git\objects\68\b119887c01363606318ab2b4098846619100c9
 \.git\objects\68\b3be4521d41049a1d8c49ea56c9c6bcd6021fc
 \.git\objects\68\b59ab4e480809c393b0c5eb19ddb3e8330658f
 \.git\objects\68\e9e890b2a6a521fc5182ca083bd517970b56d1
@@ -1501,6 +1510,7 @@ MainWindow.xaml.cs
 \.git\objects\72\bc862593fb627e7fe5b0a34eeea4a39e5ce72e
 \.git\objects\72\bcecdf74ce5f54347dd80aeabe89bafcd1b3de
 \.git\objects\72\d79a4660ccc28ed43eedb7c4c9f59856709064
+\.git\objects\72\dd932221e8e2052b37188a0a1f8218b5fd5ab4
 \.git\objects\72\e0262af859edda7d0b2deaeecbaa841a6cfe3f
 \.git\objects\72\e45859b9e71f706f65c6a100405346b5f877b5
 \.git\objects\72\ec5103147097018ce4bf9bfc0ad807bbdf10da
@@ -1722,6 +1732,7 @@ MainWindow.xaml.cs
 \.git\objects\83\55e3a623f3abfb15d8115abae55cc55f22540f
 \.git\objects\83\6b423a00045efe2041ec759db705ba5f9b1bd4
 \.git\objects\83\952698627427c22d1cf75ce86cf943e3673ad5
+\.git\objects\83\9bfd16af5faef09a8914d3af482ed6be232d25
 \.git\objects\83\b5bc512df14a0eeafb5e9ecf15a988afd625b1
 \.git\objects\83\c0c73e1e5309e06b46827227f7d6802b39e3e6
 \.git\objects\83\cb5bc5b1bdef3f2bf49d5e80eb0ef8b225b5be
@@ -1796,6 +1807,7 @@ MainWindow.xaml.cs
 \.git\objects\89\0d5bdf2066f633ec49fb888d01e6a8d4d94bd4
 \.git\objects\89\100ad7a41abc10bfc0b47b5599af8a40c8a40f
 \.git\objects\89\147ecdd2fa20112bf0afb6e60378e7c421e44a
+\.git\objects\89\3a6599511415c84083e1796ca1d231b37048b1
 \.git\objects\89\58fbb54aafad679531d1f03f4a0277e6fe9895
 \.git\objects\89\5aba624a2d4bdfc96df9c8de445df3ac1d4f3e
 \.git\objects\89\6996ad5fb2a32d9695b7a9ce345138703511e8
@@ -2174,6 +2186,7 @@ MainWindow.xaml.cs
 \.git\objects\a3\efe7c40b1213d7492e316b071e97aeb858f8e7
 \.git\objects\a4
 \.git\objects\a4\22c03db9276011dcba20d8c63ac1ef128ae0a6
+\.git\objects\a4\48ac473039eb1d2dd90b27c05b28dec4db7cbd
 \.git\objects\a4\6ea0448191f1b94f744ad8cabb740e70a82f52
 \.git\objects\a4\89b523e75b3d43f75c1595ebc3917c8476b993
 \.git\objects\a4\9cfab4d74fcbf4456f7886ab9310cecd0a693e
@@ -2320,6 +2333,7 @@ MainWindow.xaml.cs
 \.git\objects\b0\6d3b64a7fee0a64f865c96eb2a7fc4afa44b8f
 \.git\objects\b0\84e877107323fae7c44fa01e6be7923ead74ff
 \.git\objects\b0\85f85baa822165e6e42512d2b4734fce9f757d
+\.git\objects\b0\a52d291dfb276276612850aa061e897e8f5838
 \.git\objects\b0\c07a7b6ff004d376174e7a76693caa2ace3be8
 \.git\objects\b0\ec827578bab22ee9959849b4a2e11ecfc228c0
 \.git\objects\b0\f9a77b008defd444de350e9e3f17eba9550e23
@@ -3020,6 +3034,7 @@ MainWindow.xaml.cs
 \.git\objects\ec\901448e7fe17d920fa788e0a6904355867a2f0
 \.git\objects\ec\98d6eb80beb1fe28c054d287fae2606d3ef98f
 \.git\objects\ec\9e61d1296d14f7461138e9a860011aa6942826
+\.git\objects\ec\ace04389a9511defd432996f5b6af55b09a32d
 \.git\objects\ec\f265f1703449f6fbf6432f102a7bf8fd137832
 \.git\objects\ec\f5f3fb4881da7dc21a1790a0782eeab42cb6ab
 \.git\objects\ec\fe40fa8840f348f6fe95f51e34a4b6501788e8
@@ -3983,6 +3998,7 @@ MainWindow.xaml.cs
 \_other\new_fetures.txt
 \_other\STAVBY - DB.xlsx
 \_other\_SPOJENO-ALL.txt
+\_other\_SPOJENO-CHOICE.txt
 \_other\_SPOJENO.txt
 \_other\DB-CSV
 \_other\DB-CSV\ALL_CODE-1.1.1
@@ -4837,7 +4853,1400 @@ using System.Windows;
 )]
 
 
+--- Soubor: MainWindow.xaml
+--- Cesta: MainWindow.xaml
+----------------------------------------
+﻿<Window x:Class="ElektroOffer_app.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Elektro Offer - Kalkulace"
+        Height="1000"
+        Width="1000">
 
-===== SOUBOR NENALEZEN: MainWindows.xaml =====
+    <!-- =========================================================== -->
+    <!-- HLAVNÍ LAYOUT: Menu + Toolbar + Obsah                        -->
+    <!-- DockPanel umožňuje menu a toolbar "přilepit" nahoru a        -->
+    <!-- obsahu nechat zbytek prostoru (LastChildFill=True)           -->
+    <!-- =========================================================== -->
+    <DockPanel LastChildFill="True">
 
-===== SOUBOR NENALEZEN: MainWindows.xaml.cs =====
+        <!-- ======================================================= -->
+        <!-- 📋 MENU — klasické menu nahoře (File | ...)             -->
+        <!-- ======================================================= -->
+        <Menu DockPanel.Dock="Top">
+
+            <!-- ===================== -->
+            <!-- SOUBOR                -->
+            <!-- ===================== -->
+            <MenuItem Header="_Soubor">
+
+                <!-- Nový projekt — resetuje celou kalkulaci -->
+                <MenuItem Header="_Nový projekt"
+                          InputGestureText="Ctrl+N"
+                          Click="MenuNewProject_Click"/>
+
+                <Separator/>
+
+                <!-- Otevřít — načte projekt z .eof souboru -->
+                <MenuItem Header="_Otevřít..."
+                          InputGestureText="Ctrl+O"
+                          Click="MenuLoad_Click"/>
+
+                <Separator/>
+
+                <!-- Uložit — uloží na aktuální cestu (nebo vyvolá Save As) -->
+                <MenuItem Header="_Uložit"
+                          InputGestureText="Ctrl+S"
+                          Click="MenuSave_Click"/>
+
+                <!-- Uložit jako — vždy otevře dialog pro výběr cesty -->
+                <MenuItem Header="Uložit _jako..."
+                          InputGestureText="Ctrl+Shift+S"
+                          Click="MenuSaveAs_Click"/>
+
+                <!-- ADD-KOMENT: PDF export — implementovat až bude finální struktura dokumentu (sekce zákazníka) -->
+                <!-- ADD-KOMENT: Plánovaná knihovna: QuestPDF — nainstalovat přes NuGet: Install-Package QuestPDF -->
+                <!--
+                <MenuItem Header="Export _PDF (kalkulace)"
+                          Click="MenuExportPdf_Click"/>
+
+                <MenuItem Header="Export PDF (_ceník)"
+                          Click="MenuExportPricePdf_Click"/>
+                -->
+
+                <!-- Konec — ukončí aplikaci (zeptá se na uložení) -->
+                <MenuItem Header="_Konec"
+                          InputGestureText="Alt+F4"
+                          Click="MenuExit_Click"/>
+
+            </MenuItem>
+
+            <!-- ===================== -->
+            <!-- NÁPOVĚDA             -->
+            <!-- ===================== -->
+            <MenuItem Header="_Nápověda">
+
+                <!-- O aplikaci — zobrazí logo, verzi a autora -->
+                <MenuItem Header="_O aplikaci..."
+                          Click="MenuAbout_Click"/>
+
+            </MenuItem>
+
+        </Menu>
+
+        <!-- ======================================================= -->
+        <!-- 🔧 TOOLBAR — tlačítka pod menu pro rychlý přístup       -->
+        <!-- ToolBar.Band / BandIndex řídí řazení na toolbaru        -->
+        <!-- ======================================================= -->
+        <ToolBarTray DockPanel.Dock="Top">
+            <ToolBar>
+
+                <!-- Nový projekt -->
+                <Button Content="🆕 Nový"
+                        ToolTip="Nový projekt (Ctrl+N)"
+                        Click="MenuNewProject_Click"
+                        Margin="2"/>
+
+                <Separator/>
+
+                <!-- Otevřít -->
+                <Button Content="📂 Otevřít"
+                        ToolTip="Načíst projekt (Ctrl+O)"
+                        Click="MenuLoad_Click"
+                        Margin="2"/>
+
+                <!-- Uložit -->
+                <Button Content="💾 Uložit"
+                        ToolTip="Uložit projekt (Ctrl+S)"
+                        Click="MenuSave_Click"
+                        Margin="2"/>
+
+                <!-- Uložit jako -->
+                <Button Content="💾 Uložit jako"
+                        ToolTip="Uložit jako... (Ctrl+Shift+S)"
+                        Click="MenuSaveAs_Click"
+                        Margin="2"/>
+
+                <Separator/>
+
+                <!-- ADD-KOMENT: PDF tlačítka v toolbaru — odkomentovat až bude PDF export implementován -->
+                <!--
+                <Separator/>
+
+                <Button Content="📄 PDF kalkulace"
+                        ToolTip="Exportovat kalkulaci do PDF"
+                        Click="MenuExportPdf_Click"
+                        Margin="2"/>
+
+                <Button Content="📄 PDF ceník"
+                        ToolTip="Exportovat ceník do PDF"
+                        Click="MenuExportPricePdf_Click"
+                        Margin="2"/>
+                -->
+
+            </ToolBar>
+        </ToolBarTray>
+
+        <!-- ======================================================= -->
+        <!-- 📌 STAVOVÝ ŘÁDEK — název projektu + stav uložení        -->
+        <!-- Zobrazuje aktuální název souboru a zda jsou neuložené    -->
+        <!-- změny (hvězdička * v titulku je běžná konvence v IT)    -->
+        <!-- ======================================================= -->
+        <StatusBar DockPanel.Dock="Bottom">
+            <StatusBarItem>
+                <TextBlock Text="{Binding StatusText}"
+                           Foreground="Gray"
+                           FontSize="12"/>
+            </StatusBarItem>
+        </StatusBar>
+
+        <!-- ======================================================= -->
+        <!-- 📄 HLAVNÍ OBSAH — původní Grid s kalkulací              -->
+        <!-- Přesunut dovnitř DockPanelu, jinak vše stejné           -->
+        <!-- ======================================================= -->
+        <ScrollViewer VerticalScrollBarVisibility="Auto">
+            <Grid Margin="20">
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <!-- ========================================================= -->
+                <!-- 🔧 SEKCE: PRÁCE -->
+                <!-- ========================================================= -->
+                <StackPanel Grid.Row="0" Margin="0,0,0,20">
+
+                    <!-- ========================= -->
+                    <!-- HLAVIČKA SEKCE -->
+                    <!-- ========================= -->
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="PRÁCE"
+                                   FontSize="18"
+                                   FontWeight="Bold"/>
+                        <Button Content="+"
+                                Width="30"
+                                Margin="10,0,0,0"
+                                Click="AddWorkItem_Click"
+                                ToolTip="Přidat řádek práce"/>
+                    </StackPanel>
+
+                    <!-- ========================= -->
+                    <!-- HLAVIČKA TABULKY -->
+                    <!-- ========================= -->
+                    <Grid Margin="0,8,0,5">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="35"/>
+                            <ColumnDefinition Width="150"/>
+                            <ColumnDefinition Width="150"/>
+                            <ColumnDefinition Width="150"/>
+                            <ColumnDefinition Width="120"/>
+                            <ColumnDefinition Width="60"/>
+                            <ColumnDefinition Width="60"/>
+                            <ColumnDefinition Width="120"/>
+                            <ColumnDefinition Width="70"/>
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Grid.Column="1" Text="Úkon"      FontWeight="Bold"/>
+                        <TextBlock Grid.Column="2" Text="Upřesnění" FontWeight="Bold"/>
+                        <TextBlock Grid.Column="3" Text="Materiál"  FontWeight="Bold"/>
+                        <TextBlock Grid.Column="4" Text="Umístění"  FontWeight="Bold"/>
+
+                        <!-- 🔴 ZMĚNA: číselné sloupce zarovnány shodně s obsahem -->
+                        <TextBlock Grid.Column="5" Text="Množství"  FontWeight="Bold"
+                                   HorizontalAlignment="Right" TextAlignment="Right"/>
+                        <TextBlock Grid.Column="6" Text="MJ"        FontWeight="Bold"
+                                   HorizontalAlignment="Center" TextAlignment="Center"/>
+                        <TextBlock Grid.Column="7" Text="Cena"      FontWeight="Bold"
+                                   HorizontalAlignment="Right" TextAlignment="Right"/>
+
+                    </Grid>
+
+                    <!-- ========================= -->
+                    <!-- ITEM LIST: PRÁCE -->
+                    <!-- ========================= -->
+                    <ItemsControl ItemsSource="{Binding WorkCalcItems}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+
+                                <Border BorderBrush="#E0E0E0"
+                                        BorderThickness="0,0,0,1"
+                                        Padding="0,5">
+
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="35"/>
+                                            <ColumnDefinition Width="150"/>
+                                            <ColumnDefinition Width="150"/>
+                                            <ColumnDefinition Width="150"/>
+                                            <ColumnDefinition Width="120"/>
+                                            <ColumnDefinition Width="60"/>
+                                            <ColumnDefinition Width="60"/>
+                                            <ColumnDefinition Width="120"/>
+                                            <ColumnDefinition Width="70"/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <!-- ➖ Smazání řádku -->
+                                        <Button Grid.Column="0"
+                                                Content="−"
+                                                Width="25"
+                                                Height="25"
+                                                Background="#E53935"
+                                                Foreground="White"
+                                                ToolTip="Smazat řádek"
+                                                Click="DeleteWorkItem_Click"/>
+
+                                        <!-- ÚKON -->
+                                        <ComboBox Grid.Column="1"
+                                                  ItemsSource="{Binding DataContext.Tasks, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                  SelectedItem="{Binding SelectedTask, Mode=TwoWay}"/>
+
+                                        <!-- UPŘESNĚNÍ -->
+                                        <ComboBox Grid.Column="2"
+                                                  IsEnabled="{Binding CanSelectSpecification}"
+                                                  ItemsSource="{Binding AvailableSpecifications}"
+                                                  SelectedItem="{Binding SelectedSpecification, Mode=TwoWay}"/>
+
+                                        <!-- MATERIÁL -->
+                                        <ComboBox Grid.Column="3"
+                                                  IsEnabled="{Binding CanSelectMaterial}"
+                                                  ItemsSource="{Binding AvailableMaterials}"
+                                                  SelectedItem="{Binding SelectedMaterial, Mode=TwoWay}"/>
+
+                                        <!-- UMÍSTĚNÍ -->
+                                        <ComboBox Grid.Column="4"
+                                                  IsEnabled="{Binding CanSelectLocation}"
+                                                  ItemsSource="{Binding AvailableLocations}"
+                                                  SelectedItem="{Binding SelectedLocation, Mode=TwoWay}"/>
+
+                                        <!-- MNOŽSTVÍ -->
+                                        <!-- 🔴 ZMĚNA: číslo zarovnáno doprava -->
+                                        <TextBox Grid.Column="5"
+                                                 TextAlignment="Right"
+                                                 Text="{Binding Quantity, UpdateSourceTrigger=PropertyChanged}"/>
+
+                                        <!-- MJ -->
+                                        <!-- 🔴 ZMĚNA: jednotka vycentrována -->
+                                        <TextBlock Grid.Column="6"
+                                                   VerticalAlignment="Center"
+                                                   HorizontalAlignment="Center"
+                                                   TextAlignment="Center"
+                                                   Foreground="Gray"
+                                                   Text="{Binding WorkUnit}"/>
+
+                                        <!-- 💰 CENA PRÁCE -->
+                                        <!-- 🔴 ZMĚNA: zarovnání doprava -->
+                                        <TextBlock Grid.Column="7"
+                                                   FontWeight="Bold"
+                                                   Foreground="DarkBlue"
+                                                   VerticalAlignment="Center"
+                                                   HorizontalAlignment="Right"
+                                                   TextAlignment="Right"
+                                                   Text="{Binding Total, StringFormat={}{0:N0} Kč}"/>
+
+                                        <!-- 🔄 RESET ŘÁDKU -->
+                                        <Button Grid.Column="8"
+                                                Content="SMAZAT"
+                                                Background="DarkBlue"
+                                                Foreground="White"
+                                                ToolTip="Vymazat data řádku"
+                                                Click="ResetWorkItem_Click"/>
+
+                                    </Grid>
+
+                                </Border>
+
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+
+                    <!-- ========================================================= -->
+                    <!-- ➕ SOUČET PRÁCE -->
+                    <!-- ========================================================= -->
+                    <!-- 🔴 ZMĚNA: StackPanel -> Grid kvůli zarovnání -->
+                    <Border Margin="0,10,0,0"
+                            Padding="10"
+                            BorderBrush="Gray"
+                            BorderThickness="1">
+
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock Text="Součet práce"
+                                       FontWeight="Bold"/>
+
+                            <TextBlock Grid.Column="1"
+                                       Text="{Binding WorkTotal, StringFormat={}{0:N0} Kč}"
+                                       FontSize="16"
+                                       FontWeight="Bold"
+                                       Foreground="DarkBlue"
+                                       HorizontalAlignment="Right"
+                                       TextAlignment="Right"/>
+                        </Grid>
+
+                    </Border>
+
+                </StackPanel>
+
+                <!-- ========================================================= -->
+                <!-- 📦 SEKCE: MATERIÁL -->
+                <!-- ========================================================= -->
+                <StackPanel Grid.Row="1" Margin="0,0,0,20">
+
+                    <!-- ========================= -->
+                    <!-- HLAVIČKA SEKCE -->
+                    <!-- ========================= -->
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="MATERIÁL"
+                                   FontSize="18"
+                                   FontWeight="Bold"/>
+                        <Button Content="+"
+                                Width="30"
+                                Margin="10,0,0,0"
+                                Click="AddMaterialsItem_Click"
+                                ToolTip="Přidat řádek materiálu"/>
+                    </StackPanel>
+
+                    <!-- ========================= -->
+                    <!-- HLAVIČKA TABULKY -->
+                    <!-- ========================= -->
+                    <Grid Margin="0,8,0,5">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="35"/>
+                            <ColumnDefinition Width="300"/>
+                            <ColumnDefinition Width="70"/>
+                            <ColumnDefinition Width="40"/>
+                            <ColumnDefinition Width="120"/>
+                            <ColumnDefinition Width="70"/>
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Grid.Column="1" Text="Název"    FontWeight="Bold"/>
+
+                        <!-- 🔴 ZMĚNA: číselné sloupce zarovnány shodně s obsahem -->
+                        <TextBlock Grid.Column="2" Text="Množství" FontWeight="Bold"
+                                   HorizontalAlignment="Right" TextAlignment="Right"/>
+                        <TextBlock Grid.Column="3" Text="MJ"       FontWeight="Bold"
+                                   HorizontalAlignment="Center" TextAlignment="Center"/>
+                        <TextBlock Grid.Column="4" Text="Cena"     FontWeight="Bold"
+                                   HorizontalAlignment="Right" TextAlignment="Right"/>
+
+                    </Grid>
+
+                    <!-- ========================= -->
+                    <!-- ITEM LIST: MATERIÁL -->
+                    <!-- ========================= -->
+                    <ItemsControl ItemsSource="{Binding MaterialItems}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+
+                                <Border BorderBrush="#E0E0E0"
+                                        BorderThickness="0,0,0,1"
+                                        Padding="0,5">
+
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="35"/>
+                                            <ColumnDefinition Width="300"/>
+                                            <ColumnDefinition Width="70"/>
+                                            <ColumnDefinition Width="40"/>
+                                            <ColumnDefinition Width="120"/>
+                                            <ColumnDefinition Width="70"/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <Button Grid.Column="0"
+                                                Content="−"
+                                                Width="25"
+                                                Height="25"
+                                                Background="#E53935"
+                                                Foreground="White"
+                                                ToolTip="Smazat řádek"
+                                                Click="DeleteMaterialItem_Click"/>
+
+                                        <ComboBox Grid.Column="1"
+                                                  ItemsSource="{Binding DataContext.Materials, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                  DisplayMemberPath="Name"
+                                                  SelectedItem="{Binding MaterialItem, Mode=TwoWay}"/>
+
+                                        <!-- 🔴 ZMĚNA: číslo zarovnáno doprava -->
+                                        <TextBox Grid.Column="2"
+                                                 TextAlignment="Right"
+                                                 Text="{Binding Quantity, UpdateSourceTrigger=PropertyChanged}"/>
+
+                                        <!-- 🔴 ZMĚNA: jednotka vycentrována -->
+                                        <TextBlock Grid.Column="3"
+                                                   VerticalAlignment="Center"
+                                                   HorizontalAlignment="Center"
+                                                   TextAlignment="Center"
+                                                   Text="{Binding MaterialItem.Unit}"/>
+
+                                        <!-- 🔴 ZMĚNA: cena doprava -->
+                                        <TextBlock Grid.Column="4"
+                                                   FontWeight="Bold"
+                                                   VerticalAlignment="Center"
+                                                   HorizontalAlignment="Right"
+                                                   TextAlignment="Right"
+                                                   Text="{Binding Total, StringFormat={}{0:N0} Kč}"/>
+
+                                        <Button Grid.Column="5"
+                                                Content="SMAZAT"
+                                                Background="DarkBlue"
+                                                Foreground="White"
+                                                ToolTip="Vymazat data řádku"
+                                                Click="ResetMaterialItem_Click"/>
+
+                                    </Grid>
+
+                                </Border>
+
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+
+                    <!-- ========================================================= -->
+                    <!-- ➕ SOUČET MATERIÁLU -->
+                    <!-- ========================================================= -->
+                    <!-- 🔴 ZMĚNA: StackPanel -> Grid -->
+                    <Border Margin="0,10,0,0"
+                            Padding="10"
+                            BorderBrush="Gray"
+                            BorderThickness="1">
+
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock Text="Součet materiálu"
+                                       FontWeight="Bold"/>
+
+                            <!-- 🔴 ZMĚNA: chybějící HorizontalAlignment="Right" doplněn -->
+                            <TextBlock Grid.Column="1"
+                                       Text="{Binding MaterialTotal, StringFormat={}{0:N0} Kč}"
+                                       FontSize="16"
+                                       FontWeight="Bold"
+                                       Foreground="DarkBlue"
+                                       HorizontalAlignment="Right"
+                                       TextAlignment="Right"/>
+                        </Grid>
+
+                    </Border>
+
+                </StackPanel>
+
+                <!-- ========================================================= -->
+                <!-- 📊 SPOLEČNÝ ROZPIS (PRÁCE + MATERIÁL) -->
+                <!-- ========================================================= -->
+                <GroupBox Grid.Row="2">
+                    <GroupBox.Header>
+                        <TextBlock Text="DETAILNÍ ROZPOČET"
+                                   FontSize="18"
+                                   FontWeight="Bold"/>
+                    </GroupBox.Header>
+
+                    <ListView ItemsSource="{Binding BudgetItems}">
+
+                        <ListView.View>
+                            <GridView>
+
+                                <GridViewColumn Header="Typ"
+                                                Width="100"
+                                                DisplayMemberBinding="{Binding Type}"/>
+
+                                <GridViewColumn Header="Popis"
+                                                Width="350"
+                                                DisplayMemberBinding="{Binding Description}"/>
+
+                                <!-- ✔ NOVĚ: Množství + MJ -->
+                                <GridViewColumn Width="100">
+                                    <GridViewColumn.HeaderTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="Množství (MJ)"
+                                                       HorizontalAlignment="Center"
+                                                       TextAlignment="Center"
+                                                       Width="100"/>
+                                        </DataTemplate>
+                                    </GridViewColumn.HeaderTemplate>
+
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <!-- ✔ OPRAVA: zobrazí "Xm" místo pouhého "m" -->
+                                            <TextBlock HorizontalAlignment="Right"
+                                                       TextAlignment="Right"
+                                                       Width="100">
+                                                <TextBlock.Text>
+                                                    <MultiBinding StringFormat="{}{0:N0}{1}">
+                                                        <Binding Path="Quantity"/>
+                                                        <Binding Path="Unit"/>
+                                                    </MultiBinding>
+                                                </TextBlock.Text>
+                                            </TextBlock>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+
+                                <!-- Cena -->
+                                <GridViewColumn Width="120">
+                                    <GridViewColumn.HeaderTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="Cena"
+                                                       FontWeight="Bold"
+                                                       HorizontalAlignment="Right"
+                                                       TextAlignment="Right"
+                                                       Width="100"/>
+                                        </DataTemplate>
+                                    </GridViewColumn.HeaderTemplate>
+
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding Price, StringFormat={}{0:N0} Kč}"
+                                                       HorizontalAlignment="Right"
+                                                       TextAlignment="Right"
+                                                       Width="100"/>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+
+                            </GridView>
+                        </ListView.View>
+
+                    </ListView>
+
+                </GroupBox>
+
+                <!-- ========================================================= -->
+                <!-- 💰 CELKOVÁ CENA (GRAND TOTAL) -->
+                <!-- ========================================================= -->
+                <!-- 🔴 ZMĚNA: StackPanel -> Grid kvůli zarovnání -->
+                <Grid Grid.Row="3"
+                      Margin="0,10,0,20">
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Text="Celková cena nabídky:"
+                               FontSize="20"
+                               FontWeight="SemiBold"/>
+
+                    <TextBlock Grid.Column="1"
+                               FontSize="26"
+                               FontWeight="Bold"
+                               Foreground="DarkGreen"
+                               Text="{Binding GrandTotal, StringFormat={}{0:N0} Kč}"
+                               HorizontalAlignment="Right"
+                               TextAlignment="Right"/>
+
+                </Grid>
+
+            </Grid>
+        </ScrollViewer>
+
+    </DockPanel>
+</Window>
+
+
+--- Soubor: MainWindow.xaml.cs
+--- Cesta: MainWindow.xaml.cs
+----------------------------------------
+﻿using ElektroOffer_app.Data;
+using ElektroOffer_app.Models;
+using ElektroOffer_app.Services;
+using System.Collections.Specialized;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Windows;
+
+namespace ElektroOffer_app
+{
+    public partial class MainWindow : Window, INotifyPropertyChanged
+    {
+        // =========================================================
+        // 📦 DATA Z DB
+        // =========================================================
+        public ObservableCollection<Material> Materials { get; set; } = new();
+
+        // =========================================================
+        // 🔧 GLOBÁLNÍ SEZNAM ÚKONŮ
+        // =========================================================
+        public ObservableCollection<string> Tasks { get; set; } = new();
+
+        // =========================================================
+        // 🧮 KALKULACE
+        // =========================================================
+        public ObservableCollection<CalculationItems> WorkCalcItems { get; set; } = new();
+        public ObservableCollection<CalculationItems> MaterialItems { get; set; } = new();
+
+        // =========================================================
+        // 📊 DETAILNÍ ROZPIS
+        // =========================================================
+        public ObservableCollection<BudgetItem> BudgetItems { get; set; } = new();
+
+        // =========================================================
+        // 💰 CELKOVÁ CENA
+        // =========================================================
+        private double _grandTotal;
+        public double GrandTotal
+        {
+            get => _grandTotal;
+            set
+            {
+                if (Math.Abs(_grandTotal - value) < 0.0001) return;
+                _grandTotal = value;
+                OnPropertyChanged();
+            }
+        }
+
+        // =========================================================
+        // 💰 DÍLČÍ SOUČTY
+        // =========================================================
+        private double _workTotal;
+        public double WorkTotal
+        {
+            get => _workTotal;
+            set
+            {
+                if (Math.Abs(_workTotal - value) < 0.0001) return;
+                _workTotal = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private double _materialTotal;
+        public double MaterialTotal
+        {
+            get => _materialTotal;
+            set
+            {
+                if (Math.Abs(_materialTotal - value) < 0.0001) return;
+                _materialTotal = value;
+                OnPropertyChanged();
+            }
+        }
+
+        // =========================================================
+        // 💾 STAV ULOŽENÍ — správa souboru a neuložených změn
+        // =========================================================
+
+        /// <summary>
+        /// Servisní třída pro Save/Load logiku.
+        /// Oddělena od UI — MainWindow jen volá její metody.
+        /// </summary>
+        private readonly ProjectService _projectService = new();
+
+        /// <summary>
+        /// Aktuální cesta k otevřenému souboru.
+        /// Null = projekt ještě nebyl uložen (nový projekt).
+        /// </summary>
+        private string? _currentFilePath = null;
+
+        /// <summary>
+        /// Příznak neuložených změn.
+        /// True = data byla změněna od posledního uložení.
+        /// Používá se při zavírání okna nebo "Nový projekt".
+        /// </summary>
+        private bool _hasUnsavedChanges = false;
+
+        // =========================================================
+        // 📌 STAVOVÝ ŘÁDEK — text zobrazený dole v okně
+        // =========================================================
+
+        private string _statusText = "Nový projekt";
+        /// <summary>
+        /// Text zobrazený ve StatusBaru dole.
+        /// Ukazuje název souboru nebo stav projektu.
+        /// </summary>
+        public string StatusText
+        {
+            get => _statusText;
+            set
+            {
+                _statusText = value;
+                OnPropertyChanged();
+            }
+        }
+
+        // =========================================================
+        // START
+        // =========================================================
+        public MainWindow()
+        {
+            InitializeComponent();
+            DataContext = this;
+
+            using (var db = new AppDbContext())
+            {
+                db.Database.EnsureCreated();
+            }
+
+            // 🔄 SPRÁVNÉ NAČTENÍ DAT PRO WPF
+            LoadCatalogDataFromDb();
+
+            for (int i = 0; i < 5; i++)
+            {
+                AddWorkItemInternal();
+                AddMaterialItemInternal();
+            }
+
+            WorkCalcItems.CollectionChanged += WorkCalcItems_CollectionChanged;
+            MaterialItems.CollectionChanged += MaterialItems_CollectionChanged;
+
+            // Klávesové zkratky pro Save/Load
+            // Ctrl+S, Ctrl+Shift+S, Ctrl+O, Ctrl+N
+            RegisterKeyboardShortcuts();
+        }
+
+        // =========================================================
+        // 🔄 NAČTENÍ DAT PRO UI (KLÍČOVÁ OPRAVA)
+        // =========================================================
+        private void LoadCatalogDataFromDb()
+        {
+            using var db = new AppDbContext();
+
+            Tasks.Clear();
+            foreach (var task in db.PriceItems.Select(x => x.Task).Distinct().ToList())
+                Tasks.Add(task);
+
+            Materials.Clear();
+            foreach (var mat in db.Materials.ToList())
+                Materials.Add(mat);
+        }
+
+        // =========================================================
+        // ⌨️ KLÁVESOVÉ ZKRATKY
+        // =========================================================
+
+        /// <summary>
+        /// Registrace klávesových zkratek přes CommandBindings.
+        /// Tímto způsobem zkratky fungují i bez zaměření na konkrétní prvek UI.
+        /// </summary>
+        private void RegisterKeyboardShortcuts()
+        {
+            // Ctrl+S → Uložit
+            var saveBinding = new System.Windows.Input.KeyBinding(
+                new RelayCommand(_ => MenuSave_Click(this, new RoutedEventArgs())),
+                System.Windows.Input.Key.S,
+                System.Windows.Input.ModifierKeys.Control);
+
+            // Ctrl+Shift+S → Uložit jako
+            var saveAsBinding = new System.Windows.Input.KeyBinding(
+                new RelayCommand(_ => MenuSaveAs_Click(this, new RoutedEventArgs())),
+                System.Windows.Input.Key.S,
+                System.Windows.Input.ModifierKeys.Control | System.Windows.Input.ModifierKeys.Shift);
+
+            // Ctrl+O → Otevřít
+            var openBinding = new System.Windows.Input.KeyBinding(
+                new RelayCommand(_ => MenuLoad_Click(this, new RoutedEventArgs())),
+                System.Windows.Input.Key.O,
+                System.Windows.Input.ModifierKeys.Control);
+
+            // Ctrl+N → Nový projekt
+            var newBinding = new System.Windows.Input.KeyBinding(
+                new RelayCommand(_ => MenuNewProject_Click(this, new RoutedEventArgs())),
+                System.Windows.Input.Key.N,
+                System.Windows.Input.ModifierKeys.Control);
+
+            InputBindings.Add(saveBinding);
+            InputBindings.Add(saveAsBinding);
+            InputBindings.Add(openBinding);
+            InputBindings.Add(newBinding);
+        }
+
+        // =========================================================
+        // 📋 MENU — AKCE
+        // =========================================================
+
+        /// <summary>
+        /// Menu: Soubor → Nový projekt
+        /// Zeptá se na uložení změn, pak resetuje celou kalkulaci.
+        /// </summary>
+        private void MenuNewProject_Click(object sender, RoutedEventArgs e)
+        {
+            // Sestaví aktuální data projektu (potřeba pro případné uložení)
+            var currentData = BuildProjectData();
+
+            // Zkontroluje neuložené změny — pokud uživatel zruší, nic neděláme
+            if (!_projectService.ConfirmNewProject(currentData, _currentFilePath, _hasUnsavedChanges))
+                return;
+
+            // Reset aplikace do počátečního stavu
+            ResetToNewProject();
+        }
+
+        /// <summary>
+        /// Menu: Soubor → Otevřít
+        /// Načte projekt z .eof souboru a naplní UI daty.
+        /// </summary>
+        private void MenuLoad_Click(object sender, RoutedEventArgs e)
+        {
+            // Pokud jsou neuložené změny → zeptáme se před načtením
+            if (_hasUnsavedChanges)
+            {
+                var result = MessageBox.Show(
+                    "Máte neuložené změny. Chcete je uložit před načtením jiného projektu?",
+                    "Neuložené změny",
+                    MessageBoxButton.YesNoCancel,
+                    MessageBoxImage.Warning);
+
+                if (result == MessageBoxResult.Cancel) return;
+                if (result == MessageBoxResult.Yes)
+                {
+                    var saved = _projectService.Save(BuildProjectData(), _currentFilePath);
+                    if (saved == null) return; // uložení selhalo nebo bylo zrušeno
+                }
+            }
+
+            // Otevření dialogu a načtení dat
+            var (data, path) = _projectService.Load();
+            if (data == null) return; // uživatel zrušil nebo chyba
+
+            // Naplnění UI načtenými daty
+            ApplyProjectData(data, path!);
+        }
+
+        /// <summary>
+        /// Menu: Soubor → Uložit (Ctrl+S)
+        /// Uloží na aktuální cestu, nebo vyvolá Save As dialog.
+        /// </summary>
+        private void MenuSave_Click(object sender, RoutedEventArgs e)
+        {
+            var data = BuildProjectData();
+            var savedPath = _projectService.Save(data, _currentFilePath);
+
+            if (savedPath != null)
+                OnProjectSaved(savedPath);
+        }
+
+        /// <summary>
+        /// Menu: Soubor → Uložit jako (Ctrl+Shift+S)
+        /// Vždy otevře dialog pro výběr nového umístění.
+        /// </summary>
+        private void MenuSaveAs_Click(object sender, RoutedEventArgs e)
+        {
+            var data = BuildProjectData();
+            var savedPath = _projectService.SaveAs(data);
+
+            if (savedPath != null)
+                OnProjectSaved(savedPath);
+        }
+
+        // =========================================================
+        // ❓ NÁPOVĚDA
+        // =========================================================
+
+        /// <summary>
+        /// Menu: Nápověda → O aplikaci
+        /// Otevře modální okno s logem, verzí a autorem aplikace.
+        /// Owner = this zajistí centrování okna vůči MainWindow.
+        /// </summary>
+        private void MenuAbout_Click(object sender, RoutedEventArgs e)
+        {
+            var aboutWindow = new AboutWindow
+            {
+                // Owner zajistí správné centrování a chování modálního okna
+                Owner = this
+            };
+
+            // ShowDialog = modální okno (nelze klikat na MainWindow dokud je otevřené)
+            aboutWindow.ShowDialog();
+        }
+
+        // =========================================================
+        // 🚪 KONEC
+        // =========================================================
+
+        /// <summary>
+        /// Menu: Soubor → Konec
+        /// Zeptá se na uložení neuložených změn, pak ukončí aplikaci.
+        /// </summary>
+        private void MenuExit_Click(object sender, RoutedEventArgs e)
+        {
+            // Pokud jsou neuložené změny → zeptáme se před ukončením
+            if (_hasUnsavedChanges)
+            {
+                var result = MessageBox.Show(
+                    "Máte neuložené změny. Chcete je uložit před ukončením?",
+                    "Neuložené změny",
+                    MessageBoxButton.YesNoCancel,
+                    MessageBoxImage.Warning);
+
+                if (result == MessageBoxResult.Cancel) return;
+
+                if (result == MessageBoxResult.Yes)
+                {
+                    var saved = _projectService.Save(BuildProjectData(), _currentFilePath);
+                    if (saved == null) return; // uložení selhalo nebo bylo zrušeno
+                }
+            }
+
+            // Ukončení aplikace
+            Application.Current.Shutdown();
+        }
+
+        // ADD-KOMENT: PDF export metody — odkomentovat až bude QuestPDF nainstalován a struktura dokumentu finální
+        // ADD-KOMENT: Instalace: NuGet → Install-Package QuestPDF
+        // ADD-KOMENT: Docs: https://www.questpdf.com/documentation/getting-started.html
+        /*
+        private void MenuExportPdf_Click(object sender, RoutedEventArgs e)
+        {
+            // 🚧 PLACEHOLDER — implementace přijde v další fázi
+            MessageBox.Show(
+                "Export PDF kalkulace bude implementován v další fázi projektu.\n\nPlánovaná knihovna: QuestPDF",
+                "Připravuje se",
+                MessageBoxButton.OK,
+                MessageBoxImage.Information);
+        }
+
+        private void MenuExportPricePdf_Click(object sender, RoutedEventArgs e)
+        {
+            // 🚧 PLACEHOLDER — implementace přijde v další fázi
+            MessageBox.Show(
+                "Export PDF ceníku bude implementován v další fázi projektu.\n\nPlánovaná knihovna: QuestPDF",
+                "Připravuje se",
+                MessageBoxButton.OK,
+                MessageBoxImage.Information);
+        }
+        */
+
+        // =========================================================
+        // 🛠️ POMOCNÉ METODY — Save/Load logika
+        // =========================================================
+
+        /// <summary>
+        /// Sestaví objekt ProjectData z aktuálního stavu UI.
+        /// Volá se před každým uložením.
+        /// </summary>
+        private ProjectData BuildProjectData()
+        {
+            return new ProjectData
+            {
+                // Metadata
+                ProjectName = _currentFilePath != null
+                    ? System.IO.Path.GetFileNameWithoutExtension(_currentFilePath)
+                    : "Nový projekt",
+                SavedAt = DateTime.Now,
+
+                // Sekce PRÁCE — uložíme vybrané hodnoty každého řádku
+                WorkItems = WorkCalcItems.Select(x => new WorkItemData
+                {
+                    SelectedTask = x.SelectedTask,
+                    SelectedSpecification = x.SelectedSpecification,
+                    SelectedMaterial = x.SelectedMaterial,
+                    SelectedLocation = x.SelectedLocation,
+                    Quantity = x.Quantity
+                }).ToList(),
+
+                // Sekce MATERIÁL — uložíme název materiálu a množství
+                MaterialItems = MaterialItems.Select(x => new MaterialItemData
+                {
+                    MaterialName = x.MaterialItem?.Name,
+                    Quantity = x.Quantity
+                }).ToList()
+            };
+        }
+
+        /// <summary>
+        /// Aplikuje načtená data (ProjectData) do UI.
+        /// Zavolá se po úspěšném Load.
+        /// </summary>
+        private void ApplyProjectData(ProjectData data, string path)
+        {
+            // Nejdříve vyprázdníme stávající UI
+            ClearAllItems();
+
+            // ========================= //
+            // 🔧 OBNOVENÍ SEKCE: PRÁCE  //
+            // ========================= //
+            foreach (var saved in data.WorkItems)
+            {
+                var item = new CalculationItems();
+                item.PropertyChanged += Item_PropertyChanged;
+
+                // Obnovení vybraných hodnot
+                item.SelectedTask = saved.SelectedTask;
+                item.SelectedSpecification = saved.SelectedSpecification;
+                item.SelectedMaterial = saved.SelectedMaterial;
+                item.SelectedLocation = saved.SelectedLocation;
+                item.Quantity = saved.Quantity;
+
+                WorkCalcItems.Add(item);
+            }
+
+            // =========================== //
+            // 📦 OBNOVENÍ SEKCE: MATERIÁL //
+            // =========================== //
+            foreach (var saved in data.MaterialItems)
+            {
+                var item = new CalculationItems();
+                item.PropertyChanged += Item_PropertyChanged;
+
+                // Dohledání objektu Material z DB podle názvu
+                // (ukládáme název, ne ID → nezávislé na DB)
+                item.MaterialItem = Materials.FirstOrDefault(m => m.Name == saved.MaterialName);
+                item.Quantity = saved.Quantity;
+
+                MaterialItems.Add(item);
+            }
+
+            // Uložíme cestu a resetujeme příznak změn
+            _currentFilePath = path;
+            _hasUnsavedChanges = false;
+
+            // Aktualizace titulku a stavového řádku
+            UpdateWindowTitle(path);
+            Recalculate();
+        }
+
+        /// <summary>
+        /// Zavolá se po úspěšném uložení.
+        /// Aktualizuje cestu, příznak změn, titulek a status.
+        /// </summary>
+        private void OnProjectSaved(string path)
+        {
+            _currentFilePath = path;
+            _hasUnsavedChanges = false;
+            UpdateWindowTitle(path);
+        }
+
+        /// <summary>
+        /// Resetuje aplikaci do stavu "nový projekt".
+        /// Vymaže všechny řádky a přidá výchozí prázdné řádky.
+        /// </summary>
+        private void ResetToNewProject()
+        {
+            ClearAllItems();
+
+            // Přidání výchozích prázdných řádků jako při startu
+            for (int i = 0; i < 5; i++)
+            {
+                AddWorkItemInternal();
+                AddMaterialItemInternal();
+            }
+
+            _currentFilePath = null;
+            _hasUnsavedChanges = false;
+
+            // Reset titulku a stavového řádku
+            Title = "Elektro Offer - Kalkulace";
+            StatusText = "Nový projekt";
+        }
+
+        /// <summary>
+        /// Vymaže všechny řádky z obou sekcí (PRÁCE + MATERIÁL).
+        /// Odhlásí event handlery před odebráním, aby nedošlo k memory leaku.
+        /// </summary>
+        private void ClearAllItems()
+        {
+            // Odhlášení event handlerů — důležité pro správnou správu paměti
+            foreach (var item in WorkCalcItems)
+                item.PropertyChanged -= Item_PropertyChanged;
+
+            foreach (var item in MaterialItems)
+                item.PropertyChanged -= Item_PropertyChanged;
+
+            WorkCalcItems.Clear();
+            MaterialItems.Clear();
+            BudgetItems.Clear();
+        }
+
+        /// <summary>
+        /// Aktualizuje titulek okna a text ve StatusBaru.
+        /// Konvence v IT: "*" v titulku = neuložené změny.
+        /// </summary>
+        private void UpdateWindowTitle(string path)
+        {
+            var fileName = System.IO.Path.GetFileNameWithoutExtension(path);
+
+            // Titulek okna: "NázevSouboru - Elektro Offer"
+            Title = $"{fileName} - Elektro Offer";
+
+            // StatusBar: celá cesta k souboru
+            StatusText = path;
+        }
+
+        /// <summary>
+        /// Označí projekt jako "má neuložené změny".
+        /// Volá se při každé změně dat v UI.
+        /// </summary>
+        private void MarkAsChanged()
+        {
+            if (!_hasUnsavedChanges)
+            {
+                _hasUnsavedChanges = true;
+
+                // Přidá hvězdičku do titulku (konvence: * = neuložené změny)
+                if (!Title.StartsWith("*"))
+                    Title = "* " + Title;
+            }
+        }
+
+        // =========================================================
+        // ➕ ADD
+        // =========================================================
+        private void AddWorkItem_Click(object sender, RoutedEventArgs e)
+            => AddWorkItemInternal();
+
+        private void AddMaterialsItem_Click(object sender, RoutedEventArgs e)
+            => AddMaterialItemInternal();
+
+        private void AddWorkItemInternal()
+        {
+            var item = new CalculationItems();
+            item.PropertyChanged += Item_PropertyChanged;
+            WorkCalcItems.Add(item);
+        }
+
+        private void AddMaterialItemInternal()
+        {
+            var item = new CalculationItems();
+            item.PropertyChanged += Item_PropertyChanged;
+            MaterialItems.Add(item);
+        }
+
+        // =========================================================
+        // ➖ DELETE
+        // =========================================================
+        private void DeleteWorkItem_Click(object sender, RoutedEventArgs e)
+        {
+            // potvrzovací dialog
+            if (MessageBox.Show("Opravdu chcete položku odebrat?", "Potvrzení",
+                MessageBoxButton.OKCancel, MessageBoxImage.Question) != MessageBoxResult.OK)
+                return;
+
+            if (sender is FrameworkElement fe &&
+                fe.DataContext is CalculationItems item)
+            {
+                item.PropertyChanged -= Item_PropertyChanged;
+                WorkCalcItems.Remove(item);
+                Recalculate();
+            }
+        }
+
+        private void DeleteMaterialItem_Click(object sender, RoutedEventArgs e)
+        {
+            // potvrzovací dialog
+            if (MessageBox.Show("Opravdu chcete položku odebrat?", "Potvrzení",
+                MessageBoxButton.OKCancel, MessageBoxImage.Question) != MessageBoxResult.OK)
+                return;
+
+            if (sender is FrameworkElement fe &&
+                fe.DataContext is CalculationItems item)
+            {
+                item.PropertyChanged -= Item_PropertyChanged;
+                MaterialItems.Remove(item);
+                Recalculate();
+            }
+        }
+
+        // =========================================================
+        // 🧹 RESET WORK ITEM
+        // =========================================================
+        private void ResetWorkItem_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is FrameworkElement fe &&
+                fe.DataContext is CalculationItems item)
+            {
+                // zjištění, zda má řádek nějaká data
+                bool isFilled =
+                    item.SelectedTask != null ||
+                    item.SelectedSpecification != null ||
+                    item.SelectedMaterial != null ||
+                    item.SelectedLocation != null ||
+                    item.Quantity > 0;
+
+                // potvrzení jen pokud je řádek vyplněný
+                if (isFilled)
+                {
+                    if (MessageBox.Show(
+                        "Opravdu chcete vymazat vyplněný řádek práce?",
+                        "Potvrzení",
+                        MessageBoxButton.OKCancel,
+                        MessageBoxImage.Question) != MessageBoxResult.OK)
+                        return;
+                }
+
+                // reset hodnot
+                item.SelectedTask = null;
+                item.SelectedSpecification = null;
+                item.SelectedMaterial = null;
+                item.SelectedLocation = null;
+                item.Quantity = 0;
+
+                Recalculate();
+            }
+        }
+
+        // =========================================================
+        // 🧹 RESET MATERIAL ITEM
+        // =========================================================
+        private void ResetMaterialItem_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is FrameworkElement fe &&
+                fe.DataContext is CalculationItems item)
+            {
+                // zjištění, zda je řádek vyplněný
+                bool isFilled =
+                    item.MaterialItem != null ||
+                    item.Quantity > 0;
+
+                // potvrzení jen pokud má data
+                if (isFilled)
+                {
+                    if (MessageBox.Show(
+                        "Opravdu chcete vymazat vyplněný řádek materiálu?",
+                        "Potvrzení",
+                        MessageBoxButton.OKCancel,
+                        MessageBoxImage.Question) != MessageBoxResult.OK)
+                        return;
+                }
+
+                // reset hodnot
+                item.MaterialItem = null;
+                item.Quantity = 0;
+
+                Recalculate();
+            }
+        }
+
+        // =========================================================
+        // 📌 EVENTS
+        // =========================================================
+        private void WorkCalcItems_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+        {
+            MarkAsChanged(); // každá změna kolekce = neuložená změna
+            Recalculate();
+        }
+
+        private void MaterialItems_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+        {
+            MarkAsChanged(); // každá změna kolekce = neuložená změna
+            Recalculate();
+        }
+
+        private void Item_PropertyChanged(object? sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(CalculationItems.Total) ||
+                e.PropertyName == nameof(CalculationItems.Quantity) ||
+                e.PropertyName == nameof(CalculationItems.WorkItem) ||
+                e.PropertyName == nameof(CalculationItems.MaterialItem))
+            {
+                MarkAsChanged(); // každá změna hodnoty = neuložená změna
+                Recalculate();
+            }
+        }
+
+        // =========================================================
+        // 💰 REKALKULACE CEN A ROZPISU
+        // =========================================================
+        private void Recalculate()
+        {
+            // =========================
+            // 💰 CELKOVÉ SOUČTY
+            // =========================
+            WorkTotal = WorkCalcItems.Sum(x => x.Total);
+            MaterialTotal = MaterialItems.Sum(x => x.Total);
+            GrandTotal = WorkTotal + MaterialTotal;
+
+            // =========================
+            // 📊 VYČIŠTĚNÍ ROZPISU
+            // =========================
+            BudgetItems.Clear();
+
+            // =========================
+            // 🔧 PRÁCE
+            // =========================
+            foreach (var x in WorkCalcItems.Where(x => x.Total > 0))
+            {
+                BudgetItems.Add(new BudgetItem
+                {
+                    Type = "PRÁCE",
+
+                    // popis sestavený z vybraných hodnot
+                    Description = $"{x.SelectedTask} / {x.SelectedSpecification} / {x.SelectedMaterial} / {x.SelectedLocation}",
+
+                    // měrná jednotka práce (hod, ks, apod.)
+                    // ?? "" = fallback na prázdný string pokud WorkUnit vrátí null
+                    Unit = x.WorkUnit ?? "",
+
+                    // množství
+                    Quantity = x.Quantity,
+
+                    // výsledná cena řádku
+                    Price = x.Total
+                });
+            }
+
+            // =========================
+            // 📦 MATERIÁL
+            // =========================
+            foreach (var x in MaterialItems.Where(x => x.Total > 0 && x.MaterialItem != null))
+            {
+                BudgetItems.Add(new BudgetItem
+                {
+                    Type = "MATERIÁL",
+
+                    // název materiálu
+                    Description = x.MaterialItem!.Name,
+
+                    // měrná jednotka materiálu (ks, m, balení, ...)
+                    Unit = x.MaterialItem?.Unit ?? "",
+
+                    // množství
+                    Quantity = x.Quantity,
+
+                    // výsledná cena řádku
+                    Price = x.Total
+                });
+            }
+        }
+
+        // =========================================================
+        // PROPERTY CHANGED
+        // =========================================================
+        public event PropertyChangedEventHandler? PropertyChanged;
+
+        private void OnPropertyChanged([CallerMemberName] string? name = null)
+            => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+    }
+
+    // =============================================================
+    // ⌨️ RELAY COMMAND — pomocná třída pro klávesové zkratky
+    // =============================================================
+
+    /// <summary>
+    /// Jednoduchá implementace ICommand pro použití v KeyBinding.
+    /// Umožňuje předat lambda funkci jako příkaz bez nutnosti
+    /// vytvářet celou třídu Command pro každou akci zvlášť.
+    /// </summary>
+    public class RelayCommand : System.Windows.Input.ICommand
+    {
+        private readonly Action<object?> _execute;
+
+        public RelayCommand(Action<object?> execute) => _execute = execute;
+
+        // CanExecute = vždy true (příkaz je vždy dostupný)
+        public bool CanExecute(object? parameter) => true;
+
+        public void Execute(object? parameter) => _execute(parameter);
+
+        // Napojení na WPF CommandManager — standardní pattern pro RelayCommand.
+        // CommandManager.RequerySuggested se spustí, když WPF zjistí změnu stavu UI.
+        // add/remove přes CommandManager eliminuje warning CS0067 (event se "používá").
+        public event EventHandler? CanExecuteChanged
+        {
+            add => System.Windows.Input.CommandManager.RequerySuggested += value;
+            remove => System.Windows.Input.CommandManager.RequerySuggested -= value;
+        }
+    }
+}
+
+

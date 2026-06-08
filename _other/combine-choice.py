@@ -37,8 +37,8 @@ selected_files = [
     r"App.xaml",
     r"App.xaml.cs",
     r"AssemblyInfo.cs",
-    r"MainWindows.xaml",
-    r"MainWindows.xaml.cs"
+    r"MainWindow.xaml",
+    r"MainWindow.xaml.cs"
 ]
 
 current_folder = ""
