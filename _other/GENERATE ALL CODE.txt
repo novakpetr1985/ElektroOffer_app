@@ -1,0 +1,150 @@
+POWERSHELL ----------------------------------------------------------------------------------
+
+$root = "D:\_GitHub\ElektroOffer_app"
+$output = Join-Path $root "_other\_SPOJENO.txt"
+
+if (Test-Path $output) { Remove-Item $output }
+
+# 1) Struktura projektu
+$structure = Get-ChildItem -Recurse $root | 
+    Select-Object FullName |
+    ForEach-Object { $_.FullName.Replace($root, "") }
+
+Add-Content $output "Struktura projektu ($root)"
+Add-Content $output "------------------------------------------------------------"
+$structure | Add-Content $output
+Add-Content $output "------------------------------------------------------------`n`n"
+
+# 2) Soubory podle složek
+$files = Get-ChildItem -Recurse $root -Include *.cs, *.xaml, *.md |
+    Where-Object { $_.FullName -notlike "*\_other\*" } |
+    Sort-Object FullName
+
+$currentFolder = ""
+
+foreach ($file in $files) {
+    $relative = $file.FullName.Replace($root, "")
+    $folder = Split-Path $relative
+
+    if ($folder -ne $currentFolder) {
+        Add-Content $output "`n===== SLOŽKA: $folder =====`n"
+        $currentFolder = $folder
+    }
+
+    Add-Content $output "--- Soubor: $($file.Name)"
+    Add-Content $output "--- Cesta: $relative"
+    Add-Content $output "----------------------------------------"
+    Get-Content $file.FullName | Add-Content $output
+    Add-Content $output "`n"
+}
+
+Write-Host "Hotovo – soubory byly spojeny do _other\_SPOJENO.txt"
+
+
+
+
+PYTHON --------------------------------------------------------------------------------------
+
+1) Uložení skriptu
+Otevři Průzkumník souborů.
+
+Přejdi do složky:
+
+Kód
+D:\_GitHub\ElektroOffer_app\_other
+Vytvoř nový soubor:
+
+Kód
+combine.py
+Otevři ho v editoru (Notepad, VS Code…) a vlož do něj Python kód, který jsme připravili.
+
+2) Ověření instalace Pythonu
+Otevři PowerShell a zadej:
+
+Kód
+python --version
+Pokud se zobrazí verze Pythonu, můžeš pokračovat.
+
+3) Spuštění skriptu
+V PowerShellu přejdi do složky _other:
+
+Kód
+cd D:\_GitHub\ElektroOffer_app\_other
+Spusť skript:
+
+Kód
+python combine.py
+4) Výsledek
+Po spuštění se automaticky vytvoří soubor:
+
+Kód
+D:\_GitHub\ElektroOffer_app\_other\_SPOJENO.txt
+Tento soubor obsahuje:
+
+strukturu celého projektu,
+
+soubory seřazené podle složek,
+
+u každého souboru název, relativní cestu a obsah.
+
+5) Hotovo
+Kdykoli chceš aktualizovat výstup, stačí znovu spustit:
+
+Kód
+python combine.py
+Pokud chceš, připravím ti i verzi combine.py přesně na míru, aby byla 100% čistá a přehledná.
+
+
+
+import os
+
+root = r"D:\_GitHub\ElektroOffer_app"
+output_dir = os.path.join(root, "_other")
+output_file = os.path.join(output_dir, "_SPOJENO.txt")
+
+os.makedirs(output_dir, exist_ok=True)
+
+# 1) Struktura projektu
+structure_lines = []
+for path, dirs, files in os.walk(root):
+    rel = path.replace(root, "")
+    structure_lines.append(rel if rel else "/")
+    for f in files:
+        structure_lines.append(os.path.join(rel, f))
+
+with open(output_file, "w", encoding="utf-8") as out:
+    out.write(f"Struktura projektu ({root})\n")
+    out.write("------------------------------------------------------------\n")
+    for line in structure_lines:
+        out.write(line + "\n")
+    out.write("------------------------------------------------------------\n\n")
+
+    # 2) Soubory podle složek
+    all_files = []
+    for path, dirs, files in os.walk(root):
+        for f in files:
+            if f.endswith((".cs", ".xaml", ".md")) and "_other" not in path:
+                all_files.append(os.path.join(path, f))
+
+    all_files.sort()
+
+    current_folder = ""
+
+    for file in all_files:
+        rel = file.replace(root, "")
+        folder = os.path.dirname(rel)
+
+        if folder != current_folder:
+            out.write(f"\n===== SLOŽKA: {folder} =====\n")
+            current_folder = folder
+
+        out.write(f"--- Soubor: {os.path.basename(file)}\n")
+        out.write(f"--- Cesta: {rel}\n")
+        out.write("----------------------------------------\n")
+
+        with open(file, "r", encoding="utf-8") as f:
+            out.write(f.read())
+
+        out.write("\n\n")
+
+print("Hotovo – soubory byly spojeny do _other/_SPOJENO.txt")
