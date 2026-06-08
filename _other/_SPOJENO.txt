@@ -959,6 +959,7 @@ MainWindow.xaml.cs
 \.git\objects\4a
 \.git\objects\4a\2df58db7b897dbd820566cb4da0449ea88fa3a
 \.git\objects\4a\398ec95bd12220004bab9ba2c0c664c1634e61
+\.git\objects\4a\6c2fb70b601479a6e4038581e6007dc7f7b1c9
 \.git\objects\4a\765119afe76a39e221e11808bf75d8db640667
 \.git\objects\4a\a261d477263adb374b1368d891b2d74dbe66ae
 \.git\objects\4a\d82a828aa94cbecf4ea17557072710dede489d
@@ -1294,6 +1295,7 @@ MainWindow.xaml.cs
 \.git\objects\66\d7668ff6ddc2dff0e54e01b470939304c72220
 \.git\objects\66\daf24c3c9b48c47957b9a4162487ec1b343992
 \.git\objects\66\de5325e1d9ea94e7ae77a764ab253dfc677525
+\.git\objects\66\e1ac1493e6963d2b7bffc4a58c38a00a1e68a0
 \.git\objects\66\ef9e5c4ca2b4d2769d77e12f9394bf07bfaec9
 \.git\objects\67
 \.git\objects\67\0ae6150b90a607443b37cc6140711e7b994664
@@ -1412,6 +1414,7 @@ MainWindow.xaml.cs
 \.git\objects\70\252de7508a44488b257067f10d7ae1cf1e95b6
 \.git\objects\70\2f6b759d4050ce6c931345ca8c3c81f1a83ba9
 \.git\objects\70\32879127ba84abead16997339936450c10ece1
+\.git\objects\70\763cb13c0542642173ead94ab0ff9b8902073c
 \.git\objects\70\90f558dc75c426669ba844814c4646e08299e6
 \.git\objects\70\97011c4e4357d15bc0c6b73f8c05dd7553280f
 \.git\objects\70\9857beeef1ec6989ff0d9a824ab1598cb82a1d
@@ -1447,6 +1450,7 @@ MainWindow.xaml.cs
 \.git\objects\72\d79a4660ccc28ed43eedb7c4c9f59856709064
 \.git\objects\72\e0262af859edda7d0b2deaeecbaa841a6cfe3f
 \.git\objects\72\e45859b9e71f706f65c6a100405346b5f877b5
+\.git\objects\72\ec5103147097018ce4bf9bfc0ad807bbdf10da
 \.git\objects\72\f601ff50c40a7b174f48c22453c55708e50a20
 \.git\objects\73
 \.git\objects\73\05396009e9549d98f5d87122696d16650c9119
@@ -1536,6 +1540,7 @@ MainWindow.xaml.cs
 \.git\objects\7a\392b94a6dcc124732158556781f6ed4aa42dad
 \.git\objects\7a\500ad83c2e284cca364a6868bd73553e2f5388
 \.git\objects\7a\78830465c1c6a02e28753fb0037b716bcc4ccc
+\.git\objects\7a\967b0adf91bee7eee377752a311b8efd56085a
 \.git\objects\7a\9a30d43506c5bc41d7992c969961bb472e85a8
 \.git\objects\7a\a923dd3ace11cc9c12a60647c6406002f61f92
 \.git\objects\7a\b308ecefc36d2e90628374a97bffa8e75b7b25
@@ -1615,6 +1620,7 @@ MainWindow.xaml.cs
 \.git\objects\7f\e3bb00ad5dbb45522941cab355f8984e0400b0
 \.git\objects\80
 \.git\objects\80\0f4d73100a5d7ac7bba515db552267cd5dbbca
+\.git\objects\80\1ced430f3551d917da6d1701c651145880d8c5
 \.git\objects\80\34dd4e9975c09eec7f647e47cf5c21ee2a0434
 \.git\objects\80\4e13723918e16d31cb35d9e151e4ee663ea582
 \.git\objects\80\5802c77608fd4483b3b4c87ac02726265aed10
@@ -1891,6 +1897,7 @@ MainWindow.xaml.cs
 \.git\objects\95\42b9d5148c44c32d264a5206e53f9e5468ebdd
 \.git\objects\95\4deb435d90ec212b563e1fbf2f4c78d1a4cb76
 \.git\objects\95\5b4bfecb51b47b5cb98426300974a987919b28
+\.git\objects\95\6227a48c3cefa8dc0dd6af68eaef2a55116783
 \.git\objects\95\9b7103141586db5e8d2cc47efa96c751f5bd12
 \.git\objects\95\a016c332a3af11dd1897486e6c9f65f5f44cc3
 \.git\objects\95\a81f892db4409377370fe9b426449c5433d75f
@@ -1982,6 +1989,7 @@ MainWindow.xaml.cs
 \.git\objects\9c
 \.git\objects\9c\0e01d97f40cad869be4456fe0c3175fcaf709b
 \.git\objects\9c\1a57db0f1df332d84d3f1f1793b1782bcb4d08
+\.git\objects\9c\26dec38bcbaa77564b718ded64caeee87f7736
 \.git\objects\9c\27e7ef308a4e027c628044e5858724e619c191
 \.git\objects\9c\440d860cd6ca3c23be27085e281c9365941a7a
 \.git\objects\9c\5f14a8deedc9dbf7200ea33576b62897c8d51e
@@ -2611,6 +2619,7 @@ MainWindow.xaml.cs
 \.git\objects\d1\87af22636cf41efbc49d5ef3b4a9092a861cdb
 \.git\objects\d1\a3b4213356117170c394369cec582db5a500cf
 \.git\objects\d1\b69f5c1f530b8b5d362dbd8577424038bc4688
+\.git\objects\d1\f04e34f5ba150c0e3a21b70df3b82eee314d94
 \.git\objects\d1\f89acca55abfdaacff9582ddf1872b66b4000b
 \.git\objects\d2
 \.git\objects\d2\0cfa641bd20e32ccb6d35775d90d5bc689d5ed
@@ -2834,6 +2843,7 @@ MainWindow.xaml.cs
 \.git\objects\e5
 \.git\objects\e5\0d5e7159f97e51671213fa79268f8decf7772b
 \.git\objects\e5\29943cae9045c29b9a0a8efb923fe4ff4bd650
+\.git\objects\e5\29debaf4b3e7c3fbf21b3bb7c231b4dd081390
 \.git\objects\e5\55d2901e943853489f96a67b00a9824509d3e2
 \.git\objects\e5\5db9244dcc0063d9372734c2af0cbf50d2ab89
 \.git\objects\e5\718bac9fc8e2b905f9f36ad218e99770d8dfac
@@ -3004,6 +3014,7 @@ MainWindow.xaml.cs
 \.git\objects\f4\aa0070cc9f07849ba14e18d1b6a7bf14b8a72b
 \.git\objects\f4\ba395687f64858f4a01e74d047960aeefb0543
 \.git\objects\f5
+\.git\objects\f5\3b232efe01731f11d9fb2286af44f7668fc72f
 \.git\objects\f5\3da371cb15aadad529e5ddd9b91a3b4e52b694
 \.git\objects\f5\4bd93fc3fdfd3637c64a6c673bd82b178d5a78
 \.git\objects\f5\57bf830c91ef38244527db245bceb9e9164f7e
@@ -3847,6 +3858,7 @@ MainWindow.xaml.cs
 \_other\Goals 2.0.txt
 \_other\new_fetures.txt
 \_other\STAVBY - DB.xlsx
+\_other\_SPOJENO.txt
 \_other\DB-CSV
 \_other\DB-CSV\ALL_CODE-1.1.1
 \_other\DB-CSV\BaseMaterials.csv

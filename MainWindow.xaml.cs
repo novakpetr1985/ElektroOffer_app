@@ -128,13 +128,10 @@ namespace ElektroOffer_app
             using (var db = new AppDbContext())
             {
                 db.Database.EnsureCreated();
-
-                Materials = new ObservableCollection<Material>(db.Materials.ToList());
-
-                Tasks = new ObservableCollection<string>(
-                    db.PriceItems.Select(x => x.Task).Distinct().ToList()
-                );
             }
+
+            // 🔄 SPRÁVNÉ NAČTENÍ DAT PRO WPF
+            LoadCatalogDataFromDb();
 
             for (int i = 0; i < 5; i++)
             {
@@ -148,6 +145,22 @@ namespace ElektroOffer_app
             // Klávesové zkratky pro Save/Load
             // Ctrl+S, Ctrl+Shift+S, Ctrl+O, Ctrl+N
             RegisterKeyboardShortcuts();
+        }
+
+        // =========================================================
+        // 🔄 NAČTENÍ DAT PRO UI (KLÍČOVÁ OPRAVA)
+        // =========================================================
+        private void LoadCatalogDataFromDb()
+        {
+            using var db = new AppDbContext();
+
+            Tasks.Clear();
+            foreach (var task in db.PriceItems.Select(x => x.Task).Distinct().ToList())
+                Tasks.Add(task);
+
+            Materials.Clear();
+            foreach (var mat in db.Materials.ToList())
+                Materials.Add(mat);
         }
 
         // =========================================================
@@ -339,6 +352,10 @@ namespace ElektroOffer_app
 
                 // Uložení všech změn do DB najednou
                 db.SaveChanges();
+
+                // Fix: po importu je nutné znovu načíst katalog a resetovat projekt, aby se správně obnovily reference
+                LoadCatalogDataFromDb();
+                ResetToNewProject();
 
                 // =========================
                 // 🔄 OBNOVENÍ UI Z NOVÉ DB
