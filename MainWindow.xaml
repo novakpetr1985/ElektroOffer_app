@@ -46,18 +46,6 @@
                           InputGestureText="Ctrl+Shift+S"
                           Click="MenuSaveAs_Click"/>
 
-                <Separator/>
-
-                <!-- Import JSON — načte ceník/data z externího JSON souboru -->
-                <MenuItem Header="_Importovat JSON..."
-                          Click="MenuImportJson_Click"/>
-
-                <!-- Export JSON — uloží ceník/data do externího JSON souboru -->
-                <MenuItem Header="_Exportovat JSON..."
-                          Click="MenuExportJson_Click"/>
-
-                <Separator/>
-
                 <!-- ADD-KOMENT: PDF export — implementovat až bude finální struktura dokumentu (sekce zákazníka) -->
                 <!-- ADD-KOMENT: Plánovaná knihovna: QuestPDF — nainstalovat přes NuGet: Install-Package QuestPDF -->
                 <!--
@@ -67,8 +55,6 @@
                 <MenuItem Header="Export PDF (_ceník)"
                           Click="MenuExportPricePdf_Click"/>
                 -->
-
-                <Separator/>
 
                 <!-- Konec — ukončí aplikaci (zeptá se na uložení) -->
                 <MenuItem Header="_Konec"
@@ -124,18 +110,6 @@
                         Margin="2"/>
 
                 <Separator/>
-
-                <!-- Import JSON — načtení dat z externího JSON souboru -->
-                <Button Content="📥 Import JSON"
-                        ToolTip="Importovat data z JSON souboru"
-                        Click="MenuImportJson_Click"
-                        Margin="2"/>
-
-                <!-- Export JSON — uložení dat do externího JSON souboru -->
-                <Button Content="📤 Export JSON"
-                        ToolTip="Exportovat data do JSON souboru"
-                        Click="MenuExportJson_Click"
-                        Margin="2"/>
 
                 <!-- ADD-KOMENT: PDF tlačítka v toolbaru — odkomentovat až bude PDF export implementován -->
                 <!--
