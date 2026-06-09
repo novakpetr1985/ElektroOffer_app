@@ -50,6 +50,7 @@ README.md
 \.git\logs\refs\heads\feature\1.2.0-CLEAR-CODE-DOCUMENTATION
 \.git\logs\refs\heads\feature\1.2.0-ends-menu
 \.git\logs\refs\heads\feature\1.2.1-logo-a-v-aplikace
+\.git\logs\refs\heads\feature\1.4.0-documentation
 \.git\logs\refs\heads\feature\add-column
 \.git\logs\refs\heads\feature\change-alignement
 \.git\logs\refs\heads\feature\DB-new
@@ -83,6 +84,8 @@ README.md
 \.git\logs\refs\remotes\origin\feature\1.2.0-CLEAR-CODE-DOCUMENTATION
 \.git\logs\refs\remotes\origin\feature\1.2.1-logo-a-v-aplikace
 \.git\logs\refs\remotes\origin\feature\DB-new-code
+\.git\logs\refs\remotes\origin\feautre
+\.git\logs\refs\remotes\origin\feautre\1.3.0-CLEAN-CODE
 \.git\logs\refs\remotes\origin\hotfix
 \.git\logs\refs\remotes\origin\hotfix\1.0.3-unit-fix
 \.git\logs\refs\remotes\origin\release
@@ -96,6 +99,7 @@ README.md
 \.git\objects\00\19e550a983604285970b868ee562f968baf4d7
 \.git\objects\00\2435812c49391acdd64fa022d42d719ac25716
 \.git\objects\00\3dc39b7a4719fb90b445adf1747176f3d5e6b8
+\.git\objects\00\67315bf417d066b9d1b7fe45960d44a3df08f8
 \.git\objects\00\8ec4cbb63a5e76b7e263c5cc6064b530be5dd5
 \.git\objects\00\9c95fa3049db3e2a01b379aca708889523fccb
 \.git\objects\00\bee3661817425c6e7eb20d6e63e54aa9077b13
@@ -129,6 +133,7 @@ README.md
 \.git\objects\03\23cf70a6125e9110f5680a5cfb6150d928b5c3
 \.git\objects\03\2a085ad5bc049eabd43d7dc9528a367d637ca3
 \.git\objects\03\503b470326d66b827bf8899aa6a41ffb0c8164
+\.git\objects\03\653dca7dc5e7819b05a20755f61d804138848d
 \.git\objects\03\6591f731f592b14e037c82e79667b8c59608ea
 \.git\objects\03\6e931ec5d1660768e6a2c792794fecd06f5b52
 \.git\objects\03\774f2868277b557bd4121b9ffd5ff51951977e
@@ -223,6 +228,7 @@ README.md
 \.git\objects\0a
 \.git\objects\0a\041525d4b3a1236727d8c8c51cdf4fe32ef19f
 \.git\objects\0a\04bbf2328986964fa6f888d58c18374b5407c8
+\.git\objects\0a\2adf39ea91a0db822ca9398af0752366f802e1
 \.git\objects\0a\33d38b5210ccb08cfd98f135077bd1860a02c5
 \.git\objects\0a\39d5d6bfdf8df1801a0d88f0bfd25a340a6d80
 \.git\objects\0a\5f505482be1f3d07fdc1493d527f1004a760f9
@@ -237,6 +243,7 @@ README.md
 \.git\objects\0b\3523e50b4135a6b23cd99c19dd1f19ffa08d65
 \.git\objects\0b\35a9d34f06a6037e6958541ab47b2575377a76
 \.git\objects\0b\3dc21599668c7f2e4bb737b65d3daaf80a1ad0
+\.git\objects\0b\4a85ce2dc9008d98475cd2400c9434f286eb2f
 \.git\objects\0b\625aedcb023f466a59c26b59f0da6735e9be28
 \.git\objects\0b\84279274ea00cb58d26145bd13e8ff78490fd9
 \.git\objects\0b\86fed260c35d2ff661a38b4ec6631203c0249d
@@ -271,6 +278,7 @@ README.md
 \.git\objects\0e\bd164eaab7b6563ca2328e9a7add982271c646
 \.git\objects\0e\c3222bffe91bb885c78816908a9c1a1874730e
 \.git\objects\0e\db4233b8d0145dd6be43177121a347a7017c6a
+\.git\objects\0e\ed4f43b4c90f6748939ffcbcf0edf04344a043
 \.git\objects\0e\f63b5768bb027e82e550819b35ef665a72497b
 \.git\objects\0f
 \.git\objects\0f\1097ef4a87e9efa260dcc6d6b9ce55140202db
@@ -346,6 +354,7 @@ README.md
 \.git\objects\14\a5df91c3851c26579232d8d6010fd83eb74d53
 \.git\objects\14\a61b90ec239de3cad75e476db52cd240a86327
 \.git\objects\14\afa0d389d66ae356d4b4f4a9aa9672001cc0ae
+\.git\objects\14\d48c7ebb6dc3e7fda9ee2b3ffb211a61dfcefb
 \.git\objects\14\e5c57c14d6c0f9a99e658886b784b7cecc8498
 \.git\objects\14\ea641f35ed567897184a4c18b320cc628dc20e
 \.git\objects\14\f1b0e2cba1afc07eeef460a135736c25734106
@@ -389,6 +398,7 @@ README.md
 \.git\objects\17\404b6bc3e5c0ad6673a209faa1c86e60ff4b53
 \.git\objects\17\480453ecdfcdf1c49966b4dbd6a0e60e5720e2
 \.git\objects\17\59297bfd5bd81183b46fec027a5df0a5bfdab5
+\.git\objects\17\619fca66cf5bac64dacd35ac85c9cf6d58814e
 \.git\objects\17\66cbe413625767685956894f5ec3f21fc90b84
 \.git\objects\17\7b90bb9f3b32270e11334a09e702c780b8e605
 \.git\objects\17\841cc889dd04d14099c38d0de90d628eae7274
@@ -496,6 +506,7 @@ README.md
 \.git\objects\1f\a7e33e8f53be7201b2e658e68e9060d40731de
 \.git\objects\1f\b38dff721ee8af61b279a7f8674dd4c8efe89b
 \.git\objects\1f\d10f61d1d56b2cba12cd06476ddcaf3c567cc8
+\.git\objects\1f\d43a9d7d040224a9a5d9b5155b2cc601a029a0
 \.git\objects\1f\dbd9ccd22b963d7aa9197526d2afe0e7f5728a
 \.git\objects\20
 \.git\objects\20\332a86ad8a1b73280607c8a2583e02eb47b9a8
@@ -842,6 +853,7 @@ README.md
 \.git\objects\38\195dece170ad6f1c73f7b281cb11bab5b699b6
 \.git\objects\38\1c9133235f3d95f980a5697f40ebad2d3532ac
 \.git\objects\38\209f8e4a7b640145d18ab3f846efd3400d7689
+\.git\objects\38\486c17553dd2d9fd65166b12a86bfd0651336d
 \.git\objects\38\5ca63239db49feff083110f45e484c1d84d13a
 \.git\objects\38\5fb5a92b041a2bb961e7e1408d13d348e18b55
 \.git\objects\38\61bb4043543faaa496e80ab1bedd81eb9ef789
@@ -940,10 +952,12 @@ README.md
 \.git\objects\3e\b6f01aac5db10c582a4a36aa23363ecb952fa8
 \.git\objects\3e\f6049ebc9ad3ef046d7929905a4972c0109296
 \.git\objects\3f
+\.git\objects\3f\0ef3215b4cb934fa7da853bf9e4623a475a9d9
 \.git\objects\3f\34039d8990307c50e5d18644ad87ffe0bcf5d9
 \.git\objects\3f\3615216df9ebe3d7de20c09bae38087e2ea93e
 \.git\objects\3f\378ac1dbcdb6a47ad57ae0aeab879fa7dac605
 \.git\objects\3f\3b6c8a45dba258a839456b1168fff32a07779f
+\.git\objects\3f\57445be140c5d1e80c60b7046a952beb1be228
 \.git\objects\3f\5add15ce8307f5c711f68deb0c16708d1cb5ad
 \.git\objects\3f\6c0e12db846c3e1e5672b303edf47e6ec8061e
 \.git\objects\3f\7a5c1e7e54145b88af27e0800c04d2961f503e
@@ -1036,6 +1050,7 @@ README.md
 \.git\objects\45\d56d498536fe52e29513ae70b11e51890a7e21
 \.git\objects\45\d6858deecbce82d784a81500d04bd804dc0074
 \.git\objects\45\eb191ebe26150e27ba460f64143355ca7a88c2
+\.git\objects\45\f092986567ddd097dd25a82523044e8908eb13
 \.git\objects\45\f3e9d1b56993cc424aaa3b893cc8eb9fdfbde1
 \.git\objects\45\f5bd03172f976051febb616a56d14afab13afa
 \.git\objects\46
@@ -1050,6 +1065,7 @@ README.md
 \.git\objects\46\72203d57d260b5c1e177cf40a703ace0afa5bc
 \.git\objects\46\7e83875392e408aa9515cae5b5b067e45ef518
 \.git\objects\46\9b6d9670b7411842ad391a90ae7226d767683b
+\.git\objects\46\aa43cac2ccd5d52719667964238a1c6a8a69e0
 \.git\objects\46\bc02e6e0c41aff57be23b15106faf5f9b7f127
 \.git\objects\46\cd57f4b4a07b3af8de33a3403ddf84e2ae6530
 \.git\objects\46\e1a86d40eb9287b56df562bfe8327f451859a3
@@ -1105,6 +1121,7 @@ README.md
 \.git\objects\4b\3be6ff1a49fe3daff9c4950c1902385e812f1c
 \.git\objects\4b\3f4be05cb5a5c6681b505d0bce83042dfe09f2
 \.git\objects\4b\455c134fee9758ee76d66a9189d962094f255b
+\.git\objects\4b\6a5764bf98a41fb1e157285d426f8a8b30af27
 \.git\objects\4b\89e469d474f86209d9289d91cb008b96c1a6e9
 \.git\objects\4b\9615a6e3c936c047dc206adc8c5fb9789af759
 \.git\objects\4b\c96846a98b5f774828844cac2ba5c3ee16cc71
@@ -1115,6 +1132,7 @@ README.md
 \.git\objects\4b\fb78f3862a79a62f73b72e03dd86acc0ff17a2
 \.git\objects\4c
 \.git\objects\4c\0587ef0c0b5c3afeb294ffdbddf34b647c2208
+\.git\objects\4c\0c09063804e1f7c6e747ee9ad321bb2dee6932
 \.git\objects\4c\0e9a2484e0887ac66f1b39d8d58f5b51358dcc
 \.git\objects\4c\3e332a55b6d49a359b644bf91b13bc299cd5be
 \.git\objects\4c\5316a7e15ef7c7a8e3c4069c0e3f987bf025c7
@@ -1123,6 +1141,8 @@ README.md
 \.git\objects\4c\919f912a157cc6a5c10c03ebb70ca82583cbca
 \.git\objects\4c\c4362f133247761533f6c09ba8d332bcb1868a
 \.git\objects\4c\c9e56221e339507eaf36ba91cd21b6e4315b43
+\.git\objects\4c\dc82128b234280b6e4553aeead6862e74f7eda
+\.git\objects\4c\e1f40ff85b50f53d7b6017eaf79abacbde9a77
 \.git\objects\4c\f0a38449ac1c147d0785d9607f1d7449214767
 \.git\objects\4c\f528e3a0c1e1792b847855606f3b32445a809e
 \.git\objects\4d
@@ -1212,6 +1232,7 @@ README.md
 \.git\objects\52\aebbe432f043aa29345591c20323fd2133e012
 \.git\objects\52\b891da1ea66b0bf50be746d1302f858683d674
 \.git\objects\52\c1f952794e8c59d886239297ed4fc85b148f7e
+\.git\objects\52\c84a917f037f5d076feb679f7dd7d58e839b6e
 \.git\objects\52\ddf617b108a5d0a728623cbb65cf687798e90e
 \.git\objects\52\e7d4b8bdb3e7e27922432ea01f35b2b886f9f0
 \.git\objects\52\ed2f7b7d9f81280583e81ac31a4ed6344e11f2
@@ -1243,6 +1264,7 @@ README.md
 \.git\objects\54\19086c1a6b8fae370f1ee1fa5e5c37b956e205
 \.git\objects\54\2dae8556d31e2cb286e1b0c6c737fa4566cbc1
 \.git\objects\54\324330fcc92e20e938cb0ea7f98fc1bff337d4
+\.git\objects\54\34e2dbb11d43a7af67994e83fa39b104fbb99b
 \.git\objects\54\3fededb34cd7cc48668219b8cdec4334f7f5ee
 \.git\objects\54\6a5d48e78a317891208b29e1667fe00a4833e7
 \.git\objects\54\899059e440e197e2e5b45cb19ca0083db74407
@@ -1346,6 +1368,7 @@ README.md
 \.git\objects\5c\74ea9b3ee5b4bb4db6e7f015a45d54e8ad6305
 \.git\objects\5c\77839c45061471014c548ecca66adb8822d680
 \.git\objects\5c\7c496c0a9eac0c4e25edae421c25012ab09be1
+\.git\objects\5c\f5ea08e9dca4d72a87ad605a36eaf2c21e733b
 \.git\objects\5d
 \.git\objects\5d\213be1fc27bb7d8db32b01696bc55cbc6b32e8
 \.git\objects\5d\2a099b5890bf5bc5f9535e32d4f7e101f6560a
@@ -1373,6 +1396,7 @@ README.md
 \.git\objects\5e\9ae3e040880e7cbdc2ee34561398530b8f298d
 \.git\objects\5e\e865be54d6a6568bdbe00884db74a715b6da8b
 \.git\objects\5f
+\.git\objects\5f\1faff693ff1139775e170f0d7b74a74d12d9fc
 \.git\objects\5f\2b45d60a8264ad9fddcffab7a9cc42f27a7343
 \.git\objects\5f\301d0f1dcb433a554877f2fbf8a4b9a800fd38
 \.git\objects\5f\421463493f6f91a1af8688d48eac8483aa86f9
@@ -1446,6 +1470,7 @@ README.md
 \.git\objects\63\fca970771ab4a3db4f411d51a9bde57ee33ab6
 \.git\objects\64
 \.git\objects\64\229e8ac13cf4af73d34ca2dc34971bd63761d6
+\.git\objects\64\2ab5a7b6a46d1942ff7ffbec49dd9a152f71d5
 \.git\objects\64\2b7594b07279f10dea5e221d2859c04dbaa715
 \.git\objects\64\4a2cb71b3926643c6910317ccedad0680972ca
 \.git\objects\64\96ea210e39b5e8aee06d97a21fd9dc738705f0
@@ -1464,9 +1489,11 @@ README.md
 \.git\objects\65\a783a7e2df2a800ad71435f2992e25a47d44a9
 \.git\objects\65\bff193dcd4ef26a006b3e63a1d0bc614f6e05a
 \.git\objects\65\cbd1d3a41de8947101d1eacf4377afad0d95ed
+\.git\objects\65\cd60f119a55e6d40761176b9ac4e930c77ba56
 \.git\objects\65\f24ab5e89ecd25afd23ed3becfc0aa11864448
 \.git\objects\66
 \.git\objects\66\12c785b48a07fe472e67da8ce1ae32335b60f9
+\.git\objects\66\132f1e89cad6e215177e9f67305836a1cc9d86
 \.git\objects\66\2ba6ad01c5ca57ac6747273dab4bc770c8479f
 \.git\objects\66\400e6d69dc64f8687ad2376ac3d0120dcdc22b
 \.git\objects\66\705cddeaf93b2aa4e0a3a16b1ddac0d7a106b8
@@ -1514,6 +1541,7 @@ README.md
 \.git\objects\68\fdddda224932790b4604735db57c32dcc9c5bb
 \.git\objects\68\ff897408d4648ac6f5a36a47dc771970f58e4c
 \.git\objects\69
+\.git\objects\69\00b1de78ee6aa1055e60337622f9a800d4242a
 \.git\objects\69\30c0d2d9c1848e80e3923e53668ca3e0d57fb7
 \.git\objects\69\5a1f7022b42bc1748cb219fe721cf16b57bd0a
 \.git\objects\69\61c5204842ea23c9f00575438c433e3adb0522
@@ -1589,6 +1617,7 @@ README.md
 \.git\objects\6e\814b2f38a34cfa6a9192e54bfec099278430b3
 \.git\objects\6e\9cfbc6b9ecffe32b30290bf9daa39cf28feb79
 \.git\objects\6e\dc9bbd9ac0cf83d0870a817788fa0d185c402e
+\.git\objects\6e\fbb76c0171bf7807d750db40afe7988d629b3d
 \.git\objects\6f
 \.git\objects\6f\1eb14797b88581db4f847603fd00eaa0e2f467
 \.git\objects\6f\2299aca71cf9b884b1160dd9332549ef15ad09
@@ -1649,6 +1678,7 @@ README.md
 \.git\objects\72\bc862593fb627e7fe5b0a34eeea4a39e5ce72e
 \.git\objects\72\bcecdf74ce5f54347dd80aeabe89bafcd1b3de
 \.git\objects\72\d79a4660ccc28ed43eedb7c4c9f59856709064
+\.git\objects\72\dd30d0e183667cf3b140263cd4dd26d3f29357
 \.git\objects\72\dd82322e92dff8451244aa829104ceac0a2677
 \.git\objects\72\dd932221e8e2052b37188a0a1f8218b5fd5ab4
 \.git\objects\72\e0262af859edda7d0b2deaeecbaa841a6cfe3f
@@ -1729,6 +1759,7 @@ README.md
 \.git\objects\78\1804e005c5f6e95ad3edddc77e53a69bb44fa4
 \.git\objects\78\49350047dc9bbf402de7b373bbd0e0caa89838
 \.git\objects\78\5f384544f36e0cf244b4b6a01cac193064e490
+\.git\objects\78\757a334c103c9db3dcff036c4ee1e4696e8438
 \.git\objects\78\7bce05ab93556f444710cdd3e1cb72eb768455
 \.git\objects\78\88e110bf8e5aeb97c2e7a4441a9d8c84515801
 \.git\objects\78\8cdbaff6d1eec09dd40bd2f5d55e0e39ea61db
@@ -1791,6 +1822,7 @@ README.md
 \.git\objects\7c\8bd04e34e5efd60cd6d98c68bf13643b8c674a
 \.git\objects\7c\96aa2045eb5ba9cf3877b9834685e9629f353b
 \.git\objects\7c\a1151c9f44ddcdbd2cb03e92fce62e999f7602
+\.git\objects\7c\a2fb5ef7eeb3cd4b09130ed4cf63fa119faef9
 \.git\objects\7c\a351e87e074db769e982b22c70cafa1c5cfdd3
 \.git\objects\7c\a35a795de01ac34d68fc6a7a77a0051c066917
 \.git\objects\7c\bc543a8c4a3e9aaab338d82105f35a1b25c512
@@ -1859,6 +1891,7 @@ README.md
 \.git\objects\81\256cd9837ff1725cd078c56006cc0178db28ac
 \.git\objects\81\44e10328bc8d7f7e8cec14fb9d65c4d8859357
 \.git\objects\81\528562a21c594a1a223a59457f6e980305c3de
+\.git\objects\81\55c3ddc3db7016dac11963b9883f007d82c6b0
 \.git\objects\81\5c22d0f7e507444cabb1fba0c8c37c39a35907
 \.git\objects\81\604ea36a5568123e03c66d296e03758d10acd5
 \.git\objects\81\87655dd179ddf1774525401a63ce2864832ef2
@@ -1905,6 +1938,7 @@ README.md
 \.git\objects\84\21bf6762d51e32852bad17e866fcbe04b4dde2
 \.git\objects\84\361f1c4088663d61ac20790222ad3060e7c13e
 \.git\objects\84\46ff6fbd0d9284800102cd92f3ca30635f9714
+\.git\objects\84\4c06dc610280ebdc7cfe38e561e4a50d3622c8
 \.git\objects\84\5a1c01c81e75bfcbdf067c536823736d5ac16f
 \.git\objects\84\5b0399f383df4dd40b5378394e478301455e9f
 \.git\objects\84\ad38c1c2c78f24d56926d29bbe814f9395cd32
@@ -1956,6 +1990,7 @@ README.md
 \.git\objects\87\ea70b38e09d8fb213e270f5926195bec79db91
 \.git\objects\87\eb35caf74581a6438d01dc42044032aee618a0
 \.git\objects\88
+\.git\objects\88\00e3301d50a74a32c812108ad8bc90b61dfd38
 \.git\objects\88\0807f3b8092a258eb0c6d11dd155e9412ec396
 \.git\objects\88\08823e7b7d4a24a59bbf605b1e090f5d2adfed
 \.git\objects\88\21b3a88b87db19af5aabcbe5e49f6da5269691
@@ -2012,6 +2047,7 @@ README.md
 \.git\objects\8b\6468f8316aaa32396b49079902652a0d8e33c4
 \.git\objects\8b\680de5aae073b23976f496f6ab9c3b5d5a94e9
 \.git\objects\8b\7219a845280deea462d41d9018a35e77f62fb7
+\.git\objects\8b\845a6d30d2d1ac2376245b9530a1dd90ec256a
 \.git\objects\8b\9df11fad073bfefe0651030ba25ad51863d559
 \.git\objects\8b\9f7ce012a53d3a6d65043e7b705e68ce805dd0
 \.git\objects\8b\b7cd657d3a711c2a5ac30e2363df3d878530b2
@@ -2062,6 +2098,7 @@ README.md
 \.git\objects\8e\f794d6ffa9577aff4e6fafdd193903502b0bb1
 \.git\objects\8e\febd7607842d80aa7cb2ca6b19d1166a823ac0
 \.git\objects\8f
+\.git\objects\8f\0333d63b7e29c4e6c8c2fd95b939a754bc3e01
 \.git\objects\8f\28ab438657a7682fad78a4a8e5332a9111410c
 \.git\objects\8f\3e8b91cef97925ac2e36347c7bc71236ef025b
 \.git\objects\8f\4a18c3aa1fe3f2a37a2ca131a96d9075a06980
@@ -2116,6 +2153,7 @@ README.md
 \.git\objects\92\5b1351bcda9f1244c4634843cb5f994a6b5008
 \.git\objects\92\67fae72290f718806e75fde469604b4e1b2632
 \.git\objects\92\93a8ab0eb72cb465b52a6a09d2df4f36f835d9
+\.git\objects\92\a80375a642481dd73cb4ad7417414e8c0c965d
 \.git\objects\92\d6fe5b3e8155353b8a374689523bf172e9e6d9
 \.git\objects\92\eb0f9474250d46c1a1192bb25f87704092b7cd
 \.git\objects\92\f0cae44e2eefe2ec47a601a4a139ce50a5d576
@@ -2146,6 +2184,7 @@ README.md
 \.git\objects\94\65d34f8fafef5e3d3f12744ffce7c0596bbaa9
 \.git\objects\94\67275f80ac69776e6e4bf8c7625fe745f3379f
 \.git\objects\94\ba15f1de0d14b2eb66a69c99a5465c4be8e12d
+\.git\objects\94\f5f74db78bb86df5228715bf9c32c663de9d39
 \.git\objects\94\f61d5f0e930ccd5cfc9ca6e1a7c041b9026885
 \.git\objects\94\f67a920ff6a37c7caf9391537df08e06a55da2
 \.git\objects\95
@@ -2163,6 +2202,7 @@ README.md
 \.git\objects\95\c0111ed4e2f9e308c4ba64c30d19c81a8a07ac
 \.git\objects\95\cd94ee6875978d9c62953cf45c7dad51f8dc29
 \.git\objects\95\cfb59981e4573370e70b0fe1ef6480ae9c1ccd
+\.git\objects\95\d8756fdd405268af381fc042492d6340d2219c
 \.git\objects\95\e6773fdf6c9f4295837887162aaf9fd4499ff5
 \.git\objects\95\e9d208b79fef602bc2742d314aca02eb01c4ca
 \.git\objects\96
@@ -2219,6 +2259,7 @@ README.md
 \.git\objects\99\efd2001a8a9e0fec8137cb12369a896a642f91
 \.git\objects\99\f2fdc686319134115189171dcdd27ea46fd989
 \.git\objects\9a
+\.git\objects\9a\00923c7355ca2709597c83e5e0a31dd8d8b42a
 \.git\objects\9a\0223976610968b323c4540ba2028cc4b2d0454
 \.git\objects\9a\24727390128940e3cae12b47a429db6be87e53
 \.git\objects\9a\5a9d11133a635e61f613ae798608ed021265e7
@@ -2238,6 +2279,7 @@ README.md
 \.git\objects\9b\0e0314800c6974804dbe3eaa0c942640565678
 \.git\objects\9b\2428d5eda027625dc82f2547d2af9f560785d1
 \.git\objects\9b\2b916138dd13bf7d19c023532cc197adbe5ff0
+\.git\objects\9b\4f485d2625204e9c0958f14b4e99e77cd20747
 \.git\objects\9b\517365b35ff7fa2e748ee2e8be443896e6dce8
 \.git\objects\9b\5510add86bfa3ac031c4842785b41d084c9153
 \.git\objects\9b\5f4b0f87d57dcea5e9d0cac7a3a510d78c09c6
@@ -2377,12 +2419,14 @@ README.md
 \.git\objects\a3\efe7c40b1213d7492e316b071e97aeb858f8e7
 \.git\objects\a4
 \.git\objects\a4\22c03db9276011dcba20d8c63ac1ef128ae0a6
+\.git\objects\a4\2b275fc33eefeb263b3b8185241a5e54b42217
 \.git\objects\a4\48ac473039eb1d2dd90b27c05b28dec4db7cbd
 \.git\objects\a4\6ea0448191f1b94f744ad8cabb740e70a82f52
 \.git\objects\a4\89b523e75b3d43f75c1595ebc3917c8476b993
 \.git\objects\a4\9cfab4d74fcbf4456f7886ab9310cecd0a693e
 \.git\objects\a4\9d063fb26ef5ec744a06ddb5bc317b3fce72e6
 \.git\objects\a4\a4b77223c763cf5fad3fe72b4e15743d309bb8
+\.git\objects\a4\b3028892a6249617c08f2697d2350a585de679
 \.git\objects\a4\b56b864d7aac562c43c75fd4541fd2dede90c9
 \.git\objects\a4\b58bf270928776bc7f0b2deb55c4bb84383323
 \.git\objects\a4\e2ffc0952ef1b9107ed7eaef0629a0b7122bf0
@@ -2394,6 +2438,7 @@ README.md
 \.git\objects\a5\19da4e041662f1d010b0a13fa521c27f8bfe3c
 \.git\objects\a5\3d632a30802c4afe37d0c6d2c18f8f1bf3c5fa
 \.git\objects\a5\4b796792cafd4eaf5dcf6165e4410f3941cc54
+\.git\objects\a5\88143eeef716a85573a4409a4fcdb947969b37
 \.git\objects\a5\8bcae07ddb5fb6b06bd0ca124940f0ba72435f
 \.git\objects\a5\a4361029644cb5a1b085ff84dc676d9cafeceb
 \.git\objects\a5\a9690e465ac72aa31612255c01c633f06e6f6f
@@ -2431,6 +2476,7 @@ README.md
 \.git\objects\a7\a4ed07ca290c056275a5bc8e7ddc1abe804852
 \.git\objects\a7\ade7b685cf8394ffefc5f7e032fd9147e926de
 \.git\objects\a7\bf425f91b9f6dbba95db969656c1875a34352c
+\.git\objects\a7\bfdaa032510e03b903c232ecbb8530f0aa46b0
 \.git\objects\a7\cb6c43efad3a68c0fd9a740a9f8af58bd03f0b
 \.git\objects\a7\d807c525d92947cebd10202ef8ba63fe261ebe
 \.git\objects\a7\e2234e6e626416e7e3bac897d60e40f6f4ebd4
@@ -2485,6 +2531,7 @@ README.md
 \.git\objects\ac\42d4813090e4aa9adf9fa2fbe9b4a07e3c14ff
 \.git\objects\ac\4fd5f59403986e8fa09bc02d51d33a2d2fc7b7
 \.git\objects\ac\931c04fb52151a1fe97647401e658ed4ebceae
+\.git\objects\ac\b6d925fece7f64bc84013c2d3dd2f26b31bef5
 \.git\objects\ac\bb2a2051de3f275ed4681a622eb01e07bf19d2
 \.git\objects\ac\dbd8cab5f42fc7a0e036baf57b3974e6d855e9
 \.git\objects\ac\e7f9455c24a5a079c168a2fb6c608feb83c9ab
@@ -2529,6 +2576,7 @@ README.md
 \.git\objects\af\ef1c4621646d04529c8b60ca353d4469f57cab
 \.git\objects\b0
 \.git\objects\b0\02a18382487c22b16e45588d7547a3cbaa1fd6
+\.git\objects\b0\04510391c8b0819356c59009b559f3b64f70f5
 \.git\objects\b0\2bf80de7ad21b49aafe1e9540de472c34a46e2
 \.git\objects\b0\3348b2cb1133fbe7bd213bb8be25f7815c9c10
 \.git\objects\b0\4a4f8a2ef75b8e8d77e09a09f4e69f47e16cda
@@ -2631,6 +2679,7 @@ README.md
 \.git\objects\b7\9ffa2e6fb94bb9e751cd99b35f18fff8b99efb
 \.git\objects\b7\bf9b3168f0f016c529ea2ec312f72e88a13a54
 \.git\objects\b7\bfb03991bffa19a35a7849275afc3ac65718f8
+\.git\objects\b7\c44fb4e1c17c4f55d32319f85ae1da5a6cd5f2
 \.git\objects\b7\dfc21bf94b027ec66a570514520baa7d404e88
 \.git\objects\b8
 \.git\objects\b8\07c268831db0efb34a8f5e05914c48b521e4ba
@@ -2720,6 +2769,7 @@ README.md
 \.git\objects\bd\8388825c29a8695e4626c267577aa6053c6221
 \.git\objects\bd\8db3f7a6c5ed0624941128b1f3c97f95688b3c
 \.git\objects\bd\980ed5f9008d91eb81d74a6e09eb0c9f187863
+\.git\objects\bd\ab3077a01d8842a544508dff3f5bf2afeed6fb
 \.git\objects\bd\f8b230263e5d86dcb4ea871062c343a2a27cb8
 \.git\objects\be
 \.git\objects\be\00d5c8152e33d57d7e1c6a5ac663c623881d37
@@ -2728,6 +2778,7 @@ README.md
 \.git\objects\be\54c920abf54277b84cf3259815b54ad92e19ed
 \.git\objects\be\5cd8280b3820288ca6ca8887b7f4c41e8e6cc6
 \.git\objects\be\7d55a44d3806b762d703d7f612bc78bf6d3133
+\.git\objects\be\80ac3035a7738c361d3c10eafbfcc600aa83e5
 \.git\objects\be\83f42b417a746853b1c5b50c5d9689abed309d
 \.git\objects\be\9a5c3bfaef8b533b637c141b68385e1be9646e
 \.git\objects\be\c28017156eac003200785f8b33c8322a77bebf
@@ -2770,6 +2821,7 @@ README.md
 \.git\objects\c1\091a3b3f58fe37af92dc66179267b1e47a52cc
 \.git\objects\c1\2448f4ecc25770aa2e9350b913341ab77b7c92
 \.git\objects\c1\760e0c886010cefba49465b107e0e6cbc7504f
+\.git\objects\c1\7d680904e858964868e27566b20927c53d53dc
 \.git\objects\c1\8c2f203bf2ae3c58e8908c6f46895afe09782f
 \.git\objects\c1\8e812aaabbc60922d62b8e87d27646ebf91465
 \.git\objects\c1\9121e4882c41ba6b7111acd770d23004304374
@@ -2792,6 +2844,7 @@ README.md
 \.git\objects\c3\253d7f018c81bf7d23e6e2c6c6306ad2da2916
 \.git\objects\c3\30085ef1c9a8d5fa2f9864923b1d9fe6924fd7
 \.git\objects\c3\c4c3187063665011bbd5998ff74554ef84905c
+\.git\objects\c3\d3b16a72350c951bb4f2b1ae767b7124dd0cea
 \.git\objects\c4
 \.git\objects\c4\00e89b1b0a8a24515eca276ee177da3a54ead6
 \.git\objects\c4\03b3fcd21a6d41c7b9befe31e9f218e2e40091
@@ -2830,6 +2883,7 @@ README.md
 \.git\objects\c6\39b6e9ac9d5bc8bed5232e9ad10cbb14435f34
 \.git\objects\c6\4291766a3bcbe95ed521785ab7fbb74f902f6f
 \.git\objects\c6\490cc7fccbb5b5376bb7ae613ac2872d266397
+\.git\objects\c6\507f7235db17f2906072912b381b90e1527e87
 \.git\objects\c6\57895385e6981ec43f9d39aef8eec5587bd0f4
 \.git\objects\c6\590ea431f7d545280a5ab9c8aa74ea9ea96eb9
 \.git\objects\c6\70b8176d7b3144494573fb1081eda216566988
@@ -2920,6 +2974,7 @@ README.md
 \.git\objects\cc\283b0784f76dc1d7acb97ebc19d78c3f7dbaf9
 \.git\objects\cc\2ac4dfabc5413cd18cb68a47938625663545ab
 \.git\objects\cc\33c61f57ec661f277e4e62e56ec9900baa4d98
+\.git\objects\cc\62d7d2ee35dcaa6a1dbbbf2bab5b56d412fbd6
 \.git\objects\cc\8ea39a3686491f933acbdf1cd992e971385734
 \.git\objects\cc\9b8f2d302b1ad96c3394715be2726876b5d253
 \.git\objects\cc\b1bbcfb4dca02f87593ee6ad49d90eefe50ec8
@@ -2938,6 +2993,7 @@ README.md
 \.git\objects\ce
 \.git\objects\ce\114ffdf43f02e535c224bf8d6c1bd9dd74dd37
 \.git\objects\ce\376bd3e6e5752f49b32dc9438df938d4c134ce
+\.git\objects\ce\43e87d10fa3e68d8dd68722a65bd55d3cc9267
 \.git\objects\ce\5ddd6d7cc0253b6684235606d4ddb363b12db7
 \.git\objects\ce\a1bc5de32a0b3709c40b7a057e96d8cb21754e
 \.git\objects\ce\b138922da45e8efc233b3dc7218761125b077b
@@ -2979,6 +3035,7 @@ README.md
 \.git\objects\d1\4fc86c85a74e155106f45cc702706e2ec67d6b
 \.git\objects\d1\53286002039393649a51c6d16ac0912c9cffd6
 \.git\objects\d1\5f26d2ae37c36f83269b0356ab6e2c0fe17cf4
+\.git\objects\d1\6a48c32295d6f23449ea8d89cae3ffa93c460e
 \.git\objects\d1\7bd73d890628b4ae0109e5ac10b5523b3713ec
 \.git\objects\d1\87af22636cf41efbc49d5ef3b4a9092a861cdb
 \.git\objects\d1\a3b4213356117170c394369cec582db5a500cf
@@ -2988,6 +3045,7 @@ README.md
 \.git\objects\d1\f89acca55abfdaacff9582ddf1872b66b4000b
 \.git\objects\d2
 \.git\objects\d2\0cfa641bd20e32ccb6d35775d90d5bc689d5ed
+\.git\objects\d2\0e83aee5f9547678deb9a727f77d74990b6047
 \.git\objects\d2\1016905ffc31b457e5347f9b22a6bd50cf9375
 \.git\objects\d2\1ead1d4da0277fafd05b807299df007d23bab0
 \.git\objects\d2\4c35816cd84c1729f72b646554f70aedffd1e8
@@ -3010,6 +3068,7 @@ README.md
 \.git\objects\d4
 \.git\objects\d4\1a928d4cdd87b7200129c7cc1e73f3f04d23af
 \.git\objects\d4\2e6e1921200dbd5548a8ab5b72886b17f04e8d
+\.git\objects\d4\3085f507ade531b2ac78cfee0b1c7cbb1da1f6
 \.git\objects\d4\44ea01094b4818ee14c534a22b96e131d3be67
 \.git\objects\d4\5c1d346ec9807773c5f4a4fb61fc6e80ffcbef
 \.git\objects\d4\6434297fbb7dbee859a276ee85db4371fb690d
@@ -3026,6 +3085,7 @@ README.md
 \.git\objects\d5\12037560125adb6283d9b27a3ee19a9defaa20
 \.git\objects\d5\187caaa978e77dca075c5f7720b5c420be64f6
 \.git\objects\d5\2083c4724185c8b805dcd06724a61d973b2d14
+\.git\objects\d5\29f5ce70ab95daf4eca4523f167598a166f60d
 \.git\objects\d5\3c43d6f79d37d2e7bd2d41631c35fbcaccc6a8
 \.git\objects\d5\42d8b2ffe555b7d7e6076cf0a128bda9d70026
 \.git\objects\d5\47cfcf5fd23f0a52e7b1821a455fe156071127
@@ -3115,6 +3175,7 @@ README.md
 \.git\objects\db\e53ae238792ab2325fae49f9fd5c5a9b2c94bd
 \.git\objects\db\f7ab79bd49df915ad2241d1d86cb965e32ffed
 \.git\objects\dc
+\.git\objects\dc\0b11d9f595c16ae07d846b073d0f9c91176910
 \.git\objects\dc\1a139185e0587c718d77204c15e66aa5eb8c5f
 \.git\objects\dc\1f35d5e5e2461fa9f574e0c0c32ab1ee1ede34
 \.git\objects\dc\2b13d364d9217af688cb91007cc5dd6a38ecf7
@@ -3192,6 +3253,7 @@ README.md
 \.git\objects\e0\e63ebf573a3dcc7262e8702c2f717ba7149744
 \.git\objects\e0\ef25c94c1b2f2ded951e7406b85889c76a7cdc
 \.git\objects\e1
+\.git\objects\e1\6f8b3b8684050e682fa6bf3ba6c417db29c72a
 \.git\objects\e1\7a7f7bcd6a06a6bd21ae44d9c87b708178981a
 \.git\objects\e1\99acac9262a04ca40e3c1603fa8f646cac2099
 \.git\objects\e1\c4bb13cdbad82f65713657bc0d9d367f4c6fc0
@@ -3219,6 +3281,7 @@ README.md
 \.git\objects\e3\2a203d36c3c460bde9524d762b0fce5e0ee225
 \.git\objects\e3\4477a9adcca64d86ba56f3716a8a061e9e14ee
 \.git\objects\e3\63cf90a7652f4513a569b408ee98d14ba3d8b3
+\.git\objects\e3\6415c8b463e3382b5dd54ee793d5aea23b7795
 \.git\objects\e3\8f540c7b1a19d850e953d23f680a979c6bde4a
 \.git\objects\e3\9f61bd9c6bba4c84580c77bd21e06f2657eb2e
 \.git\objects\e3\bf9f9906dfc3259ca077cb86e4781d3eec9d37
@@ -3246,6 +3309,7 @@ README.md
 \.git\objects\e5\9cb879f320d5ec16a380552fd22e4321fa7ed5
 \.git\objects\e5\9f3ff5980ef5bc826790b024ac9e32e69e6e81
 \.git\objects\e5\e876ba64eda773b51021a2c9130db809e5ed24
+\.git\objects\e5\e92961bcc88b16643df9e02a001d25e9902aa7
 \.git\objects\e5\f35c2c92dc56f4a9a3789c800e83d11b4ed6ef
 \.git\objects\e5\ff8f7ec00d03ca465522250a9d545e56b539ed
 \.git\objects\e6
@@ -3288,6 +3352,7 @@ README.md
 \.git\objects\e9\32869ada016fc6172817ef9b873703fbc331f0
 \.git\objects\e9\52ace70955af158f8bd738e38aa23e8045108f
 \.git\objects\e9\5723ca10d75d0f28cfd0b6687dcf418f73ee2b
+\.git\objects\e9\57c6fbd55586221e24fd201687e627990a8d62
 \.git\objects\e9\8b7872a867d5f2b706f39bbb7776f247c25e02
 \.git\objects\e9\cfbc5b84e13c84bd1dbb28fcd2f7c38b9224f0
 \.git\objects\ea
@@ -3397,6 +3462,7 @@ README.md
 \.git\objects\f0\f5d027b19bf6582e43edad2e51511d860e9ddd
 \.git\objects\f1
 \.git\objects\f1\1255e154dc30dc7ee765757dddc02061cab636
+\.git\objects\f1\16b8b86d4004380b880ffbf8dfca970c57ac6d
 \.git\objects\f1\4832590b87dba628652e7af4949f56b48281a9
 \.git\objects\f1\585ee38bef44efe01c76a8940d8a91adc7612d
 \.git\objects\f1\89d14f5c8eac5593bd56b780b04892ce6d9f8e
@@ -3408,6 +3474,7 @@ README.md
 \.git\objects\f2
 \.git\objects\f2\19e6f0fa9a9bc73b6db225d7f8a0ea1827a7ce
 \.git\objects\f2\2f071920fabddc51319f3fed1a205b2b4651b3
+\.git\objects\f2\393770f1b4ea474706e5cc42765d7656977a95
 \.git\objects\f2\946aa5af73303d92a9eb81a5f4b72ce748631e
 \.git\objects\f2\97958641c0c5df57750fc377c69a4fc40d4c94
 \.git\objects\f2\9a9ee47f3661bcd54c295831c692166fdaa67c
@@ -3428,6 +3495,7 @@ README.md
 \.git\objects\f4
 \.git\objects\f4\0d5ec0fac04dd74da6eafc9afdbd0d576ffb56
 \.git\objects\f4\28b4e359b466df6497b27ea605ec642df93a52
+\.git\objects\f4\334b21c712bef9b9588c0613f4f65a8eb79275
 \.git\objects\f4\3cf3935c54069d14355f774ca2c626faa94514
 \.git\objects\f4\3daef78f091a087205d7e196f25d8b95fd15ad
 \.git\objects\f4\45ba93d536245c93d7946b4d012ffd1c1eabe5
@@ -3503,6 +3571,7 @@ README.md
 \.git\objects\f9\85cecd39eb0a1662e2936e82d828b3a9d93739
 \.git\objects\f9\85d8f7b907919b6b01b33f357c2d381ca82feb
 \.git\objects\f9\863554857cfe8ee4179075e38bfcb94194fa8e
+\.git\objects\f9\87bb2ef9dfa8a9efa2dd644028b2d51282a653
 \.git\objects\f9\8807afabb6d28036dd2d67b48f6c241dee4ea9
 \.git\objects\f9\aa0827ba9a6b11e6a1f08247a5dcc5e2a14f54
 \.git\objects\f9\e61238e835932d412f2bdebdeba7f0ff41f3cb
@@ -3526,6 +3595,7 @@ README.md
 \.git\objects\fa\fde22976a1bb8c68c361d7ffee448ee991a9b0
 \.git\objects\fb
 \.git\objects\fb\0ea0e4ba9c86b92bb83155b6230e8b9b968162
+\.git\objects\fb\12e097e4975c62c8bdae138ea12c98afa6d5ea
 \.git\objects\fb\4736381a9bcfb389c2ea7b495fc6d0f0eb7f5e
 \.git\objects\fb\51a3c4ad65f5afbe0b3c53c9a2d1b83530b576
 \.git\objects\fb\5770f4f8fba2abb4068c91cd12bbc82dea6d52
@@ -3590,6 +3660,7 @@ README.md
 \.git\objects\ff\3123217f3c1a20692729c50dd1dc647262a22c
 \.git\objects\ff\32ac0827677dc254d61aff1f3fdc072f5a803e
 \.git\objects\ff\350ed2ef38a029e6c3e15ca6bf2ade8008fdf8
+\.git\objects\ff\84c07e113291915517ed553c53f16c6a566a1e
 \.git\objects\ff\c1455a81284e3f7e2bcb4b2884797d4648a0c6
 \.git\objects\ff\c26a113d757b09818b63b6ed587671772eeb7f
 \.git\objects\ff\da847238644f1c02c6d56a5ac92a47796c8176
@@ -3611,6 +3682,7 @@ README.md
 \.git\refs\heads\feature\1.2.0-CLEAR-CODE-DOCUMENTATION
 \.git\refs\heads\feature\1.2.0-ends-menu
 \.git\refs\heads\feature\1.2.1-logo-a-v-aplikace
+\.git\refs\heads\feature\1.4.0-documentation
 \.git\refs\heads\feature\add-column
 \.git\refs\heads\feature\change-alignement
 \.git\refs\heads\feature\DB-new
@@ -3644,6 +3716,8 @@ README.md
 \.git\refs\remotes\origin\feature\1.2.0-CLEAR-CODE-DOCUMENTATION
 \.git\refs\remotes\origin\feature\1.2.1-logo-a-v-aplikace
 \.git\refs\remotes\origin\feature\DB-new-code
+\.git\refs\remotes\origin\feautre
+\.git\refs\remotes\origin\feautre\1.3.0-CLEAN-CODE
 \.git\refs\remotes\origin\hotfix
 \.git\refs\remotes\origin\hotfix\1.0.3-unit-fix
 \.git\refs\remotes\origin\release
@@ -3665,10 +3739,10 @@ README.md
 \.vs\ElektroOffer_app.slnx\DesignTimeBuild
 \.vs\ElektroOffer_app.slnx\DesignTimeBuild\.dtbcache.v2
 \.vs\ElektroOffer_app.slnx\FileContentIndex
-\.vs\ElektroOffer_app.slnx\FileContentIndex\81a9848c-aeb1-4c16-beb7-e17731c52047.vsidx
+\.vs\ElektroOffer_app.slnx\FileContentIndex\66707167-222c-450e-9c90-56f03fb59fd9.vsidx
+\.vs\ElektroOffer_app.slnx\FileContentIndex\85946c4f-486d-4923-87f0-b5c8b658e055.vsidx
 \.vs\ElektroOffer_app.slnx\FileContentIndex\b3e85a3c-5012-48ac-8c7a-d285acf4e1c6.vsidx
 \.vs\ElektroOffer_app.slnx\FileContentIndex\c64ae85c-8c5b-426e-b01a-329d44a8da5f.vsidx
-\.vs\ElektroOffer_app.slnx\FileContentIndex\da37f81f-050c-4b82-8b8b-2e54951c6b62.vsidx
 \.vs\ElektroOffer_app.slnx\v18
 \.vs\ElektroOffer_app.slnx\v18\.futdcache.v2
 \.vs\ElektroOffer_app.slnx\v18\.suo
@@ -4227,11 +4301,43 @@ README.md
 --- Soubor: App.xaml
 --- Cesta: \App.xaml
 ----------------------------------------
-﻿<Application x:Class="ElektroOffer_app.App"
+﻿<!--
+    HLAVNÍ
+    ======
+    Kořenová definice WPF aplikace ElektroOffer.
+
+    VEDLEJŠÍ
+    ========
+    - x:Class      → odpovídá třídě App v App.xaml.cs (namespace ElektroOffer_app)
+    - StartupUri  → první okno po startu aplikace (Views/MainWindow.xaml)
+
+    DETAILNÍ
+    ========
+    - Application.Resources slouží pro globální styly, slovníky, barvy apod.
+      V této verzi je ponechán prázdný, připravený na budoucí ResourceDictionary.
+-->
+<Application x:Class="ElektroOffer_app.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              StartupUri="Views/MainWindow.xaml">
+
+    <!-- HLAVNÍ: Globální zdroje aplikace -->
     <Application.Resources>
+
+        <!--
+            VEDLEJŠÍ
+            ========
+            Sem můžeš později sloučit sdílené slovníky stylů.
+
+            DETAILNÍ
+            ========
+            <ResourceDictionary>
+                <ResourceDictionary.MergedDictionaries>
+                    <ResourceDictionary Source="Resources/Colors.xaml" />
+                    <ResourceDictionary Source="Resources/Styles.xaml" />
+                </ResourceDictionary.MergedDictionaries>
+            </ResourceDictionary>
+        -->
     </Application.Resources>
 </Application>
 
@@ -4239,19 +4345,28 @@ README.md
 --- Soubor: App.xaml.cs
 --- Cesta: \App.xaml.cs
 ----------------------------------------
-﻿using System.Configuration;
-using System.Data;
-using System.Windows;
+﻿﻿using System.Windows;
 
 namespace ElektroOffer_app
 {
     /// <summary>
-    /// Interaction logic for App.xaml
+    /// Třída App reprezentuje běžící WPF aplikaci.
+    /// 
+    /// - Odpovídá deklaraci v App.xaml (x:Class="ElektroOffer_app.App")
+    /// - Můžeš zde reagovat na globální události aplikace:
+    ///   - OnStartup
+    ///   - OnExit
+    ///   - zpracování neodchycených výjimek apod.
+    /// 
+    /// Aktuálně je prázdná → používá se výchozí chování WPF.
     /// </summary>
     public partial class App : Application
     {
+        // TODO (pokud bude potřeba):
+        // - Přidat globální logování chyb
+        // - Přidat načtení konfigurace při startu
+        // - Přidat globální DI kontejner (pokud bys šel cestou MVVM/Services)
     }
-
 }
 
 
@@ -4260,72 +4375,80 @@ namespace ElektroOffer_app
 --- Soubor: RelayCommand.cs
 --- Cesta: \Commands\RelayCommand.cs
 ----------------------------------------
-﻿using System;
+﻿﻿using System;
 using System.Windows.Input;
 
 namespace ElektroOffer_app.Commands
 {
-    // =========================================================
-    // 🎛 RELAY COMMAND (UNIVERZÁLNÍ PŘÍKAZ PRO MVVM)
-    // =========================================================
-    // 👉 Obecná implementace ICommand používaná v MVVM aplikacích
-    // 👉 Umožňuje předat logiku Execute a CanExecute jako delegáty
-    // 👉 Díky tomu nemusíš vytvářet samostatnou třídu pro každý příkaz
-    // 👉 Používá se v KeyBinding (MainWindow) i ve ViewModelech
-    // =========================================================
+    // =========================================================================
+    // 🎛 RelayCommand – univerzální příkaz pro WPF / MVVM
+    // =========================================================================
+    //
+    // K čemu slouží:
+    // - Implementuje rozhraní ICommand (standardní WPF příkaz)
+    // - Umožňuje předat logiku Execute a CanExecute jako delegáty (Action/Func)
+    // - Nemusíš vytvářet samostatnou třídu pro každý příkaz
+    //
+    // Kde se používá v projektu:
+    // - V MainWindow pro klávesové zkratky (Ctrl+S, Ctrl+O, …)
+    // - Může se použít i ve ViewModelech (pokud je přidáš později)
+    //
+    // Jak funguje:
+    // - Konstruktor dostane:
+    //     - execute(object?) → co se má stát při spuštění příkazu
+    //     - canExecute(object?) → kdy je příkaz povolen (např. tlačítko aktivní)
+    // - WPF volá CanExecute, aby zjistilo, zda má být tlačítko povolené
+    // - WPF volá Execute, když uživatel klikne nebo stiskne klávesovou zkratku
+    // =========================================================================
     public class RelayCommand : ICommand
     {
-        // =========================================================
-        // 🔧 DELEGÁTY
-        // =========================================================
-        // _execute     → akce, která se má provést při spuštění příkazu
-        // _canExecute  → funkce, která určuje, zda je příkaz povolen
-        //                (pokud je null → příkaz je vždy povolen)
+        // ---------------------------------------------------------------------
+        // Delegáty – uložená logika příkazu
+        // ---------------------------------------------------------------------
         private readonly Action<object?> _execute;
         private readonly Func<object?, bool>? _canExecute;
 
-        // =========================================================
-        // 🧩 KONSTRUKTOR
-        // =========================================================
-        // 👉 execute     - povinný delegát, který se provede při Execute()
-        // 👉 canExecute  - volitelný delegát, který určuje, zda lze příkaz spustit
-        // =========================================================
+        /// <summary>
+        /// Vytvoří nový příkaz.
+        /// </summary>
+        /// <param name="execute">
+        /// Akce, která se provede při Execute().
+        /// Nesmí být null – jinak ArgumentNullException.
+        /// </param>
+        /// <param name="canExecute">
+        /// Funkce, která vrací true/false podle toho, zda je příkaz povolen.
+        /// Pokud je null → příkaz je vždy povolen.
+        /// </param>
         public RelayCommand(Action<object?> execute, Func<object?, bool>? canExecute = null)
         {
             _execute = execute ?? throw new ArgumentNullException(nameof(execute));
             _canExecute = canExecute;
         }
 
-        // =========================================================
-        // 🔒 CAN EXECUTE
-        // =========================================================
-        // 👉 Vrací true/false podle toho, zda je příkaz povolen
-        // 👉 Pokud není zadán canExecute delegát → vždy true
-        // 👉 WPF volá tuto metodu automaticky při změně UI
-        // =========================================================
+        /// <summary>
+        /// Určuje, zda je příkaz aktuálně povolen.
+        /// WPF tuto metodu volá automaticky (např. při změně fokusu, dat apod.).
+        /// </summary>
+        /// <param name="parameter">Parametr předaný z UI (většinou se nepoužívá).</param>
         public bool CanExecute(object? parameter)
             => _canExecute?.Invoke(parameter) ?? true;
 
-        // =========================================================
-        // ▶ EXECUTE
-        // =========================================================
-        // 👉 Spustí předanou akci (execute delegát)
-        // 👉 Používá se při kliknutí na tlačítko nebo při KeyBinding
-        // =========================================================
+        /// <summary>
+        /// Provede logiku příkazu.
+        /// </summary>
+        /// <param name="parameter">Parametr předaný z UI (např. CommandParameter).</param>
         public void Execute(object? parameter)
             => _execute(parameter);
 
-        // =========================================================
-        // 🔔 CANEXECUTECHANGED
-        // =========================================================
-        // 👉 Událost, kterou WPF sleduje pro povolení/zakázání tlačítek
-        // 👉 Pokud se změní podmínky CanExecute → zavolá se RaiseCanExecuteChanged()
-        // =========================================================
+        /// <summary>
+        /// Událost, kterou WPF sleduje pro znovuvyhodnocení CanExecute.
+        /// Když se vyvolá, WPF znovu zavolá CanExecute a podle toho povolí/zakáže tlačítka.
+        /// </summary>
         public event EventHandler? CanExecuteChanged;
 
         /// <summary>
-        /// Vyvolá událost CanExecuteChanged a tím donutí WPF znovu
-        /// vyhodnotit, zda je příkaz povolen (např. povolit/zakázat tlačítko).
+        /// Vyvolá událost CanExecuteChanged.
+        /// Použij, pokud se změnily podmínky, za kterých je příkaz povolen.
         /// </summary>
         public void RaiseCanExecuteChanged()
             => CanExecuteChanged?.Invoke(this, EventArgs.Empty);
@@ -4338,36 +4461,54 @@ namespace ElektroOffer_app.Commands
 --- Soubor: AppDbContext.cs
 --- Cesta: \Data\AppDbContext.cs
 ----------------------------------------
-﻿using Microsoft.EntityFrameworkCore;
+﻿﻿using Microsoft.EntityFrameworkCore;
 using ElektroOffer_app.Models;
 
 namespace ElektroOffer_app.Data
 {
-    // =========================
-    // 🧠 EF CORE DATABÁZOVÝ KONTEXT
-    // =========================
-    // 👉 Řídí komunikaci mezi aplikací a SQLite
-    // 👉 Nahrazuje ruční SQL dotazy
-    // =========================
+    // =========================================================================
+    // 🧠 AppDbContext – EF Core databázový kontext
+    // =========================================================================
+    //
+    // K čemu slouží:
+    // - Zprostředkovává komunikaci mezi aplikací a SQLite databází
+    // - Nahrazuje ruční psaní SQL dotazů
+    //
+    // Jaké tabulky (DbSet) obsahuje:
+    // - PriceItems  → ceník práce
+    // - Materials   → ceník materiálu
+    //
+    // Kde se používá:
+    // - V MainWindow (načítání ceníku do kolekcí Tasks a Materials)
+    // - Při importu/exportu ceníku (zápis/čtení do/z DB)
+    //
+    // Poznámka:
+    // - Konfigurace připojení je v OnConfiguring → SQLite soubor elektrooffer.db
+    // =========================================================================
     public class AppDbContext : DbContext
     {
-        // =========================
-        // 🔧 TABULKA PRÁCE
-        // =========================
+        /// <summary>
+        /// Tabulka ceníku práce (PriceItems).
+        /// Každý záznam reprezentuje jednu položku ceníku.
+        /// </summary>
         public DbSet<PriceItems> PriceItems => Set<PriceItems>();
 
-        // =========================
-        // 📦 TABULKA MATERIÁL
-        // =========================
+        /// <summary>
+        /// Tabulka ceníku materiálu (Materials).
+        /// Každý záznam reprezentuje jeden materiál.
+        /// </summary>
         public DbSet<Material> Materials => Set<Material>();
 
-        // =========================
-        // 🧩 KONFIGURACE DB
-        // =========================
+        /// <summary>
+        /// Konfigurace databázového připojení.
+        /// Pokud ještě není kontext nakonfigurován, použije SQLite soubor
+        /// "elektrooffer.db" v aktuálním adresáři aplikace.
+        /// </summary>
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
+                // TODO: případně přesunout connection string do konfigurace (appsettings.json)
                 optionsBuilder.UseSqlite("Data Source=elektrooffer.db");
             }
         }
@@ -4380,72 +4521,85 @@ namespace ElektroOffer_app.Data
 --- Soubor: BudgetItem.cs
 --- Cesta: \Models\BudgetItem.cs
 ----------------------------------------
-﻿using System.ComponentModel;
+﻿﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
 namespace ElektroOffer_app.Models
 {
-    // =========================================================
-    // 📊 POLOŽKA DO DETAILNÍHO ROZPISU
-    // =========================================================
+    // =========================================================================
+    // 📊 BudgetItem – jedna položka v detailním rozpisu
+    // =========================================================================
+    //
+    // K čemu slouží:
+    // - Reprezentuje jeden řádek v přehledovém rozpisu (PRÁCE / MATERIÁL)
+    // - Používá se v kolekci BudgetItems v MainWindow
+    //
+    // Vlastnosti:
+    // - Type        → typ položky ("PRÁCE" nebo "MATERIÁL")
+    // - Description → textový popis (sestavený z vybraných hodnot)
+    // - Unit        → měrná jednotka (m, ks, hod, …)
+    // - Quantity    → množství
+    // - Price       → výsledná cena za řádek
+    //
+    // Implementuje INotifyPropertyChanged:
+    // - Umožňuje WPF automaticky aktualizovat UI při změně hodnot
+    // =========================================================================
     public class BudgetItem : INotifyPropertyChanged
     {
-        // =========================================================
-        // 🧩 TYPE - typ položky (PRÁCE / MATERIÁL)
-        // =========================================================
         private string _type = "";
 
+        /// <summary>
+        /// Typ položky v rozpisu.
+        /// Např. "PRÁCE" nebo "MATERIÁL".
+        /// </summary>
         public string Type
         {
             get => _type;
             set
             {
                 if (_type == value) return;
-
                 _type = value;
                 OnPropertyChanged();
             }
         }
 
-        // =========================================================
-        // 🧾 DESCRIPTION - popis položky
-        // =========================================================
         private string _description = "";
 
+        /// <summary>
+        /// Textový popis položky (např. kombinace úkonu, specifikace, materiálu, umístění).
+        /// </summary>
         public string Description
         {
             get => _description;
             set
             {
                 if (_description == value) return;
-
                 _description = value;
                 OnPropertyChanged();
             }
         }
 
-        // =========================================================
-        // 📏 UNIT - měrná jednotka (MJ)
-        // =========================================================
         private string _unit = "";
 
+        /// <summary>
+        /// Měrná jednotka (např. "m", "ks", "hod").
+        /// </summary>
         public string Unit
         {
             get => _unit;
             set
             {
                 if (_unit == value) return;
-
                 _unit = value;
                 OnPropertyChanged();
             }
         }
 
-        // =========================================================
-        // 🔢 QUANTITY - množství
-        // =========================================================
         private double _quantity;
 
+        /// <summary>
+        /// Množství (počet jednotek).
+        /// </summary>
         public double Quantity
         {
             get => _quantity;
@@ -4457,127 +4611,109 @@ namespace ElektroOffer_app.Models
             }
         }
 
-        // =========================================================
-        // 💰 PRICE - cena položky
-        // =========================================================
         private double _price;
 
+        /// <summary>
+        /// Celková cena za tuto položku (Quantity × jednotková cena).
+        /// </summary>
         public double Price
         {
             get => _price;
             set
             {
                 if (Math.Abs(_price - value) < 0.0001) return;
-
                 _price = value;
                 OnPropertyChanged();
             }
         }
 
-        // =========================================================
-        // 🔔 INotifyPropertyChanged IMPLEMENTACE
-        // =========================================================
+        // ---------------------------------------------------------------------
+        // INotifyPropertyChanged – notifikace změn pro WPF binding
+        // ---------------------------------------------------------------------
         public event PropertyChangedEventHandler? PropertyChanged;
 
         protected void OnPropertyChanged([CallerMemberName] string? propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
+            => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 }
+
 
 --- Soubor: CatalogExportData.cs
 --- Cesta: \Models\CatalogExportData.cs
 ----------------------------------------
-﻿namespace ElektroOffer_app.Models
+﻿﻿namespace ElektroOffer_app.Models
 {
     /// <summary>
     /// Obálka pro export/import ceníku do JSON souboru.
-    /// Obsahuje obě tabulky — PriceItems i Materials — v jednom souboru.
+    /// 
+    /// Obsahuje obě tabulky:
+    /// - PriceItems  → ceník práce
+    /// - Materials   → ceník materiálu
+    ///
     /// Soubor má příponu .eofcat (ElektroOffer Catalog).
     /// </summary>
     public class CatalogExportData
     {
-        /// <summary>Datum a čas exportu — pro orientaci při importu</summary>
+        /// <summary>
+        /// Datum a čas exportu – pro orientaci při importu (např. který ceník je novější).
+        /// </summary>
         public DateTime ExportedAt { get; set; } = DateTime.Now;
 
-        /// <summary>Verze formátu exportu — pro budoucí kompatibilitu</summary>
+        /// <summary>
+        /// Verze formátu exportu – pro budoucí kompatibilitu.
+        /// Pokud se struktura někdy změní, můžeš zvýšit číslo a podle toho reagovat při importu.
+        /// </summary>
         public string FormatVersion { get; set; } = "1.0";
-
-        // =========================================================
-        // 🔧 CENÍK PRÁCE
-        // =========================================================
 
         /// <summary>
         /// Seznam všech položek ceníku práce (tabulka PriceItems).
-        /// Ukládají se názvy — nezávislé na ID v DB.
+        /// Ukládají se názvy – nezávislé na ID v databázi.
         /// </summary>
         public List<PriceItemExportData> PriceItems { get; set; } = new();
 
-        // =========================================================
-        // 📦 CENÍK MATERIÁLU
-        // =========================================================
-
         /// <summary>
         /// Seznam všech položek ceníku materiálu (tabulka Materials).
-        /// Ukládají se názvy — nezávislé na ID v DB.
+        /// Ukládají se názvy – nezávislé na ID v databázi.
         /// </summary>
         public List<MaterialExportData> Materials { get; set; } = new();
     }
 
-    // =============================================================
-    // 🔧 JEDNA POLOŽKA CENÍKU PRÁCE
-    // =============================================================
-
     /// <summary>
     /// Serializovatelná data jedné položky z tabulky PriceItems.
-    /// Odpovídá sloupcům: Task, Specification, Material, Location,
-    /// BasePrice, Unit, MaterialCoef, PositionCoef.
+    /// Odpovídá sloupcům:
+    /// - Task
+    /// - Specification
+    /// - Material
+    /// - Location
+    /// - BasePrice
+    /// - Unit
+    /// - MaterialCoef
+    /// - PositionCoef
     /// </summary>
     public class PriceItemExportData
     {
-        /// <summary>Název úkonu, např. "Drážkování"</summary>
         public string Task { get; set; } = "";
-
-        /// <summary>Upřesnění, např. "Spára"</summary>
         public string Specification { get; set; } = "";
-
-        /// <summary>Název materiálu, např. "Omítka - Sádra"</summary>
         public string Material { get; set; } = "";
-
-        /// <summary>Umístění, např. "Stěna"</summary>
         public string Location { get; set; } = "";
-
-        /// <summary>Základní cena bez koeficientů</summary>
         public double BasePrice { get; set; }
-
-        /// <summary>Měrná jednotka, např. "m", "ks", "hod"</summary>
         public string Unit { get; set; } = "";
-
-        /// <summary>Koeficient materiálu (násobí základní cenu)</summary>
         public double MaterialCoef { get; set; }
-
-        /// <summary>Koeficient polohy/umístění (násobí základní cenu)</summary>
         public double PositionCoef { get; set; }
     }
 
-    // =============================================================
-    // 📦 JEDNA POLOŽKA CENÍKU MATERIÁLU
-    // =============================================================
-
     /// <summary>
     /// Serializovatelná data jedné položky z tabulky Materials.
-    /// Odpovídá sloupcům: Name, Unit, Price (a případně dalším).
+    /// Odpovídá sloupcům:
+    /// - Name
+    /// - Unit
+    /// - Price
+    /// (případně dalším, pokud je v budoucnu přidáš).
     /// </summary>
     public class MaterialExportData
     {
-        /// <summary>Název materiálu, např. "Kabel CYKY 3x1,5"</summary>
         public string Name { get; set; } = "";
-
-        /// <summary>Měrná jednotka, např. "m", "ks", "balení"</summary>
         public string Unit { get; set; } = "";
-
-        /// <summary>Cena za jednotku</summary>
         public double Price { get; set; }
     }
 }
@@ -4586,31 +4722,31 @@ namespace ElektroOffer_app.Models
 --- Soubor: Material.cs
 --- Cesta: \Models\Material.cs
 ----------------------------------------
-﻿namespace ElektroOffer_app.Models
+﻿﻿namespace ElektroOffer_app.Models
 {
-    // =========================
-    // 📦 MATERIÁL
-    // =========================
-    // 👉 Jeden záznam materiálu v databázi
-    // 👉 Používá se pro kalkulaci ceny materiálu
-    // =========================
+    // =========================================================================
+    // 📦 Material – jedna položka ceníku materiálu
+    // =========================================================================
+    //
+    // K čemu slouží:
+    // - Reprezentuje jeden záznam v tabulce Materials (SQLite)
+    // - Používá se v AppDbContext (DbSet<Material>)
+    // - V UI se používá např. pro výběr materiálu v kalkulaci
+    //
+    // Vlastnosti:
+    // - Id    → primární klíč v databázi
+    // - Name  → název materiálu (např. "Kabel CYKY 3x1,5")
+    // - Price → cena za jednotku
+    // - Unit  → měrná jednotka (m, ks, balení, …)
+    // =========================================================================
     public class Material
     {
         public int Id { get; set; }
 
-        // =========================
-        // 📦 NÁZEV MATERIÁLU
-        // =========================
         public string Name { get; set; } = string.Empty;
 
-        // =========================
-        // 💰 CENA ZA JEDNOTKU
-        // =========================
         public double Price { get; set; }
 
-        // =========================
-        // 📏 JEDNOTKA
-        // =========================
         public string Unit { get; set; } = string.Empty;
     }
 }
@@ -4619,11 +4755,24 @@ namespace ElektroOffer_app.Models
 --- Soubor: MaterialItemData.cs
 --- Cesta: \Models\MaterialItemData.cs
 ----------------------------------------
-﻿namespace ElektroOffer_app.Models
+﻿﻿namespace ElektroOffer_app.Models
 {
-    // =========================================================
-    // 📦 DATA PRO JEDEN ŘÁDEK MATERIÁLU
-    // =========================================================
+    // =========================================================================
+    // 📦 MaterialItemData – data pro jeden řádek materiálu v projektu
+    // =========================================================================
+    //
+    // K čemu slouží:
+    // - Reprezentuje jeden řádek sekce MATERIÁL v uloženém projektu (ProjectData)
+    // - Ukládá se do JSON při Save a načítá při Load
+    //
+    // Vlastnosti:
+    // - MaterialName → název materiálu (string, ne ID)
+    // - Quantity     → množství
+    //
+    // Poznámka:
+    // - Při načtení projektu se podle MaterialName dohledá konkrétní Material
+    //   z kolekce Materials (načtené z databáze).
+    // =========================================================================
     public class MaterialItemData
     {
         public string? MaterialName { get; set; }
@@ -4635,61 +4784,54 @@ namespace ElektroOffer_app.Models
 --- Soubor: PriceItems.cs
 --- Cesta: \Models\PriceItems.cs
 ----------------------------------------
-﻿namespace ElektroOffer_app.Models
+﻿﻿namespace ElektroOffer_app.Models
 {
-    // =========================
-    // 🔧 CENÍK PRÁCE
-    // =========================
-    // 👉 Jeden řádek ceníku práce
-    // 👉 Obsahuje koeficienty pro výpočet ceny
-    // =========================
+    // =========================================================================
+    // 🔧 PriceItems – jedna položka ceníku práce
+    // =========================================================================
+    //
+    // K čemu slouží:
+    // - Reprezentuje jeden řádek ceníku práce v databázi (tabulka PriceItems)
+    // - Obsahuje základní cenu a koeficienty pro výpočet výsledné ceny
+    //
+    // Vlastnosti:
+    // - Id            → primární klíč
+    // - BasePrice     → základní cena (bez koeficientů)
+    // - Unit          → měrná jednotka (m, ks, hod, …)
+    // - Task          → název práce (např. "Drážkování")
+    // - Specification → upřesnění (např. "Spára")
+    // - Material      → typ materiálu (např. "Omítka - Sádra")
+    // - Location      → umístění (např. "Stěna")
+    // - MaterialCoef  → koeficient materiálu
+    // - PositionCoef  → koeficient polohy/umístění
+    //
+    // FullName:
+    // - Složený text pro zobrazení v ComboBoxu (Task | Specification | Material | Location)
+    // =========================================================================
     public class PriceItems
     {
         public int Id { get; set; }
 
-        // =========================
-        // 💰 ZÁKLADNÍ CENA
-        // =========================
         public double BasePrice { get; set; }
 
-        // =========================
-        // 📏 JEDNOTKA
-        // =========================
         public string? Unit { get; set; }
 
-        // =========================
-        // 🔧 NÁZEV PRÁCE
-        // =========================
         public string Task { get; set; } = string.Empty;
 
-        // =========================
-        // 📄 SPECIFIKACE
-        // =========================
         public string Specification { get; set; } = string.Empty;
 
-        // =========================
-        // 📦 TYP MATERIÁLU
-        // =========================
         public string Material { get; set; } = string.Empty;
 
-        // =========================
-        // 📍 UMÍSTĚNÍ
-        // =========================
         public string Location { get; set; } = string.Empty;
 
-        // =========================
-        // 📊 KOEFICIENT MATERIÁLU
-        // =========================
         public double MaterialCoef { get; set; }
 
-        // =========================
-        // 📊 KOEFICIENT POZICE
-        // =========================
         public double PositionCoef { get; set; }
 
-        // =========================
-        // 🧾 TEXT PRO COMBOBOX
-        // =========================
+        /// <summary>
+        /// Složený text pro zobrazení v ComboBoxu.
+        /// Umožňuje uživateli snadno rozlišit položky podle všech parametrů.
+        /// </summary>
         public string FullName =>
             $"{Task} | {Specification} | {Material} | {Location}";
     }
@@ -4699,33 +4841,42 @@ namespace ElektroOffer_app.Models
 --- Soubor: ProjectData.cs
 --- Cesta: \Models\ProjectData.cs
 ----------------------------------------
-﻿using ElektroOffer_app.Models;
-
-namespace ElektroOffer_app.Models
+﻿﻿namespace ElektroOffer_app.Models
 {
     /// <summary>
     /// Reprezentuje celý uložený projekt (kalkulaci) jako jeden celek.
-    /// Tato třída se serializuje do JSON při Save a deserializuje při Load.
-    /// Obsahuje všechny sekce: práce, materiál a metadata projektu.
+    ///
+    /// Tato třída se:
+    /// - serializuje do JSON při uložení (Save)
+    /// - deserializuje z JSON při načtení (Load)
+    ///
+    /// Obsahuje:
+    /// - metadata projektu (název, datum vytvoření/uložení)
+    /// - seznam řádků práce (WorkItems)
+    /// - seznam řádků materiálu (MaterialItems)
     /// </summary>
     public class ProjectData
     {
-        // =========================================================
-        // 📋 METADATA PROJEKTU
-        // =========================================================
+        // ---------------------- METADATA PROJEKTU ----------------------
 
-        /// <summary>Název projektu / zakázky (zobrazí se v titulku okna)</summary>
+        /// <summary>
+        /// Název projektu / zakázky.
+        /// Zobrazuje se v titulku okna.
+        /// </summary>
         public string ProjectName { get; set; } = "Nový projekt";
 
-        /// <summary>Datum vytvoření projektu</summary>
+        /// <summary>
+        /// Datum vytvoření projektu.
+        /// </summary>
         public DateTime CreatedAt { get; set; } = DateTime.Now;
 
-        /// <summary>Datum posledního uložení</summary>
+        /// <summary>
+        /// Datum posledního uložení.
+        /// Aktualizuje se při Save.
+        /// </summary>
         public DateTime SavedAt { get; set; } = DateTime.Now;
 
-        // =========================================================
-        // 🔧 SEKCE: PRÁCE
-        // =========================================================
+        // ---------------------- SEKCE: PRÁCE ----------------------
 
         /// <summary>
         /// Seznam všech řádků sekce PRÁCE.
@@ -4733,9 +4884,7 @@ namespace ElektroOffer_app.Models
         /// </summary>
         public List<WorkItemData> WorkItems { get; set; } = new();
 
-        // =========================================================
-        // 📦 SEKCE: MATERIÁL
-        // =========================================================
+        // ---------------------- SEKCE: MATERIÁL ----------------------
 
         /// <summary>
         /// Seznam všech řádků sekce MATERIÁL.
@@ -4749,11 +4898,26 @@ namespace ElektroOffer_app.Models
 --- Soubor: WorkItemData.cs
 --- Cesta: \Models\WorkItemData.cs
 ----------------------------------------
-﻿namespace ElektroOffer_app.Models
+﻿﻿namespace ElektroOffer_app.Models
 {
-    // =========================================================
-    // 🔧 DATA PRO JEDEN ŘÁDEK PRÁCE
-    // =========================================================
+    // =========================================================================
+    // 🔧 WorkItemData – data pro jeden řádek práce v projektu
+    // =========================================================================
+    //
+    // K čemu slouží:
+    // - Reprezentuje jeden řádek sekce PRÁCE v uloženém projektu (ProjectData)
+    // - Ukládá se do JSON při Save a načítá při Load
+    //
+    // Vlastnosti:
+    // - SelectedTask          → vybraný úkon (název práce)
+    // - SelectedSpecification → upřesnění
+    // - SelectedMaterial      → typ materiálu
+    // - SelectedLocation      → umístění
+    // - Quantity              → množství
+    //
+    // Poznámka:
+    // - Ukládají se textové hodnoty, ne ID → projekt je nezávislý na konkrétních ID v DB.
+    // =========================================================================
     public class WorkItemData
     {
         public string? SelectedTask { get; set; }
@@ -4772,13 +4936,29 @@ namespace ElektroOffer_app.Models
 ----------------------------------------
 using System.Windows;
 
+// -----------------------------------------------------------------------------
+// AssemblyInfo.cs
+// -----------------------------------------------------------------------------
+// Tento soubor obsahuje atribut ThemeInfo, který říká WPF, kde hledat zdroje
+// (ResourceDictionary) pro styly a šablony ovládacích prvků.
+//
+// - ResourceDictionaryLocation.None
+//   → Specifické slovníky pro jednotlivá témata (např. Classic, Luna, Aero)
+//     se nepoužívají.
+//
+// - ResourceDictionaryLocation.SourceAssembly
+//   → Hlavní (generic) ResourceDictionary je součástí tohoto assembly.
+//     Typicky se používá pro styly ovládacích prvků.
+// -----------------------------------------------------------------------------
+
 [assembly: ThemeInfo(
-    ResourceDictionaryLocation.None,            //where theme specific resource dictionaries are located
-                                                //(used if a resource is not found in the page,
-                                                // or application resource dictionaries)
-    ResourceDictionaryLocation.SourceAssembly   //where the generic resource dictionary is located
-                                                //(used if a resource is not found in the page,
-                                                // app, or any theme specific resource dictionaries)
+    ResourceDictionaryLocation.None,            // kde hledat theme-specific resource dictionaries
+                                                // (pokud se zdroj nenajde na stránce
+                                                // nebo v aplikačních zdrojích)
+
+    ResourceDictionaryLocation.SourceAssembly   // kde hledat generic resource dictionary
+                                                // (pokud se zdroj nenajde na stránce,
+                                                // v aplikaci nebo v theme-specific slovnících)
 )]
 
 
@@ -4787,6 +4967,47 @@ using System.Windows;
 --- Soubor: README.md
 --- Cesta: \README.md
 ----------------------------------------
+# ElektroOffer
+
+Desktopová WPF aplikace pro kalkulaci elektro prací a materiálu.
+
+## Hlavní funkce
+
+- Evidence a kalkulace práce (ceník práce – tabulka `PriceItems`)
+- Evidence a kalkulace materiálu (tabulka `Materials`)
+- Uložení a načtení projektu do/z souboru (`*.eof`)
+- Export a import ceníku (`*.eofcat`)
+- Přehledný rozpis (práce + materiál) s celkovou cenou
+
+## Technický přehled
+
+- **Platforma:** .NET (WPF)
+- **UI:** XAML (MainWindow, AboutWindow, Resources/Styles)
+- **Databáze:** SQLite přes Entity Framework Core (`AppDbContext`)
+- **Modely:**
+  - `PriceItems` – ceník práce
+  - `Material` – ceník materiálu
+  - `ProjectData` – uložený projekt (práce + materiál)
+  - `CatalogExportData` – export/import ceníku
+- **Služby:**
+  - `ProjectService` – Save/Load projektů, export/import ceníku
+  - `DialogService` – zobrazení MessageBox dialogů
+
+## Struktura projektu
+
+- `App.xaml`, `App.xaml.cs` – start aplikace
+- `Views/` – okna (např. `MainWindow`, `AboutWindow`)
+- `Models/` – datové třídy (projekty, položky, ceníky)
+- `Data/` – EF Core kontext (`AppDbContext`)
+- `Services/` – logika pro práci se soubory a dialogy
+- `Resources/` – barvy, styly
+
+## Verze
+
+- Aktuální verze aplikace: **1.3.0**
+- Formát exportu ceníku (`CatalogExportData.FormatVersion`): **1.0**
+
+> Poznámka: Verzi aplikace je vhodné držet v AssemblyInfo / csproj a číst ji v okně „O aplikaci“.
 
 
 
@@ -4857,66 +5078,68 @@ using System.Windows;
 --- Soubor: DialogService.cs
 --- Cesta: \Services\DialogService.cs
 ----------------------------------------
-﻿using System.Windows;
+﻿﻿using System.Windows;
 
 namespace ElektroOffer_app.Services
 {
-    // =========================================================
-    // 💬 DIALOG SERVICE
-    // =========================================================
-    // 👉 Jednoduchý servis pro zobrazování MessageBox dialogů
-    // 👉 Umožňuje ViewModelům volat dialogy bez přímé závislosti na UI
-    // =========================================================
+    // ========================================================================
+    // HLAVNÍ: DialogService – jednoduchý wrapper pro MessageBox
+    // ========================================================================
+    //
+    // ÚČEL:
+    // - Umožňuje ViewModelům zobrazovat dialogy bez přímé závislosti na UI.
+    // - Odděluje prezentační logiku od aplikační logiky.
+    //
+    // POUŽITÍ:
+    // - ViewModel zavolá DialogService.ShowInfo / ShowWarning / ShowError / Confirm.
+    // - UI (MessageBox) se zobrazí, ale ViewModel o něm nic neví.
+    //
+    // POZNÁMKA:
+    // - V MVVM se MessageBox nepoužívá přímo ve ViewModelu.
+    // - Tato služba je kompromisní řešení pro menší projekty.
+    // ========================================================================
     public class DialogService
     {
-        // =========================================================
-        // ℹ INFO DIALOG
-        // =========================================================
+        // --------------------------------------------------------------------
+        // VEDLEJŠÍ: Informační dialog
+        // --------------------------------------------------------------------
         /// <summary>
         /// Zobrazí informační dialog s tlačítkem OK.
         /// </summary>
-        /// <param name="message">Text zprávy.</param>
-        /// <param name="title">Titulek okna.</param>
         public void ShowInfo(string message, string title = "Informace")
         {
             MessageBox.Show(message, title, MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
-        // =========================================================
-        // ⚠ WARNING DIALOG
-        // =========================================================
+        // --------------------------------------------------------------------
+        // VEDLEJŠÍ: Varovný dialog
+        // --------------------------------------------------------------------
         /// <summary>
         /// Zobrazí varovný dialog s tlačítkem OK.
         /// </summary>
-        /// <param name="message">Text zprávy.</param>
-        /// <param name="title">Titulek okna.</param>
         public void ShowWarning(string message, string title = "Upozornění")
         {
             MessageBox.Show(message, title, MessageBoxButton.OK, MessageBoxImage.Warning);
         }
 
-        // =========================================================
-        // ❌ ERROR DIALOG
-        // =========================================================
+        // --------------------------------------------------------------------
+        // VEDLEJŠÍ: Chybový dialog
+        // --------------------------------------------------------------------
         /// <summary>
         /// Zobrazí chybový dialog s tlačítkem OK.
         /// </summary>
-        /// <param name="message">Text zprávy.</param>
-        /// <param name="title">Titulek okna.</param>
         public void ShowError(string message, string title = "Chyba")
         {
             MessageBox.Show(message, title, MessageBoxButton.OK, MessageBoxImage.Error);
         }
 
-        // =========================================================
-        // ❓ CONFIRM DIALOG (ANO/NE)
-        // =========================================================
+        // --------------------------------------------------------------------
+        // HLAVNÍ: Potvrzovací dialog (Ano/Ne)
+        // --------------------------------------------------------------------
         /// <summary>
         /// Zobrazí potvrzovací dialog s tlačítky Ano/Ne.
+        /// Vrací true = Ano, false = Ne.
         /// </summary>
-        /// <param name="message">Text zprávy.</param>
-        /// <param name="title">Titulek okna.</param>
-        /// <returns>True = uživatel zvolil Ano, False = Ne.</returns>
         public bool Confirm(string message, string title = "Potvrzení")
         {
             var result = MessageBox.Show(message, title, MessageBoxButton.YesNo, MessageBoxImage.Question);
@@ -4929,7 +5152,7 @@ namespace ElektroOffer_app.Services
 --- Soubor: ProjectService.cs
 --- Cesta: \Services\ProjectService.cs
 ----------------------------------------
-﻿using ElektroOffer_app.Models;
+﻿﻿using ElektroOffer_app.Models;
 using Microsoft.Win32;
 using System.IO;
 using System.Text.Json;
@@ -4937,111 +5160,84 @@ using System.Windows;
 
 namespace ElektroOffer_app.Services
 {
-    /// <summary>
-    /// Servisní třída zodpovědná za:
-    /// - Uložení projektu do JSON souboru (Save / Save As)
-    /// - Načtení projektu z JSON souboru (Load)
-    /// - Reset projektu (Nový projekt)
-    ///
-    /// Tato třída NEVÍ nic o UI — pouze pracuje s daty (ProjectData).
-    /// Veškeré propojení s UI (ObservableCollection atd.) se děje v MainWindow.
-    /// </summary>
+    // ========================================================================
+    // HLAVNÍ: ProjectService – správa projektových souborů (.eof)
+    // ========================================================================
+    //
+    // ÚČEL:
+    // - Ukládání projektu do JSON (Save / SaveAs)
+    // - Načítání projektu z JSON (Load)
+    // - Kontrola neuložených změn (ConfirmNewProject)
+    // - Export a import ceníku (.eofcat)
+    //
+    // DŮLEŽITÉ:
+    // - Třída NEPRACUJE s UI (kromě MessageBox – lze později nahradit DialogService)
+    // - Třída NEZNÁ ViewModel ani UI logiku
+    // - Používá pouze ProjectData a CatalogExportData
+    //
+    // ========================================================================
     public class ProjectService
     {
-        // =========================================================
-        // ⚙️ NASTAVENÍ SERIALIZACE
-        // =========================================================
-
-        /// <summary>
-        /// Možnosti pro System.Text.Json serializátor.
-        /// WriteIndented = true → JSON je čitelný pro lidi (pěkně odsazený).
-        /// </summary>
+        // --------------------------------------------------------------------
+        // DETAILNÍ: Nastavení JSON serializace
+        // --------------------------------------------------------------------
         private static readonly JsonSerializerOptions _jsonOptions = new()
         {
             WriteIndented = true
         };
 
-        // =========================================================
-        // 💾 SAVE — uložení na aktuální cestu (Ctrl+S)
-        // =========================================================
-
-        /// <summary>
-        /// Uloží projekt na aktuální cestu.
-        /// Pokud cesta ještě neexistuje (první uložení), zavolá SaveAs.
-        /// </summary>
-        /// <param name="data">Data projektu k uložení</param>
-        /// <param name="currentPath">Aktuální cesta souboru (null = ještě neuloženo)</param>
-        /// <returns>Cesta, kam se uložilo (nebo null při zrušení dialogu)</returns>
+        // --------------------------------------------------------------------
+        // HLAVNÍ: SAVE (Ctrl+S)
+        // --------------------------------------------------------------------
         public string? Save(ProjectData data, string? currentPath)
         {
-            // Pokud ještě nemáme cestu → chová se jako Save As
             if (string.IsNullOrEmpty(currentPath))
                 return SaveAs(data);
 
             return SaveToPath(data, currentPath);
         }
 
-        // =========================================================
-        // 💾 SAVE AS — uložení s výběrem cesty (Ctrl+Shift+S)
-        // =========================================================
-
-        /// <summary>
-        /// Otevře dialog pro výběr cesty a uloží projekt do nového souboru.
-        /// </summary>
-        /// <param name="data">Data projektu k uložení</param>
-        /// <returns>Cesta, kam se uložilo (nebo null při zrušení dialogu)</returns>
+        // --------------------------------------------------------------------
+        // HLAVNÍ: SAVE AS (Ctrl+Shift+S)
+        // --------------------------------------------------------------------
         public string? SaveAs(ProjectData data)
         {
-            // Otevření dialogu pro uložení souboru
             var dialog = new SaveFileDialog
             {
                 Title = "Uložit projekt",
-                Filter = "Projekt ElektroOffer (*.eof)|*.eof|Všechny soubory (*.*)|*.*",
+                Filter = "Projekt ElektroOffer (*.eof)|*.eof",
                 DefaultExt = ".eof",
                 FileName = data.ProjectName
             };
 
-            // Pokud uživatel zruší dialog → vrátíme null
             if (dialog.ShowDialog() != true)
                 return null;
 
             return SaveToPath(data, dialog.FileName);
         }
 
-        // =========================================================
-        // 📂 LOAD — načtení projektu ze souboru
-        // =========================================================
-
-        /// <summary>
-        /// Otevře dialog pro výběr souboru a načte projekt z JSON.
-        /// </summary>
-        /// <returns>
-        /// Tuple: (načtená data, cesta k souboru).
-        /// Vrátí (null, null) pokud uživatel zruší dialog nebo nastane chyba.
-        /// </returns>
+        // --------------------------------------------------------------------
+        // HLAVNÍ: LOAD (Ctrl+O)
+        // --------------------------------------------------------------------
         public (ProjectData? data, string? path) Load()
         {
-            // Otevření dialogu pro výběr souboru
             var dialog = new OpenFileDialog
             {
                 Title = "Načíst projekt",
-                Filter = "Projekt ElektroOffer (*.eof)|*.eof|Všechny soubory (*.*)|*.*"
+                Filter = "Projekt ElektroOffer (*.eof)|*.eof"
             };
 
-            // Pokud uživatel zruší dialog → vrátíme null
             if (dialog.ShowDialog() != true)
                 return (null, null);
 
             try
             {
-                // Přečtení JSON souboru a deserializace
                 var json = File.ReadAllText(dialog.FileName);
                 var data = JsonSerializer.Deserialize<ProjectData>(json, _jsonOptions);
 
                 if (data == null)
                 {
-                    MessageBox.Show("Soubor nelze načíst — pravděpodobně poškozený formát.",
-                        "Chyba načítání", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show("Soubor nelze načíst – poškozený formát.", "Chyba", MessageBoxButton.OK, MessageBoxImage.Error);
                     return (null, null);
                 }
 
@@ -5049,91 +5245,59 @@ namespace ElektroOffer_app.Services
             }
             catch (Exception ex)
             {
-                // Chyba při čtení nebo parsování JSON
-                MessageBox.Show($"Chyba při načítání souboru:\n{ex.Message}",
-                    "Chyba", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show($"Chyba při načítání:\n{ex.Message}", "Chyba", MessageBoxButton.OK, MessageBoxImage.Error);
                 return (null, null);
             }
         }
 
-        // =========================================================
-        // 🆕 NEW PROJECT — kontrola neuložených změn
-        // =========================================================
-
-        /// <summary>
-        /// Zeptá se uživatele, zda chce uložit změny před resetem.
-        /// </summary>
-        /// <returns>
-        /// True  = pokračovat (uloženo nebo uživatel zvolil "Ne")
-        /// False = uživatel zrušil akci (kliknul "Storno")
-        /// </returns>
+        // --------------------------------------------------------------------
+        // VEDLEJŠÍ: Kontrola neuložených změn
+        // --------------------------------------------------------------------
         public bool ConfirmNewProject(ProjectData data, string? currentPath, bool hasUnsavedChanges)
         {
-            // Pokud nejsou neuložené změny → rovnou pokračujeme
             if (!hasUnsavedChanges)
                 return true;
 
             var result = MessageBox.Show(
-                "Projekt obsahuje neuložené změny.\nChcete je uložit před vytvořením nového projektu?",
+                "Projekt obsahuje neuložené změny.\nUložit před vytvořením nového projektu?",
                 "Neuložené změny",
                 MessageBoxButton.YesNoCancel,
                 MessageBoxImage.Warning);
 
             return result switch
             {
-                // Uložit a pokračovat
                 MessageBoxResult.Yes => Save(data, currentPath) != null,
-
-                // Bez uložení pokračovat
                 MessageBoxResult.No => true,
-
-                // Zrušit akci
                 _ => false
             };
         }
 
-        // =========================================================
-        // 📤 EXPORT CENÍKU — PriceItems + Materials do JSON
-        // =========================================================
-
-        /// <summary>
-        /// Exportuje ceník práce (PriceItems) a materiálu (Materials) do JSON souboru.
-        /// Otevře dialog pro výběr cesty a uloží data ve formátu .eofcat.
-        /// </summary>
-        /// <param name="data">Připravená exportní data (sestavená v MainWindow)</param>
-        /// <returns>True = export proběhl úspěšně, False = zrušeno nebo chyba</returns>
+        // --------------------------------------------------------------------
+        // HLAVNÍ: Export ceníku (.eofcat)
+        // --------------------------------------------------------------------
         public bool ExportCatalog(CatalogExportData data)
         {
-            // Otevření dialogu pro uložení souboru
             var dialog = new SaveFileDialog
             {
                 Title = "Exportovat ceník",
-                Filter = "Ceník ElektroOffer (*.eofcat)|*.eofcat|Všechny soubory (*.*)|*.*",
+                Filter = "Ceník ElektroOffer (*.eofcat)|*.eofcat",
                 DefaultExt = ".eofcat",
                 FileName = $"cenik_export_{DateTime.Now:yyyy-MM-dd}"
             };
 
-            // Pokud uživatel zruší dialog → vrátíme false
             if (dialog.ShowDialog() != true)
                 return false;
 
             try
             {
-                // Aktualizace času exportu
                 data.ExportedAt = DateTime.Now;
 
-                // Serializace do čitelného JSON
                 var json = JsonSerializer.Serialize(data, _jsonOptions);
-
-                // Zápis na disk
                 File.WriteAllText(dialog.FileName, json);
 
                 MessageBox.Show(
-                    $"Ceník byl úspěšně exportován.\n\n" +
-                    $"Položky práce: {data.PriceItems.Count}\n" +
-                    $"Položky materiálu: {data.Materials.Count}\n\n" +
-                    $"Soubor: {dialog.FileName}",
-                    "Export dokončen",
+                    $"Export dokončen.\n\nPráce: {data.PriceItems.Count}\nMateriál: {data.Materials.Count}",
+                    "Hotovo",
                     MessageBoxButton.OK,
                     MessageBoxImage.Information);
 
@@ -5141,85 +5305,54 @@ namespace ElektroOffer_app.Services
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Chyba při exportu ceníku:\n{ex.Message}",
-                    "Chyba exportu", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show($"Chyba exportu:\n{ex.Message}", "Chyba", MessageBoxButton.OK, MessageBoxImage.Error);
                 return false;
             }
         }
 
-        // =========================================================
-        // 📥 IMPORT CENÍKU — PriceItems + Materials z JSON
-        // =========================================================
-
-        /// <summary>
-        /// Importuje ceník ze souboru .eofcat (JSON).
-        /// Otevře dialog pro výběr souboru a vrátí načtená data.
-        /// Samotný zápis do DB provádí MainWindow (má přístup k AppDbContext).
-        /// </summary>
-        /// <returns>Načtená data ceníku, nebo null při zrušení/chybě</returns>
+        // --------------------------------------------------------------------
+        // HLAVNÍ: Import ceníku (.eofcat)
+        // --------------------------------------------------------------------
         public CatalogExportData? ImportCatalog()
         {
-            // Otevření dialogu pro výběr souboru
             var dialog = new OpenFileDialog
             {
                 Title = "Importovat ceník",
-                Filter = "Ceník ElektroOffer (*.eofcat)|*.eofcat|Všechny soubory (*.*)|*.*"
+                Filter = "Ceník ElektroOffer (*.eofcat)|*.eofcat"
             };
 
-            // Pokud uživatel zruší dialog → vrátíme null
             if (dialog.ShowDialog() != true)
                 return null;
 
             try
             {
-                // Přečtení a deserializace JSON souboru
                 var json = File.ReadAllText(dialog.FileName);
-                var data = JsonSerializer.Deserialize<CatalogExportData>(json, _jsonOptions);
-
-                if (data == null)
-                {
-                    MessageBox.Show(
-                        "Soubor nelze načíst — pravděpodobně poškozený nebo neplatný formát.",
-                        "Chyba importu", MessageBoxButton.OK, MessageBoxImage.Error);
-                    return null;
-                }
-
-                return data;
+                return JsonSerializer.Deserialize<CatalogExportData>(json, _jsonOptions);
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Chyba při importu ceníku:\n{ex.Message}",
-                    "Chyba", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show($"Chyba importu:\n{ex.Message}", "Chyba", MessageBoxButton.OK, MessageBoxImage.Error);
                 return null;
             }
         }
 
-        // =========================================================
-        // 🔒 PRIVÁTNÍ: Zápis JSON na disk
-        // =========================================================
-
-        /// <summary>
-        /// Interní metoda — serializuje data do JSON a zapíše na disk.
-        /// </summary>
+        // --------------------------------------------------------------------
+        // DETAILNÍ: Interní metoda pro zápis JSON
+        // --------------------------------------------------------------------
         private string? SaveToPath(ProjectData data, string path)
         {
             try
             {
-                // Aktualizace data uložení
                 data.SavedAt = DateTime.Now;
 
-                // Serializace do JSON stringu
                 var json = JsonSerializer.Serialize(data, _jsonOptions);
-
-                // Zápis na disk
                 File.WriteAllText(path, json);
 
                 return path;
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Chyba při ukládání souboru:\n{ex.Message}",
-                    "Chyba", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show($"Chyba ukládání:\n{ex.Message}", "Chyba", MessageBoxButton.OK, MessageBoxImage.Error);
                 return null;
             }
         }
@@ -6455,9 +6588,9 @@ using System.Windows;
 using ElektroOffer_app.ViewModels.Items;
 using ElektroOffer_app.Commands;
 
-
 namespace ElektroOffer_app
 {
+    // RELEASE MAIN 1.1.1 – původní stabilní verze před refaktorem do MVVM
     public partial class MainWindow : Window, INotifyPropertyChanged
     {
         // =========================================================
@@ -6655,30 +6788,18 @@ namespace ElektroOffer_app
         // 📋 MENU — AKCE
         // =========================================================
 
-        /// <summary>
-        /// Menu: Soubor → Nový projekt
-        /// Zeptá se na uložení změn, pak resetuje celou kalkulaci.
-        /// </summary>
         private void MenuNewProject_Click(object sender, RoutedEventArgs e)
         {
-            // Sestaví aktuální data projektu (potřeba pro případné uložení)
             var currentData = BuildProjectData();
 
-            // Zkontroluje neuložené změny — pokud uživatel zruší, nic neděláme
             if (!_projectService.ConfirmNewProject(currentData, _currentFilePath, _hasUnsavedChanges))
                 return;
 
-            // Reset aplikace do počátečního stavu
             ResetToNewProject();
         }
 
-        /// <summary>
-        /// Menu: Soubor → Otevřít
-        /// Načte projekt z .eof souboru a naplní UI daty.
-        /// </summary>
         private void MenuLoad_Click(object sender, RoutedEventArgs e)
         {
-            // Pokud jsou neuložené změny → zeptáme se před načtením
             if (_hasUnsavedChanges)
             {
                 var result = MessageBox.Show(
@@ -6691,22 +6812,16 @@ namespace ElektroOffer_app
                 if (result == MessageBoxResult.Yes)
                 {
                     var saved = _projectService.Save(BuildProjectData(), _currentFilePath);
-                    if (saved == null) return; // uložení selhalo nebo bylo zrušeno
+                    if (saved == null) return;
                 }
             }
 
-            // Otevření dialogu a načtení dat
             var (data, path) = _projectService.Load();
-            if (data == null) return; // uživatel zrušil nebo chyba
+            if (data == null) return;
 
-            // Naplnění UI načtenými daty
             ApplyProjectData(data, path!);
         }
 
-        /// <summary>
-        /// Menu: Soubor → Uložit (Ctrl+S)
-        /// Uloží na aktuální cestu, nebo vyvolá Save As dialog.
-        /// </summary>
         private void MenuSave_Click(object sender, RoutedEventArgs e)
         {
             var data = BuildProjectData();
@@ -6716,10 +6831,6 @@ namespace ElektroOffer_app
                 OnProjectSaved(savedPath);
         }
 
-        /// <summary>
-        /// Menu: Soubor → Uložit jako (Ctrl+Shift+S)
-        /// Vždy otevře dialog pro výběr nového umístění.
-        /// </summary>
         private void MenuSaveAs_Click(object sender, RoutedEventArgs e)
         {
             var data = BuildProjectData();
@@ -6733,20 +6844,13 @@ namespace ElektroOffer_app
         // ❓ NÁPOVĚDA
         // =========================================================
 
-        /// <summary>
-        /// Menu: Nápověda → O aplikaci
-        /// Otevře modální okno s logem, verzí a autorem aplikace.
-        /// Owner = this zajistí centrování okna vůči MainWindow.
-        /// </summary>
         private void MenuAbout_Click(object sender, RoutedEventArgs e)
         {
             var aboutWindow = new AboutWindow
             {
-                // Owner zajistí správné centrování a chování modálního okna
                 Owner = this
             };
 
-            // ShowDialog = modální okno (nelze klikat na MainWindow dokud je otevřené)
             aboutWindow.ShowDialog();
         }
 
@@ -6754,21 +6858,15 @@ namespace ElektroOffer_app
         // 🛠️ POMOCNÉ METODY — Save/Load logika
         // =========================================================
 
-        /// <summary>
-        /// Sestaví objekt ProjectData z aktuálního stavu UI.
-        /// Volá se před každým uložením.
-        /// </summary>
         private ProjectData BuildProjectData()
         {
             return new ProjectData
             {
-                // Metadata
                 ProjectName = _currentFilePath != null
                     ? System.IO.Path.GetFileNameWithoutExtension(_currentFilePath)
                     : "Nový projekt",
                 SavedAt = DateTime.Now,
 
-                // Sekce PRÁCE — uložíme vybrané hodnoty každého řádku
                 WorkItems = WorkCalcItems.Select(x => new WorkItemData
                 {
                     SelectedTask = x.SelectedTask,
@@ -6778,7 +6876,6 @@ namespace ElektroOffer_app
                     Quantity = x.Quantity
                 }).ToList(),
 
-                // Sekce MATERIÁL — uložíme název materiálu a množství
                 MaterialItems = MaterialItems.Select(x => new MaterialItemData
                 {
                     MaterialName = x.MaterialItem?.Name,
@@ -6787,24 +6884,15 @@ namespace ElektroOffer_app
             };
         }
 
-        /// <summary>
-        /// Aplikuje načtená data (ProjectData) do UI.
-        /// Zavolá se po úspěšném Load.
-        /// </summary>
         private void ApplyProjectData(ProjectData data, string path)
         {
-            // Nejdříve vyprázdníme stávající UI
             ClearAllItems();
 
-            // ========================= //
-            // 🔧 OBNOVENÍ SEKCE: PRÁCE  //
-            // ========================= //
             foreach (var saved in data.WorkItems)
             {
                 var item = new CalculationItemViewModel();
                 item.PropertyChanged += Item_PropertyChanged;
 
-                // Obnovení vybraných hodnot
                 item.SelectedTask = saved.SelectedTask;
                 item.SelectedSpecification = saved.SelectedSpecification;
                 item.SelectedMaterial = saved.SelectedMaterial;
@@ -6814,35 +6902,24 @@ namespace ElektroOffer_app
                 WorkCalcItems.Add(item);
             }
 
-            // =========================== //
-            // 📦 OBNOVENÍ SEKCE: MATERIÁL //
-            // =========================== //
             foreach (var saved in data.MaterialItems)
             {
                 var item = new CalculationItemViewModel();
                 item.PropertyChanged += Item_PropertyChanged;
 
-                // Dohledání objektu Material z DB podle názvu
-                // (ukládáme název, ne ID → nezávislé na DB)
                 item.MaterialItem = Materials.FirstOrDefault(m => m.Name == saved.MaterialName);
                 item.Quantity = saved.Quantity;
 
                 MaterialItems.Add(item);
             }
 
-            // Uložíme cestu a resetujeme příznak změn
             _currentFilePath = path;
             _hasUnsavedChanges = false;
 
-            // Aktualizace titulku a stavového řádku
             UpdateWindowTitle(path);
             Recalculate();
         }
 
-        /// <summary>
-        /// Zavolá se po úspěšném uložení.
-        /// Aktualizuje cestu, příznak změn, titulek a status.
-        /// </summary>
         private void OnProjectSaved(string path)
         {
             _currentFilePath = path;
@@ -6850,15 +6927,10 @@ namespace ElektroOffer_app
             UpdateWindowTitle(path);
         }
 
-        /// <summary>
-        /// Resetuje aplikaci do stavu "nový projekt".
-        /// Vymaže všechny řádky a přidá výchozí prázdné řádky.
-        /// </summary>
         private void ResetToNewProject()
         {
             ClearAllItems();
 
-            // Přidání výchozích prázdných řádků jako při startu
             for (int i = 0; i < 5; i++)
             {
                 AddWorkItemInternal();
@@ -6868,18 +6940,12 @@ namespace ElektroOffer_app
             _currentFilePath = null;
             _hasUnsavedChanges = false;
 
-            // Reset titulku a stavového řádku
             Title = "Elektro Offer - Kalkulace";
             StatusText = "Nový projekt";
         }
 
-        /// <summary>
-        /// Vymaže všechny řádky z obou sekcí (PRÁCE + MATERIÁL).
-        /// Odhlásí event handlery před odebráním, aby nedošlo k memory leaku.
-        /// </summary>
         private void ClearAllItems()
         {
-            // Odhlášení event handlerů — důležité pro správnou správu paměti
             foreach (var item in WorkCalcItems)
                 item.PropertyChanged -= Item_PropertyChanged;
 
@@ -6891,40 +6957,24 @@ namespace ElektroOffer_app
             BudgetItems.Clear();
         }
 
-        /// <summary>
-        /// Aktualizuje titulek okna a text ve StatusBaru.
-        /// Konvence v IT: "*" v titulku = neuložené změny.
-        /// </summary>
         private void UpdateWindowTitle(string path)
         {
             var fileName = System.IO.Path.GetFileNameWithoutExtension(path);
-
-            // Titulek okna: "NázevSouboru - Elektro Offer"
             Title = $"{fileName} - Elektro Offer";
-
-            // StatusBar: celá cesta k souboru
             StatusText = path;
         }
 
-        /// <summary>
-        /// Označí projekt jako "má neuložené změny".
-        /// Volá se při každé změně dat v UI.
-        /// </summary>
         private void MarkAsChanged()
         {
             if (!_hasUnsavedChanges)
             {
                 _hasUnsavedChanges = true;
 
-                // Přidá hvězdičku do titulku (konvence: * = neuložené změny)
                 if (!Title.StartsWith("*"))
                     Title = "* " + Title;
             }
         }
 
-        /// <summary>
-        /// Zjistí, zda je projekt prázdný (nic není vyplněno).
-        /// </summary>
         private bool IsProjectEmpty()
         {
             bool workEmpty = WorkCalcItems.All(x =>
@@ -6969,7 +7019,6 @@ namespace ElektroOffer_app
         // =========================================================
         private void DeleteWorkItem_Click(object sender, RoutedEventArgs e)
         {
-            // potvrzovací dialog
             if (MessageBox.Show("Opravdu chcete položku odebrat?", "Potvrzení",
                 MessageBoxButton.OKCancel, MessageBoxImage.Question) != MessageBoxResult.OK)
                 return;
@@ -6985,7 +7034,6 @@ namespace ElektroOffer_app
 
         private void DeleteMaterialItem_Click(object sender, RoutedEventArgs e)
         {
-            // potvrzovací dialog
             if (MessageBox.Show("Opravdu chcete položku odebrat?", "Potvrzení",
                 MessageBoxButton.OKCancel, MessageBoxImage.Question) != MessageBoxResult.OK)
                 return;
@@ -7007,7 +7055,6 @@ namespace ElektroOffer_app
             if (sender is FrameworkElement fe &&
                 fe.DataContext is CalculationItemViewModel item)
             {
-                // zjištění, zda má řádek nějaká data
                 bool isFilled =
                     item.SelectedTask != null ||
                     item.SelectedSpecification != null ||
@@ -7015,7 +7062,6 @@ namespace ElektroOffer_app
                     item.SelectedLocation != null ||
                     item.Quantity > 0;
 
-                // potvrzení jen pokud je řádek vyplněný
                 if (isFilled)
                 {
                     if (MessageBox.Show(
@@ -7026,7 +7072,6 @@ namespace ElektroOffer_app
                         return;
                 }
 
-                // reset hodnot
                 item.SelectedTask = null;
                 item.SelectedSpecification = null;
                 item.SelectedMaterial = null;
@@ -7045,12 +7090,10 @@ namespace ElektroOffer_app
             if (sender is FrameworkElement fe &&
                 fe.DataContext is CalculationItemViewModel item)
             {
-                // zjištění, zda je řádek vyplněný
                 bool isFilled =
                     item.MaterialItem != null ||
                     item.Quantity > 0;
 
-                // potvrzení jen pokud má data
                 if (isFilled)
                 {
                     if (MessageBox.Show(
@@ -7061,7 +7104,6 @@ namespace ElektroOffer_app
                         return;
                 }
 
-                // reset hodnot
                 item.MaterialItem = null;
                 item.Quantity = 0;
 
@@ -7074,13 +7116,13 @@ namespace ElektroOffer_app
         // =========================================================
         private void WorkCalcItems_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
         {
-            MarkAsChanged(); // každá změna kolekce = neuložená změna
+            MarkAsChanged();
             Recalculate();
         }
 
         private void MaterialItems_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
         {
-            MarkAsChanged(); // každá změna kolekce = neuložená změna
+            MarkAsChanged();
             Recalculate();
         }
 
@@ -7091,7 +7133,7 @@ namespace ElektroOffer_app
                 e.PropertyName == nameof(CalculationItemViewModel.WorkItem) ||
                 e.PropertyName == nameof(CalculationItemViewModel.MaterialItem))
             {
-                MarkAsChanged(); // každá změna hodnoty = neuložená změna
+                MarkAsChanged();
                 Recalculate();
             }
         }
@@ -7101,61 +7143,32 @@ namespace ElektroOffer_app
         // =========================================================
         private void Recalculate()
         {
-            // =========================
-            // 💰 CELKOVÉ SOUČTY
-            // =========================
             WorkTotal = WorkCalcItems.Sum(x => x.Total);
             MaterialTotal = MaterialItems.Sum(x => x.Total);
             GrandTotal = WorkTotal + MaterialTotal;
 
-            // =========================
-            // 📊 VYČIŠTĚNÍ ROZPISU
-            // =========================
             BudgetItems.Clear();
 
-            // =========================
-            // 🔧 PRÁCE
-            // =========================
             foreach (var x in WorkCalcItems.Where(x => x.Total > 0))
             {
                 BudgetItems.Add(new BudgetItem
                 {
                     Type = "PRÁCE",
-
-                    // popis sestavený z vybraných hodnot
                     Description = $"{x.SelectedTask} / {x.SelectedSpecification} / {x.SelectedMaterial} / {x.SelectedLocation}",
-
-                    // měrná jednotka práce (hod, ks, apod.)
-                    // ?? "" = fallback na prázdný string pokud WorkUnit vrátí null
                     Unit = x.WorkUnit ?? "",
-
-                    // množství
                     Quantity = x.Quantity,
-
-                    // výsledná cena řádku
                     Price = x.Total
                 });
             }
 
-            // =========================
-            // 📦 MATERIÁL
-            // =========================
             foreach (var x in MaterialItems.Where(x => x.Total > 0 && x.MaterialItem != null))
             {
                 BudgetItems.Add(new BudgetItem
                 {
                     Type = "MATERIÁL",
-
-                    // název materiálu
                     Description = x.MaterialItem!.Name,
-
-                    // měrná jednotka materiálu (ks, m, balení, ...)
                     Unit = x.MaterialItem?.Unit ?? "",
-
-                    // množství
                     Quantity = x.Quantity,
-
-                    // výsledná cena řádku
                     Price = x.Total
                 });
             }
@@ -7172,16 +7185,11 @@ namespace ElektroOffer_app
         // =========================================================
         // 🚪 MENU: SOUBOR → KONEC
         // =========================================================
-        // 👉 Rozlišuje 3 stavy:
-        //    1) Nový + prázdný projekt → jednoduché potvrzení
-        //    2) Neuložené změny → varování + možnost uložit
-        //    3) Uložený a beze změn → rovnou ukončit
         private void MenuExit_Click(object sender, RoutedEventArgs e)
         {
             bool isNewProject = _currentFilePath == null;
             bool isEmpty = IsProjectEmpty();
 
-            // 1) Nový projekt + prázdný
             if (isNewProject && isEmpty)
             {
                 var result = MessageBox.Show(
@@ -7197,7 +7205,6 @@ namespace ElektroOffer_app
                 return;
             }
 
-            // 2) Neuložené změny
             if (_hasUnsavedChanges)
             {
                 var result = MessageBox.Show(
@@ -7219,21 +7226,16 @@ namespace ElektroOffer_app
                     return;
                 }
 
-                // YES = ukončit bez uložení
                 Application.Current.Shutdown();
                 return;
             }
 
-            // 3) Nic se nezměnilo
             Application.Current.Shutdown();
         }
 
         // =========================================================
         // ❌ KŘÍŽEK (X) – UKONČENÍ OKNA
         // =========================================================
-        // 👉 Stejná logika jako MenuExit_Click
-        // 👉 Pokud jsou neuložené změny → varování
-        // 👉 Pokud je projekt prázdný → jednoduché potvrzení
         protected override void OnClosing(CancelEventArgs e)
         {
             base.OnClosing(e);
@@ -7241,7 +7243,6 @@ namespace ElektroOffer_app
             bool isNewProject = _currentFilePath == null;
             bool isEmpty = IsProjectEmpty();
 
-            // 1) Nový projekt + prázdný
             if (isNewProject && isEmpty)
             {
                 var result = MessageBox.Show(
@@ -7256,7 +7257,6 @@ namespace ElektroOffer_app
                 return;
             }
 
-            // 2) Neuložené změny
             if (_hasUnsavedChanges)
             {
                 var result = MessageBox.Show(
@@ -7283,39 +7283,8 @@ namespace ElektroOffer_app
 
                 return;
             }
-
-            // 3) Nic se nezměnilo → zavřít bez dotazu
         }
-
-        // ================================
-        // 🔹 PŘÍPAD 3: Nic se nezměnilo → rovnou ukončit
-        // ================================
     }
-
-    // ADD-KOMENT: PDF export metody — odkomentovat až bude QuestPDF nainstalován a struktura dokumentu finální
-    // ADD-KOMENT: Instalace: NuGet → Install-Package QuestPDF
-    // ADD-KOMENT: Docs: https://www.questpdf.com/documentation/getting-started.html
-    /*
-    private void MenuExportPdf_Click(object sender, RoutedEventArgs e)
-    {
-        // 🚧 PLACEHOLDER — implementace přijde v další fázi
-        MessageBox.Show(
-            "Export PDF kalkulace bude implementován v další fázi projektu.\n\nPlánovaná knihovna: QuestPDF",
-            "Připravuje se",
-            MessageBoxButton.OK,
-            MessageBoxImage.Information);
-    }
-
-    private void MenuExportPricePdf_Click(object sender, RoutedEventArgs e)
-    {
-        // 🚧 PLACEHOLDER — implementace přijde v další fázi
-        MessageBox.Show(
-            "Export PDF ceníku bude implementován v další fázi projektu.\n\nPlánovaná knihovna: QuestPDF",
-            "Připravuje se",
-            MessageBoxButton.OK,
-            MessageBoxImage.Information);
-    }
-    */
 }
 
 
@@ -7333,81 +7302,7 @@ using System.Reflection;
 --- Soubor: App.g.cs
 --- Cesta: \obj\Debug\net10.0-windows\App.g.cs
 ----------------------------------------
-﻿#pragma checksum "..\..\..\App.xaml" "{ff1816ec-aa5e-4d10-87f7-6f4963833460}" "F034C29051FAC4A198ED4C2B198BD55350EB86A8"
-//------------------------------------------------------------------------------
-// <auto-generated>
-//     This code was generated by a tool.
-//
-//     Changes to this file may cause incorrect behavior and will be lost if
-//     the code is regenerated.
-// </auto-generated>
-//------------------------------------------------------------------------------
-
-using System;
-using System.Diagnostics;
-using System.Windows;
-using System.Windows.Automation;
-using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
-using System.Windows.Controls.Ribbon;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Ink;
-using System.Windows.Input;
-using System.Windows.Markup;
-using System.Windows.Media;
-using System.Windows.Media.Animation;
-using System.Windows.Media.Effects;
-using System.Windows.Media.Imaging;
-using System.Windows.Media.Media3D;
-using System.Windows.Media.TextFormatting;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using System.Windows.Shell;
-
-
-namespace ElektroOffer_app {
-    
-    
-    /// <summary>
-    /// App
-    /// </summary>
-    public partial class App : System.Windows.Application {
-        
-        /// <summary>
-        /// InitializeComponent
-        /// </summary>
-        [System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [System.CodeDom.Compiler.GeneratedCodeAttribute("PresentationBuildTasks", "10.0.8.0")]
-        public void InitializeComponent() {
-            
-            #line 4 "..\..\..\App.xaml"
-            this.StartupUri = new System.Uri("Views/MainWindow.xaml", System.UriKind.Relative);
-            
-            #line default
-            #line hidden
-        }
-        
-        /// <summary>
-        /// Application Entry Point.
-        /// </summary>
-        [System.STAThreadAttribute()]
-        [System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [System.CodeDom.Compiler.GeneratedCodeAttribute("PresentationBuildTasks", "10.0.8.0")]
-        public static void Main() {
-            ElektroOffer_app.App app = new ElektroOffer_app.App();
-            app.InitializeComponent();
-            app.Run();
-        }
-    }
-}
-
-
-
---- Soubor: App.g.i.cs
---- Cesta: \obj\Debug\net10.0-windows\App.g.i.cs
-----------------------------------------
-﻿#pragma checksum "..\..\..\App.xaml" "{ff1816ec-aa5e-4d10-87f7-6f4963833460}" "F034C29051FAC4A198ED4C2B198BD55350EB86A8"
+﻿#pragma checksum "..\..\..\App.xaml" "{ff1816ec-aa5e-4d10-87f7-6f4963833460}" "48A781819FA11DEC019DA4E079E13F06F984D0A1"
 //------------------------------------------------------------------------------
 // <auto-generated>
 //     Tento kód byl generován nástrojem.
@@ -7456,7 +7351,82 @@ namespace ElektroOffer_app {
         [System.CodeDom.Compiler.GeneratedCodeAttribute("PresentationBuildTasks", "10.0.8.0")]
         public void InitializeComponent() {
             
-            #line 4 "..\..\..\App.xaml"
+            #line 19 "..\..\..\App.xaml"
+            this.StartupUri = new System.Uri("Views/MainWindow.xaml", System.UriKind.Relative);
+            
+            #line default
+            #line hidden
+        }
+        
+        /// <summary>
+        /// Application Entry Point.
+        /// </summary>
+        [System.STAThreadAttribute()]
+        [System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [System.CodeDom.Compiler.GeneratedCodeAttribute("PresentationBuildTasks", "10.0.8.0")]
+        public static void Main() {
+            ElektroOffer_app.App app = new ElektroOffer_app.App();
+            app.InitializeComponent();
+            app.Run();
+        }
+    }
+}
+
+
+
+--- Soubor: App.g.i.cs
+--- Cesta: \obj\Debug\net10.0-windows\App.g.i.cs
+----------------------------------------
+﻿#pragma checksum "..\..\..\App.xaml" "{ff1816ec-aa5e-4d10-87f7-6f4963833460}" "48A781819FA11DEC019DA4E079E13F06F984D0A1"
+//------------------------------------------------------------------------------
+// <auto-generated>
+//     Tento kód byl generován nástrojem.
+//     Verze modulu runtime:4.0.30319.42000
+//
+//     Změny tohoto souboru mohou způsobit nesprávné chování a budou ztraceny,
+//     dojde-li k novému generování kódu.
+// </auto-generated>
+//------------------------------------------------------------------------------
+
+using System;
+using System.Diagnostics;
+using System.Windows;
+using System.Windows.Automation;
+using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
+using System.Windows.Controls.Ribbon;
+using System.Windows.Data;
+using System.Windows.Documents;
+using System.Windows.Ink;
+using System.Windows.Input;
+using System.Windows.Markup;
+using System.Windows.Media;
+using System.Windows.Media.Animation;
+using System.Windows.Media.Effects;
+using System.Windows.Media.Imaging;
+using System.Windows.Media.Media3D;
+using System.Windows.Media.TextFormatting;
+using System.Windows.Navigation;
+using System.Windows.Shapes;
+using System.Windows.Shell;
+
+
+namespace ElektroOffer_app {
+    
+    
+    /// <summary>
+    /// App
+    /// </summary>
+    public partial class App : System.Windows.Application {
+        
+        /// <summary>
+        /// InitializeComponent
+        /// </summary>
+        [System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [System.CodeDom.Compiler.GeneratedCodeAttribute("PresentationBuildTasks", "10.0.8.0")]
+        public void InitializeComponent() {
+            
+            #line 19 "..\..\..\App.xaml"
             this.StartupUri = new System.Uri("Views/MainWindow.xaml", System.UriKind.Relative);
             
             #line default
@@ -7484,10 +7454,11 @@ namespace ElektroOffer_app {
 ----------------------------------------
 //------------------------------------------------------------------------------
 // <auto-generated>
-//     This code was generated by a tool.
+//     Tento kód byl generován nástrojem.
+//     Verze modulu runtime:4.0.30319.42000
 //
-//     Changes to this file may cause incorrect behavior and will be lost if
-//     the code is regenerated.
+//     Změny tohoto souboru mohou způsobit nesprávné chování a budou ztraceny,
+//     dojde-li k novému generování kódu.
 // </auto-generated>
 //------------------------------------------------------------------------------
 
@@ -7497,7 +7468,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("ElektroOffer_app")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.2.1.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.2.1+6ccdf9bd10b5663b0d9ae175e5a25c42c95c5f72")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.2.1+be80ac3035a7738c361d3c10eafbfcc600aa83e5")]
 [assembly: System.Reflection.AssemblyProductAttribute("ElektroOffer_app")]
 [assembly: System.Reflection.AssemblyTitleAttribute("ElektroOffer_app")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.2.1.0")]
@@ -7524,10 +7495,11 @@ global using System.Threading.Tasks;
 ----------------------------------------
 ﻿//------------------------------------------------------------------------------
 // <auto-generated>
-//     This code was generated by a tool.
+//     Tento kód byl generován nástrojem.
+//     Verze modulu runtime:4.0.30319.42000
 //
-//     Changes to this file may cause incorrect behavior and will be lost if
-//     the code is regenerated.
+//     Změny tohoto souboru mohou způsobit nesprávné chování a budou ztraceny,
+//     dojde-li k novému generování kódu.
 // </auto-generated>
 //------------------------------------------------------------------------------
 
@@ -7562,10 +7534,11 @@ global using System.Threading.Tasks;
 ﻿#pragma checksum "..\..\..\..\Views\AboutWindow.xaml" "{ff1816ec-aa5e-4d10-87f7-6f4963833460}" "586C1CA9B5801C162D473F433D296136C517A37D"
 //------------------------------------------------------------------------------
 // <auto-generated>
-//     This code was generated by a tool.
+//     Tento kód byl generován nástrojem.
+//     Verze modulu runtime:4.0.30319.42000
 //
-//     Changes to this file may cause incorrect behavior and will be lost if
-//     the code is regenerated.
+//     Změny tohoto souboru mohou způsobit nesprávné chování a budou ztraceny,
+//     dojde-li k novému generování kódu.
 // </auto-generated>
 //------------------------------------------------------------------------------
 
@@ -7620,7 +7593,7 @@ namespace ElektroOffer_app {
                 return;
             }
             _contentLoaded = true;
-            System.Uri resourceLocater = new System.Uri("/ElektroOffer_app;V1.2.1.0;component/views/aboutwindow.xaml", System.UriKind.Relative);
+            System.Uri resourceLocater = new System.Uri("/ElektroOffer_app;component/views/aboutwindow.xaml", System.UriKind.Relative);
             
             #line 1 "..\..\..\..\Views\AboutWindow.xaml"
             System.Windows.Application.LoadComponent(this, resourceLocater);
@@ -7765,10 +7738,11 @@ namespace ElektroOffer_app {
 ﻿#pragma checksum "..\..\..\..\Views\MainWindow.xaml" "{ff1816ec-aa5e-4d10-87f7-6f4963833460}" "1A1966A4C7A38B7E327CEF04A68417736DBFE759"
 //------------------------------------------------------------------------------
 // <auto-generated>
-//     This code was generated by a tool.
+//     Tento kód byl generován nástrojem.
+//     Verze modulu runtime:4.0.30319.42000
 //
-//     Changes to this file may cause incorrect behavior and will be lost if
-//     the code is regenerated.
+//     Změny tohoto souboru mohou způsobit nesprávné chování a budou ztraceny,
+//     dojde-li k novému generování kódu.
 // </auto-generated>
 //------------------------------------------------------------------------------
 
@@ -7815,7 +7789,7 @@ namespace ElektroOffer_app {
                 return;
             }
             _contentLoaded = true;
-            System.Uri resourceLocater = new System.Uri("/ElektroOffer_app;V1.2.1.0;component/views/mainwindow.xaml", System.UriKind.Relative);
+            System.Uri resourceLocater = new System.Uri("/ElektroOffer_app;component/views/mainwindow.xaml", System.UriKind.Relative);
             
             #line 1 "..\..\..\..\Views\MainWindow.xaml"
             System.Windows.Application.LoadComponent(this, resourceLocater);
