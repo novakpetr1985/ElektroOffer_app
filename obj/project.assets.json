@@ -5,7 +5,7 @@
       "Humanizer.Core/2.14.1": {
         "type": "package",
         "compile": {
-          "lib/net6.0/_._": {
+          "lib/net6.0/Humanizer.dll": {
             "related": ".xml"
           }
         },
@@ -18,7 +18,7 @@
       "Microsoft.Build.Framework/18.0.2": {
         "type": "package",
         "compile": {
-          "ref/net10.0/_._": {
+          "ref/net10.0/Microsoft.Build.Framework.dll": {
             "related": ".xml"
           }
         },
@@ -41,7 +41,7 @@
           "Microsoft.CodeAnalysis.Analyzers": "3.11.0"
         },
         "compile": {
-          "lib/net9.0/_._": {
+          "lib/net9.0/Microsoft.CodeAnalysis.dll": {
             "related": ".pdb;.xml"
           }
         },
@@ -99,7 +99,7 @@
           "Microsoft.CodeAnalysis.Common": "[5.0.0]"
         },
         "compile": {
-          "lib/net9.0/_._": {
+          "lib/net9.0/Microsoft.CodeAnalysis.CSharp.dll": {
             "related": ".pdb;.xml"
           }
         },
@@ -161,7 +161,7 @@
           "System.Composition": "9.0.0"
         },
         "compile": {
-          "lib/net9.0/_._": {
+          "lib/net9.0/Microsoft.CodeAnalysis.CSharp.Workspaces.dll": {
             "related": ".pdb;.xml"
           }
         },
@@ -221,7 +221,7 @@
           "System.Composition": "9.0.0"
         },
         "compile": {
-          "lib/net9.0/_._": {
+          "lib/net9.0/Microsoft.CodeAnalysis.Workspaces.dll": {
             "related": ".pdb;.xml"
           }
         },
@@ -289,7 +289,10 @@
           "System.Composition": "9.0.0"
         },
         "compile": {
-          "lib/net9.0/_._": {}
+          "lib/net9.0/Microsoft.CodeAnalysis.ExternalAccess.RazorCompiler.dll": {},
+          "lib/net9.0/Microsoft.CodeAnalysis.Workspaces.MSBuild.dll": {
+            "related": ".pdb;.xml"
+          }
         },
         "runtime": {
           "lib/net9.0/Microsoft.CodeAnalysis.ExternalAccess.RazorCompiler.dll": {},
@@ -417,7 +420,7 @@
           "Newtonsoft.Json": "13.0.3"
         },
         "compile": {
-          "lib/net10.0/_._": {
+          "lib/net10.0/Microsoft.EntityFrameworkCore.Design.dll": {
             "related": ".xml"
           }
         },
@@ -692,7 +695,7 @@
       "Microsoft.VisualStudio.SolutionPersistence/1.0.52": {
         "type": "package",
         "compile": {
-          "lib/net8.0/_._": {
+          "lib/net8.0/Microsoft.VisualStudio.SolutionPersistence.dll": {
             "related": ".xml"
           }
         },
@@ -705,7 +708,7 @@
       "Mono.TextTemplating/3.0.0": {
         "type": "package",
         "compile": {
-          "lib/net6.0/_._": {}
+          "lib/net6.0/Mono.TextTemplating.dll": {}
         },
         "runtime": {
           "lib/net6.0/Mono.TextTemplating.dll": {}
@@ -717,7 +720,7 @@
       "Newtonsoft.Json/13.0.3": {
         "type": "package",
         "compile": {
-          "lib/net6.0/_._": {
+          "lib/net6.0/Newtonsoft.Json.dll": {
             "related": ".xml"
           }
         },
@@ -889,7 +892,7 @@
       "System.Composition.AttributedModel/9.0.0": {
         "type": "package",
         "compile": {
-          "lib/net9.0/_._": {
+          "lib/net9.0/System.Composition.AttributedModel.dll": {
             "related": ".xml"
           }
         },
@@ -908,7 +911,7 @@
           "System.Composition.AttributedModel": "9.0.0"
         },
         "compile": {
-          "lib/net9.0/_._": {
+          "lib/net9.0/System.Composition.Convention.dll": {
             "related": ".xml"
           }
         },
@@ -927,7 +930,7 @@
           "System.Composition.Runtime": "9.0.0"
         },
         "compile": {
-          "lib/net9.0/_._": {
+          "lib/net9.0/System.Composition.Hosting.dll": {
             "related": ".xml"
           }
         },
@@ -943,7 +946,7 @@
       "System.Composition.Runtime/9.0.0": {
         "type": "package",
         "compile": {
-          "lib/net9.0/_._": {
+          "lib/net9.0/System.Composition.Runtime.dll": {
             "related": ".xml"
           }
         },
@@ -964,7 +967,7 @@
           "System.Composition.Runtime": "9.0.0"
         },
         "compile": {
-          "lib/net9.0/_._": {
+          "lib/net9.0/System.Composition.TypedParts.dll": {
             "related": ".xml"
           }
         },
@@ -2919,7 +2922,7 @@
     "D:\\_VisualStudioSDK\\NuGetPackages": {}
   },
   "project": {
-    "version": "1.1.1",
+    "version": "1.0.0",
     "restore": {
       "projectUniqueName": "D:\\_GitHub\\ElektroOffer_app\\ElektroOffer_app.csproj",
       "projectName": "ElektroOffer_app",
@@ -2972,7 +2975,6 @@
             "version": "[10.0.8, )"
           },
           "Microsoft.EntityFrameworkCore.Design": {
-            "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
             "suppressParent": "All",
             "target": "Package",
             "version": "[10.0.8, )"
@@ -2982,7 +2984,6 @@
             "version": "[10.0.8, )"
           },
           "Microsoft.EntityFrameworkCore.Tools": {
-            "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
             "suppressParent": "All",
             "target": "Package",
             "version": "[10.0.8, )"
