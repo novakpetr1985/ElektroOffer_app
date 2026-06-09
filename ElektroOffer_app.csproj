@@ -22,12 +22,19 @@
 
   <ItemGroup>
     <None Remove="elektrooffer.db" />
+    <None Remove="Resources\Icons\LOGO.jpg" />
   </ItemGroup>
 
   <ItemGroup>
     <Content Include="elektrooffer.db">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Resources\Icons\LOGO.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
   </ItemGroup>
 
 </Project>
