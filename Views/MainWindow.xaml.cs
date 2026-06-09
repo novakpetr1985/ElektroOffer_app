@@ -8,6 +8,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using ElektroOffer_app.ViewModels.Items;
+using ElektroOffer_app.Commands;
 
 
 namespace ElektroOffer_app
@@ -305,63 +306,6 @@ namespace ElektroOffer_app
         }
 
         // =========================================================
-        // 🚪 KONEC
-        // =========================================================
-
-        /// <summary>
-        /// Menu: Soubor → Konec
-        /// Zeptá se na uložení neuložených změn, pak ukončí aplikaci.
-        /// </summary>
-        private void MenuExit_Click(object sender, RoutedEventArgs e)
-        {
-            // Pokud jsou neuložené změny → zeptáme se před ukončením
-            if (_hasUnsavedChanges)
-            {
-                var result = MessageBox.Show(
-                    "Máte neuložené změny. Chcete je uložit před ukončením?",
-                    "Neuložené změny",
-                    MessageBoxButton.YesNoCancel,
-                    MessageBoxImage.Warning);
-
-                if (result == MessageBoxResult.Cancel) return;
-
-                if (result == MessageBoxResult.Yes)
-                {
-                    var saved = _projectService.Save(BuildProjectData(), _currentFilePath);
-                    if (saved == null) return; // uložení selhalo nebo bylo zrušeno
-                }
-            }
-
-            // Ukončení aplikace
-            Application.Current.Shutdown();
-        }
-
-        // ADD-KOMENT: PDF export metody — odkomentovat až bude QuestPDF nainstalován a struktura dokumentu finální
-        // ADD-KOMENT: Instalace: NuGet → Install-Package QuestPDF
-        // ADD-KOMENT: Docs: https://www.questpdf.com/documentation/getting-started.html
-        /*
-        private void MenuExportPdf_Click(object sender, RoutedEventArgs e)
-        {
-            // 🚧 PLACEHOLDER — implementace přijde v další fázi
-            MessageBox.Show(
-                "Export PDF kalkulace bude implementován v další fázi projektu.\n\nPlánovaná knihovna: QuestPDF",
-                "Připravuje se",
-                MessageBoxButton.OK,
-                MessageBoxImage.Information);
-        }
-
-        private void MenuExportPricePdf_Click(object sender, RoutedEventArgs e)
-        {
-            // 🚧 PLACEHOLDER — implementace přijde v další fázi
-            MessageBox.Show(
-                "Export PDF ceníku bude implementován v další fázi projektu.\n\nPlánovaná knihovna: QuestPDF",
-                "Připravuje se",
-                MessageBoxButton.OK,
-                MessageBoxImage.Information);
-        }
-        */
-
-        // =========================================================
         // 🛠️ POMOCNÉ METODY — Save/Load logika
         // =========================================================
 
@@ -531,6 +475,25 @@ namespace ElektroOffer_app
                 if (!Title.StartsWith("*"))
                     Title = "* " + Title;
             }
+        }
+
+        /// <summary>
+        /// Zjistí, zda je projekt prázdný (nic není vyplněno).
+        /// </summary>
+        private bool IsProjectEmpty()
+        {
+            bool workEmpty = WorkCalcItems.All(x =>
+                x.SelectedTask == null &&
+                x.SelectedSpecification == null &&
+                x.SelectedMaterial == null &&
+                x.SelectedLocation == null &&
+                x.Quantity == 0);
+
+            bool materialEmpty = MaterialItems.All(x =>
+                x.MaterialItem == null &&
+                x.Quantity == 0);
+
+            return workEmpty && materialEmpty;
         }
 
         // =========================================================
@@ -760,35 +723,152 @@ namespace ElektroOffer_app
 
         private void OnPropertyChanged([CallerMemberName] string? name = null)
             => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
-    }
 
-    // =============================================================
-    // ⌨️ RELAY COMMAND — pomocná třída pro klávesové zkratky
-    // =============================================================
-
-    /// <summary>
-    /// Jednoduchá implementace ICommand pro použití v KeyBinding.
-    /// Umožňuje předat lambda funkci jako příkaz bez nutnosti
-    /// vytvářet celou třídu Command pro každou akci zvlášť.
-    /// </summary>
-    public class RelayCommand : System.Windows.Input.ICommand
-    {
-        private readonly Action<object?> _execute;
-
-        public RelayCommand(Action<object?> execute) => _execute = execute;
-
-        // CanExecute = vždy true (příkaz je vždy dostupný)
-        public bool CanExecute(object? parameter) => true;
-
-        public void Execute(object? parameter) => _execute(parameter);
-
-        // Napojení na WPF CommandManager — standardní pattern pro RelayCommand.
-        // CommandManager.RequerySuggested se spustí, když WPF zjistí změnu stavu UI.
-        // add/remove přes CommandManager eliminuje warning CS0067 (event se "používá").
-        public event EventHandler? CanExecuteChanged
+        // =========================================================
+        // 🚪 MENU: SOUBOR → KONEC
+        // =========================================================
+        // 👉 Rozlišuje 3 stavy:
+        //    1) Nový + prázdný projekt → jednoduché potvrzení
+        //    2) Neuložené změny → varování + možnost uložit
+        //    3) Uložený a beze změn → rovnou ukončit
+        private void MenuExit_Click(object sender, RoutedEventArgs e)
         {
-            add => System.Windows.Input.CommandManager.RequerySuggested += value;
-            remove => System.Windows.Input.CommandManager.RequerySuggested -= value;
+            bool isNewProject = _currentFilePath == null;
+            bool isEmpty = IsProjectEmpty();
+
+            // 1) Nový projekt + prázdný
+            if (isNewProject && isEmpty)
+            {
+                var result = MessageBox.Show(
+                    "Opravdu ukončit bez uložení?",
+                    "Ukončit aplikaci",
+                    MessageBoxButton.YesNo,
+                    MessageBoxImage.Question);
+
+                if (result != MessageBoxResult.Yes)
+                    return;
+
+                Application.Current.Shutdown();
+                return;
+            }
+
+            // 2) Neuložené změny
+            if (_hasUnsavedChanges)
+            {
+                var result = MessageBox.Show(
+                    "Opravdu chcete ukončit aplikaci bez uložení?",
+                    "Neuložené změny",
+                    MessageBoxButton.YesNoCancel,
+                    MessageBoxImage.Warning);
+
+                if (result == MessageBoxResult.Cancel)
+                    return;
+
+                if (result == MessageBoxResult.No)
+                {
+                    var saved = _projectService.Save(BuildProjectData(), _currentFilePath);
+                    if (saved == null)
+                        return;
+
+                    Application.Current.Shutdown();
+                    return;
+                }
+
+                // YES = ukončit bez uložení
+                Application.Current.Shutdown();
+                return;
+            }
+
+            // 3) Nic se nezměnilo
+            Application.Current.Shutdown();
         }
+
+        // =========================================================
+        // ❌ KŘÍŽEK (X) – UKONČENÍ OKNA
+        // =========================================================
+        // 👉 Stejná logika jako MenuExit_Click
+        // 👉 Pokud jsou neuložené změny → varování
+        // 👉 Pokud je projekt prázdný → jednoduché potvrzení
+        protected override void OnClosing(CancelEventArgs e)
+        {
+            base.OnClosing(e);
+
+            bool isNewProject = _currentFilePath == null;
+            bool isEmpty = IsProjectEmpty();
+
+            // 1) Nový projekt + prázdný
+            if (isNewProject && isEmpty)
+            {
+                var result = MessageBox.Show(
+                    "Opravdu ukončit bez uložení?",
+                    "Ukončit aplikaci",
+                    MessageBoxButton.YesNo,
+                    MessageBoxImage.Question);
+
+                if (result != MessageBoxResult.Yes)
+                    e.Cancel = true;
+
+                return;
+            }
+
+            // 2) Neuložené změny
+            if (_hasUnsavedChanges)
+            {
+                var result = MessageBox.Show(
+                    "Opravdu chcete ukončit aplikaci bez uložení?",
+                    "Neuložené změny",
+                    MessageBoxButton.YesNoCancel,
+                    MessageBoxImage.Warning);
+
+                if (result == MessageBoxResult.Cancel)
+                {
+                    e.Cancel = true;
+                    return;
+                }
+
+                if (result == MessageBoxResult.No)
+                {
+                    var saved = _projectService.Save(BuildProjectData(), _currentFilePath);
+                    if (saved == null)
+                    {
+                        e.Cancel = true;
+                        return;
+                    }
+                }
+
+                return;
+            }
+
+            // 3) Nic se nezměnilo → zavřít bez dotazu
+        }
+
+        // ================================
+        // 🔹 PŘÍPAD 3: Nic se nezměnilo → rovnou ukončit
+        // ================================
     }
+
+    // ADD-KOMENT: PDF export metody — odkomentovat až bude QuestPDF nainstalován a struktura dokumentu finální
+    // ADD-KOMENT: Instalace: NuGet → Install-Package QuestPDF
+    // ADD-KOMENT: Docs: https://www.questpdf.com/documentation/getting-started.html
+    /*
+    private void MenuExportPdf_Click(object sender, RoutedEventArgs e)
+    {
+        // 🚧 PLACEHOLDER — implementace přijde v další fázi
+        MessageBox.Show(
+            "Export PDF kalkulace bude implementován v další fázi projektu.\n\nPlánovaná knihovna: QuestPDF",
+            "Připravuje se",
+            MessageBoxButton.OK,
+            MessageBoxImage.Information);
+    }
+
+    private void MenuExportPricePdf_Click(object sender, RoutedEventArgs e)
+    {
+        // 🚧 PLACEHOLDER — implementace přijde v další fázi
+        MessageBox.Show(
+            "Export PDF ceníku bude implementován v další fázi projektu.\n\nPlánovaná knihovna: QuestPDF",
+            "Připravuje se",
+            MessageBoxButton.OK,
+            MessageBoxImage.Information);
+    }
+    */
 }

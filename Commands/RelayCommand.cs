@@ -4,25 +4,29 @@ using System.Windows.Input;
 namespace ElektroOffer_app.Commands
 {
     // =========================================================
-    // 🎛 RELAY COMMAND
+    // 🎛 RELAY COMMAND (UNIVERZÁLNÍ PŘÍKAZ PRO MVVM)
     // =========================================================
-    // 👉 Obecná implementace ICommand pro MVVM
-    // 👉 Umožňuje předat logiku Execute/CanExecute jako delegáty
-    // 👉 Používá se ve ViewModelech pro binding na tlačítka
+    // 👉 Obecná implementace ICommand používaná v MVVM aplikacích
+    // 👉 Umožňuje předat logiku Execute a CanExecute jako delegáty
+    // 👉 Díky tomu nemusíš vytvářet samostatnou třídu pro každý příkaz
+    // 👉 Používá se v KeyBinding (MainWindow) i ve ViewModelech
     // =========================================================
     public class RelayCommand : ICommand
     {
         // =========================================================
         // 🔧 DELEGÁTY
         // =========================================================
+        // _execute     → akce, která se má provést při spuštění příkazu
+        // _canExecute  → funkce, která určuje, zda je příkaz povolen
+        //                (pokud je null → příkaz je vždy povolen)
         private readonly Action<object?> _execute;
         private readonly Func<object?, bool>? _canExecute;
 
         // =========================================================
         // 🧩 KONSTRUKTOR
         // =========================================================
-        // 👉 execute     - akce, která se má provést
-        // 👉 canExecute  - funkce, která určuje, zda je příkaz povolen
+        // 👉 execute     - povinný delegát, který se provede při Execute()
+        // 👉 canExecute  - volitelný delegát, který určuje, zda lze příkaz spustit
         // =========================================================
         public RelayCommand(Action<object?> execute, Func<object?, bool>? canExecute = null)
         {
@@ -35,6 +39,7 @@ namespace ElektroOffer_app.Commands
         // =========================================================
         // 👉 Vrací true/false podle toho, zda je příkaz povolen
         // 👉 Pokud není zadán canExecute delegát → vždy true
+        // 👉 WPF volá tuto metodu automaticky při změně UI
         // =========================================================
         public bool CanExecute(object? parameter)
             => _canExecute?.Invoke(parameter) ?? true;
@@ -42,7 +47,8 @@ namespace ElektroOffer_app.Commands
         // =========================================================
         // ▶ EXECUTE
         // =========================================================
-        // 👉 Spustí předanou akci
+        // 👉 Spustí předanou akci (execute delegát)
+        // 👉 Používá se při kliknutí na tlačítko nebo při KeyBinding
         // =========================================================
         public void Execute(object? parameter)
             => _execute(parameter);
@@ -50,8 +56,8 @@ namespace ElektroOffer_app.Commands
         // =========================================================
         // 🔔 CANEXECUTECHANGED
         // =========================================================
-        // 👉 Událost pro WPF, když se změní stav CanExecute
-        // 👉 Lze vyvolat ručně přes RaiseCanExecuteChanged()
+        // 👉 Událost, kterou WPF sleduje pro povolení/zakázání tlačítek
+        // 👉 Pokud se změní podmínky CanExecute → zavolá se RaiseCanExecuteChanged()
         // =========================================================
         public event EventHandler? CanExecuteChanged;
 
