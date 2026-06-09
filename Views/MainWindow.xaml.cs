@@ -10,9 +10,9 @@ using System.Windows;
 using ElektroOffer_app.ViewModels.Items;
 using ElektroOffer_app.Commands;
 
-
 namespace ElektroOffer_app
 {
+    // RELEASE MAIN 1.1.1 – původní stabilní verze před refaktorem do MVVM
     public partial class MainWindow : Window, INotifyPropertyChanged
     {
         // =========================================================
@@ -210,30 +210,18 @@ namespace ElektroOffer_app
         // 📋 MENU — AKCE
         // =========================================================
 
-        /// <summary>
-        /// Menu: Soubor → Nový projekt
-        /// Zeptá se na uložení změn, pak resetuje celou kalkulaci.
-        /// </summary>
         private void MenuNewProject_Click(object sender, RoutedEventArgs e)
         {
-            // Sestaví aktuální data projektu (potřeba pro případné uložení)
             var currentData = BuildProjectData();
 
-            // Zkontroluje neuložené změny — pokud uživatel zruší, nic neděláme
             if (!_projectService.ConfirmNewProject(currentData, _currentFilePath, _hasUnsavedChanges))
                 return;
 
-            // Reset aplikace do počátečního stavu
             ResetToNewProject();
         }
 
-        /// <summary>
-        /// Menu: Soubor → Otevřít
-        /// Načte projekt z .eof souboru a naplní UI daty.
-        /// </summary>
         private void MenuLoad_Click(object sender, RoutedEventArgs e)
         {
-            // Pokud jsou neuložené změny → zeptáme se před načtením
             if (_hasUnsavedChanges)
             {
                 var result = MessageBox.Show(
@@ -246,22 +234,16 @@ namespace ElektroOffer_app
                 if (result == MessageBoxResult.Yes)
                 {
                     var saved = _projectService.Save(BuildProjectData(), _currentFilePath);
-                    if (saved == null) return; // uložení selhalo nebo bylo zrušeno
+                    if (saved == null) return;
                 }
             }
 
-            // Otevření dialogu a načtení dat
             var (data, path) = _projectService.Load();
-            if (data == null) return; // uživatel zrušil nebo chyba
+            if (data == null) return;
 
-            // Naplnění UI načtenými daty
             ApplyProjectData(data, path!);
         }
 
-        /// <summary>
-        /// Menu: Soubor → Uložit (Ctrl+S)
-        /// Uloží na aktuální cestu, nebo vyvolá Save As dialog.
-        /// </summary>
         private void MenuSave_Click(object sender, RoutedEventArgs e)
         {
             var data = BuildProjectData();
@@ -271,10 +253,6 @@ namespace ElektroOffer_app
                 OnProjectSaved(savedPath);
         }
 
-        /// <summary>
-        /// Menu: Soubor → Uložit jako (Ctrl+Shift+S)
-        /// Vždy otevře dialog pro výběr nového umístění.
-        /// </summary>
         private void MenuSaveAs_Click(object sender, RoutedEventArgs e)
         {
             var data = BuildProjectData();
@@ -288,20 +266,13 @@ namespace ElektroOffer_app
         // ❓ NÁPOVĚDA
         // =========================================================
 
-        /// <summary>
-        /// Menu: Nápověda → O aplikaci
-        /// Otevře modální okno s logem, verzí a autorem aplikace.
-        /// Owner = this zajistí centrování okna vůči MainWindow.
-        /// </summary>
         private void MenuAbout_Click(object sender, RoutedEventArgs e)
         {
             var aboutWindow = new AboutWindow
             {
-                // Owner zajistí správné centrování a chování modálního okna
                 Owner = this
             };
 
-            // ShowDialog = modální okno (nelze klikat na MainWindow dokud je otevřené)
             aboutWindow.ShowDialog();
         }
 
@@ -309,21 +280,15 @@ namespace ElektroOffer_app
         // 🛠️ POMOCNÉ METODY — Save/Load logika
         // =========================================================
 
-        /// <summary>
-        /// Sestaví objekt ProjectData z aktuálního stavu UI.
-        /// Volá se před každým uložením.
-        /// </summary>
         private ProjectData BuildProjectData()
         {
             return new ProjectData
             {
-                // Metadata
                 ProjectName = _currentFilePath != null
                     ? System.IO.Path.GetFileNameWithoutExtension(_currentFilePath)
                     : "Nový projekt",
                 SavedAt = DateTime.Now,
 
-                // Sekce PRÁCE — uložíme vybrané hodnoty každého řádku
                 WorkItems = WorkCalcItems.Select(x => new WorkItemData
                 {
                     SelectedTask = x.SelectedTask,
@@ -333,7 +298,6 @@ namespace ElektroOffer_app
                     Quantity = x.Quantity
                 }).ToList(),
 
-                // Sekce MATERIÁL — uložíme název materiálu a množství
                 MaterialItems = MaterialItems.Select(x => new MaterialItemData
                 {
                     MaterialName = x.MaterialItem?.Name,
@@ -342,24 +306,15 @@ namespace ElektroOffer_app
             };
         }
 
-        /// <summary>
-        /// Aplikuje načtená data (ProjectData) do UI.
-        /// Zavolá se po úspěšném Load.
-        /// </summary>
         private void ApplyProjectData(ProjectData data, string path)
         {
-            // Nejdříve vyprázdníme stávající UI
             ClearAllItems();
 
-            // ========================= //
-            // 🔧 OBNOVENÍ SEKCE: PRÁCE  //
-            // ========================= //
             foreach (var saved in data.WorkItems)
             {
                 var item = new CalculationItemViewModel();
                 item.PropertyChanged += Item_PropertyChanged;
 
-                // Obnovení vybraných hodnot
                 item.SelectedTask = saved.SelectedTask;
                 item.SelectedSpecification = saved.SelectedSpecification;
                 item.SelectedMaterial = saved.SelectedMaterial;
@@ -369,35 +324,24 @@ namespace ElektroOffer_app
                 WorkCalcItems.Add(item);
             }
 
-            // =========================== //
-            // 📦 OBNOVENÍ SEKCE: MATERIÁL //
-            // =========================== //
             foreach (var saved in data.MaterialItems)
             {
                 var item = new CalculationItemViewModel();
                 item.PropertyChanged += Item_PropertyChanged;
 
-                // Dohledání objektu Material z DB podle názvu
-                // (ukládáme název, ne ID → nezávislé na DB)
                 item.MaterialItem = Materials.FirstOrDefault(m => m.Name == saved.MaterialName);
                 item.Quantity = saved.Quantity;
 
                 MaterialItems.Add(item);
             }
 
-            // Uložíme cestu a resetujeme příznak změn
             _currentFilePath = path;
             _hasUnsavedChanges = false;
 
-            // Aktualizace titulku a stavového řádku
             UpdateWindowTitle(path);
             Recalculate();
         }
 
-        /// <summary>
-        /// Zavolá se po úspěšném uložení.
-        /// Aktualizuje cestu, příznak změn, titulek a status.
-        /// </summary>
         private void OnProjectSaved(string path)
         {
             _currentFilePath = path;
@@ -405,15 +349,10 @@ namespace ElektroOffer_app
             UpdateWindowTitle(path);
         }
 
-        /// <summary>
-        /// Resetuje aplikaci do stavu "nový projekt".
-        /// Vymaže všechny řádky a přidá výchozí prázdné řádky.
-        /// </summary>
         private void ResetToNewProject()
         {
             ClearAllItems();
 
-            // Přidání výchozích prázdných řádků jako při startu
             for (int i = 0; i < 5; i++)
             {
                 AddWorkItemInternal();
@@ -423,18 +362,12 @@ namespace ElektroOffer_app
             _currentFilePath = null;
             _hasUnsavedChanges = false;
 
-            // Reset titulku a stavového řádku
             Title = "Elektro Offer - Kalkulace";
             StatusText = "Nový projekt";
         }
 
-        /// <summary>
-        /// Vymaže všechny řádky z obou sekcí (PRÁCE + MATERIÁL).
-        /// Odhlásí event handlery před odebráním, aby nedošlo k memory leaku.
-        /// </summary>
         private void ClearAllItems()
         {
-            // Odhlášení event handlerů — důležité pro správnou správu paměti
             foreach (var item in WorkCalcItems)
                 item.PropertyChanged -= Item_PropertyChanged;
 
@@ -446,40 +379,24 @@ namespace ElektroOffer_app
             BudgetItems.Clear();
         }
 
-        /// <summary>
-        /// Aktualizuje titulek okna a text ve StatusBaru.
-        /// Konvence v IT: "*" v titulku = neuložené změny.
-        /// </summary>
         private void UpdateWindowTitle(string path)
         {
             var fileName = System.IO.Path.GetFileNameWithoutExtension(path);
-
-            // Titulek okna: "NázevSouboru - Elektro Offer"
             Title = $"{fileName} - Elektro Offer";
-
-            // StatusBar: celá cesta k souboru
             StatusText = path;
         }
 
-        /// <summary>
-        /// Označí projekt jako "má neuložené změny".
-        /// Volá se při každé změně dat v UI.
-        /// </summary>
         private void MarkAsChanged()
         {
             if (!_hasUnsavedChanges)
             {
                 _hasUnsavedChanges = true;
 
-                // Přidá hvězdičku do titulku (konvence: * = neuložené změny)
                 if (!Title.StartsWith("*"))
                     Title = "* " + Title;
             }
         }
 
-        /// <summary>
-        /// Zjistí, zda je projekt prázdný (nic není vyplněno).
-        /// </summary>
         private bool IsProjectEmpty()
         {
             bool workEmpty = WorkCalcItems.All(x =>
@@ -524,7 +441,6 @@ namespace ElektroOffer_app
         // =========================================================
         private void DeleteWorkItem_Click(object sender, RoutedEventArgs e)
         {
-            // potvrzovací dialog
             if (MessageBox.Show("Opravdu chcete položku odebrat?", "Potvrzení",
                 MessageBoxButton.OKCancel, MessageBoxImage.Question) != MessageBoxResult.OK)
                 return;
@@ -540,7 +456,6 @@ namespace ElektroOffer_app
 
         private void DeleteMaterialItem_Click(object sender, RoutedEventArgs e)
         {
-            // potvrzovací dialog
             if (MessageBox.Show("Opravdu chcete položku odebrat?", "Potvrzení",
                 MessageBoxButton.OKCancel, MessageBoxImage.Question) != MessageBoxResult.OK)
                 return;
@@ -562,7 +477,6 @@ namespace ElektroOffer_app
             if (sender is FrameworkElement fe &&
                 fe.DataContext is CalculationItemViewModel item)
             {
-                // zjištění, zda má řádek nějaká data
                 bool isFilled =
                     item.SelectedTask != null ||
                     item.SelectedSpecification != null ||
@@ -570,7 +484,6 @@ namespace ElektroOffer_app
                     item.SelectedLocation != null ||
                     item.Quantity > 0;
 
-                // potvrzení jen pokud je řádek vyplněný
                 if (isFilled)
                 {
                     if (MessageBox.Show(
@@ -581,7 +494,6 @@ namespace ElektroOffer_app
                         return;
                 }
 
-                // reset hodnot
                 item.SelectedTask = null;
                 item.SelectedSpecification = null;
                 item.SelectedMaterial = null;
@@ -600,12 +512,10 @@ namespace ElektroOffer_app
             if (sender is FrameworkElement fe &&
                 fe.DataContext is CalculationItemViewModel item)
             {
-                // zjištění, zda je řádek vyplněný
                 bool isFilled =
                     item.MaterialItem != null ||
                     item.Quantity > 0;
 
-                // potvrzení jen pokud má data
                 if (isFilled)
                 {
                     if (MessageBox.Show(
@@ -616,7 +526,6 @@ namespace ElektroOffer_app
                         return;
                 }
 
-                // reset hodnot
                 item.MaterialItem = null;
                 item.Quantity = 0;
 
@@ -629,13 +538,13 @@ namespace ElektroOffer_app
         // =========================================================
         private void WorkCalcItems_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
         {
-            MarkAsChanged(); // každá změna kolekce = neuložená změna
+            MarkAsChanged();
             Recalculate();
         }
 
         private void MaterialItems_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
         {
-            MarkAsChanged(); // každá změna kolekce = neuložená změna
+            MarkAsChanged();
             Recalculate();
         }
 
@@ -646,7 +555,7 @@ namespace ElektroOffer_app
                 e.PropertyName == nameof(CalculationItemViewModel.WorkItem) ||
                 e.PropertyName == nameof(CalculationItemViewModel.MaterialItem))
             {
-                MarkAsChanged(); // každá změna hodnoty = neuložená změna
+                MarkAsChanged();
                 Recalculate();
             }
         }
@@ -656,61 +565,32 @@ namespace ElektroOffer_app
         // =========================================================
         private void Recalculate()
         {
-            // =========================
-            // 💰 CELKOVÉ SOUČTY
-            // =========================
             WorkTotal = WorkCalcItems.Sum(x => x.Total);
             MaterialTotal = MaterialItems.Sum(x => x.Total);
             GrandTotal = WorkTotal + MaterialTotal;
 
-            // =========================
-            // 📊 VYČIŠTĚNÍ ROZPISU
-            // =========================
             BudgetItems.Clear();
 
-            // =========================
-            // 🔧 PRÁCE
-            // =========================
             foreach (var x in WorkCalcItems.Where(x => x.Total > 0))
             {
                 BudgetItems.Add(new BudgetItem
                 {
                     Type = "PRÁCE",
-
-                    // popis sestavený z vybraných hodnot
                     Description = $"{x.SelectedTask} / {x.SelectedSpecification} / {x.SelectedMaterial} / {x.SelectedLocation}",
-
-                    // měrná jednotka práce (hod, ks, apod.)
-                    // ?? "" = fallback na prázdný string pokud WorkUnit vrátí null
                     Unit = x.WorkUnit ?? "",
-
-                    // množství
                     Quantity = x.Quantity,
-
-                    // výsledná cena řádku
                     Price = x.Total
                 });
             }
 
-            // =========================
-            // 📦 MATERIÁL
-            // =========================
             foreach (var x in MaterialItems.Where(x => x.Total > 0 && x.MaterialItem != null))
             {
                 BudgetItems.Add(new BudgetItem
                 {
                     Type = "MATERIÁL",
-
-                    // název materiálu
                     Description = x.MaterialItem!.Name,
-
-                    // měrná jednotka materiálu (ks, m, balení, ...)
                     Unit = x.MaterialItem?.Unit ?? "",
-
-                    // množství
                     Quantity = x.Quantity,
-
-                    // výsledná cena řádku
                     Price = x.Total
                 });
             }
@@ -727,16 +607,11 @@ namespace ElektroOffer_app
         // =========================================================
         // 🚪 MENU: SOUBOR → KONEC
         // =========================================================
-        // 👉 Rozlišuje 3 stavy:
-        //    1) Nový + prázdný projekt → jednoduché potvrzení
-        //    2) Neuložené změny → varování + možnost uložit
-        //    3) Uložený a beze změn → rovnou ukončit
         private void MenuExit_Click(object sender, RoutedEventArgs e)
         {
             bool isNewProject = _currentFilePath == null;
             bool isEmpty = IsProjectEmpty();
 
-            // 1) Nový projekt + prázdný
             if (isNewProject && isEmpty)
             {
                 var result = MessageBox.Show(
@@ -752,7 +627,6 @@ namespace ElektroOffer_app
                 return;
             }
 
-            // 2) Neuložené změny
             if (_hasUnsavedChanges)
             {
                 var result = MessageBox.Show(
@@ -774,21 +648,16 @@ namespace ElektroOffer_app
                     return;
                 }
 
-                // YES = ukončit bez uložení
                 Application.Current.Shutdown();
                 return;
             }
 
-            // 3) Nic se nezměnilo
             Application.Current.Shutdown();
         }
 
         // =========================================================
         // ❌ KŘÍŽEK (X) – UKONČENÍ OKNA
         // =========================================================
-        // 👉 Stejná logika jako MenuExit_Click
-        // 👉 Pokud jsou neuložené změny → varování
-        // 👉 Pokud je projekt prázdný → jednoduché potvrzení
         protected override void OnClosing(CancelEventArgs e)
         {
             base.OnClosing(e);
@@ -796,7 +665,6 @@ namespace ElektroOffer_app
             bool isNewProject = _currentFilePath == null;
             bool isEmpty = IsProjectEmpty();
 
-            // 1) Nový projekt + prázdný
             if (isNewProject && isEmpty)
             {
                 var result = MessageBox.Show(
@@ -811,7 +679,6 @@ namespace ElektroOffer_app
                 return;
             }
 
-            // 2) Neuložené změny
             if (_hasUnsavedChanges)
             {
                 var result = MessageBox.Show(
@@ -838,37 +705,6 @@ namespace ElektroOffer_app
 
                 return;
             }
-
-            // 3) Nic se nezměnilo → zavřít bez dotazu
         }
-
-        // ================================
-        // 🔹 PŘÍPAD 3: Nic se nezměnilo → rovnou ukončit
-        // ================================
     }
-
-    // ADD-KOMENT: PDF export metody — odkomentovat až bude QuestPDF nainstalován a struktura dokumentu finální
-    // ADD-KOMENT: Instalace: NuGet → Install-Package QuestPDF
-    // ADD-KOMENT: Docs: https://www.questpdf.com/documentation/getting-started.html
-    /*
-    private void MenuExportPdf_Click(object sender, RoutedEventArgs e)
-    {
-        // 🚧 PLACEHOLDER — implementace přijde v další fázi
-        MessageBox.Show(
-            "Export PDF kalkulace bude implementován v další fázi projektu.\n\nPlánovaná knihovna: QuestPDF",
-            "Připravuje se",
-            MessageBoxButton.OK,
-            MessageBoxImage.Information);
-    }
-
-    private void MenuExportPricePdf_Click(object sender, RoutedEventArgs e)
-    {
-        // 🚧 PLACEHOLDER — implementace přijde v další fázi
-        MessageBox.Show(
-            "Export PDF ceníku bude implementován v další fázi projektu.\n\nPlánovaná knihovna: QuestPDF",
-            "Připravuje se",
-            MessageBoxButton.OK,
-            MessageBoxImage.Information);
-    }
-    */
 }

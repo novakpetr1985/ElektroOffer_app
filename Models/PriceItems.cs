@@ -1,58 +1,51 @@
-﻿namespace ElektroOffer_app.Models
+﻿﻿namespace ElektroOffer_app.Models
 {
-    // =========================
-    // 🔧 CENÍK PRÁCE
-    // =========================
-    // 👉 Jeden řádek ceníku práce
-    // 👉 Obsahuje koeficienty pro výpočet ceny
-    // =========================
+    // =========================================================================
+    // 🔧 PriceItems – jedna položka ceníku práce
+    // =========================================================================
+    //
+    // K čemu slouží:
+    // - Reprezentuje jeden řádek ceníku práce v databázi (tabulka PriceItems)
+    // - Obsahuje základní cenu a koeficienty pro výpočet výsledné ceny
+    //
+    // Vlastnosti:
+    // - Id            → primární klíč
+    // - BasePrice     → základní cena (bez koeficientů)
+    // - Unit          → měrná jednotka (m, ks, hod, …)
+    // - Task          → název práce (např. "Drážkování")
+    // - Specification → upřesnění (např. "Spára")
+    // - Material      → typ materiálu (např. "Omítka - Sádra")
+    // - Location      → umístění (např. "Stěna")
+    // - MaterialCoef  → koeficient materiálu
+    // - PositionCoef  → koeficient polohy/umístění
+    //
+    // FullName:
+    // - Složený text pro zobrazení v ComboBoxu (Task | Specification | Material | Location)
+    // =========================================================================
     public class PriceItems
     {
         public int Id { get; set; }
 
-        // =========================
-        // 💰 ZÁKLADNÍ CENA
-        // =========================
         public double BasePrice { get; set; }
 
-        // =========================
-        // 📏 JEDNOTKA
-        // =========================
         public string? Unit { get; set; }
 
-        // =========================
-        // 🔧 NÁZEV PRÁCE
-        // =========================
         public string Task { get; set; } = string.Empty;
 
-        // =========================
-        // 📄 SPECIFIKACE
-        // =========================
         public string Specification { get; set; } = string.Empty;
 
-        // =========================
-        // 📦 TYP MATERIÁLU
-        // =========================
         public string Material { get; set; } = string.Empty;
 
-        // =========================
-        // 📍 UMÍSTĚNÍ
-        // =========================
         public string Location { get; set; } = string.Empty;
 
-        // =========================
-        // 📊 KOEFICIENT MATERIÁLU
-        // =========================
         public double MaterialCoef { get; set; }
 
-        // =========================
-        // 📊 KOEFICIENT POZICE
-        // =========================
         public double PositionCoef { get; set; }
 
-        // =========================
-        // 🧾 TEXT PRO COMBOBOX
-        // =========================
+        /// <summary>
+        /// Složený text pro zobrazení v ComboBoxu.
+        /// Umožňuje uživateli snadno rozlišit položky podle všech parametrů.
+        /// </summary>
         public string FullName =>
             $"{Task} | {Specification} | {Material} | {Location}";
     }

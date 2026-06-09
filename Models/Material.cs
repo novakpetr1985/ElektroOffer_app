@@ -1,28 +1,28 @@
-﻿namespace ElektroOffer_app.Models
+﻿﻿namespace ElektroOffer_app.Models
 {
-    // =========================
-    // 📦 MATERIÁL
-    // =========================
-    // 👉 Jeden záznam materiálu v databázi
-    // 👉 Používá se pro kalkulaci ceny materiálu
-    // =========================
+    // =========================================================================
+    // 📦 Material – jedna položka ceníku materiálu
+    // =========================================================================
+    //
+    // K čemu slouží:
+    // - Reprezentuje jeden záznam v tabulce Materials (SQLite)
+    // - Používá se v AppDbContext (DbSet<Material>)
+    // - V UI se používá např. pro výběr materiálu v kalkulaci
+    //
+    // Vlastnosti:
+    // - Id    → primární klíč v databázi
+    // - Name  → název materiálu (např. "Kabel CYKY 3x1,5")
+    // - Price → cena za jednotku
+    // - Unit  → měrná jednotka (m, ks, balení, …)
+    // =========================================================================
     public class Material
     {
         public int Id { get; set; }
 
-        // =========================
-        // 📦 NÁZEV MATERIÁLU
-        // =========================
         public string Name { get; set; } = string.Empty;
 
-        // =========================
-        // 💰 CENA ZA JEDNOTKU
-        // =========================
         public double Price { get; set; }
 
-        // =========================
-        // 📏 JEDNOTKA
-        // =========================
         public string Unit { get; set; } = string.Empty;
     }
 }

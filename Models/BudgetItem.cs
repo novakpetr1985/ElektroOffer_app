@@ -1,69 +1,82 @@
-﻿using System.ComponentModel;
+﻿﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
 namespace ElektroOffer_app.Models
 {
-    // =========================================================
-    // 📊 POLOŽKA DO DETAILNÍHO ROZPISU
-    // =========================================================
+    // =========================================================================
+    // 📊 BudgetItem – jedna položka v detailním rozpisu
+    // =========================================================================
+    //
+    // K čemu slouží:
+    // - Reprezentuje jeden řádek v přehledovém rozpisu (PRÁCE / MATERIÁL)
+    // - Používá se v kolekci BudgetItems v MainWindow
+    //
+    // Vlastnosti:
+    // - Type        → typ položky ("PRÁCE" nebo "MATERIÁL")
+    // - Description → textový popis (sestavený z vybraných hodnot)
+    // - Unit        → měrná jednotka (m, ks, hod, …)
+    // - Quantity    → množství
+    // - Price       → výsledná cena za řádek
+    //
+    // Implementuje INotifyPropertyChanged:
+    // - Umožňuje WPF automaticky aktualizovat UI při změně hodnot
+    // =========================================================================
     public class BudgetItem : INotifyPropertyChanged
     {
-        // =========================================================
-        // 🧩 TYPE - typ položky (PRÁCE / MATERIÁL)
-        // =========================================================
         private string _type = "";
 
+        /// <summary>
+        /// Typ položky v rozpisu.
+        /// Např. "PRÁCE" nebo "MATERIÁL".
+        /// </summary>
         public string Type
         {
             get => _type;
             set
             {
                 if (_type == value) return;
-
                 _type = value;
                 OnPropertyChanged();
             }
         }
 
-        // =========================================================
-        // 🧾 DESCRIPTION - popis položky
-        // =========================================================
         private string _description = "";
 
+        /// <summary>
+        /// Textový popis položky (např. kombinace úkonu, specifikace, materiálu, umístění).
+        /// </summary>
         public string Description
         {
             get => _description;
             set
             {
                 if (_description == value) return;
-
                 _description = value;
                 OnPropertyChanged();
             }
         }
 
-        // =========================================================
-        // 📏 UNIT - měrná jednotka (MJ)
-        // =========================================================
         private string _unit = "";
 
+        /// <summary>
+        /// Měrná jednotka (např. "m", "ks", "hod").
+        /// </summary>
         public string Unit
         {
             get => _unit;
             set
             {
                 if (_unit == value) return;
-
                 _unit = value;
                 OnPropertyChanged();
             }
         }
 
-        // =========================================================
-        // 🔢 QUANTITY - množství
-        // =========================================================
         private double _quantity;
 
+        /// <summary>
+        /// Množství (počet jednotek).
+        /// </summary>
         public double Quantity
         {
             get => _quantity;
@@ -75,31 +88,28 @@ namespace ElektroOffer_app.Models
             }
         }
 
-        // =========================================================
-        // 💰 PRICE - cena položky
-        // =========================================================
         private double _price;
 
+        /// <summary>
+        /// Celková cena za tuto položku (Quantity × jednotková cena).
+        /// </summary>
         public double Price
         {
             get => _price;
             set
             {
                 if (Math.Abs(_price - value) < 0.0001) return;
-
                 _price = value;
                 OnPropertyChanged();
             }
         }
 
-        // =========================================================
-        // 🔔 INotifyPropertyChanged IMPLEMENTACE
-        // =========================================================
+        // ---------------------------------------------------------------------
+        // INotifyPropertyChanged – notifikace změn pro WPF binding
+        // ---------------------------------------------------------------------
         public event PropertyChangedEventHandler? PropertyChanged;
 
         protected void OnPropertyChanged([CallerMemberName] string? propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
+            => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 }

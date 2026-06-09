@@ -1,30 +1,39 @@
-﻿using ElektroOffer_app.Models;
-
-namespace ElektroOffer_app.Models
+﻿﻿namespace ElektroOffer_app.Models
 {
     /// <summary>
     /// Reprezentuje celý uložený projekt (kalkulaci) jako jeden celek.
-    /// Tato třída se serializuje do JSON při Save a deserializuje při Load.
-    /// Obsahuje všechny sekce: práce, materiál a metadata projektu.
+    ///
+    /// Tato třída se:
+    /// - serializuje do JSON při uložení (Save)
+    /// - deserializuje z JSON při načtení (Load)
+    ///
+    /// Obsahuje:
+    /// - metadata projektu (název, datum vytvoření/uložení)
+    /// - seznam řádků práce (WorkItems)
+    /// - seznam řádků materiálu (MaterialItems)
     /// </summary>
     public class ProjectData
     {
-        // =========================================================
-        // 📋 METADATA PROJEKTU
-        // =========================================================
+        // ---------------------- METADATA PROJEKTU ----------------------
 
-        /// <summary>Název projektu / zakázky (zobrazí se v titulku okna)</summary>
+        /// <summary>
+        /// Název projektu / zakázky.
+        /// Zobrazuje se v titulku okna.
+        /// </summary>
         public string ProjectName { get; set; } = "Nový projekt";
 
-        /// <summary>Datum vytvoření projektu</summary>
+        /// <summary>
+        /// Datum vytvoření projektu.
+        /// </summary>
         public DateTime CreatedAt { get; set; } = DateTime.Now;
 
-        /// <summary>Datum posledního uložení</summary>
+        /// <summary>
+        /// Datum posledního uložení.
+        /// Aktualizuje se při Save.
+        /// </summary>
         public DateTime SavedAt { get; set; } = DateTime.Now;
 
-        // =========================================================
-        // 🔧 SEKCE: PRÁCE
-        // =========================================================
+        // ---------------------- SEKCE: PRÁCE ----------------------
 
         /// <summary>
         /// Seznam všech řádků sekce PRÁCE.
@@ -32,9 +41,7 @@ namespace ElektroOffer_app.Models
         /// </summary>
         public List<WorkItemData> WorkItems { get; set; } = new();
 
-        // =========================================================
-        // 📦 SEKCE: MATERIÁL
-        // =========================================================
+        // ---------------------- SEKCE: MATERIÁL ----------------------
 
         /// <summary>
         /// Seznam všech řádků sekce MATERIÁL.
