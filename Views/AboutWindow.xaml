@@ -1,0 +1,88 @@
+﻿<Window x:Class="ElektroOffer_app.AboutWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="O aplikaci"
+        Width="420"
+        MinHeight="300"
+        MaxHeight="600"
+        ResizeMode="NoResize"
+        WindowStartupLocation="CenterOwner"
+        ShowInTaskbar="False">
+
+    <!-- =========================================================== -->
+    <!-- HLAVNÍ LAYOUT: ScrollViewer pro případ velkého obsahu        -->
+    <!-- =========================================================== -->
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+
+        <StackPanel Margin="30"
+                    HorizontalAlignment="Center">
+
+            <!-- ======================================================= -->
+            <!-- 🖼️ LOGO APLIKACE                                        -->
+            <!-- Obrázek se načítá ze složky Resources/Icons/ v projektu.         -->
+            <!-- Build Action musí být nastaven na "Resource" ve VS.     -->
+            <!-- ======================================================= -->
+            <Image Source="Resources/Icons/LOGO.jpg"
+                   Width="180"
+                   Height="180"
+                   Stretch="Uniform"
+                   HorizontalAlignment="Center"
+                   Margin="0,0,0,20"/>
+
+
+            <!-- ======================================================= -->
+            <!-- 📛 NÁZEV APLIKACE                                        -->
+            <!-- ======================================================= -->
+            <TextBlock Text="ElektroOffer"
+                       FontSize="24"
+                       FontWeight="Bold"
+                       HorizontalAlignment="Center"
+                       TextAlignment="Center"
+                       Margin="0,0,0,6"/>
+
+            <!-- ======================================================= -->
+            <!-- 🔢 VERZE — načítá se z .csproj přes AssemblyInfo        -->
+            <!-- Text se nastavuje z code-behind při otevření okna       -->
+            <!-- ======================================================= -->
+            <TextBlock x:Name="VersionText"
+                       FontSize="14"
+                       Foreground="Gray"
+                       HorizontalAlignment="Center"
+                       TextAlignment="Center"
+                       Margin="0,0,0,20"/>
+
+            <!-- ======================================================= -->
+            <!-- ODDĚLOVAČ                                                -->
+            <!-- ======================================================= -->
+            <Separator Margin="0,0,0,20"/>
+
+            <!-- ======================================================= -->
+            <!-- 👤 AUTOR                                                 -->
+            <!-- ======================================================= -->
+            <TextBlock Text="Vyrobeno"
+                       FontSize="13"
+                       Foreground="Gray"
+                       HorizontalAlignment="Center"
+                       TextAlignment="Center"
+                       Margin="0,0,0,4"/>
+
+            <TextBlock Text="Nowimusic"
+                       FontSize="16"
+                       FontWeight="SemiBold"
+                       HorizontalAlignment="Center"
+                       TextAlignment="Center"
+                       Margin="0,0,0,30"/>
+
+            <!-- ======================================================= -->
+            <!-- ✅ TLAČÍTKO ZAVŘÍT                                       -->
+            <!-- ======================================================= -->
+            <Button Content="Zavřít"
+                    Width="100"
+                    HorizontalAlignment="Center"
+                    Click="CloseButton_Click"/>
+
+        </StackPanel>
+
+    </ScrollViewer>
+
+</Window>

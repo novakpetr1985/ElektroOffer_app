@@ -10,7 +10,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Assets\LOGO.jpg" />
+    <None Remove="Resources\Icons\LOGO.jpg" />
     <None Remove="elektrooffer.db" />
   </ItemGroup>
 
@@ -34,7 +34,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="Assets\LOGO.jpg" />
+    <Resource Include="Resources\Icons\LOGO.jpg" />
   </ItemGroup>
 
 </Project>
