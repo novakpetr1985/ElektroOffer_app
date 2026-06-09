@@ -22,12 +22,13 @@
             <!-- Obrázek se načítá ze složky Resources/Icons/ v projektu.         -->
             <!-- Build Action musí být nastaven na "Resource" ve VS.     -->
             <!-- ======================================================= -->
-            <Image Source="Resources/Icons/LOGO.jpg"
-                   Width="180"
-                   Height="180"
-                   Stretch="Uniform"
-                   HorizontalAlignment="Center"
-                   Margin="0,0,0,20"/>
+            <Image Source="/Resources/Icons/LOGO.jpg"
+                Width="180"
+                Height="180"
+                Stretch="Uniform"
+                HorizontalAlignment="Center"
+                Margin="0,0,0,20"/>
+
 
 
             <!-- ======================================================= -->

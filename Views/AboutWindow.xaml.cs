@@ -21,10 +21,7 @@ namespace ElektroOffer_app
             // Formát: "Verze 1.0.0" — major.minor.patch
             // =========================================================
 
-            var version = Assembly
-                .GetExecutingAssembly()
-                .GetName()
-                .Version;
+            var version = Assembly.GetExecutingAssembly().GetName().Version;
 
             // Zobrazíme jen major.minor.patch (bez revision čísla za poslední tečkou)
             VersionText.Text = version != null
