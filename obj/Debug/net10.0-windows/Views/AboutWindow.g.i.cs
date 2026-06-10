@@ -60,7 +60,7 @@ namespace ElektroOffer_app {
                 return;
             }
             _contentLoaded = true;
-            System.Uri resourceLocater = new System.Uri("/ElektroOffer_app;V1.4.0.0;component/views/aboutwindow.xaml", System.UriKind.Relative);
+            System.Uri resourceLocater = new System.Uri("/ElektroOffer_app;V1.4.1.0;component/views/aboutwindow.xaml", System.UriKind.Relative);
             
             #line 1 "..\..\..\..\Views\AboutWindow.xaml"
             System.Windows.Application.LoadComponent(this, resourceLocater);
