@@ -19,6 +19,10 @@ namespace ElektroOffer_app.Data
     // - V MainWindow (načítání ceníku do kolekcí Tasks a Materials)
     // - Při importu/exportu ceníku (zápis/čtení do/z DB)
     //
+    // Databázový kontext pro SQLite.
+    // Při prvním spuštění vytvoří soubor elektrooffer.db
+    // a inicializuje schéma přes EnsureCreated() v MainWindow.
+    //
     // Poznámka:
     // - Konfigurace připojení je v OnConfiguring → SQLite soubor elektrooffer.db
     // =========================================================================

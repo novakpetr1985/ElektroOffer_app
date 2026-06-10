@@ -186,6 +186,7 @@ namespace ElektroOffer_app.ViewModels.Items
         // 👉 Pokud je vybraná práce → BasePrice * MaterialCoef * PositionCoef * Quantity
         // 👉 Pokud je vybraný materiál → Material.Price * Quantity
         // 👉 Jinak 0
+        // 👉 Příklad: 150 Kč × 1,2 × 1,0 × 10 m = 1 800 Kč
         // =========================================================
         public double Total
         {

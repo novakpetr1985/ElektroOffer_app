@@ -23,7 +23,12 @@ namespace ElektroOffer_app.Models
     // =========================================================================
     public class BudgetItem : INotifyPropertyChanged
     {
+        /// <summary>
+        /// Výsledná cena tohoto řádku v rozpisu.
+        /// Odpovídá hodnotě Total z CalculationItemViewModel.
+        /// </summary>
         private string _type = "";
+
 
         /// <summary>
         /// Typ položky v rozpisu.

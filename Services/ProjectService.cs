@@ -99,6 +99,8 @@ namespace ElektroOffer_app.Services
         // --------------------------------------------------------------------
         // VEDLEJŠÍ: Kontrola neuložených změn
         // --------------------------------------------------------------------
+        /// Předává se zvenčí, protože ProjectService nezná stav UI —
+        /// o neuložených změnách ví jen MainWindow.
         public bool ConfirmNewProject(ProjectData data, string? currentPath, bool hasUnsavedChanges)
         {
             if (!hasUnsavedChanges)
