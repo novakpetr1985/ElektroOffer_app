@@ -2921,11 +2921,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\_GitHub\\ElektroOffer_app\\ElektroOffer_app.csproj",
+      "projectUniqueName": "D:\\_GitHub\\ElektroOffer_app.worktrees\\agents-code-review-request\\ElektroOffer_app.csproj",
       "projectName": "ElektroOffer_app",
-      "projectPath": "D:\\_GitHub\\ElektroOffer_app\\ElektroOffer_app.csproj",
+      "projectPath": "D:\\_GitHub\\ElektroOffer_app.worktrees\\agents-code-review-request\\ElektroOffer_app.csproj",
       "packagesPath": "C:\\Users\\nowim\\.nuget\\packages\\",
-      "outputPath": "D:\\_GitHub\\ElektroOffer_app\\obj\\",
+      "outputPath": "D:\\_GitHub\\ElektroOffer_app.worktrees\\agents-code-review-request\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "D:\\_VisualStudioSDK\\NuGetPackages"
@@ -3007,7 +3007,7 @@
             "privateAssets": "none"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.300/PortableRuntimeIdentifierGraph.json",
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.301/PortableRuntimeIdentifierGraph.json",
         "packagesToPrune": {
           "Microsoft.CSharp": "(,4.7.32767]",
           "Microsoft.VisualBasic": "(,10.4.32767]",
