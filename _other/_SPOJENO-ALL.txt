@@ -51,6 +51,8 @@ README.md
 \.git\logs\refs\heads\feature\1.2.0-ends-menu
 \.git\logs\refs\heads\feature\1.2.1-logo-a-v-aplikace
 \.git\logs\refs\heads\feature\1.4.0-documentation
+\.git\logs\refs\heads\feature\1.4.1
+\.git\logs\refs\heads\feature\1.4.1-documentation
 \.git\logs\refs\heads\feature\add-column
 \.git\logs\refs\heads\feature\change-alignement
 \.git\logs\refs\heads\feature\DB-new
@@ -218,6 +220,7 @@ README.md
 \.git\objects\09\424aa27db6205b34d0352e2bd301ed8ba66ce6
 \.git\objects\09\4a609d38d3ae5a45e66eeaa5bff9afba554d8a
 \.git\objects\09\5bf77604d8090db3871a75986ddd82f665da1e
+\.git\objects\09\5ef1deaa2594e7aa0e5cc10aa6e60423c8cc13
 \.git\objects\09\5f33a6ce91dae1a9da37637c505966306c6f08
 \.git\objects\09\817223adeebd3a79bab4590017b6ab700b24d2
 \.git\objects\09\830ae7eaa3a50d65c87470edeacfaa43f35dae
@@ -232,6 +235,7 @@ README.md
 \.git\objects\0a\04bbf2328986964fa6f888d58c18374b5407c8
 \.git\objects\0a\2adf39ea91a0db822ca9398af0752366f802e1
 \.git\objects\0a\33d38b5210ccb08cfd98f135077bd1860a02c5
+\.git\objects\0a\3415fe49b72f6d890c14e0374285f3df67bc81
 \.git\objects\0a\39d5d6bfdf8df1801a0d88f0bfd25a340a6d80
 \.git\objects\0a\5f505482be1f3d07fdc1493d527f1004a760f9
 \.git\objects\0a\77f6cbbf74caf5e78c590c1ef6c67621571a0f
@@ -290,6 +294,7 @@ README.md
 \.git\objects\0f\2e64db1905b57657fd6b4483b303bc0de7ca05
 \.git\objects\0f\2fd4deecf78821d58c6e2a8f29f479c741835f
 \.git\objects\0f\4866aa7ae9ee90956600df466b11f354b0511e
+\.git\objects\0f\63e56fb7eea06a5b284bcf0b437ef5657056b7
 \.git\objects\0f\90553021107033327f9ce2ea02e6c5f6476829
 \.git\objects\0f\99fc4c66bad752a4b1e03d01b9fb21132a9c70
 \.git\objects\0f\ca57e80e4484da52f39de9c1a2de5402c97d0a
@@ -317,6 +322,7 @@ README.md
 \.git\objects\11\33b07c91e672cfd3113c8c32e6fc8ca759f94d
 \.git\objects\11\57448e1dae8f16eb72b3185095f981ad37bc15
 \.git\objects\11\8b9b8a32a32d0f4687264e62e14e780302d79c
+\.git\objects\11\a8889187c5ee4978c2c8a327138c5d4b198543
 \.git\objects\11\b3d062760bf6716ad672a58a95224baf351909
 \.git\objects\11\cfaddb344f005d0df32e7bb173a324b8cdfbcf
 \.git\objects\11\d5b9b4c0483accd665dbe2a7d9368e859f7972
@@ -345,6 +351,7 @@ README.md
 \.git\objects\13\4de44e17798bf43f4cd8f323479d21b9402d92
 \.git\objects\13\93afa1e75e90e68821aa69904022cf38c3d0c4
 \.git\objects\13\94469d913ba2fabdddced95958333926059c5b
+\.git\objects\13\99e829beff1511b1421f0ea9e7950ca6bd985c
 \.git\objects\13\a9482c99f9702946d1bbfa9663a538b47ac943
 \.git\objects\13\e8a71487fbc8d3e00ff9f2dcdcbdff555bca49
 \.git\objects\14
@@ -365,6 +372,8 @@ README.md
 \.git\objects\14\f1b0e2cba1afc07eeef460a135736c25734106
 \.git\objects\14\fee212bf9462f83ddbf58b58fca925baff47f8
 \.git\objects\15
+\.git\objects\15\023404f690ad5cb01428c5e07d4c16cffa5ad1
+\.git\objects\15\1c5105bb86316686abac7721d2178bf10f050d
 \.git\objects\15\2b6daedfcfc782ab9c7ad4b1221b01db5e1809
 \.git\objects\15\368b569d4ee2e94b78a874c83688e95c982f2e
 \.git\objects\15\3926f3676b21effa72e45be730848edfee9b77
@@ -410,6 +419,7 @@ README.md
 \.git\objects\17\98cdf71f0c4e5ee8350436e607615469dc7513
 \.git\objects\17\b223a373685976326792a086e31bd82ea1bd9c
 \.git\objects\17\be1c427324d989c9711b67f1d24c95e02a177d
+\.git\objects\17\f3f7716013d66709a8455f101af9a0ae969313
 \.git\objects\17\f7825d5f3d1774cced0ebec9a7a80913dc3922
 \.git\objects\18
 \.git\objects\18\05cc264be8a1c84b9c23eeed6f98e637637b49
@@ -440,6 +450,7 @@ README.md
 \.git\objects\19\b7946fe80fc455786c7e27cc6f67520b12f068
 \.git\objects\19\c043469296f742095d78c23d7d210b523c5e50
 \.git\objects\19\c9b77f2f9f0508ae928ca295066ebaa9fb2c3a
+\.git\objects\19\ce55617d12afbe37ac665361ac61500e6c6bf0
 \.git\objects\19\e3d5504e49629af808062527fff6e91ae2590f
 \.git\objects\19\e5c2c081130cc17d017eb0568ca6a928ea23ee
 \.git\objects\19\f381983124f4116c04adf1b0fc7ebdb3e78b68
@@ -537,6 +548,7 @@ README.md
 \.git\objects\21\bd836396e079092bfbd6fdb8bbb98ccefd1f7a
 \.git\objects\21\deebf6f040a0f23abba4473391ffda48f0ffc1
 \.git\objects\21\e6c58b8b08d509d22a5d96e1113a3bf2e477e1
+\.git\objects\21\f4550eb53f58a6e4fba8b3770ec841c7604dc0
 \.git\objects\21\fdc42ab1ed26c20ea2beff8776280af27a4faf
 \.git\objects\22
 \.git\objects\22\192e2fa7a71e2d51e1b64680d75e054902b362
@@ -678,6 +690,7 @@ README.md
 \.git\objects\2c\20f6ea76e472eac4bd2410dd3896b0e2f9b3c2
 \.git\objects\2c\2abea6c384a34c0cc92cdf8aa99ecc61eac378
 \.git\objects\2c\30f234b0ea03bfbec2c8e905c77b8b9ab61e45
+\.git\objects\2c\3271c0656cdb2ef0592278e46b5f62f4442fe5
 \.git\objects\2c\5576f690c354ba24e2592c5972c81082b57165
 \.git\objects\2c\99086e7ce48c0f90d5f15ba79acd18ed4ecb0d
 \.git\objects\2c\ba33c6239f76106384f133fbe0d60f00c6fc57
@@ -725,6 +738,7 @@ README.md
 \.git\objects\2f\881c50e51df2cc723602bfd0a6069b1a1e8d26
 \.git\objects\2f\a917b3ad871d15e9d209b604a7bbc4289dbd53
 \.git\objects\2f\bb0efa1edbf6e10e655d2c0bbff8ef9088d333
+\.git\objects\2f\dca8819ab30ebb346908649ded1f8597706f5f
 \.git\objects\2f\e15d53c8d0b8bc132bd6f0029658d4b76f6034
 \.git\objects\2f\fbe25fd37edd27c4fd552ad172f39ef434a4e9
 \.git\objects\30
@@ -779,6 +793,7 @@ README.md
 \.git\objects\33\b02ae835535136d5b21f0463091a3536067576
 \.git\objects\33\c3fa557a9376ec0a9f709126be36e48933ad96
 \.git\objects\33\d7fe50829e25cb1b467c49c7dcc7154ed4f28c
+\.git\objects\33\eacb7708f567c16fdc0c0f4e08de3c32b23dbc
 \.git\objects\33\f6fc728abe82960e1bde4c2502053b7e0e1fe9
 \.git\objects\34
 \.git\objects\34\111f6882aed60e3ce7a2d79961e6a3dde70d1b
@@ -826,6 +841,7 @@ README.md
 \.git\objects\36\2302443a62b0f9240da0dbcd2f774a7a528463
 \.git\objects\36\25e01f20421fe3fce8c35418464f0490992579
 \.git\objects\36\2603596be42c15c544c203695310de8b17ffc8
+\.git\objects\36\261ead93e9be5384e756e93ce859b5b480015a
 \.git\objects\36\2cb0de7712bd6e2cff8ce609a9f51d15cab055
 \.git\objects\36\37a2f052a6bf2ebbf9e711ff5e0e6275ca5ca7
 \.git\objects\36\3931045bb2627d6b3e3fe2cd0838c250cf5316
@@ -982,6 +998,7 @@ README.md
 \.git\objects\40\7e216682c2db95491981bf9e75bd4c6a250c6e
 \.git\objects\40\857733f183812abcc1b76c8daa717a424f8fa3
 \.git\objects\40\aa1f0ec177f6da2951ced2311f803846c48362
+\.git\objects\40\ab7e77161bd09bc12df42295bb969e7eb5bf10
 \.git\objects\40\afcc9006b3265ed8f05fbba845da8893ab1e74
 \.git\objects\40\e8edc3f115328634c25e5d3370c0a97c522d29
 \.git\objects\40\f6537d9144bfdf49866e54977f54b8e1adb7fe
@@ -1029,6 +1046,8 @@ README.md
 \.git\objects\43\660d98a62d46960e0886edae9b3ea2d8736cb2
 \.git\objects\43\6bfd17a7d4443cfbf6e745b596ba3dd453d402
 \.git\objects\43\7a7a369ff4f0234d18469e4845fec953106f88
+\.git\objects\43\b6254879cbd52f67c71dcf633535ae509698e4
+\.git\objects\43\c8edb7906d35c37e2684a93ee3a4fdb11cfc7e
 \.git\objects\43\d3e791811be25c1b4835fc713858d96b09f4c8
 \.git\objects\43\dcd020c864228b82a7d6affca37d9f728c9a51
 \.git\objects\43\f3329071ea644e90243bded875bdb45469e473
@@ -1050,6 +1069,7 @@ README.md
 \.git\objects\44\f2962f5554c34756d5beea3f54b77235572d23
 \.git\objects\44\f60e79ef83304ce443bec062d79b6446e467ff
 \.git\objects\45
+\.git\objects\45\077f55da8eea7e0a4a83e22a6297f7f3898353
 \.git\objects\45\13d563d5f0afe7edbcc54b3ecfec93f17df849
 \.git\objects\45\8c02671ec942796887b1e5f03402f73941dc5e
 \.git\objects\45\943d7137dff63bc01fd52f229365009e7ba6a3
@@ -1083,6 +1103,7 @@ README.md
 \.git\objects\47\9627d39d8063da8db4049743473eb1aa4e2ed1
 \.git\objects\47\9e53b89aa678ccc7776bf785b129d78dad4150
 \.git\objects\47\bbc1a03e22f1594c7fe6704947edf220161a02
+\.git\objects\47\dd2ea7adb1a0acf1434dc086f52649bf8b256d
 \.git\objects\48
 \.git\objects\48\4851f14daaa1b706f847ba7c982135d8968cbf
 \.git\objects\48\4d78043f01a0fcd3a7e381e4a25c407a7b2421
@@ -1126,6 +1147,7 @@ README.md
 \.git\objects\4b
 \.git\objects\4b\1440f9b0196529063613a4f2d8c2f76237980e
 \.git\objects\4b\1db1484392dabd4b342ecaba3c5da87f028079
+\.git\objects\4b\23b6dfb2f8e750959baa3099c4b63929e5f1eb
 \.git\objects\4b\3be6ff1a49fe3daff9c4950c1902385e812f1c
 \.git\objects\4b\3f4be05cb5a5c6681b505d0bce83042dfe09f2
 \.git\objects\4b\455c134fee9758ee76d66a9189d962094f255b
@@ -1164,6 +1186,7 @@ README.md
 \.git\objects\4d\65d9c3f85f7fea42d1c3ca0821bd9e01367a2b
 \.git\objects\4d\73ce67b8e010cbb7608a5eec08c2f3bdd9abaa
 \.git\objects\4d\7658fecd3bb0af8439fdcf9852538e21f72cb8
+\.git\objects\4d\8167a29b954eff4ba4b950dbad42996caeb41d
 \.git\objects\4d\a1e326089405d3053d6ae1bb3170d9500d5212
 \.git\objects\4d\c00eba79624c79a10091a0049c2cbc802546d6
 \.git\objects\4d\c640ed6f648cf626491ec5298e672dbdc293a5
@@ -1224,6 +1247,7 @@ README.md
 \.git\objects\51\caab388033e22cc2767bcf93fe62ce6cd85e2a
 \.git\objects\51\d5565f1d60a35cc3c3e8ab707c2d51049f93a1
 \.git\objects\51\e02e69ea5a2d29bac9832946c8c0258e0d1c3c
+\.git\objects\51\e46b40677ccdb2b5cabf3047122cdc034e6cfa
 \.git\objects\51\f2be6f5fb01d694a98afa94e1a19a610467c20
 \.git\objects\51\f953f3cbebdc0c5d8f00ca247774d923a4ed01
 \.git\objects\52
@@ -1257,6 +1281,8 @@ README.md
 \.git\objects\53\5f2bbf9eddefe1a9bf003389f9e39be92671bf
 \.git\objects\53\63eb8ed42dc90aa16108be26619ccac59278b3
 \.git\objects\53\84342feeece8aa732f79fb8ad384dfebaea344
+\.git\objects\53\8815711cb64f83fdd4e036e64c9bae6c11141e
+\.git\objects\53\93a87d3c83f1af4952be22d340251bb6bf9b7c
 \.git\objects\53\9419810db4b20dbe854b263984f178e0a5b005
 \.git\objects\53\99251106ff9d273d9978c294d880390bb1369c
 \.git\objects\53\9a19e5634c9df83c97a2dd5625dbf91a733bc4
@@ -1307,6 +1333,7 @@ README.md
 \.git\objects\56\cf1a7901fde31c590511b9b4c732db0a9164f9
 \.git\objects\56\d5a7073f5e3570838b90796d5ed6353360468a
 \.git\objects\57
+\.git\objects\57\3c9efc5d9a620654b3d01c6a21a12504ff5782
 \.git\objects\57\6345a604c4431ce6a2cab8a532f4a378716bf1
 \.git\objects\57\63d6edaf1cccc1541bf0e74a075a5c9ac56c61
 \.git\objects\57\92d03f69a3b90ab8645aed06c28de8273fe85b
@@ -1320,12 +1347,14 @@ README.md
 \.git\objects\58
 \.git\objects\58\02885ea6f9302d257f90976830802b77e60866
 \.git\objects\58\17768a18fa4760e618a00c5e99851080b8fa8f
+\.git\objects\58\2771fbd9a2c29ef145efd01a24e0f6089ddb96
 \.git\objects\58\33e693947d9b7b37866128a062fd5aad41080c
 \.git\objects\58\346a06ecd32a880b69b48002a38428572372df
 \.git\objects\58\3fe83b39d0a2314d6922630371b61e2dd7ff0e
 \.git\objects\58\5453e9fad576b2d0af758ca10299c3c49869ba
 \.git\objects\58\849baef25145fe46a81a5a472bab00b561e27d
 \.git\objects\58\90303fbc0ea622d003f090216bb4c623c822c0
+\.git\objects\58\aa489244047717a8d30cfb7ae11757ead22558
 \.git\objects\58\c1dfb8811bb018aea65ebac0f471045fde2c8d
 \.git\objects\58\c5dcb439ce241db29acf9a10b5e92154363162
 \.git\objects\58\ed531e3ac2975253bd41c5e8e5d720d48e5676
@@ -1339,7 +1368,9 @@ README.md
 \.git\objects\59\4301e52236922c0abbbf78d13145523e5ddd5d
 \.git\objects\59\5257f85ac0ae7e9b1439d2e269d083fdea32ec
 \.git\objects\59\5ae705af17d7523a85227369e2c17fcdd51572
+\.git\objects\59\6b80f60350948cccc6afa06ee7bf33b32e4f9b
 \.git\objects\59\89b3554fa2640537b07bc5e6dd0e6a85635f5c
+\.git\objects\59\a557032abfd2c48c8e3c1ec4144bd0fc5eecf8
 \.git\objects\59\c80c7d0e1dfee8a56c6b6296d26441ef6f6280
 \.git\objects\59\dd322c501937c59eace7e04a9c89b625ccc023
 \.git\objects\5a
@@ -1348,6 +1379,7 @@ README.md
 \.git\objects\5a\1a4579b2105aa54025c1c5d03340530095d9f9
 \.git\objects\5a\2ff3170bee37a4d04bf4b35d2abffabfef249f
 \.git\objects\5a\3e9d6b6af7c3133954a6d88a6c207c8132d642
+\.git\objects\5a\3fd9d4573508f18cd944214e6963430bd78d6b
 \.git\objects\5a\481efdb282be41fb5db8184928dd4d85f57f19
 \.git\objects\5a\4ca5a85726ee3a6a806f41bbfc70aa13238c7a
 \.git\objects\5a\63eb1dd4974149b8468f3ee9d0361b6b59272f
@@ -1369,6 +1401,7 @@ README.md
 \.git\objects\5c\1d529b95ed82a4728eaf6895ea0487f8ed0db1
 \.git\objects\5c\2478c47d06fcccd3e5cc11daa412410066300d
 \.git\objects\5c\4e735550b88da291ac91cf88f81d8ef54e5e26
+\.git\objects\5c\517d9b3ffb69ad3de1f0968b512f6892d83cd4
 \.git\objects\5c\52e2b06e55e074bda21f425fa8e19d05625e58
 \.git\objects\5c\53c0ea61a99d79ea96083a1a92c4e43ee73157
 \.git\objects\5c\58fd1f8a4dfe4bdf3c7b111180e1fe02be3d32
@@ -1404,6 +1437,7 @@ README.md
 \.git\objects\5e\9006ddf603e812e21546db6fc9def99a7cb985
 \.git\objects\5e\9ae3e040880e7cbdc2ee34561398530b8f298d
 \.git\objects\5e\e865be54d6a6568bdbe00884db74a715b6da8b
+\.git\objects\5e\ecb88befba6800294bcaa6b407ab3a4907f172
 \.git\objects\5f
 \.git\objects\5f\1faff693ff1139775e170f0d7b74a74d12d9fc
 \.git\objects\5f\2b45d60a8264ad9fddcffab7a9cc42f27a7343
@@ -1484,6 +1518,7 @@ README.md
 \.git\objects\64\2b7594b07279f10dea5e221d2859c04dbaa715
 \.git\objects\64\4a2cb71b3926643c6910317ccedad0680972ca
 \.git\objects\64\96ea210e39b5e8aee06d97a21fd9dc738705f0
+\.git\objects\64\9a026845abdabc4bdecb7cc2869093127ac3b5
 \.git\objects\64\a566ad784d4a8ea5c26f4fc6fee396e02d192d
 \.git\objects\64\a80490fb8078493a2e25819463237fc48a30dc
 \.git\objects\64\e27ad43840ba38ea225b1f3360cc1ba4b6d8d2
@@ -1563,6 +1598,7 @@ README.md
 \.git\objects\69\d234995a90449fa9606a94a7d761de6bcacf7e
 \.git\objects\69\f62d2d45dcb6f22f4051f2f65de0d10a9b45b5
 \.git\objects\6a
+\.git\objects\6a\1c11716ab7be9c211defb79dec4ac90ae93768
 \.git\objects\6a\4084d908e88f14a83db1ed230da0aed0f730c5
 \.git\objects\6a\5079e730ae93c99db6c5266b2264edc8fb2bdc
 \.git\objects\6a\6dd97468ff31a6783c9ce7d33afe996fb0c478
@@ -1589,6 +1625,7 @@ README.md
 \.git\objects\6c
 \.git\objects\6c\078f2f99701dee996067edb94e63213609602d
 \.git\objects\6c\0ea7fef2149716aaa4a00ca5029e58b9bd54ae
+\.git\objects\6c\173db776fde7cc88d84a199bea6a3b08f38bba
 \.git\objects\6c\280154202728ff84f5cc19c57bd8412d3f9acd
 \.git\objects\6c\67dd78c65ba765473fbe7aee1eebe7eeeac18a
 \.git\objects\6c\6ce8c130926671d3acd851b6a8f61ac7986149
@@ -1601,6 +1638,7 @@ README.md
 \.git\objects\6c\e3024e25432aae2b34256b5b73b512fcf0e06c
 \.git\objects\6c\ea970330a65b8acc546cc89c3927e1161371fd
 \.git\objects\6c\f5a6013f42f240957f66992463cfa54fe199d5
+\.git\objects\6c\fb4e4f33511b75b7de31e347413f7fe5842bfa
 \.git\objects\6d
 \.git\objects\6d\254c8d4e2aaa7bdb4b4284c537dc4eabf87f7d
 \.git\objects\6d\30d61592d7391cc8c404c702e88b55b0113b56
@@ -1626,6 +1664,7 @@ README.md
 \.git\objects\6e\6f98552fd74c2ded928c6d269e1fde2f7c104f
 \.git\objects\6e\814b2f38a34cfa6a9192e54bfec099278430b3
 \.git\objects\6e\9cfbc6b9ecffe32b30290bf9daa39cf28feb79
+\.git\objects\6e\abe3f3a255def74b60867bceb78c2c2452324b
 \.git\objects\6e\dc9bbd9ac0cf83d0870a817788fa0d185c402e
 \.git\objects\6e\fbb76c0171bf7807d750db40afe7988d629b3d
 \.git\objects\6f
@@ -1657,6 +1696,7 @@ README.md
 \.git\objects\70\97011c4e4357d15bc0c6b73f8c05dd7553280f
 \.git\objects\70\9857beeef1ec6989ff0d9a824ab1598cb82a1d
 \.git\objects\70\9b4cb425af0b6a8bcdbc5952a58aebb1d91c25
+\.git\objects\70\9c3402f2e5991f57c7555864349bec04379aec
 \.git\objects\70\bb4dc66cf0cbd025732f8221659cc0e7ecca0c
 \.git\objects\70\c886588cd3ab94596c7620f1fa19bad1953114
 \.git\objects\70\ceea5b1601e8c73be85acb6f1c2c3f7c4e0b70
@@ -1718,6 +1758,7 @@ README.md
 \.git\objects\74
 \.git\objects\74\00f4ab5877d5621d2e977e303ac3f41c181c35
 \.git\objects\74\0b8ed020b369ec3cfa2d6e00e576a01316597f
+\.git\objects\74\128a9bb2586fbf02294067ee49115e728ef3ec
 \.git\objects\74\1f62ce0ebb3b95ec02e8620cc41b4f9c52970a
 \.git\objects\74\40ea94b213af1f0a0e893de19a8671e9664d67
 \.git\objects\74\4bdaa9c5f853d2b803d22ffa6607c238457dd3
@@ -1764,11 +1805,13 @@ README.md
 \.git\objects\77\9562e417131c8f57772805ffe53f3119d14bfe
 \.git\objects\77\b9afeb0be352252b88e75b70db4650a3267e92
 \.git\objects\77\c89172b51bda5352b2fda6bebb1bf92574eefe
+\.git\objects\77\d91bad0d451de86a095d6bd887d68271d4bb3d
 \.git\objects\77\e73cd7af1cc58c34223bb34f6382ac9de90b9b
 \.git\objects\77\eb4505b90aaf63407fd917f01d31a9c4bf719a
 \.git\objects\78
 \.git\objects\78\1804e005c5f6e95ad3edddc77e53a69bb44fa4
 \.git\objects\78\49350047dc9bbf402de7b373bbd0e0caa89838
+\.git\objects\78\519355f19ce1e1ce55bb627f1262641404ab3d
 \.git\objects\78\5f384544f36e0cf244b4b6a01cac193064e490
 \.git\objects\78\757a334c103c9db3dcff036c4ee1e4696e8438
 \.git\objects\78\7bce05ab93556f444710cdd3e1cb72eb768455
@@ -1799,6 +1842,7 @@ README.md
 \.git\objects\7a\59c7b6b49fc2a317764a2d6a01be94ed227df8
 \.git\objects\7a\78830465c1c6a02e28753fb0037b716bcc4ccc
 \.git\objects\7a\967b0adf91bee7eee377752a311b8efd56085a
+\.git\objects\7a\97c5a1098f214e10ee53032ea02a1c842bc969
 \.git\objects\7a\9a30d43506c5bc41d7992c969961bb472e85a8
 \.git\objects\7a\a923dd3ace11cc9c12a60647c6406002f61f92
 \.git\objects\7a\b308ecefc36d2e90628374a97bffa8e75b7b25
@@ -1991,6 +2035,7 @@ README.md
 \.git\objects\87\5b2e331b9bc5a73c2905a665f1589416e88763
 \.git\objects\87\5ee7918368c88249e8989700a6fb4561652c39
 \.git\objects\87\64f83a874ed142e24f6b53852510b67981211e
+\.git\objects\87\6ad90a9c16987c97ed97d9f18c9cdb03935440
 \.git\objects\87\72f045ade96b08e17ab230a406a20f461be7bc
 \.git\objects\87\805783c32ce9097ca51cb7a5ffe9f1b83595da
 \.git\objects\87\8e67584e4090e6298a8c90d6abd76d7c7d3884
@@ -2003,6 +2048,7 @@ README.md
 \.git\objects\87\eb35caf74581a6438d01dc42044032aee618a0
 \.git\objects\88
 \.git\objects\88\00e3301d50a74a32c812108ad8bc90b61dfd38
+\.git\objects\88\010d48e99eac3f108ce3f8356b7bee745ee171
 \.git\objects\88\0807f3b8092a258eb0c6d11dd155e9412ec396
 \.git\objects\88\08823e7b7d4a24a59bbf605b1e090f5d2adfed
 \.git\objects\88\21b3a88b87db19af5aabcbe5e49f6da5269691
@@ -2098,6 +2144,7 @@ README.md
 \.git\objects\8e\1e455bd86b193e7be013f368468bcb72a6d26d
 \.git\objects\8e\32c60228303993f6e1130a68c382f2d204a1ab
 \.git\objects\8e\3a39034b4d5869ee6dd47a5002036a691c330c
+\.git\objects\8e\6dd231531817c8db61fdb2100cacd00273a90d
 \.git\objects\8e\6e2556aaf1652af95cc7f04447e0d8558e1aee
 \.git\objects\8e\71f57db187f8751a37bac77af55d2643f3b4f0
 \.git\objects\8e\9f8b72a3ef4e95965af1b7d0908be08c25fe63
@@ -2286,6 +2333,7 @@ README.md
 \.git\objects\9a\e271d26ffc3663cc60f35d31848132c25f8255
 \.git\objects\9a\e3e7e61af6306e97653a70671ecc8da1fed512
 \.git\objects\9a\e8ef6f11209bf3fa2b306257b8f3c5873ca3c2
+\.git\objects\9a\f890c123263bdc5c8e20546b3300c27c09b362
 \.git\objects\9b
 \.git\objects\9b\043f5d203854e047e93e43eba88fb3ee1862b0
 \.git\objects\9b\0c5f9c2198bb6aed69e6cf02dfc8751495269a
@@ -2354,6 +2402,7 @@ README.md
 \.git\objects\9e\72405597daf1e5a9e7c7c69eade7bf2eceda52
 \.git\objects\9e\7253130c4b026293afec713583ec9932cdde97
 \.git\objects\9e\7fa29f092444974a5fb0aaa1b7f535b79aa251
+\.git\objects\9e\eff1e8098d5bbf677c6ec144227ecb83452456
 \.git\objects\9e\f30ebbd8766ee84bee5407682a6c9fd05416c0
 \.git\objects\9e\f468df256099b2f994494c0d9cf788a3165826
 \.git\objects\9f
@@ -2387,6 +2436,7 @@ README.md
 \.git\objects\a1\439af80bcac51f336b0ff731c8e3409a9cdf1d
 \.git\objects\a1\54041d5fbbaf83a60dedf94c42718290a4f504
 \.git\objects\a1\5fa533fcd7f5f12e4d6176733f30256f415b4c
+\.git\objects\a1\6a89219a30260e4f816d56f67c9508362dfb58
 \.git\objects\a1\826ad71da7a8ac8877ef74e86577aa21e33904
 \.git\objects\a1\8447134749812f308d87b9974fdb245c0e2db7
 \.git\objects\a1\8e3a9a6310324cfcb801741feb841be37c1be2
@@ -2728,6 +2778,7 @@ README.md
 \.git\objects\ba\4a8423903fdd7edfc9f644e48526c15e78ccd3
 \.git\objects\ba\7edeb920e7f36acf7e6cdbcd7af8eb153ed2fb
 \.git\objects\ba\95da55fd0d07f57b62c8a41c0cc159c44901a2
+\.git\objects\ba\a551beea242ae041cfaf881867688fb5f34c82
 \.git\objects\ba\b305687bdcc3903b532c0ad22de3ceef7ce9c9
 \.git\objects\ba\b55a070135f448ee129ad0fab67672ca4cd197
 \.git\objects\ba\c2e1b42c4e4273b6a8ec67070be0cf24a1b6d5
@@ -2847,6 +2898,7 @@ README.md
 \.git\objects\c2
 \.git\objects\c2\19a07a49446c7b59656b3a1d32909a94cdf3c8
 \.git\objects\c2\384f3f3d19aa3509bc753746d3daef4e2c20e8
+\.git\objects\c2\55699ef7a3de7e0fad4a5d9033ebc02af57716
 \.git\objects\c2\95359bd0e247277d4323eebe5d12e8a471faee
 \.git\objects\c2\d7fed36557dd3774d371be21dc02e22ea00b40
 \.git\objects\c2\ecb72538e02793cf9653842b8579abe4f2ac3d
@@ -2862,9 +2914,11 @@ README.md
 \.git\objects\c4
 \.git\objects\c4\00e89b1b0a8a24515eca276ee177da3a54ead6
 \.git\objects\c4\03b3fcd21a6d41c7b9befe31e9f218e2e40091
+\.git\objects\c4\0684ce2586797e579f9e520ff1d1c23bf716ce
 \.git\objects\c4\1f5c75e917291b74a6ff359510e1c5d4baeccf
 \.git\objects\c4\20baff3c348440d6e2dfe876f4275d4bc67fb3
 \.git\objects\c4\2fda3f9bf2480c716aed03d96fcaee6eb4a961
+\.git\objects\c4\36b94450c6ef90b241077ba2a1795d1dff9e6b
 \.git\objects\c4\4457628af80ab392878e0356f60362fb7807b6
 \.git\objects\c4\607d459e07252df0169b0427cfe08d1a75bf1c
 \.git\objects\c4\757b5b3248584cb13e5d57eee38be451ab8c23
@@ -2877,6 +2931,7 @@ README.md
 \.git\objects\c4\ca3f5141cfbd2fd756f7508b0a950d05b83023
 \.git\objects\c4\d5c10795b4eed091673c7f173222612c0b261b
 \.git\objects\c4\f30ef28cec1c725b5251d8a27730179a3404ad
+\.git\objects\c4\f900d5529959540cf9832fecbe575ee2d83e69
 \.git\objects\c4\f9897168015af1b96a2d90846dad74a1769630
 \.git\objects\c5
 \.git\objects\c5\0f1398ae2a88ea5aa78ee11270702226097868
@@ -2930,6 +2985,7 @@ README.md
 \.git\objects\c8\0b9b3fe40408b30b568001940a2f99abd6112c
 \.git\objects\c8\121c2700a4b0a8d7ee50c68d2cc57fe8e78c9d
 \.git\objects\c8\177f580f22f2326e03130047de07c340d871bd
+\.git\objects\c8\4e8367196b69fc9a4a4a4f3cf8a12ba5d4d8a0
 \.git\objects\c8\4fdf89ff68c3874cca496afa12b2f932f31aa5
 \.git\objects\c8\52506a29dd7ddf92573e63a52378449dd09df6
 \.git\objects\c8\6132a8126fe0406c213d3e91a2229d4406ed6c
@@ -2970,6 +3026,7 @@ README.md
 \.git\objects\ca\508cd7822cca3f2d193660d050a207339811e9
 \.git\objects\ca\58a76b482655da3041ade734424ce3f8f833e5
 \.git\objects\ca\c3e41701e96b3aa79dc1e208fcebb2963eb1a4
+\.git\objects\ca\cc3bfb75d603f2bc0b8502ed34fcca84866b17
 \.git\objects\cb
 \.git\objects\cb\0e2cf27439d96a2505c06b0e3a65496dab6f48
 \.git\objects\cb\2ac4c9d8b3f738622294d2244fb3b08c558f63
@@ -3057,6 +3114,7 @@ README.md
 \.git\objects\d1\a3b4213356117170c394369cec582db5a500cf
 \.git\objects\d1\b69f5c1f530b8b5d362dbd8577424038bc4688
 \.git\objects\d1\b9d0fdf331818dd2d77e50fb506000ea4ef459
+\.git\objects\d1\c6d84a56d7135266cebddc8332c2f7ed45fe97
 \.git\objects\d1\f04e34f5ba150c0e3a21b70df3b82eee314d94
 \.git\objects\d1\f89acca55abfdaacff9582ddf1872b66b4000b
 \.git\objects\d2
@@ -3074,6 +3132,7 @@ README.md
 \.git\objects\d2\f11b59f2aab253130960d85731c326fbe66731
 \.git\objects\d2\fd1698cec943155b43fc22c393f97764cefade
 \.git\objects\d3
+\.git\objects\d3\38db3373e78554ec1465151848edd2f6dd2396
 \.git\objects\d3\59718e5c242997062568dcfc3521952237c165
 \.git\objects\d3\63f7c2070307d0d31066ab882b6063600c1cb2
 \.git\objects\d3\672f19608927889f142177d5c94605979d51e8
@@ -3128,6 +3187,7 @@ README.md
 \.git\objects\d7\277f913a40a1bd483fcebb04815dc3eec45017
 \.git\objects\d7\2870c687eb375e45c995b9caba9726cc5bc566
 \.git\objects\d7\44e39c65394d1ff9860765f6144ec1f90429a6
+\.git\objects\d7\4d0ceed0ce8dd944dabd4bc83c747cd30363b0
 \.git\objects\d7\596d0e4ba8674b3b6945f25dedc9b3e4c78cb4
 \.git\objects\d7\675e9457a40bf36d740939cac78afad92d1b1f
 \.git\objects\d7\7dbef00407b66f53af7210908249e86c8519bc
@@ -3167,6 +3227,7 @@ README.md
 \.git\objects\d9\daf5efdcc6d01f5509731fe1c631d10d39f3a8
 \.git\objects\d9\ec2d0d82ec41e2fc5a4e74965f240eef960917
 \.git\objects\da
+\.git\objects\da\0d2e66bb903f1b983163e84a2260e15962da2e
 \.git\objects\da\19fa429def0e5528597958e7c88b64a4379099
 \.git\objects\da\4018f735441815830d64ff65703d05141bbeb5
 \.git\objects\da\4b72fd5f3711836bfa148739f41329a394cbdc
@@ -3200,6 +3261,7 @@ README.md
 \.git\objects\dc\448ae6d0c14da2d5662fddef75fd0efeb64a7d
 \.git\objects\dc\5ee44eedbf8c6c87d4a5640bea5da7d2fc5325
 \.git\objects\dc\8095a458e9b60656df314dd5bc271315c96931
+\.git\objects\dc\88d3c1d68570672cf80cc15feb96a00ad03b67
 \.git\objects\dc\b1f1159bb817c5a4991e97ea613821e2fb71f1
 \.git\objects\dc\bd5217213e12415765f80ab51c1cee0c0bd2ac
 \.git\objects\dc\bdcf6be5077c36d97069797aac37ea834dbc27
@@ -3236,10 +3298,12 @@ README.md
 \.git\objects\df
 \.git\objects\df\14f8b23e922c1e58c5daa69c0c7ba47564fb99
 \.git\objects\df\24973b72156e33d2cf44d797fcd05b95c79c4b
+\.git\objects\df\2830754952a7e96286a2966e0dfea2e23890c4
 \.git\objects\df\2a7d1dc302c3147b82b29d7436236193fedad5
 \.git\objects\df\3ed22c424d6a21095201f9cfeac2394a5cd661
 \.git\objects\df\4b02cd8abe4dd3edea8d934f99332ac83adb75
 \.git\objects\df\5f3fe9b984b7396d9fe7bf44cb8ab56cfb061d
+\.git\objects\df\6c02781fdbb2800a92a3b4fc0048cab5bf9018
 \.git\objects\df\70daf5a4f372e3f06d5c9c157da3903005d402
 \.git\objects\df\724e674b8b8b141302a9d2f379cfb03aa726b2
 \.git\objects\df\8c681b1921ba12e0efb4503c4ef29b5e8c6428
@@ -3432,6 +3496,7 @@ README.md
 \.git\objects\ed\f5a32fcddc6e22ead7659aa87f059b4a22f70b
 \.git\objects\ee
 \.git\objects\ee\013c6cd0b282a2300ed887dceb36a3df44edc8
+\.git\objects\ee\03a1523535b9812f3ef6c7839ced41c4b9dc04
 \.git\objects\ee\10d5757d32bbfadf28308734fd8345091e9fd5
 \.git\objects\ee\2342f55d313a2693affd5b9ef31f34d259c2d3
 \.git\objects\ee\28f85c432f02bf2b4e4cf7273d35bdfc00aae8
@@ -3496,7 +3561,9 @@ README.md
 \.git\objects\f2\97958641c0c5df57750fc377c69a4fc40d4c94
 \.git\objects\f2\9a9ee47f3661bcd54c295831c692166fdaa67c
 \.git\objects\f2\be954d50cf3f2b4d3c932c88caa19df0d4e8f1
+\.git\objects\f2\d5a96038a81ed246a50cdcbf27bcc954d13820
 \.git\objects\f2\e17882b8ee5aea1f984f4a0f127b0bbd792764
+\.git\objects\f2\f071839366e9605728fdd54a6208966bffdf35
 \.git\objects\f2\fc0dcf47091fb9ef1d69bb51cae59952035c92
 \.git\objects\f3
 \.git\objects\f3\4023798169f6fa56934dc764719cd7f86349e6
@@ -3551,6 +3618,7 @@ README.md
 \.git\objects\f6\bfc54eccc6f2dcd880a0b4fa415e14d70e4792
 \.git\objects\f6\bfd02906c3175f40f9449fb08a2bd5e1e62d50
 \.git\objects\f6\d035e15fde6767e5b9453a7e81fae8ea8a812e
+\.git\objects\f6\d5185b96d9768e18648d092bd28839cc411985
 \.git\objects\f6\eed49e938cbc00a72714008bd5b5ba41151470
 \.git\objects\f7
 \.git\objects\f7\1ed65cb66406e9d81bf41d84d58b338d9785e3
@@ -3613,6 +3681,7 @@ README.md
 \.git\objects\fb
 \.git\objects\fb\0ea0e4ba9c86b92bb83155b6230e8b9b968162
 \.git\objects\fb\12e097e4975c62c8bdae138ea12c98afa6d5ea
+\.git\objects\fb\14e4dcf836599ffdc7eac9669deec0bbb27e50
 \.git\objects\fb\4736381a9bcfb389c2ea7b495fc6d0f0eb7f5e
 \.git\objects\fb\51a3c4ad65f5afbe0b3c53c9a2d1b83530b576
 \.git\objects\fb\5770f4f8fba2abb4068c91cd12bbc82dea6d52
@@ -3632,6 +3701,7 @@ README.md
 \.git\objects\fc\36d36a493452431ba31f3a86db52f76f07969e
 \.git\objects\fc\4413aabc0328486825f94570da66510cc079ad
 \.git\objects\fc\65a706046cd54a10e95468fad638f3745f94ef
+\.git\objects\fc\6af3d9426e6909ebf672932d598eaa08e9eb72
 \.git\objects\fc\700051746f51b0afb66a5a9efb7b50898740d0
 \.git\objects\fc\801e735b10e59665b990e3c39c79ab13e43887
 \.git\objects\fc\b147069beb4501287e50d7ec5ef4a03ede6b49
@@ -3701,6 +3771,8 @@ README.md
 \.git\refs\heads\feature\1.2.0-ends-menu
 \.git\refs\heads\feature\1.2.1-logo-a-v-aplikace
 \.git\refs\heads\feature\1.4.0-documentation
+\.git\refs\heads\feature\1.4.1
+\.git\refs\heads\feature\1.4.1-documentation
 \.git\refs\heads\feature\add-column
 \.git\refs\heads\feature\change-alignement
 \.git\refs\heads\feature\DB-new
@@ -3758,10 +3830,7 @@ README.md
 \.vs\ElektroOffer_app.slnx\DesignTimeBuild
 \.vs\ElektroOffer_app.slnx\DesignTimeBuild\.dtbcache.v2
 \.vs\ElektroOffer_app.slnx\FileContentIndex
-\.vs\ElektroOffer_app.slnx\FileContentIndex\66707167-222c-450e-9c90-56f03fb59fd9.vsidx
-\.vs\ElektroOffer_app.slnx\FileContentIndex\85946c4f-486d-4923-87f0-b5c8b658e055.vsidx
-\.vs\ElektroOffer_app.slnx\FileContentIndex\b3e85a3c-5012-48ac-8c7a-d285acf4e1c6.vsidx
-\.vs\ElektroOffer_app.slnx\FileContentIndex\c64ae85c-8c5b-426e-b01a-329d44a8da5f.vsidx
+\.vs\ElektroOffer_app.slnx\FileContentIndex\e47906b3-207b-4b02-8e59-7527d1bcd198.vsidx
 \.vs\ElektroOffer_app.slnx\v18
 \.vs\ElektroOffer_app.slnx\v18\.futdcache.v2
 \.vs\ElektroOffer_app.slnx\v18\.suo
@@ -3775,6 +3844,8 @@ README.md
 \bin\Debug
 \bin\Debug\net10.0-windows
 \bin\Debug\net10.0-windows\elektrooffer.db
+\bin\Debug\net10.0-windows\elektrooffer.db-shm
+\bin\Debug\net10.0-windows\elektrooffer.db-wal
 \bin\Debug\net10.0-windows\ElektroOffer_app.deps.json
 \bin\Debug\net10.0-windows\ElektroOffer_app.dll
 \bin\Debug\net10.0-windows\ElektroOffer_app.exe
@@ -4300,7 +4371,6 @@ README.md
 \Services\ProjectService.cs
 \ViewModels
 \ViewModels\AboutWindowViewModel.cs
-\ViewModels\MainWindowViewModel.cs
 \ViewModels\Base
 \ViewModels\Base\BaseViewModel.cs
 \ViewModels\Items
@@ -5023,7 +5093,7 @@ Desktopová WPF aplikace pro kalkulaci elektro prací a materiálu.
 
 ## Verze
 
-- Aktuální verze aplikace: **1.3.0**
+- Aktuální verze aplikace: **1.4.1**
 - Formát exportu ceníku (`CatalogExportData.FormatVersion`): **1.0**
 
 > Poznámka: Verzi aplikace je vhodné držet v AssemblyInfo / csproj a číst ji v okně „O aplikaci“.
@@ -5841,13 +5911,6 @@ namespace ElektroOffer_app.ViewModels.Items
             => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
     }
 }
-
-
-
-===== SLOŽKA: \ViewModels =====
---- Soubor: MainWindowViewModel.cs
---- Cesta: \ViewModels\MainWindowViewModel.cs
-----------------------------------------
 
 
 
@@ -7324,10 +7387,11 @@ using System.Reflection;
 ﻿#pragma checksum "..\..\..\App.xaml" "{ff1816ec-aa5e-4d10-87f7-6f4963833460}" "48A781819FA11DEC019DA4E079E13F06F984D0A1"
 //------------------------------------------------------------------------------
 // <auto-generated>
-//     This code was generated by a tool.
+//     Tento kód byl generován nástrojem.
+//     Verze modulu runtime:4.0.30319.42000
 //
-//     Changes to this file may cause incorrect behavior and will be lost if
-//     the code is regenerated.
+//     Změny tohoto souboru mohou způsobit nesprávné chování a budou ztraceny,
+//     dojde-li k novému generování kódu.
 // </auto-generated>
 //------------------------------------------------------------------------------
 
@@ -7472,10 +7536,11 @@ namespace ElektroOffer_app {
 ----------------------------------------
 //------------------------------------------------------------------------------
 // <auto-generated>
-//     This code was generated by a tool.
+//     Tento kód byl generován nástrojem.
+//     Verze modulu runtime:4.0.30319.42000
 //
-//     Changes to this file may cause incorrect behavior and will be lost if
-//     the code is regenerated.
+//     Změny tohoto souboru mohou způsobit nesprávné chování a budou ztraceny,
+//     dojde-li k novému generování kódu.
 // </auto-generated>
 //------------------------------------------------------------------------------
 
@@ -7484,11 +7549,11 @@ using System.Reflection;
 
 [assembly: System.Reflection.AssemblyCompanyAttribute("ElektroOffer_app")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
-[assembly: System.Reflection.AssemblyFileVersionAttribute("1.4.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.4.0+c6507f7235db17f2906072912b381b90e1527e87")]
+[assembly: System.Reflection.AssemblyFileVersionAttribute("1.4.1.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.4.1+8e6dd231531817c8db61fdb2100cacd00273a90d")]
 [assembly: System.Reflection.AssemblyProductAttribute("ElektroOffer_app")]
 [assembly: System.Reflection.AssemblyTitleAttribute("ElektroOffer_app")]
-[assembly: System.Reflection.AssemblyVersionAttribute("1.4.0.0")]
+[assembly: System.Reflection.AssemblyVersionAttribute("1.4.1.0")]
 [assembly: System.Runtime.Versioning.TargetPlatformAttribute("Windows7.0")]
 [assembly: System.Runtime.Versioning.SupportedOSPlatformAttribute("Windows7.0")]
 
@@ -7512,10 +7577,11 @@ global using System.Threading.Tasks;
 ----------------------------------------
 ﻿//------------------------------------------------------------------------------
 // <auto-generated>
-//     This code was generated by a tool.
+//     Tento kód byl generován nástrojem.
+//     Verze modulu runtime:4.0.30319.42000
 //
-//     Changes to this file may cause incorrect behavior and will be lost if
-//     the code is regenerated.
+//     Změny tohoto souboru mohou způsobit nesprávné chování a budou ztraceny,
+//     dojde-li k novému generování kódu.
 // </auto-generated>
 //------------------------------------------------------------------------------
 
@@ -7550,10 +7616,11 @@ global using System.Threading.Tasks;
 ﻿#pragma checksum "..\..\..\..\Views\AboutWindow.xaml" "{ff1816ec-aa5e-4d10-87f7-6f4963833460}" "586C1CA9B5801C162D473F433D296136C517A37D"
 //------------------------------------------------------------------------------
 // <auto-generated>
-//     This code was generated by a tool.
+//     Tento kód byl generován nástrojem.
+//     Verze modulu runtime:4.0.30319.42000
 //
-//     Changes to this file may cause incorrect behavior and will be lost if
-//     the code is regenerated.
+//     Změny tohoto souboru mohou způsobit nesprávné chování a budou ztraceny,
+//     dojde-li k novému generování kódu.
 // </auto-generated>
 //------------------------------------------------------------------------------
 
@@ -7608,7 +7675,7 @@ namespace ElektroOffer_app {
                 return;
             }
             _contentLoaded = true;
-            System.Uri resourceLocater = new System.Uri("/ElektroOffer_app;V1.4.0.0;component/views/aboutwindow.xaml", System.UriKind.Relative);
+            System.Uri resourceLocater = new System.Uri("/ElektroOffer_app;component/views/aboutwindow.xaml", System.UriKind.Relative);
             
             #line 1 "..\..\..\..\Views\AboutWindow.xaml"
             System.Windows.Application.LoadComponent(this, resourceLocater);
@@ -7710,7 +7777,7 @@ namespace ElektroOffer_app {
                 return;
             }
             _contentLoaded = true;
-            System.Uri resourceLocater = new System.Uri("/ElektroOffer_app;component/views/aboutwindow.xaml", System.UriKind.Relative);
+            System.Uri resourceLocater = new System.Uri("/ElektroOffer_app;V1.4.1.0;component/views/aboutwindow.xaml", System.UriKind.Relative);
             
             #line 1 "..\..\..\..\Views\AboutWindow.xaml"
             System.Windows.Application.LoadComponent(this, resourceLocater);
@@ -7753,10 +7820,11 @@ namespace ElektroOffer_app {
 ﻿#pragma checksum "..\..\..\..\Views\MainWindow.xaml" "{ff1816ec-aa5e-4d10-87f7-6f4963833460}" "1A1966A4C7A38B7E327CEF04A68417736DBFE759"
 //------------------------------------------------------------------------------
 // <auto-generated>
-//     This code was generated by a tool.
+//     Tento kód byl generován nástrojem.
+//     Verze modulu runtime:4.0.30319.42000
 //
-//     Changes to this file may cause incorrect behavior and will be lost if
-//     the code is regenerated.
+//     Změny tohoto souboru mohou způsobit nesprávné chování a budou ztraceny,
+//     dojde-li k novému generování kódu.
 // </auto-generated>
 //------------------------------------------------------------------------------
 
@@ -7803,7 +7871,7 @@ namespace ElektroOffer_app {
                 return;
             }
             _contentLoaded = true;
-            System.Uri resourceLocater = new System.Uri("/ElektroOffer_app;V1.4.0.0;component/views/mainwindow.xaml", System.UriKind.Relative);
+            System.Uri resourceLocater = new System.Uri("/ElektroOffer_app;component/views/mainwindow.xaml", System.UriKind.Relative);
             
             #line 1 "..\..\..\..\Views\MainWindow.xaml"
             System.Windows.Application.LoadComponent(this, resourceLocater);
@@ -8026,7 +8094,7 @@ namespace ElektroOffer_app {
                 return;
             }
             _contentLoaded = true;
-            System.Uri resourceLocater = new System.Uri("/ElektroOffer_app;component/views/mainwindow.xaml", System.UriKind.Relative);
+            System.Uri resourceLocater = new System.Uri("/ElektroOffer_app;V1.4.1.0;component/views/mainwindow.xaml", System.UriKind.Relative);
             
             #line 1 "..\..\..\..\Views\MainWindow.xaml"
             System.Windows.Application.LoadComponent(this, resourceLocater);
