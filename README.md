@@ -35,7 +35,7 @@ Desktopová WPF aplikace pro kalkulaci elektro prací a materiálu.
 
 ## Verze
 
-- Aktuální verze aplikace: **1.3.0**
+- Aktuální verze aplikace: **1.4.0**
 - Formát exportu ceníku (`CatalogExportData.FormatVersion`): **1.0**
 
 > Poznámka: Verzi aplikace je vhodné držet v AssemblyInfo / csproj a číst ji v okně „O aplikaci“.

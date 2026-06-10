@@ -83,6 +83,7 @@ README.md
 \.git\logs\refs\remotes\origin\feature\1.1.1-wihtout-import-export
 \.git\logs\refs\remotes\origin\feature\1.2.0-CLEAR-CODE-DOCUMENTATION
 \.git\logs\refs\remotes\origin\feature\1.2.1-logo-a-v-aplikace
+\.git\logs\refs\remotes\origin\feature\1.4.0-documentation
 \.git\logs\refs\remotes\origin\feature\DB-new-code
 \.git\logs\refs\remotes\origin\feautre
 \.git\logs\refs\remotes\origin\feautre\1.3.0-CLEAN-CODE
@@ -157,6 +158,7 @@ README.md
 \.git\objects\04\f70a661aa09a3b4c2f50c8c7501cd928547c7e
 \.git\objects\05
 \.git\objects\05\0ccf45e98d9a991069071f26a1da091860176e
+\.git\objects\05\21ab20e4d130ace26f555c15127b610dedcd30
 \.git\objects\05\276b8cafd5502b7fbb06dfbcac3ad3ec1944ec
 \.git\objects\05\46a84961f2f05092bb534d864b6c5d3b6878bc
 \.git\objects\05\69cf65c81b13f3770bfe503e4c7db264b5a043
@@ -259,6 +261,7 @@ README.md
 \.git\objects\0c\959d76fa647610c8cdcb1f3d1259335f4841b1
 \.git\objects\0c\baaa29f492ae1486d5924e2d73fab69890c53d
 \.git\objects\0d
+\.git\objects\0d\25e278daec414b86a239b04c8b44fc80ac1446
 \.git\objects\0d\6b173cfc691da80d113603a28e5a251ecf9a01
 \.git\objects\0d\7d18c1fc55a64a553b1cbb84d1c8bddaea75c5
 \.git\objects\0d\8a10388dce9d389b062b91d8ee71a31363f492
@@ -272,6 +275,7 @@ README.md
 \.git\objects\0e
 \.git\objects\0e\0cb438f3ecb5bef1642bb851c7dcad9af6079b
 \.git\objects\0e\10fa11a369bc2f26fc06f8a044374e3fa3cbae
+\.git\objects\0e\1cb79d9d3dd57b1e651a4e5c2c375ecee8805d
 \.git\objects\0e\50188821cbd438896aab911503d17558aa0fef
 \.git\objects\0e\84875487c6a5254a137e29e73f22f0370989aa
 \.git\objects\0e\898df644844600131712ac2f63ccf416a9de21
@@ -314,6 +318,7 @@ README.md
 \.git\objects\11\57448e1dae8f16eb72b3185095f981ad37bc15
 \.git\objects\11\8b9b8a32a32d0f4687264e62e14e780302d79c
 \.git\objects\11\b3d062760bf6716ad672a58a95224baf351909
+\.git\objects\11\cfaddb344f005d0df32e7bb173a324b8cdfbcf
 \.git\objects\11\d5b9b4c0483accd665dbe2a7d9368e859f7972
 \.git\objects\11\ec240eb0cbd3f08a19bc5f095bf92d55216b1a
 \.git\objects\12
@@ -760,6 +765,7 @@ README.md
 \.git\objects\32\ab7aa40ea43f0ac3bf964daa96c2033fa21b5f
 \.git\objects\32\bb19e6b0085beb104d0e3433df052e0c35924b
 \.git\objects\32\bf3e9f4b596c48c240ecc16f4f1ecda8610bc2
+\.git\objects\32\d2092e290b3de3eafcb3a3f2806a183ec3f5a6
 \.git\objects\32\d90cc841abcc38c97248d4d83da986fa7b50e4
 \.git\objects\32\db32e5ed022949a9c26c2a39231db0c20278f3
 \.git\objects\32\e17afe3fd989b7933cd6be4de8b325909397a5
@@ -1010,6 +1016,7 @@ README.md
 \.git\objects\42\a8bb26bcef811406b022cbb67be22eec009d56
 \.git\objects\42\b3f3f13e96883517e314ef7f4fff23fa1c146a
 \.git\objects\42\be0b569826e53bb1f619ef55c796a4baf07824
+\.git\objects\42\f1eba2815f910b91bc4f00e63faa50ece95d26
 \.git\objects\43
 \.git\objects\43\0422b47f26a268f386602150f009e2eda19f83
 \.git\objects\43\09ed441b156e21c447aea930e6ab8c76c5911c
@@ -1101,6 +1108,7 @@ README.md
 \.git\objects\49\a540ae6a57e3af017283cccf91989d59818dd9
 \.git\objects\49\aa80d7122da13080f9d436766546f63ceec173
 \.git\objects\49\e478da742142e6ebc7bf186d32b80e2c13daa8
+\.git\objects\49\ef98dc34d43a5c7d016896de712e65c03b2313
 \.git\objects\49\f148088e43a42fb47bf866013bdfd1494aba73
 \.git\objects\49\fec1c4ff061db5739a7b0b3f5b05d66b39469d
 \.git\objects\4a
@@ -1185,6 +1193,7 @@ README.md
 \.git\objects\4f\7e1d7d7e66e6438700100c8f11c476411baf85
 \.git\objects\4f\866b97eb241ce0a37be9067be3fb4cc2c444e1
 \.git\objects\4f\8970a27bd65d2ba5f377c57668eb380a627830
+\.git\objects\4f\8bd93c5f67b20e80dba75506cb68006e18952c
 \.git\objects\4f\9a1b6e1d1d7387bd7dc1bc9eef30d3b40ee3f1
 \.git\objects\4f\b8b9cc35c0759f9bcd6b14fdbd12a038893b29
 \.git\objects\4f\c12572303abaf946fc2a87607e882822342b45
@@ -1411,6 +1420,7 @@ README.md
 \.git\objects\5f\f079c7e3f0ab6ff61a530f618f61c42fd76623
 \.git\objects\60
 \.git\objects\60\3a96e76be02aa06f6cc82f6aa70e3880cd9f09
+\.git\objects\60\44447c806bb6bf021133fef2a067c6e9d4e689
 \.git\objects\60\690df6e8c9c4617099032d9454d0e169f7e8f9
 \.git\objects\60\76ded815f60c3a9c8a1c5615a29eed3cf0f3be
 \.git\objects\60\7d333d38a14f9f533e9fe46354e57386e91631
@@ -1628,6 +1638,7 @@ README.md
 \.git\objects\6f\5dea7e8c6c783f96b7d16f800a0392aa4a18e9
 \.git\objects\6f\7084eb36e9828b988a63d977014c9d779129e4
 \.git\objects\6f\94b440ba0315f2f4bb62903eec9b93637dec62
+\.git\objects\6f\addfa68417858b7d5116b15d3e89b7395c4112
 \.git\objects\6f\b54d33173e01a315dada440385642d30e3a544
 \.git\objects\6f\c4eeaa4bee488c1971096c30eef0dfc1770d1c
 \.git\objects\6f\c851bfe771593f8608179a09f3ecad9f57a4cc
@@ -1941,6 +1952,7 @@ README.md
 \.git\objects\84\4c06dc610280ebdc7cfe38e561e4a50d3622c8
 \.git\objects\84\5a1c01c81e75bfcbdf067c536823736d5ac16f
 \.git\objects\84\5b0399f383df4dd40b5378394e478301455e9f
+\.git\objects\84\77feb307d86b6763038dbc471a91d0600e535b
 \.git\objects\84\ad38c1c2c78f24d56926d29bbe814f9395cd32
 \.git\objects\84\b849bf4327e19b24d03e4695bf59bc3147533b
 \.git\objects\84\cb9d9ef4766f96c9690a85806a5f0e86979fd9
@@ -2208,6 +2220,7 @@ README.md
 \.git\objects\96
 \.git\objects\96\09e9a0ef71b90884c38b540c9e92a16d0f41d0
 \.git\objects\96\0c4407149aeec61ae1739da1f0e9ffc8d99453
+\.git\objects\96\2da247add54c66de2c305a806f81f0e2b9013c
 \.git\objects\96\57a8c5f1d28433db340e9ecb8c7568a0135c33
 \.git\objects\96\8cd5e76e26bd02220a084c821bde9ae7c71d5d
 \.git\objects\96\a8d7faeb3cdcd2f654d2140a02e0ebaae75396
@@ -2597,6 +2610,7 @@ README.md
 \.git\objects\b1\8bf746207820d4053914095aee1aafe33e0b98
 \.git\objects\b1\b60e5730a55bf354b4802c9697de77371d0fde
 \.git\objects\b1\c2f81cabcb8a80b792224c5f1c69cb92a76a79
+\.git\objects\b1\c35839239b84cc0f8aec29069c8e8474a10f49
 \.git\objects\b1\cce858586e7de7b380b6382cbab9a003b1477f
 \.git\objects\b1\ff3f920a259fe6fe41d3dc917186d1a62a3624
 \.git\objects\b2
@@ -2882,6 +2896,7 @@ README.md
 \.git\objects\c6\2df500a2099826153f21ff979adb95e9c8a320
 \.git\objects\c6\39b6e9ac9d5bc8bed5232e9ad10cbb14435f34
 \.git\objects\c6\4291766a3bcbe95ed521785ab7fbb74f902f6f
+\.git\objects\c6\4454c4811b75ee06ae7c88fb3674d153b671b6
 \.git\objects\c6\490cc7fccbb5b5376bb7ae613ac2872d266397
 \.git\objects\c6\507f7235db17f2906072912b381b90e1527e87
 \.git\objects\c6\57895385e6981ec43f9d39aef8eec5587bd0f4
@@ -3011,6 +3026,7 @@ README.md
 \.git\objects\cf\26202eeaeb6e857003aae42a67a4a9cbf5f66e
 \.git\objects\cf\4f2dcf6363f0b21e1147638a89efe19acb92f5
 \.git\objects\cf\5095e333979ed121a16ce12fdc4c23d6fb790c
+\.git\objects\cf\5fa5a60890251f271934f2762479020c19b9ea
 \.git\objects\cf\78140eabe62b911569952f8064c2df93c31823
 \.git\objects\cf\baaf05dc41825c7c29f55cab141246aa39088c
 \.git\objects\cf\bbd8e975a29cbd1481bc229f137d1bfaa8f48f
@@ -3101,6 +3117,7 @@ README.md
 \.git\objects\d6\558bd712716640adfc2ac34c95ca55d72c68a5
 \.git\objects\d6\73e79a50a69ee467d2a955d6afdd6595f46620
 \.git\objects\d6\96ac6e8db6ccec0315338b5902c8ab04f046da
+\.git\objects\d6\a05af3adc0d0d50148b20e40382b101e80478d
 \.git\objects\d6\a765a85b188c0565396c2b142812532a710585
 \.git\objects\d6\acf0dc76f98aff57ce2f324974a7e2450aa2e4
 \.git\objects\d6\c27f35c109e868135d234d1b7ab92081d2d7f7
@@ -3616,6 +3633,7 @@ README.md
 \.git\objects\fc\4413aabc0328486825f94570da66510cc079ad
 \.git\objects\fc\65a706046cd54a10e95468fad638f3745f94ef
 \.git\objects\fc\700051746f51b0afb66a5a9efb7b50898740d0
+\.git\objects\fc\801e735b10e59665b990e3c39c79ab13e43887
 \.git\objects\fc\b147069beb4501287e50d7ec5ef4a03ede6b49
 \.git\objects\fc\bc450b516cb78b3db763b16938b86ac5e791ce
 \.git\objects\fc\d7609fea86c0cf3b2c3bc7d3550cdc3eabcec2
@@ -3715,6 +3733,7 @@ README.md
 \.git\refs\remotes\origin\feature\1.1.1-wihtout-import-export
 \.git\refs\remotes\origin\feature\1.2.0-CLEAR-CODE-DOCUMENTATION
 \.git\refs\remotes\origin\feature\1.2.1-logo-a-v-aplikace
+\.git\refs\remotes\origin\feature\1.4.0-documentation
 \.git\refs\remotes\origin\feature\DB-new-code
 \.git\refs\remotes\origin\feautre
 \.git\refs\remotes\origin\feautre\1.3.0-CLEAN-CODE
@@ -7305,11 +7324,10 @@ using System.Reflection;
 ﻿#pragma checksum "..\..\..\App.xaml" "{ff1816ec-aa5e-4d10-87f7-6f4963833460}" "48A781819FA11DEC019DA4E079E13F06F984D0A1"
 //------------------------------------------------------------------------------
 // <auto-generated>
-//     Tento kód byl generován nástrojem.
-//     Verze modulu runtime:4.0.30319.42000
+//     This code was generated by a tool.
 //
-//     Změny tohoto souboru mohou způsobit nesprávné chování a budou ztraceny,
-//     dojde-li k novému generování kódu.
+//     Changes to this file may cause incorrect behavior and will be lost if
+//     the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
 
@@ -7454,11 +7472,10 @@ namespace ElektroOffer_app {
 ----------------------------------------
 //------------------------------------------------------------------------------
 // <auto-generated>
-//     Tento kód byl generován nástrojem.
-//     Verze modulu runtime:4.0.30319.42000
+//     This code was generated by a tool.
 //
-//     Změny tohoto souboru mohou způsobit nesprávné chování a budou ztraceny,
-//     dojde-li k novému generování kódu.
+//     Changes to this file may cause incorrect behavior and will be lost if
+//     the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
 
@@ -7467,11 +7484,11 @@ using System.Reflection;
 
 [assembly: System.Reflection.AssemblyCompanyAttribute("ElektroOffer_app")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
-[assembly: System.Reflection.AssemblyFileVersionAttribute("1.2.1.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.2.1+be80ac3035a7738c361d3c10eafbfcc600aa83e5")]
+[assembly: System.Reflection.AssemblyFileVersionAttribute("1.4.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.4.0+c6507f7235db17f2906072912b381b90e1527e87")]
 [assembly: System.Reflection.AssemblyProductAttribute("ElektroOffer_app")]
 [assembly: System.Reflection.AssemblyTitleAttribute("ElektroOffer_app")]
-[assembly: System.Reflection.AssemblyVersionAttribute("1.2.1.0")]
+[assembly: System.Reflection.AssemblyVersionAttribute("1.4.0.0")]
 [assembly: System.Runtime.Versioning.TargetPlatformAttribute("Windows7.0")]
 [assembly: System.Runtime.Versioning.SupportedOSPlatformAttribute("Windows7.0")]
 
@@ -7495,11 +7512,10 @@ global using System.Threading.Tasks;
 ----------------------------------------
 ﻿//------------------------------------------------------------------------------
 // <auto-generated>
-//     Tento kód byl generován nástrojem.
-//     Verze modulu runtime:4.0.30319.42000
+//     This code was generated by a tool.
 //
-//     Změny tohoto souboru mohou způsobit nesprávné chování a budou ztraceny,
-//     dojde-li k novému generování kódu.
+//     Changes to this file may cause incorrect behavior and will be lost if
+//     the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
 
@@ -7534,11 +7550,10 @@ global using System.Threading.Tasks;
 ﻿#pragma checksum "..\..\..\..\Views\AboutWindow.xaml" "{ff1816ec-aa5e-4d10-87f7-6f4963833460}" "586C1CA9B5801C162D473F433D296136C517A37D"
 //------------------------------------------------------------------------------
 // <auto-generated>
-//     Tento kód byl generován nástrojem.
-//     Verze modulu runtime:4.0.30319.42000
+//     This code was generated by a tool.
 //
-//     Změny tohoto souboru mohou způsobit nesprávné chování a budou ztraceny,
-//     dojde-li k novému generování kódu.
+//     Changes to this file may cause incorrect behavior and will be lost if
+//     the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
 
@@ -7593,7 +7608,7 @@ namespace ElektroOffer_app {
                 return;
             }
             _contentLoaded = true;
-            System.Uri resourceLocater = new System.Uri("/ElektroOffer_app;component/views/aboutwindow.xaml", System.UriKind.Relative);
+            System.Uri resourceLocater = new System.Uri("/ElektroOffer_app;V1.4.0.0;component/views/aboutwindow.xaml", System.UriKind.Relative);
             
             #line 1 "..\..\..\..\Views\AboutWindow.xaml"
             System.Windows.Application.LoadComponent(this, resourceLocater);
@@ -7738,11 +7753,10 @@ namespace ElektroOffer_app {
 ﻿#pragma checksum "..\..\..\..\Views\MainWindow.xaml" "{ff1816ec-aa5e-4d10-87f7-6f4963833460}" "1A1966A4C7A38B7E327CEF04A68417736DBFE759"
 //------------------------------------------------------------------------------
 // <auto-generated>
-//     Tento kód byl generován nástrojem.
-//     Verze modulu runtime:4.0.30319.42000
+//     This code was generated by a tool.
 //
-//     Změny tohoto souboru mohou způsobit nesprávné chování a budou ztraceny,
-//     dojde-li k novému generování kódu.
+//     Changes to this file may cause incorrect behavior and will be lost if
+//     the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
 
@@ -7789,7 +7803,7 @@ namespace ElektroOffer_app {
                 return;
             }
             _contentLoaded = true;
-            System.Uri resourceLocater = new System.Uri("/ElektroOffer_app;component/views/mainwindow.xaml", System.UriKind.Relative);
+            System.Uri resourceLocater = new System.Uri("/ElektroOffer_app;V1.4.0.0;component/views/mainwindow.xaml", System.UriKind.Relative);
             
             #line 1 "..\..\..\..\Views\MainWindow.xaml"
             System.Windows.Application.LoadComponent(this, resourceLocater);
