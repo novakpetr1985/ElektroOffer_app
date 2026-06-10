@@ -5,8 +5,8 @@
 ## [1.4.1]
 ### Přidáno
 - Doplněný CHANGELOG.md
-- Úrava komentářů pro dokumentaci
-    -
+- Úrava detailnějších komentářů pro dokumentaci v kódu
+
 
 ### Opraveno
 - Zobrazení verze v 'Nápověda/O aplikaci'
