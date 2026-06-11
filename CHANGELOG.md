@@ -2,6 +2,11 @@
 
 # Changelog
 
+## [1.4.2]
+### Přidáno
+- Přidaná složka *\Tests\DatabaseTests s *.cs souborem a prvním testem
+- Úrava detailnějších komentářů pro dokumentaci v kódu
+
 ## [1.4.1]
 ### Přidáno
 - Doplněný CHANGELOG.md
