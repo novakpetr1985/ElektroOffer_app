@@ -51,7 +51,7 @@ Tabulky jsou při prvním spuštění prázdné — ceník importuj přes
 
 ## Verze
 
-- Aktuální verze aplikace: **1.4.1**
+- Aktuální verze aplikace: **1.5.0**
 //- Formát exportu ceníku (`CatalogExportData.FormatVersion`): **1.0** - nezařazeno do v1.4.1
 
 > Poznámka: Verzi aplikace je vhodné držet v AssemblyInfo / csproj a číst ji v okně „O aplikaci“.
