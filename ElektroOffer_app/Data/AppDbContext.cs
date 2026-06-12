@@ -1,4 +1,4 @@
-﻿﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using ElektroOffer_app.Models;
 
 namespace ElektroOffer_app.Data
@@ -7,27 +7,51 @@ namespace ElektroOffer_app.Data
     // 🧠 AppDbContext – EF Core databázový kontext
     // =========================================================================
     //
-    // K čemu slouží:
+    // ÚČEL:
     // - Zprostředkovává komunikaci mezi aplikací a SQLite databází
-    // - Nahrazuje ruční psaní SQL dotazů
+    // - Nahrazuje ruční psaní SQL dotazů (SELECT, INSERT, UPDATE, DELETE)
     //
-    // Jaké tabulky (DbSet) obsahuje:
-    // - PriceItems  → ceník práce
-    // - Materials   → ceník materiálu
+    // DŮLEŽITÉ:
+    // - Musí podporovat dva režimy:
+    //      1) Běžný provoz aplikace (SQLite soubor elektrooffer.db)
+    //      2) Unit testy (SQLite InMemory přes DbContextOptions)
     //
-    // Kde se používá:
-    // - V MainWindow (načítání ceníku do kolekcí Tasks a Materials)
-    // - Při importu/exportu ceníku (zápis/čtení do/z DB)
+    // PROČ JSOU DVA KONSTRUKTORY:
+    // - AppDbContext(DbContextOptions<AppDbContext> options)
+    //      → používají testy a DI kontejnery
+    // - AppDbContext()
+    //      → používá aplikace, pokud není DI
     //
-    // Databázový kontext pro SQLite.
-    // Při prvním spuštění vytvoří soubor elektrooffer.db
-    // a inicializuje schéma přes EnsureCreated() v MainWindow.
-    //
-    // Poznámka:
-    // - Konfigurace připojení je v OnConfiguring → SQLite soubor elektrooffer.db
+    // OnConfiguring():
+    // - Použije se pouze tehdy, pokud options NEJSOU nastavené
+    //   (tj. v aplikaci ano, v testech ne)
     // =========================================================================
     public class AppDbContext : DbContext
     {
+        /// <summary>
+        /// Konstruktor používaný v testech a DI kontejnerech.
+        /// Umožňuje předat vlastní DbContextOptions (např. SQLite InMemory).
+        /// </summary>
+        public AppDbContext(DbContextOptions<AppDbContext> options)
+            : base(options)
+        {
+            // Tento konstruktor se používá v testech.
+            // OnConfiguring se NEVOLÁ, protože options jsou již nastavené.
+        }
+
+        /// <summary>
+        /// Konstruktor používaný aplikací, pokud není použit DI kontejner.
+        /// </summary>
+        public AppDbContext()
+        {
+            // Tento konstruktor se používá v běžném provozu aplikace.
+            // OnConfiguring nastaví SQLite soubor elektrooffer.db.
+        }
+
+        // =========================================================================
+        // DB SETS – tabulky v databázi
+        // =========================================================================
+
         /// <summary>
         /// Tabulka ceníku práce (PriceItems).
         /// Každý záznam reprezentuje jednu položku ceníku.
@@ -40,18 +64,23 @@ namespace ElektroOffer_app.Data
         /// </summary>
         public DbSet<Material> Materials => Set<Material>();
 
+        // =========================================================================
+        // KONFIGURACE DB
+        // =========================================================================
+
         /// <summary>
         /// Konfigurace databázového připojení.
-        /// Pokud ještě není kontext nakonfigurován, použije SQLite soubor
-        /// "elektrooffer.db" v aktuálním adresáři aplikace.
+        /// Použije se pouze tehdy, pokud nebyly předány DbContextOptions.
+        /// (např. v testech se NEPOUŽIJE)
         /// </summary>
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            if (!optionsBuilder.IsConfigured)
-            {
-                // TODO: případně přesunout connection string do konfigurace (appsettings.json)
-                optionsBuilder.UseSqlite("Data Source=elektrooffer.db");
-            }
+            // Pokud už jsou options nastavené (např. testy), nic nedělej
+            if (optionsBuilder.IsConfigured)
+                return;
+
+            // Výchozí konfigurace pro aplikaci – SQLite soubor elektrooffer.db
+            optionsBuilder.UseSqlite("Data Source=elektrooffer.db");
         }
     }
 }
