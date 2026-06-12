@@ -44,10 +44,33 @@ namespace ElektroOffer_app.Tests.DatabaseTests
 
         /// <summary>
         /// Po testu smaže testovací databázi.
+        /// SQLite někdy drží file-lock i po Dispose(),
+        /// proto je nutné explicitně uvolnit connection pool
+        /// a donutit GC dokončit finalizaci.
         /// </summary>
         [TearDown]
         public void TearDown()
         {
+            // ============================================
+            // 1) Uvolnění všech SQLite connection poolů
+            //    - SQLite si drží file-lock i po Dispose()
+            //    - ClearAllPools() okamžitě uvolní všechny handly
+            // ============================================
+            SQLiteConnection.ClearAllPools();
+
+            // ============================================
+            // 2) Donutit Garbage Collector dokončit finalizaci
+            //    - některé SQLite objekty uvolňují lock až ve finalizéru
+            //    - GC.Collect + WaitForPendingFinalizers zajistí,
+            //      že file-lock bude opravdu uvolněn
+            // ============================================
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+
+            // ============================================
+            // 3) Smazání testovací databáze
+            //    - nyní je soubor 100% volný
+            // ============================================
             if (File.Exists(_dbPath))
                 File.Delete(_dbPath);
         }
