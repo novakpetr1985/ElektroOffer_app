@@ -1,7 +1,7 @@
 using ElektroOffer_app.Models;
 using NUnit.Framework;
 
-namespace ElektroOffer_app.Tests.LogicTests
+namespace ElektroOffer_app.Tests.Unit.LogicTests
 {
     /// <summary>
     /// Testy výpočtů cen pro model PriceItems.

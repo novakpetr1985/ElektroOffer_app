@@ -6,7 +6,7 @@ using NUnit.Framework;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace ElektroOffer_app.Tests.RepositoryTests
+namespace ElektroOffer_app.Tests.Unit.RepositoryTests
 {
     /// <summary>
     /// Testy EF Core DbContextu pro tabulku PriceItems.

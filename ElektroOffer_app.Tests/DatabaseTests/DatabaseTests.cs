@@ -4,7 +4,7 @@ using System.IO;
 using System.Data.SQLite;
 using System.Collections.Generic;
 
-namespace ElektroOffer_app.Tests.DatabaseTests
+namespace ElektroOffer_app.Tests.Unit.DatabaseTests
 {
     /// <summary>
     /// Integration testy SQLite databáze.

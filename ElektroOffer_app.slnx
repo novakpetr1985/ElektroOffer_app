@@ -1,4 +1,4 @@
 <Solution>
+  <Project Path="ElektroOffer_app.Tests/ElektroOffer_app.Tests.Unit.csproj" />
   <Project Path="ElektroOffer_app\ElektroOffer_app.csproj" />
-  <Project Path="ElektroOffer_app.Tests\ElektroOffer_app.Tests.csproj" />
 </Solution>
