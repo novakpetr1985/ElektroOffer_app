@@ -13,11 +13,11 @@ using System.Reflection;
 
 [assembly: System.Reflection.AssemblyCompanyAttribute("ElektroOffer_app")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
-[assembly: System.Reflection.AssemblyFileVersionAttribute("1.5.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.5.0+769042b7c878a474d899cb45641120a8e3d863a7")]
+[assembly: System.Reflection.AssemblyFileVersionAttribute("1.5.1.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.5.1+85da346ec7321775222a861b95e7ae73d9cd08c0")]
 [assembly: System.Reflection.AssemblyProductAttribute("ElektroOffer_app")]
 [assembly: System.Reflection.AssemblyTitleAttribute("ElektroOffer_app")]
-[assembly: System.Reflection.AssemblyVersionAttribute("1.5.0.0")]
+[assembly: System.Reflection.AssemblyVersionAttribute("1.5.1.0")]
 [assembly: System.Runtime.Versioning.TargetPlatformAttribute("Windows7.0")]
 [assembly: System.Runtime.Versioning.SupportedOSPlatformAttribute("Windows7.0")]
 

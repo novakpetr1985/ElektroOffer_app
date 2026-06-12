@@ -1,46 +1,58 @@
-# ZATÍM NEVYUŽITO - PRO FINÁLNÍ VERZI 2.0
-
 # Changelog
-## [1.5.0]
-### Změněno 1.5.0-tests-Logic
-- Přidání testů
-    - Logic CalculationItems
+
+Všechny důležité změny projektu jsou dokumentovány v tomto souboru.  
+Formát vychází z [Keep a Changelog](https://keepachangelog.com/cs/1.0.0/).
+
+---
+
+## [1.5.1] - Refaktoring pro testovatelnost
+### Přidáno
+- `CatalogService` – nová service pro načítání dat ceníku z databáze
+  - Metoda `LoadCatalog(AppDbContext db)` vrací seznam úkonů a materiálů
+  - Metoda `IsCatalogEmpty(AppDbContext db)` pro detekci prázdné DB (připraveno pro seed data)
+
+### Změněno
+- `MainWindow.LoadCatalogDataFromDb()` – logika DB dotazů přesunuta do `CatalogService`
+  - MainWindow nadále volá tuto metodu beze změny, jen deleguje na service
+  - Umožňuje integrační testování načítání ceníku bez závislosti na WPF
+
+---
 
 ## [1.5.0]
-### Změněno 1.5.0-tests-Repository
-- Přidání testů
-    - RepositoryTests/PriceItemsRepositoryTests.cs
-    - RepositoryTests/MaterialRepositoryTests.cs
+### Přidáno
+- Integrační testy databázové vrstvy (`DatabaseTests/`)
+- Unit testy logiky kalkulací (`CalculationItemViewModelTests`)
+- Repository testy (`RepositoryTests/PriceItemsRepositoryTests`, `MaterialRepositoryTests`)
+- Skripty pro generování stromové struktury projektu (s výjimkami `bin`, `obj`, `.git`, `.vs`)
 
-## [1.5.0]
-### Změněno 1.5.0-tests-DB
-- Přesunutí DB do složky */Data v root aplikaci */ElektroOffer_app/Data
+### Změněno
+- Rozdělení solution na dva projekty: `ElektroOffer_app` a `ElektroOffer_app.Tests`
+- Přesun `CHANGELOG.md` a `README.md` do složky `docs/` v root solution
+- Přesun databáze `elektrooffer.db` do složky `ElektroOffer_app/Data/`
 
-### Změněno 1.5.0-tests
-- Změna a rozdělení aplikace a testy
-    - ElektroOffer_app
-    - ElektroOffer_app.Tests
-- Přesunutí CHANGELOG.md a README.md do */Docs hlavní složky
-- Přidání skriptů pro generování root složky s výjimkami "bin", "obj", ".git", ".vs", "__pycache__", "scripts", "data"
+---
 
 ## [1.4.1]
 ### Přidáno
-- Doplněný CHANGELOG.md
-- Úrava detailnějších komentářů pro dokumentaci v kódu
+- Rozšířené XML doc komentáře (`/// <summary>`) napříč kódem
 
 ### Opraveno
-- Zobrazení verze v 'Nápověda/O aplikaci'
+- Správné zobrazení verze aplikace v dialogu „O aplikaci"
+- Doplněny záznamy do `CHANGELOG.md`
+
+---
 
 ## [1.4.0]
 ### Přidáno
-- Doplněné README.md
-- Zarovnání číselných sloupců doprava v tabulkách
+- `README.md` s popisem projektu, struktury a ADR
+- Zarovnání číselných sloupců doprava v tabulkách kalkulace
 
 ### Opraveno
-- Zobrazení verze v 'Nápověda/O aplikaci'
+- Zobrazení verze aplikace v dialogu „O aplikaci"
 
-## [1.3.0] - Clean Code release
-### Změněno 
-- Refaktor stromové struktury projektu (Services, ViewModels, Commands)
-- Kompletní kontrola kódu, doplnění poznámaek a odmazání balastu
+---
 
+## [1.3.0] - Clean Code
+### Změněno
+- Refaktoring stromové struktury projektu (`Services/`, `ViewModels/`, `Commands/`)
+- Kompletní revize kódu: doplnění komentářů, odstranění mrtvého kódu

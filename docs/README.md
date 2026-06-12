@@ -18,46 +18,94 @@ Databáze `elektrooffer.db` se vytvoří automaticky při prvním spuštění.
 Tabulky jsou při prvním spuštění prázdné — ceník importuj přes  
 **Soubor → Import ceníku** (soubor `.eofcat`).
 
+---
+
 ## Hlavní funkce
 
-- Evidence a kalkulace práce (ceník práce – tabulka `PriceItems`)
-- Evidence a kalkulace materiálu (tabulka `Materials`)
-- Uložení a načtení projektu do/z souboru (`*.eof`)
-// - Export a import ceníku (`*.eofcat`) - nezařazeno do v1.4.1
-- Přehledný rozpis (práce + materiál) s celkovou cenou
+- Kalkulace práce podle ceníku (tabulka `PriceItems`)
+- Kalkulace materiálu (tabulka `Materials`)
+- Uložení a načtení projektu (`*.eof`)
+- Export a import ceníku (`*.eofcat`)
+- Přehledný rozpis položek s celkovou cenou
+
+---
 
 ## Technický přehled
 
-- **Platforma:** .NET (WPF)
-- **UI:** XAML (MainWindow, AboutWindow, Resources/Styles)
+- **Platforma:** .NET 10, WPF
+- **UI:** XAML (`MainWindow`, `AboutWindow`, `Resources/Styles`)
 - **Databáze:** SQLite přes Entity Framework Core (`AppDbContext`)
-- **Modely:**
-  - `PriceItems` – ceník práce
-  - `Material` – ceník materiálu
-  - `ProjectData` – uložený projekt (práce + materiál)
-  - `CatalogExportData` – export/import ceníku
-- **Služby:**
-  - `ProjectService` – Save/Load projektů, export/import ceníku
-  - `DialogService` – zobrazení MessageBox dialogů
+- **Architektura:** Code-behind s částečným MVVM (viz ADR níže)
+
+### Modely
+| Třída | Účel |
+|---|---|
+| `PriceItems` | Ceník práce |
+| `Material` | Ceník materiálu |
+| `ProjectData` | Serializovaný projekt (`.eof`) |
+| `CatalogExportData` | Export/import ceníku (`.eofcat`) |
+| `BudgetItem` | Řádek rozpisu kalkulace |
+
+### Služby
+| Třída | Účel |
+|---|---|
+| `ProjectService` | Ukládání a načítání projektů, export/import ceníku |
+| `CatalogService` | Načítání ceníku z DB (testovatelné bez WPF) |
+| `DialogService` | Zobrazení MessageBox dialogů |
+
+---
 
 ## Struktura projektu
 
-- `App.xaml`, `App.xaml.cs` – start aplikace
-- `Views/` – okna (např. `MainWindow`, `AboutWindow`)
-- `Models/` – datové třídy (projekty, položky, ceníky)
-- `Data/` – EF Core kontext (`AppDbContext`)
-- `Services/` – logika pro práci se soubory a dialogy
-- `Resources/` – barvy, styly
+```
+ElektroOffer_app.slnx
+├── ElektroOffer_app/         – hlavní WPF projekt
+│   ├── App.xaml              – vstupní bod aplikace
+│   ├── Views/                – okna (MainWindow, AboutWindow)
+│   ├── Models/               – datové třídy
+│   ├── Data/                 – EF Core kontext (AppDbContext)
+│   ├── Services/             – business logika (ProjectService, CatalogService)
+│   ├── ViewModels/           – ViewModely a CalculationItemViewModel
+│   ├── Commands/             – RelayCommand
+│   └── Resources/            – barvy, styly (XAML)
+├── ElektroOffer_app.Tests/   – unit a integrační testy
+└── docs/                     – dokumentace (README, CHANGELOG)
+```
+
+---
+
+## Testování
+
+Solution obsahuje samostatný testovací projekt `ElektroOffer_app.Tests`.
+
+| Kategorie | Popis |
+|---|---|
+| `DatabaseTests` | Integrační testy DB vrstvy (SQLite in-memory) |
+| `RepositoryTests` | Testy operací s `PriceItems` a `Materials` |
+| `LogicTests` | Unit testy logiky `CalculationItemViewModel` |
+
+`AppDbContext` podporuje předání `DbContextOptions` zvenčí — testy proto používají izolovanou in-memory databázi a nezasahují do produkčního `elektrooffer.db`.
+
+---
 
 ## Verze
 
-- Aktuální verze aplikace: **1.5.0**
-//- Formát exportu ceníku (`CatalogExportData.FormatVersion`): **1.0** - nezařazeno do v1.4.1
+Aktuální verze: **1.5.1**
 
-> Poznámka: Verzi aplikace je vhodné držet v AssemblyInfo / csproj a číst ji v okně „O aplikaci“.
+Verze je definována v `ElektroOffer_app.csproj` a zobrazena v dialogu „O aplikaci".
 
-## Architektura rozhodnutí (ADR)
+---
 
-- **Proč SQLite?** — Desktopová aplikace bez serveru, jednoduchý deployment
-- **Proč code-behind místo čistého MVVM?** — Projekt vzniká pro učení, code-behind je srozumitelnější
-- **Proč JSON pro .eof soubory?** — Čitelné pro debugging, snadná migrace
+## Architektura — rozhodnutí (ADR)
+
+**Proč SQLite?**  
+Desktopová aplikace bez serveru. Jednoduchý deployment — jeden soubor `.db`.
+
+**Proč code-behind místo čistého MVVM?**  
+Projekt vzniká jako výukový. Code-behind je pro začínajícího programátora srozumitelnější než plné MVVM. Přechod je plánován postupně.
+
+**Proč JSON pro `.eof` soubory?**  
+Čitelné pro ruční debugging, snadná migrace formátu do budoucna.
+
+**Proč `CatalogService` místo přímého volání DB z `MainWindow`?**  
+Oddělení DB logiky od UI umožňuje integrační testování bez závislosti na WPF.

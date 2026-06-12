@@ -8,7 +8,7 @@ namespace ElektroOffer_app.ViewModels
     public class AboutWindowViewModel : BaseViewModel
     {
         private string _appName = "ElektroOffer";
-        private string _version = "1.2.0";
+        private string _version = "1.5.1";
         private string _author = "Petr";
         private string _description =
             "Aplikace pro kalkulaci elektro zakázek.\n" +

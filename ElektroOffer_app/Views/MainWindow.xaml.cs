@@ -89,6 +89,12 @@ namespace ElektroOffer_app
         private readonly ProjectService _projectService = new();
 
         /// <summary>
+        /// Servisní třída pro načítání ceníku z databáze.
+        /// Oddělena od UI — umožňuje testování bez WPF.
+        /// </summary>
+        private readonly CatalogService _catalogService = new();
+
+        /// <summary>
         /// Aktuální cesta k otevřenému souboru.
         /// Null = projekt ještě nebyl uložen (nový projekt).
         /// </summary>
@@ -151,19 +157,27 @@ namespace ElektroOffer_app
         }
 
         // =========================================================
-        // 🔄 NAČTENÍ DAT PRO UI (KLÍČOVÁ OPRAVA)
+        // 🔄 NAČTENÍ DAT PRO UI
         // =========================================================
+
+        /// <summary>
+        /// Načte ceník z databáze přes CatalogService a naplní kolekce pro UI.
+        /// Volá se při startu aplikace a po importu ceníku.
+        /// Samotná DB logika je v CatalogService — zde jen přijímáme výsledek.
+        /// </summary>
         private void LoadCatalogDataFromDb()
         {
-            using var db = new AppDbContext();
+            // CatalogService vrátí dvojici (tasks, materials) načtenou z DB
+            // new AppDbContext() → použije výchozí připojení k elektrooffer.db
+            var (tasks, materials) = _catalogService.LoadCatalog(new AppDbContext());
 
+            // Naplnění kolekce úkonů — Clear() zachovává referenci (WPF binding zůstane funkční)
             Tasks.Clear();
-            foreach (var task in db.PriceItems.Select(x => x.Task).Distinct().ToList())
-                Tasks.Add(task);
+            foreach (var t in tasks) Tasks.Add(t);
 
+            // Naplnění kolekce materiálů — stejný princip
             Materials.Clear();
-            foreach (var mat in db.Materials.ToList())
-                Materials.Add(mat);
+            foreach (var m in materials) Materials.Add(m);
         }
 
         // =========================================================
