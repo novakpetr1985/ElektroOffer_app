@@ -3,6 +3,9 @@
 # Changelog
 
 ## [1.5.0]
+### Změněno 1.5.0-tests-DB
+- Přesunutí DB do složky */Data v root aplikaci */ElektroOffer_app/Data
+
 ### Změněno 1.5.0-tests
 - Změna a rozdělení aplikace a testy
     - ElektroOffer_app
