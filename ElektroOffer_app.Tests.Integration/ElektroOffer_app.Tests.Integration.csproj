@@ -1,0 +1,31 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+
+    <!-- Důležité pro správné namespace -->
+    <RootNamespace>ElektroOffer_app.Tests.Integration</RootNamespace>
+    <AssemblyName>ElektroOffer_app.Tests.Integration</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Testovací framework -->
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.10.0" />
+    <PackageReference Include="NUnit" Version="3.14.0" />
+    <PackageReference Include="NUnit3TestAdapter" Version="4.5.0" />
+    <PackageReference Include="coverlet.collector" Version="6.0.0" />
+
+    <!-- Pro integrační testy (DB, DI, hostování) -->
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Data.Sqlite" Version="8.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Reference na hlavní aplikaci -->
+    <ProjectReference Include="..\ElektroOffer_app\ElektroOffer_app.csproj" />
+  </ItemGroup>
+
+</Project>
