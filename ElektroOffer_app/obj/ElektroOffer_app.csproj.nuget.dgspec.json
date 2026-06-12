@@ -70,6 +70,16 @@
               "suppressParent": "All",
               "target": "Package",
               "version": "[10.0.8, )"
+            },
+            "System.Data.SQLite.Core": {
+              "target": "Package",
+              "version": "[1.0.119, )"
+            },
+            "coverlet.collector": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[10.0.1, )"
             }
           },
           "imports": [

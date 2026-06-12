@@ -10,19 +10,11 @@
         "dependencies": {
           "ElektroOffer_app": "1.5.0",
           "Microsoft.NET.Test.Sdk": "17.14.0",
-          "NUnit": "4.3.2",
-          "NUnit3TestAdapter": "5.0.0"
+          "NUnit": "3.14.0",
+          "System.Data.SQLite.Core": "1.0.119"
         },
         "runtime": {
           "ElektroOffer_app.Tests.dll": {}
-        }
-      },
-      "Microsoft.ApplicationInsights/2.22.0": {
-        "runtime": {
-          "lib/netstandard2.0/Microsoft.ApplicationInsights.dll": {
-            "assemblyVersion": "2.22.0.997",
-            "fileVersion": "2.22.0.997"
-          }
         }
       },
       "Microsoft.CodeCoverage/17.14.0": {
@@ -219,227 +211,6 @@
         "dependencies": {
           "Microsoft.CodeCoverage": "17.14.0",
           "Microsoft.TestPlatform.TestHost": "17.14.0"
-        }
-      },
-      "Microsoft.Testing.Extensions.Telemetry/1.5.3": {
-        "dependencies": {
-          "Microsoft.ApplicationInsights": "2.22.0",
-          "Microsoft.Testing.Platform": "1.5.3"
-        },
-        "runtime": {
-          "lib/net9.0/Microsoft.Testing.Extensions.Telemetry.dll": {
-            "assemblyVersion": "1.5.3.0",
-            "fileVersion": "1.500.325.7706"
-          }
-        },
-        "resources": {
-          "lib/net9.0/cs/Microsoft.Testing.Extensions.Telemetry.resources.dll": {
-            "locale": "cs"
-          },
-          "lib/net9.0/de/Microsoft.Testing.Extensions.Telemetry.resources.dll": {
-            "locale": "de"
-          },
-          "lib/net9.0/es/Microsoft.Testing.Extensions.Telemetry.resources.dll": {
-            "locale": "es"
-          },
-          "lib/net9.0/fr/Microsoft.Testing.Extensions.Telemetry.resources.dll": {
-            "locale": "fr"
-          },
-          "lib/net9.0/it/Microsoft.Testing.Extensions.Telemetry.resources.dll": {
-            "locale": "it"
-          },
-          "lib/net9.0/ja/Microsoft.Testing.Extensions.Telemetry.resources.dll": {
-            "locale": "ja"
-          },
-          "lib/net9.0/ko/Microsoft.Testing.Extensions.Telemetry.resources.dll": {
-            "locale": "ko"
-          },
-          "lib/net9.0/pl/Microsoft.Testing.Extensions.Telemetry.resources.dll": {
-            "locale": "pl"
-          },
-          "lib/net9.0/pt-BR/Microsoft.Testing.Extensions.Telemetry.resources.dll": {
-            "locale": "pt-BR"
-          },
-          "lib/net9.0/ru/Microsoft.Testing.Extensions.Telemetry.resources.dll": {
-            "locale": "ru"
-          },
-          "lib/net9.0/tr/Microsoft.Testing.Extensions.Telemetry.resources.dll": {
-            "locale": "tr"
-          },
-          "lib/net9.0/zh-Hans/Microsoft.Testing.Extensions.Telemetry.resources.dll": {
-            "locale": "zh-Hans"
-          },
-          "lib/net9.0/zh-Hant/Microsoft.Testing.Extensions.Telemetry.resources.dll": {
-            "locale": "zh-Hant"
-          }
-        }
-      },
-      "Microsoft.Testing.Extensions.TrxReport.Abstractions/1.5.3": {
-        "dependencies": {
-          "Microsoft.Testing.Platform": "1.5.3"
-        },
-        "runtime": {
-          "lib/net9.0/Microsoft.Testing.Extensions.TrxReport.Abstractions.dll": {
-            "assemblyVersion": "1.5.3.0",
-            "fileVersion": "1.500.325.7706"
-          }
-        }
-      },
-      "Microsoft.Testing.Extensions.VSTestBridge/1.5.3": {
-        "dependencies": {
-          "Microsoft.ApplicationInsights": "2.22.0",
-          "Microsoft.TestPlatform.ObjectModel": "17.14.0",
-          "Microsoft.Testing.Extensions.Telemetry": "1.5.3",
-          "Microsoft.Testing.Extensions.TrxReport.Abstractions": "1.5.3",
-          "Microsoft.Testing.Platform": "1.5.3"
-        },
-        "runtime": {
-          "lib/net9.0/Microsoft.Testing.Extensions.VSTestBridge.dll": {
-            "assemblyVersion": "1.5.3.0",
-            "fileVersion": "1.500.325.7706"
-          }
-        },
-        "resources": {
-          "lib/net9.0/cs/Microsoft.Testing.Extensions.VSTestBridge.resources.dll": {
-            "locale": "cs"
-          },
-          "lib/net9.0/de/Microsoft.Testing.Extensions.VSTestBridge.resources.dll": {
-            "locale": "de"
-          },
-          "lib/net9.0/es/Microsoft.Testing.Extensions.VSTestBridge.resources.dll": {
-            "locale": "es"
-          },
-          "lib/net9.0/fr/Microsoft.Testing.Extensions.VSTestBridge.resources.dll": {
-            "locale": "fr"
-          },
-          "lib/net9.0/it/Microsoft.Testing.Extensions.VSTestBridge.resources.dll": {
-            "locale": "it"
-          },
-          "lib/net9.0/ja/Microsoft.Testing.Extensions.VSTestBridge.resources.dll": {
-            "locale": "ja"
-          },
-          "lib/net9.0/ko/Microsoft.Testing.Extensions.VSTestBridge.resources.dll": {
-            "locale": "ko"
-          },
-          "lib/net9.0/pl/Microsoft.Testing.Extensions.VSTestBridge.resources.dll": {
-            "locale": "pl"
-          },
-          "lib/net9.0/pt-BR/Microsoft.Testing.Extensions.VSTestBridge.resources.dll": {
-            "locale": "pt-BR"
-          },
-          "lib/net9.0/ru/Microsoft.Testing.Extensions.VSTestBridge.resources.dll": {
-            "locale": "ru"
-          },
-          "lib/net9.0/tr/Microsoft.Testing.Extensions.VSTestBridge.resources.dll": {
-            "locale": "tr"
-          },
-          "lib/net9.0/zh-Hans/Microsoft.Testing.Extensions.VSTestBridge.resources.dll": {
-            "locale": "zh-Hans"
-          },
-          "lib/net9.0/zh-Hant/Microsoft.Testing.Extensions.VSTestBridge.resources.dll": {
-            "locale": "zh-Hant"
-          }
-        }
-      },
-      "Microsoft.Testing.Platform/1.5.3": {
-        "runtime": {
-          "lib/net9.0/Microsoft.Testing.Platform.dll": {
-            "assemblyVersion": "1.5.3.0",
-            "fileVersion": "1.500.325.7706"
-          }
-        },
-        "resources": {
-          "lib/net9.0/cs/Microsoft.Testing.Platform.resources.dll": {
-            "locale": "cs"
-          },
-          "lib/net9.0/de/Microsoft.Testing.Platform.resources.dll": {
-            "locale": "de"
-          },
-          "lib/net9.0/es/Microsoft.Testing.Platform.resources.dll": {
-            "locale": "es"
-          },
-          "lib/net9.0/fr/Microsoft.Testing.Platform.resources.dll": {
-            "locale": "fr"
-          },
-          "lib/net9.0/it/Microsoft.Testing.Platform.resources.dll": {
-            "locale": "it"
-          },
-          "lib/net9.0/ja/Microsoft.Testing.Platform.resources.dll": {
-            "locale": "ja"
-          },
-          "lib/net9.0/ko/Microsoft.Testing.Platform.resources.dll": {
-            "locale": "ko"
-          },
-          "lib/net9.0/pl/Microsoft.Testing.Platform.resources.dll": {
-            "locale": "pl"
-          },
-          "lib/net9.0/pt-BR/Microsoft.Testing.Platform.resources.dll": {
-            "locale": "pt-BR"
-          },
-          "lib/net9.0/ru/Microsoft.Testing.Platform.resources.dll": {
-            "locale": "ru"
-          },
-          "lib/net9.0/tr/Microsoft.Testing.Platform.resources.dll": {
-            "locale": "tr"
-          },
-          "lib/net9.0/zh-Hans/Microsoft.Testing.Platform.resources.dll": {
-            "locale": "zh-Hans"
-          },
-          "lib/net9.0/zh-Hant/Microsoft.Testing.Platform.resources.dll": {
-            "locale": "zh-Hant"
-          }
-        }
-      },
-      "Microsoft.Testing.Platform.MSBuild/1.5.3": {
-        "dependencies": {
-          "Microsoft.Testing.Platform": "1.5.3"
-        },
-        "runtime": {
-          "lib/net9.0/Microsoft.Testing.Extensions.MSBuild.dll": {
-            "assemblyVersion": "1.5.3.0",
-            "fileVersion": "1.500.325.7706"
-          }
-        },
-        "resources": {
-          "lib/net9.0/cs/Microsoft.Testing.Extensions.MSBuild.resources.dll": {
-            "locale": "cs"
-          },
-          "lib/net9.0/de/Microsoft.Testing.Extensions.MSBuild.resources.dll": {
-            "locale": "de"
-          },
-          "lib/net9.0/es/Microsoft.Testing.Extensions.MSBuild.resources.dll": {
-            "locale": "es"
-          },
-          "lib/net9.0/fr/Microsoft.Testing.Extensions.MSBuild.resources.dll": {
-            "locale": "fr"
-          },
-          "lib/net9.0/it/Microsoft.Testing.Extensions.MSBuild.resources.dll": {
-            "locale": "it"
-          },
-          "lib/net9.0/ja/Microsoft.Testing.Extensions.MSBuild.resources.dll": {
-            "locale": "ja"
-          },
-          "lib/net9.0/ko/Microsoft.Testing.Extensions.MSBuild.resources.dll": {
-            "locale": "ko"
-          },
-          "lib/net9.0/pl/Microsoft.Testing.Extensions.MSBuild.resources.dll": {
-            "locale": "pl"
-          },
-          "lib/net9.0/pt-BR/Microsoft.Testing.Extensions.MSBuild.resources.dll": {
-            "locale": "pt-BR"
-          },
-          "lib/net9.0/ru/Microsoft.Testing.Extensions.MSBuild.resources.dll": {
-            "locale": "ru"
-          },
-          "lib/net9.0/tr/Microsoft.Testing.Extensions.MSBuild.resources.dll": {
-            "locale": "tr"
-          },
-          "lib/net9.0/zh-Hans/Microsoft.Testing.Extensions.MSBuild.resources.dll": {
-            "locale": "zh-Hans"
-          },
-          "lib/net9.0/zh-Hant/Microsoft.Testing.Extensions.MSBuild.resources.dll": {
-            "locale": "zh-Hant"
-          }
         }
       },
       "Microsoft.TestPlatform.ObjectModel/17.14.0": {
@@ -693,22 +464,12 @@
           }
         }
       },
-      "NUnit/4.3.2": {
+      "NUnit/3.14.0": {
         "runtime": {
-          "lib/net8.0/nunit.framework.dll": {
-            "assemblyVersion": "4.3.2.0",
-            "fileVersion": "4.3.2.0"
-          },
-          "lib/net8.0/nunit.framework.legacy.dll": {
-            "assemblyVersion": "4.3.2.0",
-            "fileVersion": "4.3.2.0"
+          "lib/netstandard2.0/nunit.framework.dll": {
+            "assemblyVersion": "3.14.0.0",
+            "fileVersion": "3.14.0.0"
           }
-        }
-      },
-      "NUnit3TestAdapter/5.0.0": {
-        "dependencies": {
-          "Microsoft.Testing.Extensions.VSTestBridge": "1.5.3",
-          "Microsoft.Testing.Platform.MSBuild": "1.5.3"
         }
       },
       "SQLitePCLRaw.bundle_e_sqlite3/2.1.11": {
@@ -861,10 +622,46 @@
           }
         }
       },
+      "Stub.System.Data.SQLite.Core.NetStandard/1.0.119": {
+        "runtime": {
+          "lib/netstandard2.1/System.Data.SQLite.dll": {
+            "assemblyVersion": "1.0.119.0",
+            "fileVersion": "1.0.119.0"
+          }
+        },
+        "runtimeTargets": {
+          "runtimes/linux-x64/native/SQLite.Interop.dll": {
+            "rid": "linux-x64",
+            "assetType": "native",
+            "fileVersion": "0.0.0.0"
+          },
+          "runtimes/osx-x64/native/SQLite.Interop.dll": {
+            "rid": "osx-x64",
+            "assetType": "native",
+            "fileVersion": "0.0.0.0"
+          },
+          "runtimes/win-x64/native/SQLite.Interop.dll": {
+            "rid": "win-x64",
+            "assetType": "native",
+            "fileVersion": "1.0.119.0"
+          },
+          "runtimes/win-x86/native/SQLite.Interop.dll": {
+            "rid": "win-x86",
+            "assetType": "native",
+            "fileVersion": "1.0.119.0"
+          }
+        }
+      },
+      "System.Data.SQLite.Core/1.0.119": {
+        "dependencies": {
+          "Stub.System.Data.SQLite.Core.NetStandard": "1.0.119"
+        }
+      },
       "ElektroOffer_app/1.5.0": {
         "dependencies": {
           "Microsoft.EntityFrameworkCore": "10.0.8",
-          "Microsoft.EntityFrameworkCore.Sqlite": "10.0.8"
+          "Microsoft.EntityFrameworkCore.Sqlite": "10.0.8",
+          "System.Data.SQLite.Core": "1.0.119"
         },
         "runtime": {
           "ElektroOffer_app.dll": {
@@ -880,13 +677,6 @@
       "type": "project",
       "serviceable": false,
       "sha512": ""
-    },
-    "Microsoft.ApplicationInsights/2.22.0": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-3AOM9bZtku7RQwHyMEY3tQMrHIgjcfRDa6YQpd/QG2LDGvMydSlL9Di+8LLMt7J2RDdfJ7/2jdYv6yHcMJAnNw==",
-      "path": "microsoft.applicationinsights/2.22.0",
-      "hashPath": "microsoft.applicationinsights.2.22.0.nupkg.sha512"
     },
     "Microsoft.CodeCoverage/17.14.0": {
       "type": "package",
@@ -1014,41 +804,6 @@
       "path": "microsoft.net.test.sdk/17.14.0",
       "hashPath": "microsoft.net.test.sdk.17.14.0.nupkg.sha512"
     },
-    "Microsoft.Testing.Extensions.Telemetry/1.5.3": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-U9pGd5DQuX1PfkrdFI+xH34JGgQ2nes5QAwIITTk+MQfLvRITqsZjJeHTjpGWh33D/0q1l7aA8/LQHR7UuCgLQ==",
-      "path": "microsoft.testing.extensions.telemetry/1.5.3",
-      "hashPath": "microsoft.testing.extensions.telemetry.1.5.3.nupkg.sha512"
-    },
-    "Microsoft.Testing.Extensions.TrxReport.Abstractions/1.5.3": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-h34zKNpGyni66VH738mRHeXSnf3klSShUdavUWNhSfWICUUi5aXeI0LBvoX/ad93N0+9xBDU3Fyi6WfxrwKQGw==",
-      "path": "microsoft.testing.extensions.trxreport.abstractions/1.5.3",
-      "hashPath": "microsoft.testing.extensions.trxreport.abstractions.1.5.3.nupkg.sha512"
-    },
-    "Microsoft.Testing.Extensions.VSTestBridge/1.5.3": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-cJD67YfDT98wEWyazKVD/yPVW6+H1usXeuselCnRes7JZBTIYWtrCchcOzOahnmajT79eDKqt9sta7DXwTDU4Q==",
-      "path": "microsoft.testing.extensions.vstestbridge/1.5.3",
-      "hashPath": "microsoft.testing.extensions.vstestbridge.1.5.3.nupkg.sha512"
-    },
-    "Microsoft.Testing.Platform/1.5.3": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-WqJydnJ99dEKtquR9HwINz104ehWJKTXbQQrydGatlLRw14bmsx0pa8+E6KUXMYXZAimN0swWlDmcJGjjW4TIg==",
-      "path": "microsoft.testing.platform/1.5.3",
-      "hashPath": "microsoft.testing.platform.1.5.3.nupkg.sha512"
-    },
-    "Microsoft.Testing.Platform.MSBuild/1.5.3": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-bOtpRMSPeT5YLQo+NNY8EtdNTphAUcmALjW4ABU7P0rb6yR2XAZau3TzNieLmR3lRuwudguWzzBhgcLRXwZh0A==",
-      "path": "microsoft.testing.platform.msbuild/1.5.3",
-      "hashPath": "microsoft.testing.platform.msbuild.1.5.3.nupkg.sha512"
-    },
     "Microsoft.TestPlatform.ObjectModel/17.14.0": {
       "type": "package",
       "serviceable": true,
@@ -1070,19 +825,12 @@
       "path": "newtonsoft.json/13.0.3",
       "hashPath": "newtonsoft.json.13.0.3.nupkg.sha512"
     },
-    "NUnit/4.3.2": {
+    "NUnit/3.14.0": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-puVXayXNmEu7MFQSUswGmUjOy3M3baprMbkLl5PAutpeDoGTr+jPv33qAYsqxywi2wJCq8l/O3EhHoLulPE1iQ==",
-      "path": "nunit/4.3.2",
-      "hashPath": "nunit.4.3.2.nupkg.sha512"
-    },
-    "NUnit3TestAdapter/5.0.0": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-sy4cLoUAdE6TDM4wNX5gmNCyhMev5wUz4cA6ZRf/aON9vf9t4xTVGLj/4huhDKcS4dFfmVVcgcP70yC7WC9kKg==",
-      "path": "nunit3testadapter/5.0.0",
-      "hashPath": "nunit3testadapter.5.0.0.nupkg.sha512"
+      "sha512": "sha512-R7iPwD7kbOaP3o2zldWJbWeMQAvDKD0uld27QvA3PAALl1unl7x0v2J7eGiJOYjimV/BuGT4VJmr45RjS7z4LA==",
+      "path": "nunit/3.14.0",
+      "hashPath": "nunit.3.14.0.nupkg.sha512"
     },
     "SQLitePCLRaw.bundle_e_sqlite3/2.1.11": {
       "type": "package",
@@ -1111,6 +859,20 @@
       "sha512": "sha512-Y/0ZkR+r0Cg3DQFuCl1RBnv/tmxpIZRU3HUvelPw6MVaKHwYYR8YNvgs0vuNuXCMvlyJ+Fh88U1D4tah1tt6qw==",
       "path": "sqlitepclraw.provider.e_sqlite3/2.1.11",
       "hashPath": "sqlitepclraw.provider.e_sqlite3.2.1.11.nupkg.sha512"
+    },
+    "Stub.System.Data.SQLite.Core.NetStandard/1.0.119": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-dI7ngiCNgdm+n00nQvFTa+LbHvE9MIQXwMSLRzJI/KAJ7G1WmCachsvfE1CD6xvb3OXJvYYEfv3+S/LHyhN0Rg==",
+      "path": "stub.system.data.sqlite.core.netstandard/1.0.119",
+      "hashPath": "stub.system.data.sqlite.core.netstandard.1.0.119.nupkg.sha512"
+    },
+    "System.Data.SQLite.Core/1.0.119": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-bhQB8HVtRA+OOYw8UTD1F1kU+nGJ0/OZvH1JmlVUI4bGvgVEWeX1NcHjA765NvUoRVuCPlt8PrEpZ1thSsk1jg==",
+      "path": "system.data.sqlite.core/1.0.119",
+      "hashPath": "system.data.sqlite.core.1.0.119.nupkg.sha512"
     },
     "ElektroOffer_app/1.5.0": {
       "type": "project",

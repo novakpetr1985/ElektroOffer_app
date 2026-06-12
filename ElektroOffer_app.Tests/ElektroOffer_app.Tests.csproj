@@ -1,27 +1,44 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-	  <TargetFramework>net10.0-windows7.0</TargetFramework>
-    <LangVersion>latest</LangVersion>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-    <IsPackable>false</IsPackable>
-  </PropertyGroup>
+	<PropertyGroup>
+		<!-- Cílový framework -->
+		<TargetFramework>net10.0-windows7.0</TargetFramework>
 
-  <ItemGroup>
-    <PackageReference Include="coverlet.collector" Version="6.0.4" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.14.0" />
-    <PackageReference Include="NUnit" Version="4.3.2" />
-    <PackageReference Include="NUnit.Analyzers" Version="4.7.0" />
-    <PackageReference Include="NUnit3TestAdapter" Version="5.0.0" />
-  </ItemGroup>
+		<!-- Moderní C# -->
+		<LangVersion>latest</LangVersion>
 
-  <ItemGroup>
-    <Using Include="NUnit.Framework" />
-  </ItemGroup>
+		<!-- Automatické usingy -->
+		<ImplicitUsings>enable</ImplicitUsings>
 
-  <ItemGroup>
-    <ProjectReference Include="..\ElektroOffer_app\ElektroOffer_app.csproj" />
-  </ItemGroup>
+		<!-- Nullable reference types -->
+		<Nullable>enable</Nullable>
+
+		<!-- Test projekt se nebalí do NuGetu -->
+		<IsPackable>false</IsPackable>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<!-- NUnit 3.x – stabilní verze -->
+		<PackageReference Include="NUnit" Version="3.14.0" />
+
+		<!-- Adapter pro Visual Studio Test Explorer -->
+		<PackageReference Include="NUnit3TestAdapter" Version="4.5.0" />
+
+		<!-- Microsoft test runner -->
+		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.14.0" />
+
+		<!-- Code coverage -->
+		<PackageReference Include="coverlet.collector" Version="10.0.1">
+			<PrivateAssets>all</PrivateAssets>
+		</PackageReference>
+
+		<!-- SQLite knihovna -->
+		<PackageReference Include="System.Data.SQLite.Core" Version="1.0.119" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<!-- Odkaz na hlavní projekt -->
+		<ProjectReference Include="..\ElektroOffer_app\ElektroOffer_app.csproj" />
+	</ItemGroup>
 
 </Project>

@@ -1,9 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "cWmS+AlSaLA=",
+  "dgSpecHash": "Y04AMc+k/+s=",
   "success": true,
   "projectFilePath": "D:\\_GitHub\\ElektroOffer_app\\ElektroOffer_app\\ElektroOffer_app.csproj",
   "expectedPackageFiles": [
+    "C:\\Users\\nowim\\.nuget\\packages\\coverlet.collector\\10.0.1\\coverlet.collector.10.0.1.nupkg.sha512",
     "C:\\Users\\nowim\\.nuget\\packages\\humanizer.core\\2.14.1\\humanizer.core.2.14.1.nupkg.sha512",
     "C:\\Users\\nowim\\.nuget\\packages\\microsoft.build.framework\\18.0.2\\microsoft.build.framework.18.0.2.nupkg.sha512",
     "C:\\Users\\nowim\\.nuget\\packages\\microsoft.codeanalysis.analyzers\\3.11.0\\microsoft.codeanalysis.analyzers.3.11.0.nupkg.sha512",
@@ -38,12 +39,14 @@
     "C:\\Users\\nowim\\.nuget\\packages\\sqlitepclraw.core\\2.1.11\\sqlitepclraw.core.2.1.11.nupkg.sha512",
     "C:\\Users\\nowim\\.nuget\\packages\\sqlitepclraw.lib.e_sqlite3\\2.1.11\\sqlitepclraw.lib.e_sqlite3.2.1.11.nupkg.sha512",
     "C:\\Users\\nowim\\.nuget\\packages\\sqlitepclraw.provider.e_sqlite3\\2.1.11\\sqlitepclraw.provider.e_sqlite3.2.1.11.nupkg.sha512",
+    "C:\\Users\\nowim\\.nuget\\packages\\stub.system.data.sqlite.core.netstandard\\1.0.119\\stub.system.data.sqlite.core.netstandard.1.0.119.nupkg.sha512",
     "C:\\Users\\nowim\\.nuget\\packages\\system.composition\\9.0.0\\system.composition.9.0.0.nupkg.sha512",
     "C:\\Users\\nowim\\.nuget\\packages\\system.composition.attributedmodel\\9.0.0\\system.composition.attributedmodel.9.0.0.nupkg.sha512",
     "C:\\Users\\nowim\\.nuget\\packages\\system.composition.convention\\9.0.0\\system.composition.convention.9.0.0.nupkg.sha512",
     "C:\\Users\\nowim\\.nuget\\packages\\system.composition.hosting\\9.0.0\\system.composition.hosting.9.0.0.nupkg.sha512",
     "C:\\Users\\nowim\\.nuget\\packages\\system.composition.runtime\\9.0.0\\system.composition.runtime.9.0.0.nupkg.sha512",
-    "C:\\Users\\nowim\\.nuget\\packages\\system.composition.typedparts\\9.0.0\\system.composition.typedparts.9.0.0.nupkg.sha512"
+    "C:\\Users\\nowim\\.nuget\\packages\\system.composition.typedparts\\9.0.0\\system.composition.typedparts.9.0.0.nupkg.sha512",
+    "C:\\Users\\nowim\\.nuget\\packages\\system.data.sqlite.core\\1.0.119\\system.data.sqlite.core.1.0.119.nupkg.sha512"
   ],
   "logs": []
 }

@@ -8,20 +8,20 @@ namespace ElektroOffer_app.Tests.DatabaseTests
 {
     /// <summary>
     /// Integration testy SQLite databáze.
-    /// Vytváří izolovanou testovací DB v temp složce.
+    /// Každý test dostane vlastní izolovanou DB v temp složce.
     /// </summary>
     [TestFixture]
     public class DatabaseTests
     {
-        // =========================
-        // TEST DB PATH
-        // =========================
-
+        /// <summary>
+        /// Cesta k testovací databázi.
+        /// Vytváří se v [SetUp] a maže v [TearDown].
+        /// </summary>
         private string _dbPath = string.Empty;
 
-        // =========================
+        // ============================================================
         // SETUP
-        // =========================
+        // ============================================================
 
         /// <summary>
         /// Vytvoří novou testovací SQLite databázi před každým testem.
@@ -38,9 +38,9 @@ namespace ElektroOffer_app.Tests.DatabaseTests
             CreateTestDatabase(_dbPath);
         }
 
-        // =========================
+        // ============================================================
         // TEARDOWN
-        // =========================
+        // ============================================================
 
         /// <summary>
         /// Po testu smaže testovací databázi.
@@ -49,21 +49,20 @@ namespace ElektroOffer_app.Tests.DatabaseTests
         public void TearDown()
         {
             if (File.Exists(_dbPath))
-            {
                 File.Delete(_dbPath);
-            }
         }
 
-        // =========================
+        // ============================================================
         // CREATE TEST DB
-        // =========================
+        // ============================================================
 
         /// <summary>
         /// Vytvoří strukturu databáze pro testy.
-        /// (jednoduchý seed bez business logiky aplikace)
+        /// Jednoduchý seed bez business logiky aplikace.
         /// </summary>
         private void CreateTestDatabase(string path)
         {
+            // vytvoření prázdné DB
             SQLiteConnection.CreateFile(path);
 
             using var conn = new SQLiteConnection($"Data Source={path};Version=3;");
@@ -71,9 +70,7 @@ namespace ElektroOffer_app.Tests.DatabaseTests
 
             using var cmd = conn.CreateCommand();
 
-            // -------------------------
-            // TABULKY
-            // -------------------------
+            // vytvoření tabulek
             cmd.CommandText = @"
                 CREATE TABLE Tasks (Id INTEGER PRIMARY KEY, Name TEXT);
                 CREATE TABLE Materials (Id INTEGER PRIMARY KEY);
@@ -85,9 +82,7 @@ namespace ElektroOffer_app.Tests.DatabaseTests
             ";
             cmd.ExecuteNonQuery();
 
-            // -------------------------
-            // TEST DATA (MINIMUM)
-            // -------------------------
+            // minimální test data
             cmd.CommandText = "INSERT INTO Tasks (Name) VALUES ('Test Task');";
             cmd.ExecuteNonQuery();
 
@@ -95,9 +90,9 @@ namespace ElektroOffer_app.Tests.DatabaseTests
             cmd.ExecuteNonQuery();
         }
 
-        // =========================
-        // TEST 1 - FILE EXISTS
-        // =========================
+        // ============================================================
+        // TEST 1 – FILE EXISTS
+        // ============================================================
 
         /// <summary>
         /// Ověří, že test DB byla vytvořena na disku.
@@ -109,9 +104,9 @@ namespace ElektroOffer_app.Tests.DatabaseTests
                 $"Test DB neexistuje: {_dbPath}");
         }
 
-        // =========================
-        // TEST 2 - CONNECTION
-        // =========================
+        // ============================================================
+        // TEST 2 – CONNECTION
+        // ============================================================
 
         /// <summary>
         /// Ověří, že SQLite DB lze otevřít.
@@ -126,9 +121,9 @@ namespace ElektroOffer_app.Tests.DatabaseTests
                 Is.EqualTo(System.Data.ConnectionState.Open));
         }
 
-        // =========================
-        // TEST 3 - TABLES
-        // =========================
+        // ============================================================
+        // TEST 3 – TABLES
+        // ============================================================
 
         /// <summary>
         /// Ověří, že DB obsahuje všechny klíčové tabulky.
@@ -150,9 +145,7 @@ namespace ElektroOffer_app.Tests.DatabaseTests
 
             using var reader = cmd.ExecuteReader();
             while (reader.Read())
-            {
                 tables.Add(reader.GetString(0));
-            }
 
             Assert.Multiple(() =>
             {
@@ -166,9 +159,9 @@ namespace ElektroOffer_app.Tests.DatabaseTests
             });
         }
 
-        // =========================
-        // TEST 4 - DATA CHECK
-        // =========================
+        // ============================================================
+        // TEST 4 – DATA CHECK
+        // ============================================================
 
         /// <summary>
         /// Ověří, že tabulka Tasks obsahuje data.

@@ -149,3 +149,8 @@ D:\_GitHub\ElektroOffer_app\ElektroOffer_app\obj\Debug\net10.0-windows\refint\El
 D:\_GitHub\ElektroOffer_app\ElektroOffer_app\obj\Debug\net10.0-windows\ElektroOffer_app.pdb
 D:\_GitHub\ElektroOffer_app\ElektroOffer_app\obj\Debug\net10.0-windows\ElektroOffer_app.genruntimeconfig.cache
 D:\_GitHub\ElektroOffer_app\ElektroOffer_app\obj\Debug\net10.0-windows\ref\ElektroOffer_app.dll
+D:\_GitHub\ElektroOffer_app\ElektroOffer_app\bin\Debug\net10.0-windows\System.Data.SQLite.dll
+D:\_GitHub\ElektroOffer_app\ElektroOffer_app\bin\Debug\net10.0-windows\runtimes\linux-x64\native\SQLite.Interop.dll
+D:\_GitHub\ElektroOffer_app\ElektroOffer_app\bin\Debug\net10.0-windows\runtimes\osx-x64\native\SQLite.Interop.dll
+D:\_GitHub\ElektroOffer_app\ElektroOffer_app\bin\Debug\net10.0-windows\runtimes\win-x64\native\SQLite.Interop.dll
+D:\_GitHub\ElektroOffer_app\ElektroOffer_app\bin\Debug\net10.0-windows\runtimes\win-x86\native\SQLite.Interop.dll
