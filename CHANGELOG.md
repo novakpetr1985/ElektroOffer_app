@@ -2,11 +2,17 @@
 
 # Changelog
 
+## [1.5.0]
+### Změněno 1.5.0-tests
+- Změna a rozdělení aplikace a testy
+    - ElektroOffer_app
+    - ElektroOffer_app.Tests
+- Přesunutí CHANGELOG.md a README.md do hlavní složky
+
 ## [1.4.1]
 ### Přidáno
 - Doplněný CHANGELOG.md
 - Úrava detailnějších komentářů pro dokumentaci v kódu
-
 
 ### Opraveno
 - Zobrazení verze v 'Nápověda/O aplikaci'
