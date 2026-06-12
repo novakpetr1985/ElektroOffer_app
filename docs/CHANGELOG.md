@@ -7,10 +7,11 @@ Formát vychází z [Keep a Changelog](https://keepachangelog.com/cs/1.0.0/).
 
 ## [1.6.0] - Integrační testování
 ### Přidáno
-- `ElektroOffer_app.Tests.Integration` do projektu
+- `ElektroOffer_app.Tests.Integration` – nový projekt pro integrační testy
+- První integrační test databáze: `DatabaseConnectionTests` (ověření připojení k SQLite in-memory DB)
 
 ### Změněno
-- `ElektroOffer_app.Tests` na upřesnění testu `ElektroOffer_app.Tests.Unit`
+- `ElektroOffer_app.Tests` přejmenováno na `ElektroOffer_app.Tests.Unit` pro jasné oddělení typů testů
 
 ## [1.5.2] - GIT - ingorování dočasných souborů
 ### Přidáno

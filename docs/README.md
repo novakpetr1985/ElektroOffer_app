@@ -59,39 +59,58 @@ Tabulky jsou při prvním spuštění prázdné — ceník importuj přes
 
 ```
 ElektroOffer_app.slnx
-├── ElektroOffer_app/         – hlavní WPF projekt
-│   ├── App.xaml              – vstupní bod aplikace
-│   ├── Views/                – okna (MainWindow, AboutWindow)
-│   ├── Models/               – datové třídy
-│   ├── Data/                 – EF Core kontext (AppDbContext)
-│   ├── Services/             – business logika (ProjectService, CatalogService)
-│   ├── ViewModels/           – ViewModely a CalculationItemViewModel
-│   ├── Commands/             – RelayCommand
-│   └── Resources/            – barvy, styly (XAML)
-├── ElektroOffer_app.Tests/   – unit a integrační testy
-└── docs/                     – dokumentace (README, CHANGELOG)
+├── ElektroOffer_app/                   – hlavní WPF projekt
+│   ├── App.xaml                        – vstupní bod aplikace
+│   ├── Views/                          – okna (MainWindow, AboutWindow)
+│   ├── Models/                         – datové třídy
+│   ├── Data/                           – EF Core kontext (AppDbContext)
+│   ├── Services/                       – business logika (ProjectService, CatalogService)
+│   ├── ViewModels/                     – ViewModely a CalculationItemViewModel
+│   ├── Commands/                       – RelayCommand
+│   └── Resources/                      – barvy, styly (XAML)
+├── ElektroOffer_app.Tests.Unit/        – unit testy (logika, repository, výpočty)
+├── ElektroOffer_app.Tests.Integration/ – integrační testy (DB, služby, UI)
+└── docs/                               – dokumentace (README, CHANGELOG)
 ```
 
 ---
 
 ## Testování
 
-Solution obsahuje samostatný testovací projekt `ElektroOffer_app.Tests`.
+Solution obsahuje dva samostatné testovací projekty:
 
-| Kategorie | Popis |
-|---|---|
-| `DatabaseTests` | Integrační testy DB vrstvy (SQLite in-memory) |
-| `RepositoryTests` | Testy operací s `PriceItems` a `Materials` |
-| `LogicTests` | Unit testy logiky `CalculationItemViewModel` |
+### **Unit testy**  
+Umístění: `ElektroOffer_app.Tests.Unit/`  
+Popis:  
+Testují jednotlivé třídy a metody izolovaně.  
+Používají SQLite InMemory databázi přes EF Core pro rychlé testování repository.
 
-`AppDbContext` podporuje předání `DbContextOptions` zvenčí — testy proto používají izolovanou in-memory databázi a nezasahují do produkčního `elektrooffer.db`.
+Kategorie:
+- `RepositoryTests` – testy operací s `PriceItems` a `Materials`
+- `LogicTests` – testy logiky `CalculationItemViewModel`
+- další unit testy podle potřeby
+
+---
+
+### **Integrační testy**  
+Umístění: `ElektroOffer_app.Tests.Integration/`  
+Popis:  
+Ověřují spolupráci více částí aplikace — databázi, služby, repository a případně UI.
+
+Kategorie:
+- `DatabaseConnectionTests` – ověření připojení k SQLite
+- `DatabaseSchemaTests` – ověření vytvoření tabulek
+- `DatabaseCrudTests` – CRUD operace nad reálným AppDbContextem
+- `ServiceTests` – testy služeb (např. CatalogService)
+- `UiTests` – případné testy UI (např. přes Playwright)
+
+Integrační testy používají **SQLite in-memory databázi** nebo **testovací instanci SQLite** podle potřeby.
 
 ---
 
 ## Verze
 
-Aktuální verze: **1.5.2**
-
+Aktuální verze: **1.6.0 (vývoj)**  
 Verze je definována v `ElektroOffer_app.csproj` a zobrazena v dialogu „O aplikaci".
 
 ---
