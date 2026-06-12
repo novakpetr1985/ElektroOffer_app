@@ -8,6 +8,14 @@ Formát vychází z [Keep a Changelog](https://keepachangelog.com/cs/1.0.0/).
 ## [1.5.2] - GIT - ingorování dočasných souborů
 ### Přidáno
 - `.gitignore` do složky projektu
+  - ignorace souborů -> bin/, obj/, .vs/, TestResults/, *.user, *.suo, *.cache, *.log, *.db-shm, *.db-wal
+    - vždy se generují automaticky,
+    - nikdy se necommitují,
+    - nikdy nejsou potřeba pro build,
+    - nikdy nejsou potřeba pro běh aplikace,
+    - nikdy nejsou potřeba pro testy,
+    - a jejich ignorování je 100% bezpečné.
+
 
 ## [1.5.1] - Refaktoring pro testovatelnost
 ### Přidáno
