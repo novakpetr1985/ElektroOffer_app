@@ -2,6 +2,11 @@
 
 # Changelog
 ## [1.5.0]
+### Změněno 1.5.0-tests-Logic
+- Přidání testů
+    - Logic CalculationItems
+
+## [1.5.0]
 ### Změněno 1.5.0-tests-Repository
 - Přidání testů
     - RepositoryTests/PriceItemsRepositoryTests.cs

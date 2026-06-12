@@ -1,12 +1,54 @@
 {
   "Version": 1,
   "WorkspaceRootPath": "D:\\_GitHub\\ElektroOffer_app\\",
-  "Documents": [],
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{0E67C157-65BF-11AF-1BDC-5B3429FA0513}|ElektroOffer_app.Tests\\ElektroOffer_app.Tests.csproj|d:\\_github\\elektrooffer_app\\elektrooffer_app.tests\\elektrooffer_app.tests.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{0E67C157-65BF-11AF-1BDC-5B3429FA0513}|ElektroOffer_app.Tests\\ElektroOffer_app.Tests.csproj|solutionrelative:elektrooffer_app.tests\\elektrooffer_app.tests.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{0E67C157-65BF-11AF-1BDC-5B3429FA0513}|ElektroOffer_app.Tests\\ElektroOffer_app.Tests.csproj|d:\\_github\\elektrooffer_app\\elektrooffer_app.tests\\databasetests\\databasetests.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{0E67C157-65BF-11AF-1BDC-5B3429FA0513}|ElektroOffer_app.Tests\\ElektroOffer_app.Tests.csproj|solutionrelative:elektrooffer_app.tests\\databasetests\\databasetests.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
   "DocumentGroupContainers": [
     {
       "Orientation": 0,
       "VerticalTabListWidth": 256,
-      "DocumentGroups": []
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 1,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "DatabaseTests.cs",
+              "DocumentMoniker": "D:\\_GitHub\\ElektroOffer_app\\ElektroOffer_app.Tests\\DatabaseTests\\DatabaseTests.cs",
+              "RelativeDocumentMoniker": "ElektroOffer_app.Tests\\DatabaseTests\\DatabaseTests.cs",
+              "ToolTip": "D:\\_GitHub\\ElektroOffer_app\\ElektroOffer_app.Tests\\DatabaseTests\\DatabaseTests.cs",
+              "RelativeToolTip": "ElektroOffer_app.Tests\\DatabaseTests\\DatabaseTests.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-12T04:09:21.697Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "ElektroOffer_app.Tests",
+              "DocumentMoniker": "D:\\_GitHub\\ElektroOffer_app\\ElektroOffer_app.Tests\\ElektroOffer_app.Tests.csproj",
+              "RelativeDocumentMoniker": "ElektroOffer_app.Tests\\ElektroOffer_app.Tests.csproj",
+              "ToolTip": "D:\\_GitHub\\ElektroOffer_app\\ElektroOffer_app.Tests\\ElektroOffer_app.Tests.csproj",
+              "RelativeToolTip": "ElektroOffer_app.Tests\\ElektroOffer_app.Tests.csproj",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2026-06-12T04:07:57.332Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
     }
   ]
 }
