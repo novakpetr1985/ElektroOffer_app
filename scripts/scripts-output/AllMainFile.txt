@@ -1,0 +1,63 @@
+=== STROMOVÁ STRUKTURA PROJEKTU ===
+
+📁 D:\_GitHub\ElektroOffer_app
+   └── ElektroOffer_app.slnx
+
+📁 docs
+   └── CHANGELOG.md
+   └── README.md
+
+📁 ElektroOffer_app
+   └── App.xaml
+   └── App.xaml.cs
+   └── elektrooffer.db
+   └── elektrooffer.sqbpro
+   └── ElektroOffer_app.csproj
+   └── ElektroOffer_app.slnx
+
+📁 ElektroOffer_app\Commands
+   └── RelayCommand.cs
+
+📁 ElektroOffer_app\Data
+   └── AppDbContext.cs
+
+📁 ElektroOffer_app\Models
+   └── BudgetItem.cs
+   └── CatalogExportData.cs
+   └── Material.cs
+   └── MaterialItemData.cs
+   └── PriceItems.cs
+   └── ProjectData.cs
+   └── WorkItemData.cs
+
+📁 ElektroOffer_app\Resources
+   └── Colors.xaml
+   └── Styles.xaml
+
+📁 ElektroOffer_app\Resources\Icons
+   └── LOGO.jpg
+
+📁 ElektroOffer_app\Services
+   └── DialogService.cs
+   └── ProjectService.cs
+
+📁 ElektroOffer_app\ViewModels
+   └── AboutWindowViewModel.cs
+
+📁 ElektroOffer_app\ViewModels\Base
+   └── BaseViewModel.cs
+
+📁 ElektroOffer_app\ViewModels\Items
+   └── CalculationItemViewModel.cs
+
+📁 ElektroOffer_app\Views
+   └── AboutWindow.xaml
+   └── AboutWindow.xaml.cs
+   └── MainWindow.xaml
+   └── MainWindow.xaml.cs
+
+📁 ElektroOffer_app.Tests
+   └── ElektroOffer_app.Tests.csproj
+
+📁 ElektroOffer_app.Tests\DatabaseTests
+   └── DatabaseTests.cs

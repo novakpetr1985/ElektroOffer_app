@@ -7,7 +7,8 @@
 - Změna a rozdělení aplikace a testy
     - ElektroOffer_app
     - ElektroOffer_app.Tests
-- Přesunutí CHANGELOG.md a README.md do hlavní složky
+- Přesunutí CHANGELOG.md a README.md do */Docs hlavní složky
+- Přidání skriptů pro generování root složky s výjimkami "bin", "obj", ".git", ".vs", "__pycache__", "scripts", "data"
 
 ## [1.4.1]
 ### Přidáno
