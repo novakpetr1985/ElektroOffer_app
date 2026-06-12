@@ -90,7 +90,7 @@ Solution obsahuje samostatný testovací projekt `ElektroOffer_app.Tests`.
 
 ## Verze
 
-Aktuální verze: **1.5.1**
+Aktuální verze: **1.5.2**
 
 Verze je definována v `ElektroOffer_app.csproj` a zobrazena v dialogu „O aplikaci".
 

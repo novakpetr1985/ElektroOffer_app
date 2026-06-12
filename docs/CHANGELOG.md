@@ -5,6 +5,10 @@ Formát vychází z [Keep a Changelog](https://keepachangelog.com/cs/1.0.0/).
 
 ---
 
+## [1.5.2] - GIT - ingorování dočasných souborů
+### Přidáno
+- `.gitignore` do složky projektu
+
 ## [1.5.1] - Refaktoring pro testovatelnost
 ### Přidáno
 - `CatalogService` – nová service pro načítání dat ceníku z databáze
