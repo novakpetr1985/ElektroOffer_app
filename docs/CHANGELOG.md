@@ -5,6 +5,13 @@ Formát vychází z [Keep a Changelog](https://keepachangelog.com/cs/1.0.0/).
 
 ---
 
+## [1.6.0] - Integrační testování
+### Přidáno
+- `ElektroOffer_app.Tests.Integration` do projektu
+
+### Změněno
+- `ElektroOffer_app.Tests` na upřesnění testu `ElektroOffer_app.Tests.Unit`
+
 ## [1.5.2] - GIT - ingorování dočasných souborů
 ### Přidáno
 - `.gitignore` do složky projektu
