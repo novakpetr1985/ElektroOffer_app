@@ -38,6 +38,7 @@
    └── LOGO.jpg
 
 📁 ElektroOffer_app\Services
+   └── CatalogService.cs
    └── DialogService.cs
    └── ProjectService.cs
 
@@ -61,3 +62,10 @@
 
 📁 ElektroOffer_app.Tests\DatabaseTests
    └── DatabaseTests.cs
+
+📁 ElektroOffer_app.Tests\LogicTests
+   └── PriceCalculationTests.cs
+
+📁 ElektroOffer_app.Tests\RepositoryTests
+   └── MaterialRepositoryTests.cs
+   └── PriceItemsRepositoryTests.cs
