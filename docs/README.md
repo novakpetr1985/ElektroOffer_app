@@ -2,129 +2,168 @@
 
 Desktopová WPF aplikace pro kalkulaci elektro prací a materiálu.
 
-## Požadavky
+---
+
+## 📦 Požadavky
 
 - Windows 10/11
 - Visual Studio 2022+ s workload **.NET Desktop Development**
 - .NET 10 SDK
 
-## Jak spustit
+---
+
+## 🚀 Jak spustit
 
 1. Otevři `ElektroOffer_app.slnx` ve Visual Studio
 2. Sestav projekt — `Ctrl+Shift+B`
 3. Spusť — `F5`
 
 Databáze `elektrooffer.db` se vytvoří automaticky při prvním spuštění.  
-Tabulky jsou při prvním spuštění prázdné — ceník importuj přes  
-**Soubor → Import ceníku** (soubor `.eofcat`).
+Tabulky jsou při prvním spuštění prázdné — ceník importuj přes:
+
+**Soubor → Import ceníku** (`.eofcat`)
 
 ---
 
-## Hlavní funkce
+## ✨ Hlavní funkce
 
-- Kalkulace práce podle ceníku (tabulka `PriceItems`)
-- Kalkulace materiálu (tabulka `Materials`)
+- Kalkulace práce podle ceníku (`PriceItems`)
+- Kalkulace materiálu (`Materials`)
 - Uložení a načtení projektu (`*.eof`)
 - Export a import ceníku (`*.eofcat`)
 - Přehledný rozpis položek s celkovou cenou
 
 ---
 
-## Technický přehled
+## 🧠 Technický přehled
 
 - **Platforma:** .NET 10, WPF
 - **UI:** XAML (`MainWindow`, `AboutWindow`, `Resources/Styles`)
-- **Databáze:** SQLite přes Entity Framework Core (`AppDbContext`)
-- **Architektura:** Code-behind s částečným MVVM (viz ADR níže)
+- **Databáze:** SQLite + Entity Framework Core (`AppDbContext`)
+- **Architektura:** Code-behind + částečné oddělení service vrstvy
 
-### Modely
+---
+
+## 🧩 Modely
+
 | Třída | Účel |
-|---|---|
+|------|------|
 | `PriceItems` | Ceník práce |
 | `Material` | Ceník materiálu |
 | `ProjectData` | Serializovaný projekt (`.eof`) |
 | `CatalogExportData` | Export/import ceníku (`.eofcat`) |
-| `BudgetItem` | Řádek rozpisu kalkulace |
+| `WorkItemData` | Řádek kalkulace práce |
+| `MaterialItemData` | Řádek kalkulace materiálu |
 
-### Služby
+---
+
+## ⚙️ Služby
+
 | Třída | Účel |
-|---|---|
-| `ProjectService` | Ukládání a načítání projektů, export/import ceníku |
-| `CatalogService` | Načítání ceníku z DB (testovatelné bez WPF) |
+|------|------|
+| `ProjectService` | Ukládání/načítání projektů + import/export ceníku |
+| `CatalogService` | Načítání ceníku z databáze (testovatelné bez UI) |
 | `DialogService` | Zobrazení MessageBox dialogů |
 
 ---
 
-## Struktura projektu
-
-```
+## 📁 Struktura projektu
 ElektroOffer_app.slnx
-├── ElektroOffer_app/                   – hlavní WPF projekt
-│   ├── App.xaml                        – vstupní bod aplikace
-│   ├── Views/                          – okna (MainWindow, AboutWindow)
-│   ├── Models/                         – datové třídy
-│   ├── Data/                           – EF Core kontext (AppDbContext)
-│   ├── Services/                       – business logika (ProjectService, CatalogService)
-│   ├── ViewModels/                     – ViewModely a CalculationItemViewModel
-│   ├── Commands/                       – RelayCommand
-│   └── Resources/                      – barvy, styly (XAML)
-├── ElektroOffer_app.Tests.Unit/        – unit testy (logika, repository, výpočty)
-├── ElektroOffer_app.Tests.Integration/ – integrační testy (DB, služby, UI)
-└── docs/                               – dokumentace (README, CHANGELOG)
-```
+├── ElektroOffer_app/
+│ ├── App.xaml
+│ ├── Views/ – MainWindow, AboutWindow
+│ ├── Models/ – datové modely
+│ ├── Data/ – AppDbContext (EF Core)
+│ ├── Services/ – business logika
+│ ├── ViewModels/ – MVVM částečná vrstva
+│ ├── Commands/ – RelayCommand
+│ └── Resources/ – styly, barvy
+│
+├── ElektroOffer_app.Tests.Unit/
+│ ├── LogicTests
+│ ├── DatabaseTests
+│ └── RepositoryTests
+│
+├── ElektroOffer_app.Tests.Integration/
+│ ├── Database/
+│ │ ├── DatabaseConnectionTests
+│ │ ├── DatabaseSchemaTests
+│ │ └── DatabaseCrudTests
+│ │
+│ └── Services/
+│ ├── CatalogServiceTests
+│ └── ProjectServiceTests
+│
+└── docs/
+├── README.md
+└── CHANGELOG.md
 
 ---
 
-## Testování
+## 🧪 Testování
 
-Solution obsahuje dva samostatné testovací projekty:
+Projekt obsahuje dvě úrovně testů:
 
-### **Unit testy**  
-Umístění: `ElektroOffer_app.Tests.Unit/`  
-Popis:  
-Testují jednotlivé třídy a metody izolovaně.  
-Používají SQLite InMemory databázi přes EF Core pro rychlé testování repository.
+---
+
+### 🔬 Unit testy
+
+Umístění: `ElektroOffer_app.Tests.Unit`
+
+Testují izolovanou logiku bez závislosti na databázi nebo UI.
 
 Kategorie:
-- `RepositoryTests` – testy operací s `PriceItems` a `Materials`
-- `LogicTests` – testy logiky `CalculationItemViewModel`
-- další unit testy podle potřeby
+- `LogicTests` – výpočty a ViewModel logika
+- `RepositoryTests` – práce s EF Core v izolaci
+- `DatabaseTests` – základní DB operace
 
 ---
 
-### **Integrační testy**  
-Umístění: `ElektroOffer_app.Tests.Integration/`  
-Popis:  
-Ověřují spolupráci více částí aplikace — databázi, služby, repository a případně UI.
+### 🧪 Integrační testy
+
+Umístění: `ElektroOffer_app.Tests.Integration`
+
+Testují spolupráci více částí systému.
 
 Kategorie:
-- `DatabaseConnectionTests` – ověření připojení k SQLite
-- `DatabaseSchemaTests` – ověření vytvoření tabulek
-- `DatabaseCrudTests` – CRUD operace nad reálným AppDbContextem
-- `ServiceTests` – testy služeb (např. CatalogService)
-- `UiTests` – případné testy UI (např. přes Playwright)
 
-Integrační testy používají **SQLite in-memory databázi** nebo **testovací instanci SQLite** podle potřeby.
-
----
-
-## Verze
-
-Aktuální verze: **1.6.0 (vývoj)**  
-Verze je definována v `ElektroOffer_app.csproj` a zobrazena v dialogu „O aplikaci".
+- `DatabaseConnectionTests` – připojení k SQLite
+- `DatabaseSchemaTests` – vytvoření tabulek (EF Core)
+- `DatabaseCrudTests` – CRUD operace nad databází
+- `CatalogServiceTests` – logika načítání ceníku
+- `ProjectServiceTests` – ukládání a načítání projektů (.eof)
 
 ---
 
-## Architektura — rozhodnutí (ADR)
+## 🧠 Testovací architektura
 
-**Proč SQLite?**  
-Desktopová aplikace bez serveru. Jednoduchý deployment — jeden soubor `.db`.
+- SQLite InMemory databáze
+- EF Core `DbContext` izolovaný pro každý test
+- oddělení Unit vs Integration testů
+- testování service vrstvy bez UI
 
-**Proč code-behind místo čistého MVVM?**  
-Projekt vzniká jako výukový. Code-behind je pro začínajícího programátora srozumitelnější než plné MVVM. Přechod je plánován postupně.
+---
 
-**Proč JSON pro `.eof` soubory?**  
-Čitelné pro ruční debugging, snadná migrace formátu do budoucna.
+## 📌 Verze
 
-**Proč `CatalogService` místo přímého volání DB z `MainWindow`?**  
-Oddělení DB logiky od UI umožňuje integrační testování bez závislosti na WPF.
+Aktuální verze: **1.6.0 (Integrační testovací základ)**
+
+- databázová vrstva otestována
+- service vrstva otestována
+- připraveno pro PDF export (1.7.0)
+
+---
+
+## 🏗️ Architektura — rozhodnutí (ADR)
+
+### Proč SQLite?
+Desktopová aplikace bez serveru → jednoduché nasazení.
+
+### Proč code-behind + částečné MVVM?
+Výukový projekt → jednoduchost > enterprise složitost.
+
+### Proč JSON (.eof)?
+Snadná čitelnost a ladění dat.
+
+### Proč CatalogService?
+Oddělení DB logiky od UI → umožňuje testování bez WPF.
