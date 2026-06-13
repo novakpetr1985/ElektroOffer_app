@@ -6,7 +6,6 @@ Formát vychází z [Keep a Changelog](https://keepachangelog.com/cs/1.0.0/).
 ---
 
 ## [1.6.0] - Integrační testování
-
 ### Přidáno
 - `ElektroOffer_app.Tests.Integration` – nový projekt pro integrační testy
 - `DatabaseConnectionTests` – ověření připojení k SQLite databázi
