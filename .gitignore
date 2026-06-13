@@ -1,0 +1,23 @@
+# Build directories
+bin/
+obj/
+
+# Visual Studio
+.vs/
+*.user
+*.suo
+
+# Test results
+TestResults/
+
+# Cache & logs
+*.cache
+*.log
+
+# Rider / VS Code
+.idea/
+.vscode/
+
+# SQLite temporary files
+*.db-shm
+*.db-wal
