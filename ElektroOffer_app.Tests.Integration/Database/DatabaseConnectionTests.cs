@@ -12,12 +12,8 @@ public class DatabaseConnectionTests
 
     /// <summary>
     /// Connection string pro dočasnou SQLite databázi v paměti.
-    /// Používáme ji pro integrační testy, aby:
-    /// - se nic neukládalo na disk,
-    /// - testy byly rychlé,
-    /// - každý test měl čisté prostředí.
     /// </summary>
-    private string _connectionString;
+    private string _connectionString = string.Empty;
 
     // =========================================================
     // 🧪 SETUP — spouští se před KAŽDÝM testem
