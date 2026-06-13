@@ -6,12 +6,22 @@ Formát vychází z [Keep a Changelog](https://keepachangelog.com/cs/1.0.0/).
 ---
 
 ## [1.6.0] - Integrační testování
+
 ### Přidáno
 - `ElektroOffer_app.Tests.Integration` – nový projekt pro integrační testy
-- První integrační test databáze: `DatabaseConnectionTests` (ověření připojení k SQLite in-memory DB)
+- `DatabaseConnectionTests` – ověření připojení k SQLite in-memory databázi
+- `DatabaseSchemaTests` – ověření vytvoření databáze pomocí EF Core (`AppDbContext`)
+  - kontrola existence tabulek:
+    - `PriceItems`
+    - `Materials`
+- `DatabaseCrudTests` – CRUD operace nad `PriceItems` v SQLite InMemory databázi
 
 ### Změněno
 - `ElektroOffer_app.Tests` přejmenováno na `ElektroOffer_app.Tests.Unit` pro jasné oddělení typů testů
+
+### Poznámka
+- Integrační testy jsou budovány postupně v rámci vývoje verze 1.6.0
+- Každý test ověřuje samostatnou část databázové vrstvy
 
 ## [1.5.2] - GIT - ingorování dočasných souborů
 ### Přidáno
