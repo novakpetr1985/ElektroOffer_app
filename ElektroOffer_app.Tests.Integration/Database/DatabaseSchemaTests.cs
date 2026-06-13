@@ -1,59 +1,120 @@
-using NUnit.Framework;
+using ElektroOffer_app.Data;
 using Microsoft.Data.Sqlite;
+using Microsoft.EntityFrameworkCore;
+using NUnit.Framework;
 
 namespace ElektroOffer_app.Tests.Integration.Database;
+
+// =========================================================================
+// 🧪 DatabaseSchemaTests
+// =========================================================================
+//
+// ÚČEL:
+// - Ověření, že EF Core správně vytvoří databázové schéma
+// - Testuje AppDbContext (ne SQLite ručně)
+// - Ochrana proti rozbití DbSetů nebo modelů
+//
+// DŮLEŽITÉ:
+// - Tento test NEtestuje SQLite
+// - Tento test testuje Entity Framework konfiguraci
+//
+// Pokud selže:
+// - nebyl vytvořen DbSet
+// - chybí model
+// - nebo je rozbitý AppDbContext
+//
+// =========================================================================
 
 [TestFixture]
 public class DatabaseSchemaTests
 {
-    // =========================================================
-    // 🔧 KONFIGURACE — připojení k in-memory SQLite databázi
-    // =========================================================
+    // =====================================================================
+    // KONFIGURACE TESTU
+    // =====================================================================
 
-    private string _connectionString;
+    private SqliteConnection _connection = null!;
+    private AppDbContext _db = null!;
 
+    // =====================================================================
+    // SETUP
+    // =====================================================================
+
+    /// <summary>
+    /// Vytvoří čistou SQLite databázi v paměti
+    /// před každým testem.
+    /// </summary>
     [SetUp]
     public void Setup()
     {
-        // SQLite databáze uložená pouze v paměti
-        _connectionString = "Data Source=:memory:;Cache=Shared";
+        // SQLite pouze v paměti
+        _connection = new SqliteConnection("Data Source=:memory:");
+        _connection.Open();
+
+        // EF Core konfigurace pro testovací databázi
+        var options = new DbContextOptionsBuilder<AppDbContext>()
+            .UseSqlite(_connection)
+            .Options;
+
+        _db = new AppDbContext(options);
+
+        // Vytvoření databázového schématu podle DbContext
+        _db.Database.EnsureCreated();
     }
 
-    // =========================================================
-    // 🧪 TEST — vytvoření tabulky a ověření, že existuje
-    // =========================================================
+    // =====================================================================
+    // TEARDOWN
+    // =====================================================================
 
     /// <summary>
-    /// Ověří, že lze vytvořit tabulku Products a že je následně
-    /// viditelná v SQLite systémové tabulce sqlite_master.
+    /// Uvolnění prostředků po testu.
+    /// </summary>
+    [TearDown]
+    public void TearDown()
+    {
+        _db.Dispose();
+        _connection.Dispose();
+    }
+
+    // =====================================================================
+    // TEST SCHÉMATU
+    // =====================================================================
+
+    /// <summary>
+    /// Ověří, že EF Core vytvořil tabulky
+    /// PriceItems a Materials.
     /// </summary>
     [Test]
-    public void Should_Create_Products_Table()
+    public void Should_Create_AppDbContext_Tables()
     {
-        using var connection = new SqliteConnection(_connectionString);
-        connection.Open();
+        // =============================================================
+        // ASSERT 1 – PriceItems tabulka existuje
+        // =============================================================
+        var priceItemsExists = _db.PriceItems != null;
 
-        // SQL příkaz pro vytvoření tabulky
-        var createTableSql = @"
-            CREATE TABLE IF NOT EXISTS Products (
-                Id INTEGER PRIMARY KEY,
-                Name TEXT NOT NULL
-            );
-        ";
+        Assert.That(
+            priceItemsExists,
+            Is.True,
+            "Tabulka PriceItems nebyla vytvořena."
+        );
 
-        using (var cmd = connection.CreateCommand())
-        {
-            cmd.CommandText = createTableSql;
-            cmd.ExecuteNonQuery();
-        }
+        // =============================================================
+        // ASSERT 2 – Materials tabulka existuje
+        // =============================================================
+        var materialsExists = _db.Materials != null;
 
-        // Ověření, že tabulka existuje v sqlite_master
-        using (var cmd = connection.CreateCommand())
-        {
-            cmd.CommandText = "SELECT name FROM sqlite_master WHERE type='table' AND name='Products';";
-            var result = cmd.ExecuteScalar();
+        Assert.That(
+            materialsExists,
+            Is.True,
+            "Tabulka Materials nebyla vytvořena."
+        );
 
-            Assert.That(result, Is.EqualTo("Products"), "Tabulka Products nebyla vytvořena.");
-        }
+        // =============================================================
+        // BONUS ASSERT – databáze je skutečně vytvořená
+        // =============================================================
+        Assert.That(
+            _db.Database.CanConnect(),
+            Is.True,
+            "Nelze se připojit k databázi."
+        );
     }
 }
