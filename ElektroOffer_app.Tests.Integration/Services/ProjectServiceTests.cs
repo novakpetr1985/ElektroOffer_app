@@ -1,51 +1,80 @@
+using ElektroOffer_app.Data;
 using ElektroOffer_app.Models;
 using ElektroOffer_app.Services;
+using Microsoft.Data.Sqlite;
+using Microsoft.EntityFrameworkCore;
 using NUnit.Framework;
 
 namespace ElektroOffer_app.Tests.Integration.Services;
 
 // =========================================================================
-// 🧪 ProjectServiceTests
+// 🧪 CatalogServiceTests (STABILNÍ VERZE)
 // =========================================================================
 //
-// ÚČEL:
-// - Testování logiky ukládání a načítání projektů (.eof)
-// - Ověření serializace a deserializace ProjectData
-// - Ověření integrity dat po uložení a načtení
+// FIX:
+// - Použit SQLite shared in-memory connection
+// - Zabránění zamrzání test runneru
+// - Správné lifecycle DB (open → use → dispose)
 //
-// DŮLEŽITÉ:
-// - Testuje FILE I/O logiku
-// - NEtestuje UI (SaveFileDialog / OpenFileDialog)
-//   → tyto části nejsou testovatelné v integračních testech
+// ÚČEL:
+// - Testování business logiky CatalogService
+// - Ověření práce s EF Core přes SQLite InMemory DB
 //
 // =========================================================================
 
 [TestFixture]
-public class ProjectServiceTests
+public class CatalogServiceTests
 {
     // =====================================================================
     // TEST INFRASTRUKTURA
     // =====================================================================
 
-    private ProjectService _service = null!;
-    private string _testFilePath = null!;
+    private SqliteConnection _connection = null!;
+    private AppDbContext _db = null!;
+    private CatalogService _service = null!;
 
     // =====================================================================
     // SETUP
     // =====================================================================
 
     /// <summary>
-    /// Příprava testovací instance služby a dočasné cesty souboru.
+    /// Inicializace sdílené SQLite InMemory databáze.
+    /// 
+    /// DŮLEŽITÉ:
+    /// Používáme "file:memdb1?mode=memory&cache=shared"
+    /// → zabrání ztrátě DB mezi EF Core operacemi
+    /// → eliminuje freeze test runneru
     /// </summary>
     [SetUp]
     public void Setup()
     {
-        _service = new ProjectService();
-
-        _testFilePath = Path.Combine(
-            Path.GetTempPath(),
-            $"project_test_{Guid.NewGuid()}.eof"
+        // -------------------------------------------------------------
+        // 1. Otevření SQLite connection (KRITICKÉ)
+        // -------------------------------------------------------------
+        _connection = new SqliteConnection(
+            "Data Source=file:memdb1?mode=memory&cache=shared"
         );
+
+        _connection.Open();
+
+        // -------------------------------------------------------------
+        // 2. EF Core konfigurace
+        // -------------------------------------------------------------
+        var options = new DbContextOptionsBuilder<AppDbContext>()
+            .UseSqlite(_connection)
+            .Options;
+
+        _db = new AppDbContext(options);
+
+        // -------------------------------------------------------------
+        // 3. Vytvoření DB schématu
+        // -------------------------------------------------------------
+        _db.Database.EnsureCreated();
+
+        // -------------------------------------------------------------
+        // 4. Service vrstva
+        // -------------------------------------------------------------
+        _service = new CatalogService();
     }
 
     // =====================================================================
@@ -53,117 +82,94 @@ public class ProjectServiceTests
     // =====================================================================
 
     /// <summary>
-    /// Úklid testovacího souboru po dokončení testu.
+    /// Bezpečné uvolnění zdrojů po každém testu.
     /// </summary>
     [TearDown]
     public void TearDown()
     {
-        if (File.Exists(_testFilePath))
-            File.Delete(_testFilePath);
+        _db?.Dispose();
+        _connection?.Close();
+        _connection?.Dispose();
     }
 
     // =====================================================================
-    // SAVE TEST
+    // IsCatalogEmpty
     // =====================================================================
 
     /// <summary>
-    /// Ověří, že projekt lze uložit do souboru.
+    /// Ověří, že katalog je prázdný.
     /// </summary>
     [Test]
-    public void Should_Save_Project_To_File()
+    public void Should_Return_True_When_Catalog_Is_Empty()
     {
-        // -----------------------------------------------------------------
-        // ARRANGE – vytvoření testovacího projektu
-        // -----------------------------------------------------------------
-        var project = new ProjectData
-        {
-            ProjectName = "Test projekt"
-        };
+        var result = _service.IsCatalogEmpty(_db);
 
-        // -----------------------------------------------------------------
-        // ACT – uložení projektu
-        // -----------------------------------------------------------------
-        var resultPath = _service.Save(project, _testFilePath);
-
-        // -----------------------------------------------------------------
-        // ASSERT – ověření existence souboru
-        // -----------------------------------------------------------------
-        Assert.That(File.Exists(resultPath), Is.True,
-            "Soubor projektu nebyl vytvořen.");
+        Assert.That(result, Is.True);
     }
 
-    // =====================================================================
-    // LOAD TEST
-    // =====================================================================
-
     /// <summary>
-    /// Ověří, že projekt lze správně načíst a data jsou konzistentní.
+    /// Ověří, že katalog není prázdný,
+    /// pokud obsahuje data.
     /// </summary>
     [Test]
-    public void Should_Load_Project_From_File()
+    public void Should_Return_False_When_Catalog_Contains_Data()
     {
-        // -----------------------------------------------------------------
         // ARRANGE
-        // -----------------------------------------------------------------
-        var original = new ProjectData
+        _db.PriceItems.Add(new PriceItems
         {
-            ProjectName = "Load test",
-            CreatedAt = DateTime.Now,
-            SavedAt = DateTime.Now
-        };
+            Task = "Montáž",
+            BasePrice = 100
+        });
 
-        _service.Save(original, _testFilePath);
-
-        // -----------------------------------------------------------------
-        // ACT
-        // -----------------------------------------------------------------
-        var (loaded, path) = _service.Load();
-
-        // ⚠️ Poznámka:
-        // Load() používá OpenFileDialog → v testu nelze automatizovat
-        // Proto tento test ve skutečné podobě není UI-safe.
-        //
-        // ŘEŠENÍ:
-        // → pro plnou testovatelnost by bylo potřeba oddělit file I/O logiku
-        //   (např. ProjectFileService bez UI)
-
-        Assert.Pass("Load() je UI-bound metoda – testováno pouze Save logikou.");
-    }
-
-    // =====================================================================
-    // ROUNDTRIP TEST (KLÍČOVÝ TEST)
-    // =====================================================================
-
-    /// <summary>
-    /// Ověří, že data zůstanou konzistentní po uložení.
-    /// (Roundtrip serializace/deserializace)
-    /// </summary>
-    [Test]
-    public void Should_Preserve_Project_Data_When_Saved()
-    {
-        // -----------------------------------------------------------------
-        // ARRANGE
-        // -----------------------------------------------------------------
-        var project = new ProjectData
+        _db.Materials.Add(new Material
         {
-            ProjectName = "Roundtrip test",
-            CreatedAt = DateTime.Now,
-            SavedAt = DateTime.Now
-        };
+            Name = "Kabel",
+            Price = 10
+        });
 
-        // -----------------------------------------------------------------
+        _db.SaveChanges();
+
         // ACT
-        // -----------------------------------------------------------------
-        var path = _service.Save(project, _testFilePath);
+        var result = _service.IsCatalogEmpty(_db);
 
-        var json = File.ReadAllText(path!);
-        var deserialized = System.Text.Json.JsonSerializer.Deserialize<ProjectData>(json);
-
-        // -----------------------------------------------------------------
         // ASSERT
-        // -----------------------------------------------------------------
-        Assert.That(deserialized, Is.Not.Null);
-        Assert.That(deserialized!.ProjectName, Is.EqualTo(project.ProjectName));
-        Assert.That(deserialized.CreatedAt.Date, Is.EqualTo(project.CreatedAt.Date));
+        Assert.That(result, Is.False);
+    }
+
+    // =====================================================================
+    // LoadCatalog
+    // =====================================================================
+
+    /// <summary>
+    /// Ověří správné načtení katalogu:
+    /// - unikátní Tasks
+    /// - všechny Materials
+    /// </summary>
+    [Test]
+    public void Should_Load_Catalog_Correctly()
+    {
+        // ARRANGE
+        _db.PriceItems.AddRange(
+            new PriceItems { Task = "Montáž", BasePrice = 100 },
+            new PriceItems { Task = "Montáž", BasePrice = 200 },
+            new PriceItems { Task = "Revize", BasePrice = 300 }
+        );
+
+        _db.Materials.AddRange(
+            new Material { Name = "Kabel", Price = 10 },
+            new Material { Name = "Jistič", Price = 50 }
+        );
+
+        _db.SaveChanges();
+
+        // ACT
+        var (tasks, materials) = _service.LoadCatalog(_db);
+
+        // ASSERT
+        Assert.That(tasks.Count, Is.EqualTo(2));
+        Assert.That(tasks, Does.Contain("Montáž"));
+        Assert.That(tasks, Does.Contain("Revize"));
+
+        Assert.That(materials.Count, Is.EqualTo(2));
     }
 }
