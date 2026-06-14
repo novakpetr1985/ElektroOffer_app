@@ -1,14 +1,20 @@
-﻿using ElektroOffer_app.Data;
-using ElektroOffer_app.Models;
-using ElektroOffer_app.Services;
-using System.Collections.Specialized;
+﻿using System;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Text;
 using System.Windows;
-using ElektroOffer_app.ViewModels.Items;
+using System.Windows.Controls;
+using System.Windows.Documents;
+using System.Windows.Media;
+
 using ElektroOffer_app.Commands;
+using ElektroOffer_app.Data;
+using ElektroOffer_app.Models;
+using ElektroOffer_app.Services;
+using ElektroOffer_app.ViewModels.Items;
 
 namespace ElektroOffer_app
 {
@@ -425,6 +431,87 @@ namespace ElektroOffer_app
                 x.Quantity == 0);
 
             return workEmpty && materialEmpty;
+        }
+
+        // =========================================================
+        // 🖨️ PRINT / EXPORT (tisk kalkulace do PDF / tiskárny)
+        // =========================================================
+        //
+        // ÚČEL:
+        // - Vytvoří textový výstup kalkulace (PRÁCE + MATERIÁL)
+        // - Převede ho do FlowDocument
+        // - Odešle na tiskárnu přes PrintDialog
+        //
+        // POZNÁMKA:
+        // - V této verzi jde o jednoduchý tisk (textový layout)
+        // - Později lze nahradit PDF generátorem (např. QuestPDF)
+        // - ExportAsText() sestavuje data z aktuální kalkulace
+        // =========================================================
+
+        private void MenuPrint_Click(object sender, RoutedEventArgs e)
+        {
+            var dialog = new System.Windows.Controls.PrintDialog();
+
+            // pokud uživatel zruší dialog, nic netiskneme
+            if (dialog.ShowDialog() != true)
+                return;
+
+            // převod kalkulace do textové podoby
+            var text = ExportAsText();
+
+            // vytvoření dokumentu pro tisk
+            var flowDoc = new FlowDocument(new Paragraph(new Run(text)))
+            {
+                FontFamily = new FontFamily("Consolas"), // monospaced font pro zarovnání
+                FontSize = 12,
+                PagePadding = new Thickness(50)
+            };
+
+            // odeslání na tiskárnu
+            dialog.PrintDocument(
+                ((IDocumentPaginatorSource)flowDoc).DocumentPaginator,
+                "ElektroOffer – Kalkulace"
+            );
+        }
+
+        /// <summary>
+        /// Vytvoří textovou reprezentaci celé kalkulace.
+        /// Používá se pro tisk (FlowDocument).
+        /// </summary>
+        private string ExportAsText()
+        {
+            var sb = new System.Text.StringBuilder();
+
+            sb.AppendLine("=================================");
+            sb.AppendLine("ELEKTRO OFFER - KALKULACE");
+            sb.AppendLine("=================================");
+            sb.AppendLine();
+
+            sb.AppendLine("PRÁCE:");
+
+            foreach (var item in WorkCalcItems)
+            {
+                sb.AppendLine($"{item.SelectedTask} | {item.Quantity} | {item.Total:N0} Kč");
+            }
+
+            sb.AppendLine();
+            sb.AppendLine("MATERIÁL:");
+
+            foreach (var item in MaterialItems)
+            {
+                if (item.MaterialItem == null)
+                    continue;
+
+                sb.AppendLine($"{item.MaterialItem.Name} | {item.Quantity} | {item.Total:N0} Kč");
+            }
+
+            sb.AppendLine();
+            sb.AppendLine("---------------------------------");
+            sb.AppendLine($"PRÁCE CELKEM: {WorkTotal:N0} Kč");
+            sb.AppendLine($"MATERIÁL CELKEM: {MaterialTotal:N0} Kč");
+            sb.AppendLine($"CELKEM: {GrandTotal:N0} Kč");
+
+            return sb.ToString();
         }
 
         // =========================================================

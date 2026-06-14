@@ -46,15 +46,11 @@
                           InputGestureText="Ctrl+Shift+S"
                           Click="MenuSaveAs_Click"/>
 
-                <!-- ADD-KOMENT: PDF export — implementovat až bude finální struktura dokumentu (sekce zákazníka) -->
-                <!-- ADD-KOMENT: Plánovaná knihovna: QuestPDF — nainstalovat přes NuGet: Install-Package QuestPDF -->
-                <!--
-                <MenuItem Header="Export _PDF (kalkulace)"
-                          Click="MenuExportPdf_Click"/>
 
-                <MenuItem Header="Export PDF (_ceník)"
-                          Click="MenuExportPricePdf_Click"/>
-                -->
+                <!-- Tisk nabídky-->
+                <MenuItem Header="_Tisk"
+                          InputGestureText="Ctrl+P"
+                          Click="MenuPrint_Click"/>
 
                 <!-- Konec — ukončí aplikaci (zeptá se na uložení) -->
                 <MenuItem Header="_Konec"
@@ -107,6 +103,12 @@
                 <Button Content="💾 Uložit jako"
                         ToolTip="Uložit jako... (Ctrl+Shift+S)"
                         Click="MenuSaveAs_Click"
+                        Margin="2"/>
+
+                <!-- Tisk -->
+                <Button Content="🖨️ Tisk"
+                        ToolTip="Tisk"
+                        Click="MenuPrint_Click"
                         Margin="2"/>
 
                 <Separator/>
