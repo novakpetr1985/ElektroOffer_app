@@ -5,6 +5,12 @@ Formát vychází z [Keep a Changelog](https://keepachangelog.com/cs/1.0.0/).
 
 ---
 
+## [1.7.0] - ExportPDF
+### Přidáno
+- Možnost exportovat nabídku do PDF
+
+---
+
 ## [1.6.0] - Integrační testování
 ### Přidáno
 - `ElektroOffer_app.Tests.Integration` – nový projekt pro integrační testy
