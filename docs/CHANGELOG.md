@@ -3,18 +3,49 @@
 Všechny důležité změny projektu jsou dokumentovány v tomto souboru.  
 Formát vychází z [Keep a Changelog](https://keepachangelog.com/cs/1.0.0/).
 
----
+# [1.7.0] - Print / Export
 
-## [1.7.0] - Print / Export
-### Přidáno
-- `ElektroOffer_app/ElektroOffer_app/Services/PrintService.cs` – možnost tisknout a exportovat nabídku (např. do PDF přes systémový tiskový dialog Windows)
-- Menu a UI připraveno pro tisk/export kalkulace
+## Přidáno
+- `ElektroOffer_app/ElektroOffer_app/Services/PrintService.cs` – základní servisní vrstva pro budoucí exporty (PDF / tisková logika)
+- `MainWindow.xaml.cs`
+  - implementace tisku pomocí `PrintDialog`
+  - metoda `MenuPrint_Click` pro spuštění tisku kalkulace
+  - metoda `ExportAsText()` pro generování textové reprezentace rozpočtu (PRÁCE + MATERIÁL + celkové součty)
+- UI rozšířeno o možnost tisku:
+  - menu položka „Tisk“
+  - toolbar tlačítko „🖨 Tisk“
+- Tiskový výstup zahrnuje:
+  - detailní rozpis práce
+  - detailní rozpis materiálu
+  - součty jednotlivých sekcí
+  - celkovou cenu nabídky
 
-### Změněno
-- `ProjectData.cs` – zpřesnění datového modelu (DTO), odstranění nevhodných odvozených hodnot (např. TotalPrice mimo model)
-- Úprava architektury směrem k oddělení dat vs. výpočtů (ViewModel / Service vrstva)
+## Změněno
+- `ProjectData.cs`
+  - zpřesnění datového modelu (DTO pro serializaci)
+  - odstranění/zamezení neexistujících odvozených property z modelu (např. `TotalPrice` mimo model)
+- `MainWindow.xaml.cs`
+  - sjednocení `using System.Windows.*` a odstranění duplicit
+  - doplnění chybějících namespace pro tisk (`FlowDocument`, `Run`, `Paragraph`, `PrintDialog`)
+- `BudgetItem`
+  - zpřesnění modelu pro rozpis kalkulace (práce/materiál)
+  - sjednocení datového toku pro export i UI
+- Architektura aplikace:
+  - jasné oddělení:
+    - výpočty (`Recalculate`)
+    - UI (MainWindow)
+    - export/tisk (ExportAsText + PrintDialog)
+  - příprava na budoucí PDF export (QuestPDF nebo Print-to-PDF pipeline)
 
----
+## Opraveno
+- odstraněny build chyby:
+  - chybějící `ExportAsText`
+  - chybějící WPF tiskové namespace
+  - duplicity `using System.Windows`
+- stabilizace kompilace solution (Unit + Integration testy + UI projekt)
+
+## Poznámka
+Tato verze zavádí první jednoduchý reporting/export vrstvu nad kalkulací bez externích knihoven. Slouží jako základ pro budoucí PDF export a pokročilé tiskové šablony (fakturační styl).
 
 ## [1.6.0] - Integrační testování
 ### Přidáno

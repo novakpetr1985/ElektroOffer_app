@@ -1,6 +1,7 @@
 === STROMOVÁ STRUKTURA PROJEKTU ===
 
 📁 D:\_GitHub\ElektroOffer_app
+   └── .gitignore
    └── ElektroOffer_app.slnx
 
 📁 docs
@@ -57,15 +58,27 @@
    └── MainWindow.xaml
    └── MainWindow.xaml.cs
 
-📁 ElektroOffer_app.Tests
-   └── ElektroOffer_app.Tests.csproj
+📁 ElektroOffer_app.Tests.Integration
+   └── ElektroOffer_app.Tests.Integration.csproj
 
-📁 ElektroOffer_app.Tests\DatabaseTests
+📁 ElektroOffer_app.Tests.Integration\Database
+   └── DatabaseConnectionTests.cs
+   └── DatabaseCrudTests.cs
+   └── DatabaseSchemaTests.cs
+
+📁 ElektroOffer_app.Tests.Integration\Services
+   └── CatalogServiceTests.cs
+   └── ProjectServiceTests.cs
+
+📁 ElektroOffer_app.Tests.Unit
+   └── ElektroOffer_app.Tests.Unit.csproj
+
+📁 ElektroOffer_app.Tests.Unit\DatabaseTests
    └── DatabaseTests.cs
 
-📁 ElektroOffer_app.Tests\LogicTests
+📁 ElektroOffer_app.Tests.Unit\LogicTests
    └── PriceCalculationTests.cs
 
-📁 ElektroOffer_app.Tests\RepositoryTests
+📁 ElektroOffer_app.Tests.Unit\RepositoryTests
    └── MaterialRepositoryTests.cs
    └── PriceItemsRepositoryTests.cs
