@@ -5,9 +5,14 @@ Formát vychází z [Keep a Changelog](https://keepachangelog.com/cs/1.0.0/).
 
 ---
 
-## [1.7.0] - ExportPDF
+## [1.7.0] - Print / Export
 ### Přidáno
-- Možnost exportovat nabídku do PDF
+- `ElektroOffer_app/ElektroOffer_app/Services/PrintService.cs` – možnost tisknout a exportovat nabídku (např. do PDF přes systémový tiskový dialog Windows)
+- Menu a UI připraveno pro tisk/export kalkulace
+
+### Změněno
+- `ProjectData.cs` – zpřesnění datového modelu (DTO), odstranění nevhodných odvozených hodnot (např. TotalPrice mimo model)
+- Úprava architektury směrem k oddělení dat vs. výpočtů (ViewModel / Service vrstva)
 
 ---
 
