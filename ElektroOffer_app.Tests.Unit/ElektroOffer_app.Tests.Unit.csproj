@@ -25,12 +25,13 @@
 		<PackageReference Include="NUnit3TestAdapter" Version="4.5.0" />
 
 		<!-- Microsoft test runner -->
-		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.14.0" />
+		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.7.0" />
 
 		<!-- Code coverage -->
 		<PackageReference Include="coverlet.collector" Version="10.0.1">
 			<PrivateAssets>all</PrivateAssets>
 		</PackageReference>
+		<PackageReference Include="SQLitePCLRaw.lib.e_sqlite3" Version="2.1.11" />
 
 		<!-- SQLite knihovna -->
 		<PackageReference Include="System.Data.SQLite.Core" Version="1.0.119" />
