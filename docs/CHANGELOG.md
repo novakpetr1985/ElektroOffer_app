@@ -5,6 +5,34 @@ Formát vychází z [Keep a Changelog](https://keepachangelog.com/cs/1.0.0/).
 
 ---
 
+## [1.7.2] - Verzování na jednom místě + oprava komentářů
+
+### Přidáno
+- `Services/ApplicationInfoService.cs` – nová service pro čtení metadat aplikace
+  - Čte verzi z `AssemblyInformationalVersionAttribute` (generováno z `.csproj` při buildu)
+  - Ořezává automaticky přidávaný `+commit_hash` suffix (např. `1.7.2+a3f2c8b` → `1.7.2`)
+  - Záložní čtení přes `AssemblyName.Version` pokud `InformationalVersion` není dostupná
+  - Vrací `"neznámá"` pokud nelze verzi určit
+
+### Změněno
+- `ElektroOffer_app.csproj` – verzování rozšířeno o všechny tři tagy:
+  - `<Version>` – čte `ApplicationInfoService`, zobrazuje se uživateli v okně „O aplikaci"
+  - `<AssemblyVersion>` – identifikace sestavení pro .NET runtime
+  - `<FileVersion>` – zobrazuje se ve Vlastnostech `.exe` v Průzkumníku Windows
+- `AboutWindow` (ViewModel) – `private string _version = "1.5.1"` nahrazeno voláním `ApplicationInfoService.Version`
+  - Verze se napříště načítá automaticky z buildu, není třeba ji měnit ručně v kódu
+
+### Opraveno
+- Poškozené české znaky ve všech třech `.csproj` souborech
+  - Příčina: soubory uložené jako Windows-1250, čtené jako UTF-8
+  - Opraveny znaky jako `bal\xed\xe8ky` → `balíčky`, `ZM\xccN\xccNO` → `ZMĚNĚNO` apod.
+  - Sjednoceno odsazení komentářů v `Tests.Unit.csproj` a `Tests.Integration.csproj`
+
+### Technická poznámka
+Od této verze stačí při vydání nové verze změnit číslo pouze na jednom místě – v `<Version>` tagu v `ElektroOffer_app.csproj`. Okno „O aplikaci" i případné další části aplikace si verzi načtou automaticky přes `ApplicationInfoService.Version`.
+
+---
+
 ## [1.7.1] - NuGet úklid a oprava závislostí
 
 ### Opraveno
@@ -58,9 +86,9 @@ Příčina: VS měl otevřené projekty a při detekci změn souborů na disku j
 
 ---
 
-# [1.7.0] - Print / Export
+## [1.7.0] - Print / Export
 
-## Přidáno
+### Přidáno
 - `ElektroOffer_app/ElektroOffer_app/Services/PrintService.cs` – základní servisní vrstva pro budoucí exporty (PDF / tisková logika)
 - `MainWindow.xaml.cs`
   - implementace tisku pomocí `PrintDialog`
@@ -75,7 +103,7 @@ Příčina: VS měl otevřené projekty a při detekci změn souborů na disku j
   - součty jednotlivých sekcí
   - celkovou cenu nabídky
 
-## Změněno
+### Změněno
 - `ProjectData.cs`
   - zpřesnění datového modelu (DTO pro serializaci)
   - odstranění/zamezení neexistujících odvozených property z modelu (např. `TotalPrice` mimo model)
@@ -92,14 +120,14 @@ Příčina: VS měl otevřené projekty a při detekci změn souborů na disku j
     - export/tisk (ExportAsText + PrintDialog)
   - příprava na budoucí PDF export (QuestPDF nebo Print-to-PDF pipeline)
 
-## Opraveno
+### Opraveno
 - odstraněny build chyby:
   - chybějící `ExportAsText`
   - chybějící WPF tiskové namespace
   - duplicity `using System.Windows`
 - stabilizace kompilace solution (Unit + Integration testy + UI projekt)
 
-## Poznámka
+### Poznámka
 Tato verze zavádí první jednoduchý reporting/export vrstvu nad kalkulací bez externích knihoven. Slouží jako základ pro budoucí PDF export a pokročilé tiskové šablony (fakturační styl).
 
 ---

@@ -1,24 +1,24 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<!-- Cílový framework -->
+		<!-- CÃ­lovÃ½ framework -->
 		<TargetFramework>net10.0-windows7.0</TargetFramework>
 
-		<!-- Moderní C# -->
+		<!-- ModernÃ­ C# -->
 		<LangVersion>latest</LangVersion>
 
-		<!-- Automatické usingy -->
+		<!-- AutomatickÃ© usingy -->
 		<ImplicitUsings>enable</ImplicitUsings>
 
 		<!-- Nullable reference types -->
 		<Nullable>enable</Nullable>
 
-		<!-- Test projekt se nebalí do NuGetu -->
+		<!-- Test projekt se nebalÃ­ do NuGetu -->
 		<IsPackable>false</IsPackable>
 	</PropertyGroup>
 
 	<ItemGroup>
-		<!-- NUnit 3.x – stabilní verze -->
+		<!-- NUnit 3.x â€“ stabilnÃ­ verze -->
 		<PackageReference Include="Microsoft.Data.Sqlite" Version="10.0.9" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.9" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.9" />
@@ -34,17 +34,18 @@
 		<PackageReference Include="coverlet.collector" Version="10.0.1">
 			<PrivateAssets>all</PrivateAssets>
 		</PackageReference>
+
+		<!-- SQLite knihovna -->
 		<PackageReference Include="SQLitePCLRaw.lib.e_sqlite3" Version="3.50.3" />
 
-		    <!-- Explicitní pin tranzitivních SQLitePCLRaw balíèkù – oprava zranitelnosti GHSA-2m69-gcr7-jv3q -->
-    <PackageReference Include="SQLitePCLRaw.bundle_e_sqlite3" Version="3.0.3" />
-    <PackageReference Include="SQLitePCLRaw.core" Version="3.0.3" />
-    <PackageReference Include="SQLitePCLRaw.provider.e_sqlite3" Version="3.0.3" />
-<!-- SQLite knihovna -->
+		<!-- ExplicitnÃ­ pin tranzitivnÃ­ch SQLitePCLRaw balÃ­ÄkÅ¯ â€“ oprava zranitelnosti GHSA-2m69-gcr7-jv3q -->
+		<PackageReference Include="SQLitePCLRaw.bundle_e_sqlite3" Version="3.0.3" />
+		<PackageReference Include="SQLitePCLRaw.core" Version="3.0.3" />
+		<PackageReference Include="SQLitePCLRaw.provider.e_sqlite3" Version="3.0.3" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<!-- Odkaz na hlavní projekt -->
+		<!-- Odkaz na hlavnÃ­ projekt -->
 		<ProjectReference Include="..\ElektroOffer_app\ElektroOffer_app.csproj" />
 	</ItemGroup>
 

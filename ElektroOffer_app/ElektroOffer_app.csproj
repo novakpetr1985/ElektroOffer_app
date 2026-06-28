@@ -6,19 +6,27 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
-    <Version>1.7.0</Version>
+
+    <!-- =====================================================================
+         VERZOVÃNÃ â€“ mÄ›Åˆ pouze zde, zbytek aplikace si verzi naÄte automaticky
+         - ApplicationInfoService.cs Äte AssemblyInformationalVersion z buildu
+         - Po zmÄ›nÄ› verze aktualizuj takÃ© docs/README.md a docs/CHANGELOG.md
+         ===================================================================== -->
+    <Version>1.7.2</Version>
+    <AssemblyVersion>1.7.2.0</AssemblyVersion>
+    <FileVersion>1.7.2.0</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>
-    <!-- ODEBRÁNO: coverlet, Microsoft.NET.Test.Sdk, NUnit, NUnit3TestAdapter -->
-    <!-- Tyto balíèky patøí POUZE do testovacího projektu, ne do WPF aplikace -->
+    <!-- ODEBRÃNO: coverlet, Microsoft.NET.Test.Sdk, NUnit, NUnit3TestAdapter -->
+    <!-- Tyto balÃ­Äky patÅ™Ã­ POUZE do testovacÃ­ho projektu, ne do WPF aplikace -->
 
-    <!-- ZMÌNÌNO: z 11.0.0-preview na 10.0.9 – preview verze patøí do .NET 11, ne .NET 10 -->
+    <!-- ZMÄšNÄšNO: z 11.0.0-preview na 10.0.9 â€“ preview verze patÅ™Ã­ do .NET 11, ne .NET 10 -->
     <PackageReference Include="Microsoft.Data.Sqlite" Version="10.0.9" />
 
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.9" />
 
-    <!-- Design a Tools jsou jen pro vývoj (migrace), PrivateAssets=all je správnì -->
+    <!-- Design a Tools jsou jen pro vÃ½voj (migrace), PrivateAssets=all je sprÃ¡vnÄ› -->
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.9">
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
@@ -29,16 +37,17 @@
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
 
-    <!-- ZMÌNÌNO: z 2.1.11 na 3.50.3 – oprava bezpeènostní zranitelnosti GHSA-2m69-gcr7-jv3q -->
+    <!-- ZMÄšNÄšNO: z 2.1.11 na 3.50.3 â€“ oprava bezpeÄnostnÃ­ zranitelnosti GHSA-2m69-gcr7-jv3q -->
     <PackageReference Include="SQLitePCLRaw.lib.e_sqlite3" Version="3.50.3" />
 
-        <!-- Explicitní pin tranzitivních SQLitePCLRaw balíèkù – oprava zranitelnosti GHSA-2m69-gcr7-jv3q -->
+    <!-- ExplicitnÃ­ pin tranzitivnÃ­ch SQLitePCLRaw balÃ­ÄkÅ¯ â€“ oprava zranitelnosti GHSA-2m69-gcr7-jv3q -->
     <PackageReference Include="SQLitePCLRaw.bundle_e_sqlite3" Version="3.0.3" />
     <PackageReference Include="SQLitePCLRaw.core" Version="3.0.3" />
     <PackageReference Include="SQLitePCLRaw.provider.e_sqlite3" Version="3.0.3" />
-<!-- ODEBRÁNO: System.Data.SQLite.Core -->
-    <!-- Tento balíèek je starý wrapper pro System.Data namespace a KONFLIKTUJE -->
-    <!-- s Microsoft.Data.Sqlite + EF Core. Používáš EF Core, tento nepotøebuješ. -->
+
+    <!-- ODEBRÃNO: System.Data.SQLite.Core -->
+    <!-- Tento balÃ­Äek je starÃ½ wrapper pro System.Data namespace a KONFLIKTUJE -->
+    <!-- s Microsoft.Data.Sqlite + EF Core. PouÅ¾Ã­vÃ¡Å¡ EF Core, tento nepotÅ™ebujeÅ¡. -->
   </ItemGroup>
 
   <ItemGroup>

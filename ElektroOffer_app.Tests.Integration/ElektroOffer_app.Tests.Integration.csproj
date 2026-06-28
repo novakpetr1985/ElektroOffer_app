@@ -11,7 +11,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<!-- Testovací framework – sjednoceno s hlavním projektem -->
+		<!-- TestovacÃ­ framework â€“ sjednoceno s hlavnÃ­m projektem -->
 		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.9" />
 		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.7.0" />
 		<PackageReference Include="NUnit" Version="3.14.0" />
@@ -21,18 +21,18 @@
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
 
-		<!-- DI / Hosting – sjednoceno s hlavním projektem -->          <!-- bylo 10.0.8 -->
+		<!-- DI / Hosting â€“ sjednoceno s hlavnÃ­m projektem -->          <!-- bylo 10.0.8 -->
 		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.9" /> <!-- bylo 10.0.8 -->
 
 		<!-- SQLite -->
 		<PackageReference Include="Microsoft.Data.Sqlite" Version="10.0.9" />
-		<!-- Override zranitelné verze 2.1.11 – fix bezpeènostní chyby GHSA-2m69-gcr7-jv3q -->
+		<!-- Override zranitelnÃ© verze 2.1.11 â€“ fix bezpeÄnostnÃ­ chyby GHSA-2m69-gcr7-jv3q -->
 		<PackageReference Include="SQLitePCLRaw.lib.e_sqlite3" Version="3.50.3" />
-	    <!-- Explicitní pin tranzitivních SQLitePCLRaw balíèkù – oprava zranitelnosti GHSA-2m69-gcr7-jv3q -->
-    <PackageReference Include="SQLitePCLRaw.bundle_e_sqlite3" Version="3.0.3" />
-    <PackageReference Include="SQLitePCLRaw.core" Version="3.0.3" />
-    <PackageReference Include="SQLitePCLRaw.provider.e_sqlite3" Version="3.0.3" />
-</ItemGroup>
+		<!-- ExplicitnÃ­ pin tranzitivnÃ­ch SQLitePCLRaw balÃ­ÄkÅ¯ â€“ oprava zranitelnosti GHSA-2m69-gcr7-jv3q -->
+		<PackageReference Include="SQLitePCLRaw.bundle_e_sqlite3" Version="3.0.3" />
+		<PackageReference Include="SQLitePCLRaw.core" Version="3.0.3" />
+		<PackageReference Include="SQLitePCLRaw.provider.e_sqlite3" Version="3.0.3" />
+	</ItemGroup>
 
 	<ItemGroup>
 		<ProjectReference Include="..\ElektroOffer_app\ElektroOffer_app.csproj" />

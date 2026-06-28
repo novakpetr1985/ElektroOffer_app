@@ -202,18 +202,6 @@ Testují spolupráci:
 
 ---
 
-## 📌 Verze
-
-Aktuální verze: **1.7.1 (NuGet úklid a oprava závislostí)**
-
-- opravena bezpečnostní zranitelnost `SQLitePCLRaw 2.1.11`
-- odstraněny nepoužívané a konfliktní NuGet balíčky
-- sjednoceny verze balíčků napříč všemi projekty
-- opravena nekompatibilita `Microsoft.Data.Sqlite 11.0.0-preview` s .NET 10
-- přepsán `DatabaseTests.cs` na `Microsoft.Data.Sqlite` API
-
----
-
 ## 🏗️ Architektonická rozhodnutí (ADR)
 
 ### SQLite
