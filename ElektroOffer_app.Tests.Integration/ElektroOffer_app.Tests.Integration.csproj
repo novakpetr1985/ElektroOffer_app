@@ -22,7 +22,7 @@
 		<!-- Pro integrační testy (DB, DI, hostování) - sjednoceno na 10.0.8 -->
 		<PackageReference Include="Microsoft.Extensions.Hosting" Version="10.0.8" />
 		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.8" />
-		<PackageReference Include="Microsoft.Data.Sqlite" Version="10.0.8" />
+		<PackageReference Include="Microsoft.Data.Sqlite" Version="11.0.0-preview.5.26302.115" />
 		<PackageReference Include="SQLitePCLRaw.lib.e_sqlite3" Version="2.1.11" />
 	</ItemGroup>
 

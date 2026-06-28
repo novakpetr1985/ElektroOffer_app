@@ -19,10 +19,14 @@
 
 	<ItemGroup>
 		<!-- NUnit 3.x – stabilní verze -->
+		<PackageReference Include="Microsoft.Data.Sqlite" Version="11.0.0-preview.5.26302.115" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.9" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.9" />
+		<PackageReference Include="Microsoft.Extensions.Hosting" Version="10.0.9" />
 		<PackageReference Include="NUnit" Version="3.14.0" />
 
 		<!-- Adapter pro Visual Studio Test Explorer -->
-		<PackageReference Include="NUnit3TestAdapter" Version="4.5.0" />
+		<PackageReference Include="NUnit3TestAdapter" Version="6.2.0" />
 
 		<!-- Microsoft test runner -->
 		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.7.0" />
