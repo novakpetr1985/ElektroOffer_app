@@ -1,14 +1,21 @@
 using NUnit.Framework;
 using System;
 using System.IO;
-using System.Data.SQLite;
 using System.Collections.Generic;
+using Microsoft.Data.Sqlite;  // ← ZMĚNĚNO: z System.Data.SQLite
 
 namespace ElektroOffer_app.Tests.Unit.DatabaseTests
 {
     /// <summary>
     /// Integration testy SQLite databáze.
     /// Každý test dostane vlastní izolovanou DB v temp složce.
+    /// 
+    /// POZOR: Používáme Microsoft.Data.Sqlite (nový balíček kompatibilní s EF Core),
+    /// nikoliv System.Data.SQLite (starý balíček – odebrán z projektu).
+    /// Rozdíly oproti System.Data.SQLite:
+    ///   - žádné SQLiteConnection.CreateFile() → soubor vznikne automaticky při Open()
+    ///   - žádné ClearAllPools() → Microsoft.Data.Sqlite nepotřebuje ruční uvolnění poolů
+    ///   - connection string: "Data Source=cesta.db" (bez "Version=3;")
     /// </summary>
     [TestFixture]
     public class DatabaseTests
@@ -29,7 +36,7 @@ namespace ElektroOffer_app.Tests.Unit.DatabaseTests
         [SetUp]
         public void Setup()
         {
-            // vytvoří unikátní DB pro každý test
+            // Vytvoří unikátní DB pro každý test
             _dbPath = Path.Combine(
                 Path.GetTempPath(),
                 $"elektrooffer_test_{Guid.NewGuid()}.db"
@@ -44,32 +51,23 @@ namespace ElektroOffer_app.Tests.Unit.DatabaseTests
 
         /// <summary>
         /// Po testu smaže testovací databázi.
-        /// SQLite někdy drží file-lock i po Dispose(),
-        /// proto je nutné explicitně uvolnit connection pool
-        /// a donutit GC dokončit finalizaci.
+        /// Microsoft.Data.Sqlite uvolňuje file-lock při Dispose() automaticky,
+        /// ale GC.Collect() přidáváme jako pojistku pro případ že někde
+        /// zůstal neuvolněný SqliteConnection objekt.
         /// </summary>
         [TearDown]
         public void TearDown()
         {
             // ============================================
-            // 1) Uvolnění všech SQLite connection poolů
-            //    - SQLite si drží file-lock i po Dispose()
-            //    - ClearAllPools() okamžitě uvolní všechny handly
-            // ============================================
-            SQLiteConnection.ClearAllPools();
-
-            // ============================================
-            // 2) Donutit Garbage Collector dokončit finalizaci
-            //    - některé SQLite objekty uvolňují lock až ve finalizéru
-            //    - GC.Collect + WaitForPendingFinalizers zajistí,
-            //      že file-lock bude opravdu uvolněn
+            // 1) Donutit GC dokončit finalizaci
+            //    - pojistka pro případ neuvolněného connection objektu
+            //    - Microsoft.Data.Sqlite nepotřebuje ClearAllPools()
             // ============================================
             GC.Collect();
             GC.WaitForPendingFinalizers();
 
             // ============================================
-            // 3) Smazání testovací databáze
-            //    - nyní je soubor 100% volný
+            // 2) Smazání testovací databáze
             // ============================================
             if (File.Exists(_dbPath))
                 File.Delete(_dbPath);
@@ -82,18 +80,20 @@ namespace ElektroOffer_app.Tests.Unit.DatabaseTests
         /// <summary>
         /// Vytvoří strukturu databáze pro testy.
         /// Jednoduchý seed bez business logiky aplikace.
+        /// 
+        /// Microsoft.Data.Sqlite vytvoří soubor automaticky při Open(),
+        /// pokud ještě neexistuje – není potřeba CreateFile().
         /// </summary>
         private void CreateTestDatabase(string path)
         {
-            // vytvoření prázdné DB
-            SQLiteConnection.CreateFile(path);
-
-            using var conn = new SQLiteConnection($"Data Source={path};Version=3;");
+            // ← ZMĚNĚNO: žádné CreateFile() – soubor vznikne při conn.Open()
+            // Connection string bez "Version=3;" – Microsoft.Data.Sqlite ho nepodporuje
+            using var conn = new SqliteConnection($"Data Source={path}");
             conn.Open();
 
             using var cmd = conn.CreateCommand();
 
-            // vytvoření tabulek
+            // Vytvoření tabulek
             cmd.CommandText = @"
                 CREATE TABLE Tasks (Id INTEGER PRIMARY KEY, Name TEXT);
                 CREATE TABLE Materials (Id INTEGER PRIMARY KEY);
@@ -105,7 +105,7 @@ namespace ElektroOffer_app.Tests.Unit.DatabaseTests
             ";
             cmd.ExecuteNonQuery();
 
-            // minimální test data
+            // Minimální testovací data
             cmd.CommandText = "INSERT INTO Tasks (Name) VALUES ('Test Task');";
             cmd.ExecuteNonQuery();
 
@@ -137,7 +137,8 @@ namespace ElektroOffer_app.Tests.Unit.DatabaseTests
         [Test]
         public void DB_Should_Be_Connectable()
         {
-            using var conn = new SQLiteConnection($"Data Source={_dbPath};Version=3;");
+            // ← ZMĚNĚNO: SqliteConnection (Microsoft) místo SQLiteConnection (System.Data)
+            using var conn = new SqliteConnection($"Data Source={_dbPath}");
             conn.Open();
 
             Assert.That(conn.State,
@@ -154,7 +155,7 @@ namespace ElektroOffer_app.Tests.Unit.DatabaseTests
         [Test]
         public void DB_Should_Contain_Core_Tables()
         {
-            using var conn = new SQLiteConnection($"Data Source={_dbPath};Version=3;");
+            using var conn = new SqliteConnection($"Data Source={_dbPath}");
             conn.Open();
 
             var cmd = conn.CreateCommand();
@@ -192,7 +193,7 @@ namespace ElektroOffer_app.Tests.Unit.DatabaseTests
         [Test]
         public void Tasks_Should_Not_Be_Empty()
         {
-            using var conn = new SQLiteConnection($"Data Source={_dbPath};Version=3;");
+            using var conn = new SqliteConnection($"Data Source={_dbPath}");
             conn.Open();
 
             var cmd = conn.CreateCommand();
@@ -209,7 +210,7 @@ namespace ElektroOffer_app.Tests.Unit.DatabaseTests
         [Test]
         public void PriceCatalog_Should_Not_Be_Empty()
         {
-            using var conn = new SQLiteConnection($"Data Source={_dbPath};Version=3;");
+            using var conn = new SqliteConnection($"Data Source={_dbPath}");
             conn.Open();
 
             var cmd = conn.CreateCommand();

@@ -3,6 +3,61 @@
 Všechny důležité změny projektu jsou dokumentovány v tomto souboru.  
 Formát vychází z [Keep a Changelog](https://keepachangelog.com/cs/1.0.0/).
 
+---
+
+## [1.7.1] - NuGet úklid a oprava závislostí
+
+### Opraveno
+
+- **`Microsoft.Data.Sqlite`** downgradeován z `11.0.0-preview.5.26302.115` na `10.0.9`
+  - Preview verze `11.x` patří do .NET 11 ekosystému a není kompatibilní s projektem cílícím na `net10.0`
+  - Způsobovala chybu: *„Balíček není kompatibilní s net10.0-windows7.0"*
+  - Opraveno ve všech třech projektech (App, Tests.Unit, Tests.Integration)
+
+- **`SQLitePCLRaw.lib.e_sqlite3`** aktualizován z `2.1.11` na `3.50.3`
+  - Verze `2.1.11` obsahuje známou **vysokou bezpečnostní zranitelnost** [GHSA-2m69-gcr7-jv3q](https://github.com/advisories/GHSA-2m69-gcr7-jv3q)
+  - Verze `2.1.12` (nejbližší patch) není na NuGet publikována – resolved na `3.50.3`
+
+- **Tranzitivní SQLitePCLRaw balíčky** explicitně pinovány na `3.0.3`
+  - `SQLitePCLRaw.bundle_e_sqlite3`, `SQLitePCLRaw.core`, `SQLitePCLRaw.provider.e_sqlite3`
+  - Tyto balíčky přicházely jako tranzitivní závislosti přes EF Core a držely zranitelnou verzi `2.1.11`
+  - Explicitní pin v `.csproj` přebíjí tranzitivní požadavek
+
+- **`NUnit`** v projektu `Tests.Integration` sjednocen z `4.6.1` na `3.14.0`
+  - Nekonzistentní verze způsobovala potenciální konflikty při sdílení testovací infrastruktury
+
+- **`NUnit3TestAdapter`** v projektu `Tests.Integration` sjednocen z `4.5.0` na `6.2.0`
+  - Stejný důvod jako u NUnit – sjednocení s ostatními projekty
+
+- **`Microsoft.Extensions.Hosting`** odebrán ze všech projektů
+  - Balíček nebyl v žádném `.cs` souboru fakticky použit (žádné `IHost`, `HostBuilder`, `IHostedService`)
+  - Zbytečná závislost táhla celý strom `Microsoft.Extensions.*` balíčků
+
+- **`System.Data.SQLite.Core`** odebrán ze všech projektů
+  - Starý SQLite wrapper pro `System.Data` namespace – **konfliktuje** s `Microsoft.Data.Sqlite` + EF Core
+  - Projekt používá výhradně `Microsoft.Data.Sqlite` přes EF Core, tento balíček byl nadbytečný
+
+- **Testovací balíčky** odebrány z hlavního WPF projektu (`ElektroOffer_app.csproj`)
+  - `coverlet.collector`, `Microsoft.NET.Test.Sdk`, `NUnit`, `NUnit3TestAdapter`
+  - Tyto balíčky patří výhradně do testovacích projektů, ne do produkční WPF aplikace
+
+- **`DatabaseTests.cs`** přepsán z `System.Data.SQLite` API na `Microsoft.Data.Sqlite` API
+  - Původní kód používal `SQLiteConnection` (starý namespace), `SQLiteConnection.CreateFile()` a `ClearAllPools()`
+  - `Microsoft.Data.Sqlite` tyto metody nemá – soubor se vůbec nekompiloval
+  - Nový kód: `SqliteConnection`, bez `CreateFile()` (soubor vznikne při `Open()`), bez `ClearAllPools()` (uvolnění je automatické)
+  - Connection string změněn z `"Data Source=x;Version=3;"` na `"Data Source=x"` (Microsoft verze `Version=3` nepodporuje)
+
+- **`EF Core Design` a `Tools`** verze sjednoceny z `10.0.8` na `10.0.9`
+  - Drobná nekonzistence která mohla způsobovat downgrade warningy
+
+### Technická poznámka
+
+Během oprav docházelo k opakovanému přepisování `.csproj` souborů Visual Studiem zpět na staré verze.
+Příčina: VS měl otevřené projekty a při detekci změn souborů na disku je přepisoval hodnotami ze své vnitřní cache (NuGet Package Manager v pozadí).
+Řešení: Změny prováděny přes PowerShell při **zavřeném** Visual Studiu, následované `dotnet nuget locals all --clear` pro vyčištění NuGet cache.
+
+---
+
 # [1.7.0] - Print / Export
 
 ## Přidáno
@@ -12,8 +67,8 @@ Formát vychází z [Keep a Changelog](https://keepachangelog.com/cs/1.0.0/).
   - metoda `MenuPrint_Click` pro spuštění tisku kalkulace
   - metoda `ExportAsText()` pro generování textové reprezentace rozpočtu (PRÁCE + MATERIÁL + celkové součty)
 - UI rozšířeno o možnost tisku:
-  - menu položka „Tisk“
-  - toolbar tlačítko „🖨 Tisk“
+  - menu položka „Tisk"
+  - toolbar tlačítko „🖨 Tisk"
 - Tiskový výstup zahrnuje:
   - detailní rozpis práce
   - detailní rozpis materiálu
@@ -47,6 +102,8 @@ Formát vychází z [Keep a Changelog](https://keepachangelog.com/cs/1.0.0/).
 ## Poznámka
 Tato verze zavádí první jednoduchý reporting/export vrstvu nad kalkulací bez externích knihoven. Slouží jako základ pro budoucí PDF export a pokročilé tiskové šablony (fakturační styl).
 
+---
+
 ## [1.6.0] - Integrační testování
 ### Přidáno
 - `ElektroOffer_app.Tests.Integration` – nový projekt pro integrační testy
@@ -63,19 +120,20 @@ Tato verze zavádí první jednoduchý reporting/export vrstvu nad kalkulací be
 - Stabilizace SQLite InMemory testovací databáze (přechod na shared memory mode)
 - Úprava testovací architektury pro podporu EF Core integračních testů
 
-## [1.5.2] - GIT - ingorování dočasných souborů
+---
+
+## [1.5.2] - GIT - ignorování dočasných souborů
 ### Přidáno
 - `.gitignore` do složky projektu
 
 ### Změněno
-- ignorace souborů -> bin/, obj/, .vs/, TestResults/, *.user, *.suo, *.cache, *.log, *.db-shm, *.db-wal
-  - vždy se generují automaticky,
-  - nikdy se necommitují,
-  - nikdy nejsou potřeba pro build,
-  - nikdy nejsou potřeba pro běh aplikace,
-  - nikdy nejsou potřeba pro testy,
-  - a jejich ignorování je 100% bezpečné.
+- ignorace souborů → bin/, obj/, .vs/, TestResults/, *.user, *.suo, *.cache, *.log, *.db-shm, *.db-wal
+  - vždy se generují automaticky
+  - nikdy se necommitují
+  - nikdy nejsou potřeba pro build, běh aplikace ani testy
+  - jejich ignorování je 100% bezpečné
 
+---
 
 ## [1.5.1] - Refaktoring pro testovatelnost
 ### Přidáno

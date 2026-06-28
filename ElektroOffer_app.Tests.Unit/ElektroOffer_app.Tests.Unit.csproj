@@ -1,28 +1,27 @@
-ï»¿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<!-- CÃ­lovÃ½ framework -->
+		<!-- Cílový framework -->
 		<TargetFramework>net10.0-windows7.0</TargetFramework>
 
-		<!-- ModernÃ­ C# -->
+		<!-- Moderní C# -->
 		<LangVersion>latest</LangVersion>
 
-		<!-- AutomatickÃ© usingy -->
+		<!-- Automatické usingy -->
 		<ImplicitUsings>enable</ImplicitUsings>
 
 		<!-- Nullable reference types -->
 		<Nullable>enable</Nullable>
 
-		<!-- Test projekt se nebalÃ­ do NuGetu -->
+		<!-- Test projekt se nebalí do NuGetu -->
 		<IsPackable>false</IsPackable>
 	</PropertyGroup>
 
 	<ItemGroup>
-		<!-- NUnit 3.x â€“ stabilnÃ­ verze -->
-		<PackageReference Include="Microsoft.Data.Sqlite" Version="11.0.0-preview.5.26302.115" />
+		<!-- NUnit 3.x – stabilní verze -->
+		<PackageReference Include="Microsoft.Data.Sqlite" Version="10.0.9" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.9" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.9" />
-		<PackageReference Include="Microsoft.Extensions.Hosting" Version="10.0.9" />
 		<PackageReference Include="NUnit" Version="3.14.0" />
 
 		<!-- Adapter pro Visual Studio Test Explorer -->
@@ -35,14 +34,17 @@
 		<PackageReference Include="coverlet.collector" Version="10.0.1">
 			<PrivateAssets>all</PrivateAssets>
 		</PackageReference>
-		<PackageReference Include="SQLitePCLRaw.lib.e_sqlite3" Version="2.1.11" />
+		<PackageReference Include="SQLitePCLRaw.lib.e_sqlite3" Version="3.50.3" />
 
-		<!-- SQLite knihovna -->
-		<PackageReference Include="System.Data.SQLite.Core" Version="1.0.119" />
+		    <!-- Explicitní pin tranzitivních SQLitePCLRaw balíèkù – oprava zranitelnosti GHSA-2m69-gcr7-jv3q -->
+    <PackageReference Include="SQLitePCLRaw.bundle_e_sqlite3" Version="3.0.3" />
+    <PackageReference Include="SQLitePCLRaw.core" Version="3.0.3" />
+    <PackageReference Include="SQLitePCLRaw.provider.e_sqlite3" Version="3.0.3" />
+<!-- SQLite knihovna -->
 	</ItemGroup>
 
 	<ItemGroup>
-		<!-- Odkaz na hlavnÃ­ projekt -->
+		<!-- Odkaz na hlavní projekt -->
 		<ProjectReference Include="..\ElektroOffer_app\ElektroOffer_app.csproj" />
 	</ItemGroup>
 

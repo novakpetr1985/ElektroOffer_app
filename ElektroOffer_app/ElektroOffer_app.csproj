@@ -1,4 +1,4 @@
-ï»¿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
@@ -10,25 +10,35 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="coverlet.collector" Version="10.0.1">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="Microsoft.Data.Sqlite" Version="11.0.0-preview.5.26302.115" />
+    <!-- ODEBRÁNO: coverlet, Microsoft.NET.Test.Sdk, NUnit, NUnit3TestAdapter -->
+    <!-- Tyto balíèky patøí POUZE do testovacího projektu, ne do WPF aplikace -->
+
+    <!-- ZMÌNÌNO: z 11.0.0-preview na 10.0.9 – preview verze patøí do .NET 11, ne .NET 10 -->
+    <PackageReference Include="Microsoft.Data.Sqlite" Version="10.0.9" />
+
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.9" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.8">
+
+    <!-- Design a Tools jsou jen pro vývoj (migrace), PrivateAssets=all je správnì -->
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.9">
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
+
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.9" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="10.0.8">
+
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="10.0.9">
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.Extensions.Hosting" Version="10.0.9" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.7.0" />
-    <PackageReference Include="NUnit" Version="3.14.0" />
-    <PackageReference Include="NUnit3TestAdapter" Version="6.2.0" />
-    <PackageReference Include="SQLitePCLRaw.lib.e_sqlite3" Version="2.1.11" />
-    <PackageReference Include="System.Data.SQLite.Core" Version="1.0.119" />
+
+    <!-- ZMÌNÌNO: z 2.1.11 na 3.50.3 – oprava bezpeènostní zranitelnosti GHSA-2m69-gcr7-jv3q -->
+    <PackageReference Include="SQLitePCLRaw.lib.e_sqlite3" Version="3.50.3" />
+
+        <!-- Explicitní pin tranzitivních SQLitePCLRaw balíèkù – oprava zranitelnosti GHSA-2m69-gcr7-jv3q -->
+    <PackageReference Include="SQLitePCLRaw.bundle_e_sqlite3" Version="3.0.3" />
+    <PackageReference Include="SQLitePCLRaw.core" Version="3.0.3" />
+    <PackageReference Include="SQLitePCLRaw.provider.e_sqlite3" Version="3.0.3" />
+<!-- ODEBRÁNO: System.Data.SQLite.Core -->
+    <!-- Tento balíèek je starý wrapper pro System.Data namespace a KONFLIKTUJE -->
+    <!-- s Microsoft.Data.Sqlite + EF Core. Používáš EF Core, tento nepotøebuješ. -->
   </ItemGroup>
 
   <ItemGroup>
