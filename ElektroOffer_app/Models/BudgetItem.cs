@@ -123,6 +123,23 @@ namespace ElektroOffer_app.Models
         }
 
         // =========================================================
+        // 🏷️ SLEVA (nově doplněno pro zobrazení v rozpisu)
+        // =========================================================
+
+        /// <summary>
+        /// Procentuální sleva na tomto řádku (null = žádná sleva).
+        /// Zobrazuje se v sloupci "Sleva %" v detailním rozpočtu.
+        /// </summary>
+        public double? DiscountPercent { get; set; }
+
+        /// <summary>
+        /// Výše slevy v Kč = cena bez slevy MINUS cena se slevou.
+        /// Zobrazuje se v sloupci "Sleva Kč" v detailním rozpočtu.
+        /// Null = žádná sleva na tomto řádku.
+        /// </summary>
+        public double? DiscountAmount { get; set; }
+
+        // =========================================================
         // 🔔 WPF NOTIFIKACE ZMĚN
         // =========================================================
 

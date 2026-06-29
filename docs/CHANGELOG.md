@@ -5,6 +5,90 @@ Formát vychází z [Keep a Changelog](https://keepachangelog.com/cs/1.0.0/).
 
 ---
 
+## [1.7.3] - Sleva na řádek kalkulace
+
+### Přidáno
+- `ViewModels/Items/CalculationItemViewModel.cs` – podpora slevy na jednotlivý řádek kalkulace
+  - Nová privátní pole `_isDiscountEnabled` (bool) a `_discountPercent` (double?)
+  - Property `IsDiscountEnabled` – přepíná aktivaci slevy; při deaktivaci automaticky
+    vynuluje `DiscountPercent` a vyvolá přepočet `Total`
+  - Property `DiscountPercent` – procentuální hodnota slevy (null = sleva nezadána)
+  - Obě properties volají `OnPropertyChanged(nameof(Total))` → UI se automaticky přepočítá
+- `Models/BudgetItem.cs` – dvě nová pole pro zobrazení slevy v detailním rozpisu
+  - `DiscountPercent` (double?) – procentuální výše slevy na řádku (null = bez slevy)
+  - `DiscountAmount` (double?) – výše slevy v Kč = cena bez slevy minus cena se slevou (null = bez slevy)
+- `Models/WorkItemData.cs` – dvě nová pole pro perzistenci slevy při ukládání projektu
+  - `IsDiscountEnabled` (bool) – výchozí false → staré .eof soubory se načtou správně
+  - `DiscountPercent` (double?) – výše slevy v procentech (null = nezadána)
+- `Models/MaterialItemData.cs` – dvě nová pole pro perzistenci slevy při ukládání projektu
+  - `IsDiscountEnabled` (bool) – výchozí false → staré .eof soubory se načtou správně
+  - `DiscountPercent` (double?) – výše slevy v procentech (null = nezadána)
+- `MainWindow.xaml.cs` – pět nových properties pro agregaci slev
+  - `WorkDiscountTotal` – celková sleva na práci v Kč
+  - `MaterialDiscountTotal` – celková sleva na materiál v Kč
+  - `TotalDiscount` – celková sleva v Kč (práce + materiál)
+  - `GrandTotalBeforeDiscount` – celková cena nabídky před odečtením slev
+  - `HasAnyDiscount` – příznak pro XAML Visibility; true pokud existuje alespoň jedna nenulová sleva
+
+TESTY NEDOPLŇĚNY ZATÍM, DOŠLO KE SMAZÁNÍ TESTŮ
+    - `Tests/Unit/LogicTests/PriceCalculationTests.cs`
+      - přidán soubor s testy základní cenové logiky
+      - ověřuje výpočet ceny z `BasePrice × MaterialCoef × PositionCoef`
+      - pokrývá:
+        - základní výpočet
+        - koeficienty = 1 (neutralita)
+        - koeficienty < 1 (snížení ceny)
+        - koeficienty > 1 (navýšení ceny)
+        - nulové hodnoty
+        - záporné hodnoty
+        - zaokrouhlení výsledku
+    - `Tests/Unit/LogicTests/DiscountCalculationTests.cs`
+      - přidán soubor pro testování slevové logiky
+      - ověřuje výpočet slevy `basePrice × (1 - percent / 100)`
+      - pokrývá:
+        - 10 % sleva (běžný scénář)
+        - 0 % sleva (bez změny ceny)
+        - 100 % sleva (nulová cena)
+        - edge case nad 100 % (záporný výsledek)
+        - robustnost výpočtu slevy bez UI vrstvy
+
+### Změněno
+- `ViewModels/Items/CalculationItemViewModel.cs` – přepočet `Total` rozšířen o aplikaci slevy
+  - Původní přímý `return` nahrazen mezivýsledkem `baseTotal`
+  - Sleva se aplikuje pouze pokud `IsDiscountEnabled == true` a `DiscountPercent` má hodnotu
+  - Vzorec: `baseTotal * (1 - DiscountPercent.Value / 100.0)`
+  - Bez aktivní slevy je chování identické s předchozí verzí
+- `MainWindow.xaml.cs` – metoda `Recalculate()` rozšířena o výpočet slev
+  - Přibyla lokální pomocná funkce `BaseTotal()` – počítá cenu řádku bez slevy
+  - Výpočet `WorkDiscountTotal`, `MaterialDiscountTotal`, `TotalDiscount`,
+    `GrandTotalBeforeDiscount` a `HasAnyDiscount` probíhá při každé rekalkulaci
+  - `BudgetItem` se nově plní hodnotami `DiscountPercent` a `DiscountAmount`
+    (null pokud řádek nemá aktivní slevu → XAML zobrazí prázdnou buňku)
+- `MainWindow.xaml.cs` – metody `BuildProjectData()` a `ApplyProjectData()` rozšířeny
+  - `BuildProjectData()` ukládá `IsDiscountEnabled` a `DiscountPercent` do `WorkItemData`
+    a `MaterialItemData`
+  - `ApplyProjectData()` obnovuje `IsDiscountEnabled` a `DiscountPercent` na každém
+    řádku ViewModelu při načtení projektu
+- `MainWindow.xaml.cs` – metoda `ExportAsText()` rozšířena o podporu slev
+  - Řádky se slevou zobrazí tři dílčí řádky: cena bez slevy, výše slevy, cena se slevou
+  - Řádky bez slevy zůstávají v původním jednořádkovém formátu
+  - Sekce slev v součtu (cena před slevou + celková sleva) se tiskne pouze pokud
+    `HasAnyDiscount` je true — stejná podmínka jako v UI
+- `MainWindow.xaml` – detailní rozpočet rozšířen o dva nové sloupce za sloupcem Cena
+  - `Sleva %` – procentuální výše slevy na řádku; prázdná buňka pokud sleva není zadána
+  - `Sleva Kč` – výše slevy v Kč zvýrazněná červeně; prázdná buňka pokud sleva není zadána
+- `MainWindow.xaml` – sekce celkové ceny rozšířena o tři řádky
+  - `Cena před slevou` – zobrazí se pouze pokud `HasAnyDiscount == true`
+  - `Celková sleva` – zobrazí se pouze pokud `HasAnyDiscount == true`
+  - `Celková cena nabídky` – vždy viditelná; zobrazuje cenu po odečtení všech slev
+
+### Poznámka k návrhu
+Sleva je záměrně vedena na úrovni jednotlivého řádku (ne celého úseku). Důvod: různé
+položky mohou mít různou výši slevy nebo být bez slevy zcela. Případná hromadná sleva
+na celý úsek je připravena jako budoucí rozšíření (UI akce, bez zásahu do datového modelu).
+
+---
+
 ## [1.7.2] - Verzování na jednom místě + oprava komentářů
 
 ### Přidáno

@@ -85,6 +85,90 @@ namespace ElektroOffer_app
         }
 
         // =========================================================
+        // 🏷️ SLEVY — celková výše slev (práce + materiál zvlášť)
+        // =========================================================
+
+        private double _workDiscountTotal;
+        /// <summary>
+        /// Celková sleva na práci v Kč (součet všech řádkových slev).
+        /// = cena bez slevy MINUS cena se slevou.
+        /// </summary>
+        public double WorkDiscountTotal
+        {
+            get => _workDiscountTotal;
+            set
+            {
+                if (Math.Abs(_workDiscountTotal - value) < 0.0001) return;
+                _workDiscountTotal = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private double _materialDiscountTotal;
+        /// <summary>
+        /// Celková sleva na materiál v Kč (součet všech řádkových slev).
+        /// </summary>
+        public double MaterialDiscountTotal
+        {
+            get => _materialDiscountTotal;
+            set
+            {
+                if (Math.Abs(_materialDiscountTotal - value) < 0.0001) return;
+                _materialDiscountTotal = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private double _totalDiscount;
+        /// <summary>
+        /// Celková sleva v Kč — práce + materiál dohromady.
+        /// Zobrazuje se v celkovém součtu jako "Sleva celkem".
+        /// </summary>
+        public double TotalDiscount
+        {
+            get => _totalDiscount;
+            set
+            {
+                if (Math.Abs(_totalDiscount - value) < 0.0001) return;
+                _totalDiscount = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private bool _hasAnyDiscount;
+        /// <summary>
+        /// True pokud existuje alespoň jeden řádek se slevou.
+        /// Používá se v XAML pro Visibility — sekce slevy se zobrazí jen když je relevantní.
+        /// </summary>
+        public bool HasAnyDiscount
+        {
+            get => _hasAnyDiscount;
+            set
+            {
+                if (_hasAnyDiscount == value) return;
+                _hasAnyDiscount = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private double _grandTotalBeforeDiscount;
+        /// <summary>
+        /// Celková cena nabídky BEZ slevy = GrandTotal + TotalDiscount.
+        /// Zobrazuje se v sekci celkového součtu nad řádkem slevy.
+        /// Skrytá (přes HasAnyDiscount) pokud žádná sleva neexistuje.
+        /// </summary>
+        public double GrandTotalBeforeDiscount
+        {
+            get => _grandTotalBeforeDiscount;
+            set
+            {
+                if (Math.Abs(_grandTotalBeforeDiscount - value) < 0.0001) return;
+                _grandTotalBeforeDiscount = value;
+                OnPropertyChanged();
+            }
+        }
+
+        // =========================================================
         // 💾 STAV ULOŽENÍ — správa souboru a neuložených změn
         // =========================================================
 
@@ -477,6 +561,7 @@ namespace ElektroOffer_app
         /// <summary>
         /// Vytvoří textovou reprezentaci celé kalkulace.
         /// Používá se pro tisk (FlowDocument).
+        /// Obsahuje sekci slev pokud jsou zadány — stejná logika jako UI.
         /// </summary>
         private string ExportAsText()
         {
@@ -487,29 +572,77 @@ namespace ElektroOffer_app
             sb.AppendLine("=================================");
             sb.AppendLine();
 
+            // ── PRÁCE ─────────────────────────────────────────────────────
             sb.AppendLine("PRÁCE:");
 
             foreach (var item in WorkCalcItems)
             {
-                sb.AppendLine($"{item.SelectedTask} | {item.Quantity} | {item.Total:N0} Kč");
+                if (item.WorkItem == null) continue;
+
+                // Pokud má řádek slevu → zobrazíme původní cenu, slevu i výsledek
+                if (item.IsDiscountEnabled && item.DiscountPercent.HasValue)
+                {
+                    double basePrice = item.WorkItem.BasePrice
+                                     * item.WorkItem.MaterialCoef
+                                     * item.WorkItem.PositionCoef
+                                     * item.Quantity;
+                    double discount = basePrice - item.Total;
+
+                    sb.AppendLine($"  {item.SelectedTask} | {item.Quantity}");
+                    sb.AppendLine($"    Cena bez slevy:  {basePrice:N0} Kč");
+                    sb.AppendLine($"    Sleva:           -{discount:N0} Kč ({item.DiscountPercent:N0} %)");
+                    sb.AppendLine($"    Cena se slevou:  {item.Total:N0} Kč");
+                }
+                else
+                {
+                    sb.AppendLine($"  {item.SelectedTask} | {item.Quantity} | {item.Total:N0} Kč");
+                }
             }
 
             sb.AppendLine();
+
+            // ── MATERIÁL ──────────────────────────────────────────────────
             sb.AppendLine("MATERIÁL:");
 
             foreach (var item in MaterialItems)
             {
-                if (item.MaterialItem == null)
-                    continue;
+                if (item.MaterialItem == null) continue;
 
-                sb.AppendLine($"{item.MaterialItem.Name} | {item.Quantity} | {item.Total:N0} Kč");
+                // Pokud má řádek slevu → zobrazíme původní cenu, slevu i výsledek
+                if (item.IsDiscountEnabled && item.DiscountPercent.HasValue)
+                {
+                    double basePrice = item.MaterialItem.Price * item.Quantity;
+                    double discount = basePrice - item.Total;
+
+                    sb.AppendLine($"  {item.MaterialItem.Name} | {item.Quantity}");
+                    sb.AppendLine($"    Cena bez slevy:  {basePrice:N0} Kč");
+                    sb.AppendLine($"    Sleva:           -{discount:N0} Kč ({item.DiscountPercent:N0} %)");
+                    sb.AppendLine($"    Cena se slevou:  {item.Total:N0} Kč");
+                }
+                else
+                {
+                    sb.AppendLine($"  {item.MaterialItem.Name} | {item.Quantity} | {item.Total:N0} Kč");
+                }
             }
 
             sb.AppendLine();
             sb.AppendLine("---------------------------------");
-            sb.AppendLine($"PRÁCE CELKEM: {WorkTotal:N0} Kč");
+
+            // ── SOUČTY ────────────────────────────────────────────────────
+            sb.AppendLine($"PRÁCE CELKEM:    {WorkTotal:N0} Kč");
             sb.AppendLine($"MATERIÁL CELKEM: {MaterialTotal:N0} Kč");
-            sb.AppendLine($"CELKEM: {GrandTotal:N0} Kč");
+
+            // Sekce slev — zobrazí se pouze pokud existuje alespoň jedna sleva
+            // Stejná podmínka jako HasAnyDiscount v UI
+            if (HasAnyDiscount)
+            {
+                sb.AppendLine("---------------------------------");
+                sb.AppendLine($"CENA PŘED SLEVOU: {GrandTotalBeforeDiscount:N0} Kč");
+                sb.AppendLine($"CELKOVÁ SLEVA:    -{TotalDiscount:N0} Kč");
+            }
+
+            sb.AppendLine("---------------------------------");
+            sb.AppendLine($"CELKEM:          {GrandTotal:N0} Kč");
 
             return sb.ToString();
         }
@@ -666,33 +799,96 @@ namespace ElektroOffer_app
         // =========================================================
         private void Recalculate()
         {
+            // ── Pomocná lokální funkce ─────────────────────────────────────
+            // Spočítá cenu řádku BEZ slevy.
+            // Potřebujeme ji proto, že x.Total už slevu obsahuje —
+            // abychom zjistili kolik Kč sleva odebrala, musíme
+            // základ dopočítat znovu ze vstupních hodnot.
+            static double BaseTotal(CalculationItemViewModel x)
+            {
+                if (x.WorkItem != null)
+                    return x.WorkItem.BasePrice * x.WorkItem.MaterialCoef * x.WorkItem.PositionCoef * x.Quantity;
+                if (x.MaterialItem != null)
+                    return x.MaterialItem.Price * x.Quantity;
+                return 0;
+            }
+
+            // ── Dílčí součty ──────────────────────────────────────────────
+            // x.Total = cena SE slevou (díky úpravě v CalculationItemViewModel)
             WorkTotal = WorkCalcItems.Sum(x => x.Total);
             MaterialTotal = MaterialItems.Sum(x => x.Total);
             GrandTotal = WorkTotal + MaterialTotal;
 
+            // ── Výpočet slev v Kč ─────────────────────────────────────────
+            // Logika: základ (bez slevy) − výsledek (se slevou) = ušetřeno
+            // Řádky bez aktivní slevy přispívají nulou → součet je bezpečný
+            WorkDiscountTotal = WorkCalcItems
+                .Where(x => x.IsDiscountEnabled && x.DiscountPercent.HasValue)
+                .Sum(x => BaseTotal(x) - x.Total);
+
+            MaterialDiscountTotal = MaterialItems
+                .Where(x => x.IsDiscountEnabled && x.DiscountPercent.HasValue)
+                .Sum(x => BaseTotal(x) - x.Total);
+
+            TotalDiscount = WorkDiscountTotal + MaterialDiscountTotal;
+            GrandTotalBeforeDiscount = GrandTotal + TotalDiscount; // ← NOVĚ: cena před slevou
+                                                                   // GrandTotal už slevu obsahuje,
+                                                                   // proto zpětně přičteme co bylo odečteno
+
+            // ── Příznak pro XAML Visibility ───────────────────────────────
+            // Sekce slevy v celkovém součtu se zobrazí jen když skutečně
+            // existuje nějaká nenulová sleva — jinak zůstane skrytá.
+            HasAnyDiscount = TotalDiscount > 0.0001;
+
+            // ── Detailní rozpis (BudgetItems) ─────────────────────────────
             BudgetItems.Clear();
 
             foreach (var x in WorkCalcItems.Where(x => x.Total > 0))
             {
+                // Základ bez slevy potřebujeme pro výpočet DiscountAmount
+                double basePrice = BaseTotal(x);
+                // Kolik Kč sleva odebrala = základ − cena se slevou
+                double discountAmount = basePrice - x.Total;
+
                 BudgetItems.Add(new BudgetItem
                 {
                     Type = "PRÁCE",
                     Description = $"{x.SelectedTask} / {x.SelectedSpecification} / {x.SelectedMaterial} / {x.SelectedLocation}",
                     Unit = x.WorkUnit ?? "",
                     Quantity = x.Quantity,
-                    Price = x.Total
+                    Price = x.Total,
+
+                    // null → XAML zobrazí prázdnou buňku (TargetNullValue="")
+                    // hodnota → zobrazí se procento / částka slevy
+                    DiscountPercent = (x.IsDiscountEnabled && x.DiscountPercent.HasValue)
+                        ? x.DiscountPercent
+                        : null,
+                    DiscountAmount = discountAmount > 0.0001
+                        ? discountAmount
+                        : null
                 });
             }
 
             foreach (var x in MaterialItems.Where(x => x.Total > 0 && x.MaterialItem != null))
             {
+                double basePrice = BaseTotal(x);
+                double discountAmount = basePrice - x.Total;
+
                 BudgetItems.Add(new BudgetItem
                 {
                     Type = "MATERIÁL",
                     Description = x.MaterialItem!.Name,
                     Unit = x.MaterialItem?.Unit ?? "",
                     Quantity = x.Quantity,
-                    Price = x.Total
+                    Price = x.Total,
+
+                    // null → prázdná buňka, hodnota → zobrazí slevu
+                    DiscountPercent = (x.IsDiscountEnabled && x.DiscountPercent.HasValue)
+                        ? x.DiscountPercent
+                        : null,
+                    DiscountAmount = discountAmount > 0.0001
+                        ? discountAmount
+                        : null
                 });
             }
         }
