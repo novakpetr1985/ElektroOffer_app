@@ -1,6 +1,7 @@
 using ElektroOffer_app.Data;
 using ElektroOffer_app.Models;
 using ElektroOffer_app.Services;
+using ElektroOffer_app.Services.Storage;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using NUnit.Framework;
@@ -177,7 +178,7 @@ public class ProjectServiceTests
         // -------------------------------------------------------------
         // 6. Inicializace Service vrstvy (SUT)
         // -------------------------------------------------------------
-        _service = new ProjectService();
+        _service = new ProjectService(new FileProjectStorage());
     }
 
     // =====================================================================
@@ -259,34 +260,54 @@ public class ProjectServiceTests
     public void Should_Save_Project_To_File_Correctly()
     {
         // ARRANGE
-        var tempFile = Path.Combine(Path.GetTempPath(), $"project_test_{Guid.NewGuid()}.eof");
+        // Vytvoříme unikátní dočasnou cestu pro tento test, aby se soubory nepřepisovaly
+        // a aby byl test izolovaný od ostatních běhů.
+        var tempFile = Path.Combine(
+            Path.GetTempPath(),
+            $"project_test_{Guid.NewGuid()}.eof");
 
+        // Připravíme jednoduchý model projektu, který chceme serializovat a uložit.
         var project = new ProjectData
         {
             ProjectName = "Test projekt"
         };
 
+        // Použijeme konkrétní implementaci storage vrstvy.
+        // Po refaktoru je file I/O v FileProjectStorage, proto testujeme přímo tuto vrstvu.
+        IProjectStorage storage = new FileProjectStorage();
+
         // ACT
-        var savedPath = InvokeSaveToPath(project, tempFile);
+        // Uložíme data na explicitně zadanou cestu. Tím se vyhneme UI dialogům
+        // a test zůstane deterministický.
+        var savedPath = storage.Save(project, tempFile);
 
         // ASSERT
-        Assert.That(savedPath, Is.Not.Null, "SaveToPath vrátil null.");
-        Assert.That(File.Exists(savedPath), Is.True, "Soubor nebyl vytvořen.");
+        // Ověříme, že metoda Save vrátila neprázdnou cestu.
+        Assert.That(savedPath, Is.Not.Null, "Save v IProjectStorage vrátil null.");
 
-        var content = File.ReadAllText(savedPath);
+        // Ověříme, že soubor skutečně existuje na disku.
+        Assert.That(File.Exists(savedPath!), Is.True, "Soubor nebyl vytvořen.");
 
+        // Načteme obsah souboru jako text pro další ověření.
+        var content = File.ReadAllText(savedPath!);
+
+        // Ověříme, že serializovaný JSON obsahuje očekávaný název projektu.
         Assert.That(content, Does.Contain("Test projekt"),
             "Data nebyla správně serializována do JSON.");
 
-        // BONUS: validace JSON struktury (ochrana proti rozbití modelu)
+        // BONUS: validace JSON struktury pro ochranu proti nechtěným změnám modelu.
         var deserialized = JsonSerializer.Deserialize<ProjectData>(content);
 
-        Assert.That(deserialized, Is.Not.Null);
-        Assert.That(deserialized!.ProjectName, Is.EqualTo("Test projekt"));
+        // Ověříme, že deserializace proběhla a že hodnoty odpovídají.
+        Assert.That(deserialized, Is.Not.Null, "Deserializace ProjectData selhala.");
+        Assert.That(deserialized!.ProjectName, Is.EqualTo("Test projekt"),
+            "ProjectName po deserializaci neodpovídá očekávané hodnotě.");
 
         // CLEANUP
-        File.Delete(savedPath);
+        // Smažeme dočasný soubor, aby test nezanechal artefakty.
+        File.Delete(savedPath!);
     }
+
 
     // =====================================================================
     // LOAD TEST

@@ -5,13 +5,13 @@ Formát vychází z [Keep a Changelog](https://keepachangelog.com/cs/1.0.0/).
 
 ---
 
-## [1.7.5] - Refaktor ProjectService (DI + odstranění UI závislostí)
+## [1.7.5] - Refaktor ProjectService (DI + odstranění UI závislostí) - TAG v1.7.5-alpha-2
 
 ### Přidáno
 - zavedení `IProjectStorage` jako nové abstrakční vrstvy pro práci se soubory
 - vytvořen `FileProjectStorage` pro izolaci file I/O a JSON logiky
 - oddělení persistence vrstvy od `ProjectService`
-- příprava architektury pro budoucí Dependency Injection
+- možnost jednoduchého mockování storage pro unit testy (usnadňuje testování bez file I/O a UI)
 
 ### Změněno
 - `ProjectService`
@@ -19,22 +19,36 @@ Formát vychází z [Keep a Changelog](https://keepachangelog.com/cs/1.0.0/).
     - `File.ReadAllText`
     - `File.WriteAllText`
     - `JsonSerializer`
-  - Save/Load nyní delegují operace do `_storage`
-- ztenčení role třídy na orchestrátor operací
-- zachována UI integrace (SaveFileDialog, OpenFileDialog, MessageBox) pro další krok refactoru
+- konstruktor nyní přijímá `IProjectStorage` → `ProjectService`(IProjectStorage storage) (připraveno pro DI).
+- role třídy zredukována na orchestrace operací (deleguje persistence do _storage).
+- zachována UI integrace (`SaveFileDialog`, `OpenFileDialog`, `MessageBox`) pro další krok refactoru
 
-### Refaktor architektury
-- zaveden pattern Service → Storage separation
-- `ProjectService` již neobsahuje persistence logiku
-- vytvořena první vrstva připravená pro:
-    - unit testování pomocí mock storage
-    - budoucí DB / API backend storage
+### Architektur / návrh
+- service → Storage separation: persistence je izolovaná v `IProjectStorage`/`FileProjectStorage`, `ProjectService` pouze koordinuje
+- testovatelnost
+    - storage lze mockovat; unit testy file I/O se přesunou na `FileProjectStorage`
+    - testy ProjectService používají mock `IProjectStorage`
+- Příprava pro budoucí DI:
+  - konstruktorová injekce `IProjectStorage` umožňuje snadné zavedení DI kontejneru nebo továrny v dalším kroku
 
 ### Poznámka k návrhu
 - File/JSON logika byla přesunuta do storage vrstvy
 - ProjectService nyní pouze koordinuje operace
 - UI vrstva zatím zůstává součástí service (plánováno k oddělení v dalších krocích)
 - tento krok je základ pro budoucí zavedení Dependency Injection
+
+### Checkpoint
+- ✔ app funguje (chování zachováno přes delegaci do storage)
+- ✔ unit testy:
+  - file I/O testy přesunuty na `FileProjectStorage`
+  - projectService testy používají mock `IProjectStorage`
+
+### Poznámka
+- refactor: ProjectService nyní používá konstruktorovou injekci IProjectStorage
+- move: file I/O a JSON serializace přesunuty do FileProjectStorage
+- tests: upraveny unit testy pro storage; ProjectService testy používají mock IProjectStorage
+- docs: aktualizovány komentáře a poznámky v kódu
+
 
 ---
 

@@ -21,6 +21,12 @@ namespace ElektroOffer_app.Services
     //
     // 👉 Tohle vše je přesunuto do IProjectStorage / FileProjectStorage
     //
+    // 🔵 KROK 4 — CO SE ZMĚNILO:
+    // - konstruktor už NEVYTVÁŘÍ FileProjectStorage sám (new FileProjectStorage())
+    // - místo toho PŘIJÍMÁ hotovou instanci zvenku (Dependency Injection)
+    // - výhoda: v testech lze předat mock, v aplikaci FileProjectStorage
+    // - MainWindow nyní rozhoduje CO se předá (viz MainWindow.xaml.cs)
+    //
     // ========================================================================
     public class ProjectService
     {
@@ -32,13 +38,43 @@ namespace ElektroOffer_app.Services
         // - ProjectService už neřeší "JAK" se ukládá
         // - jen říká "ULOŽ / NAČTI"
         // - umožňuje budoucí výměnu (DB, API, cloud)
+        //
+        // 🔵 KROK 4 — ZMĚNA:
+        // - pole zůstává stejné (IProjectStorage _storage)
+        // - ale hodnota se teď PŘIŘAZUJE z konstruktoru (ne new FileProjectStorage())
+        // - díky tomu je závislost "injektovaná" = Dependency Injection
         private readonly IProjectStorage _storage;
 
-        public ProjectService()
+        // =========================================================
+        // KONSTRUKTOR — DEPENDENCY INJECTION
+        // =========================================================
+        //
+        // 🧠 CO SE DĚJE:
+        // - konstruktor přijme HOTOVOU instanci IProjectStorage
+        // - ProjectService si ji uloží a používá
+        // - ProjectService NEVÍ co konkrétně dostane (FileProjectStorage? Mock? DB?)
+        // - to je záměr — třída závisí jen na rozhraní, ne na implementaci
+        //
+        // 🔵 KROK 4 — ZMĚNA OPROTI PŘEDCHOZÍMU STAVU:
+        // ❌ BYLO:
+        //    public ProjectService()
+        //    {
+        //        _storage = new FileProjectStorage();   ← hardcoded závislost
+        //    }
+        //
+        // ✔ JE:
+        //    public ProjectService(IProjectStorage storage)
+        //    {
+        //        _storage = storage;                    ← přichází zvenku
+        //    }
+        //
+        // 👉 KDO PŘEDÁVÁ STORAGE?
+        // - MainWindow.xaml.cs → new ProjectService(new FileProjectStorage())
+        // - testy → new ProjectService(new MockStorage())   ← budoucí krok 5
+        public ProjectService(IProjectStorage storage)
         {
-            // 🧠 zatím ruční inicializace
-            // 👉 později se nahradí Dependency Injection
-            _storage = new FileProjectStorage();
+            // ✔ uložíme si co nám přišlo — budeme to používat v Save/Load
+            _storage = storage;
         }
 
         // =========================================================
@@ -79,9 +115,10 @@ namespace ElektroOffer_app.Services
                 FileName = data.ProjectName
             };
 
-            // ❗ uživatel zrušil dialog → nic neukládáme
-            if (dialog.ShowDialog() != true)
+            // ❗ pokud uživatel zruší dialog nebo FileName není platná cesta → vrátit null
+            if (dialog.ShowDialog() != true || string.IsNullOrWhiteSpace(dialog.FileName))
                 return null;
+
 
             // ✔ delegace na storage vrstvu
             return _storage.Save(data, dialog.FileName);
@@ -172,7 +209,7 @@ namespace ElektroOffer_app.Services
                 // 🧠 metadata exportu
                 data.ExportedAt = DateTime.Now;
 
-                // ⚠️ zatím ponecháno (refactor přijde později)
+                // ⚠️ zatím ponecháno (refactor přijde v KROK 6–7)
                 var json = System.Text.Json.JsonSerializer.Serialize(
                     data,
                     new System.Text.Json.JsonSerializerOptions
@@ -216,7 +253,8 @@ namespace ElektroOffer_app.Services
                 Filter = "Ceník ElektroOffer (*.eofcat)|*.eofcat"
             };
 
-            if (dialog.ShowDialog() != true)
+            // ❗ dialog zrušen nebo neobsahuje platnou cestu → nic nenačítáme
+            if (dialog.ShowDialog() != true || string.IsNullOrWhiteSpace(dialog.FileName))
                 return null;
 
             try

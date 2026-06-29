@@ -12,9 +12,9 @@
          - ApplicationInfoService.cs čte AssemblyInformationalVersion z buildu
          - Po změně verze aktualizuj také docs/README.md a docs/CHANGELOG.md
          ===================================================================== -->
-    <Version>1.7.3</Version>
-    <AssemblyVersion>1.7.3.0</AssemblyVersion>
-    <FileVersion>1.7.3.0</FileVersion>
+    <Version>1.7.5</Version>
+    <AssemblyVersion>1.7.5.0</AssemblyVersion>
+    <FileVersion>1.7.5.0</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>

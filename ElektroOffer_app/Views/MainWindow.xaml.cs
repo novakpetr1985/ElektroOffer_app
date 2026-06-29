@@ -14,6 +14,7 @@ using ElektroOffer_app.Commands;
 using ElektroOffer_app.Data;
 using ElektroOffer_app.Models;
 using ElektroOffer_app.Services;
+using ElektroOffer_app.Services.Storage;
 using ElektroOffer_app.ViewModels.Items;
 
 namespace ElektroOffer_app
@@ -175,8 +176,23 @@ namespace ElektroOffer_app
         /// <summary>
         /// Servisní třída pro Save/Load logiku.
         /// Oddělena od UI — MainWindow jen volá její metody.
+        ///
+        /// 🔵 KROK 4 — ZMĚNA:
+        /// - ProjectService už NEVYTVÁŘÍ storage sám
+        /// - MainWindow mu předá new FileProjectStorage() jako argument
+        /// - tím je splněn princip Dependency Injection:
+        ///   "závislosti se předávají zvenku, ne vytvářejí uvnitř"
+        ///
+        /// ❌ BYLO:
+        ///   new ProjectService()
+        ///   → uvnitř ProjectService si sám udělal new FileProjectStorage()
+        ///
+        /// ✔ JE:
+        ///   new ProjectService(new FileProjectStorage())
+        ///   → MainWindow rozhoduje co ProjectService dostane
+        ///   → v testech lze předat jiný storage (mock, in-memory, ...)
         /// </summary>
-        private readonly ProjectService _projectService = new();
+        private readonly ProjectService _projectService = new(new FileProjectStorage());
 
         /// <summary>
         /// Servisní třída pro načítání ceníku z databáze.
@@ -831,13 +847,9 @@ namespace ElektroOffer_app
                 .Sum(x => BaseTotal(x) - x.Total);
 
             TotalDiscount = WorkDiscountTotal + MaterialDiscountTotal;
-            GrandTotalBeforeDiscount = GrandTotal + TotalDiscount; // ← NOVĚ: cena před slevou
-                                                                   // GrandTotal už slevu obsahuje,
-                                                                   // proto zpětně přičteme co bylo odečteno
+            GrandTotalBeforeDiscount = GrandTotal + TotalDiscount;
 
             // ── Příznak pro XAML Visibility ───────────────────────────────
-            // Sekce slevy v celkovém součtu se zobrazí jen když skutečně
-            // existuje nějaká nenulová sleva — jinak zůstane skrytá.
             HasAnyDiscount = TotalDiscount > 0.0001;
 
             // ── Detailní rozpis (BudgetItems) ─────────────────────────────
@@ -845,9 +857,7 @@ namespace ElektroOffer_app
 
             foreach (var x in WorkCalcItems.Where(x => x.Total > 0))
             {
-                // Základ bez slevy potřebujeme pro výpočet DiscountAmount
                 double basePrice = BaseTotal(x);
-                // Kolik Kč sleva odebrala = základ − cena se slevou
                 double discountAmount = basePrice - x.Total;
 
                 BudgetItems.Add(new BudgetItem
@@ -857,9 +867,6 @@ namespace ElektroOffer_app
                     Unit = x.WorkUnit ?? "",
                     Quantity = x.Quantity,
                     Price = x.Total,
-
-                    // null → XAML zobrazí prázdnou buňku (TargetNullValue="")
-                    // hodnota → zobrazí se procento / částka slevy
                     DiscountPercent = (x.IsDiscountEnabled && x.DiscountPercent.HasValue)
                         ? x.DiscountPercent
                         : null,
@@ -881,8 +888,6 @@ namespace ElektroOffer_app
                     Unit = x.MaterialItem?.Unit ?? "",
                     Quantity = x.Quantity,
                     Price = x.Total,
-
-                    // null → prázdná buňka, hodnota → zobrazí slevu
                     DiscountPercent = (x.IsDiscountEnabled && x.DiscountPercent.HasValue)
                         ? x.DiscountPercent
                         : null,
