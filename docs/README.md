@@ -292,6 +292,7 @@ Projekt používá výhradně `Microsoft.Data.Sqlite` jako SQLite driver – je 
 - [x] Kalkulace práce a materiálu
 - [x] SQLite databáze
 - [x] Ukládání projektu
+- [x] Unit testy
 - [x] Integrační testy
 - [x] Tisk / PrintDialog
 - [x] NuGet závislosti stabilizovány a zabezpečeny
