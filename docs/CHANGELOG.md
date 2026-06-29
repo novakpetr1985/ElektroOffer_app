@@ -5,6 +5,39 @@ Formát vychází z [Keep a Changelog](https://keepachangelog.com/cs/1.0.0/).
 
 ---
 
+## [1.7.5] - Refaktor ProjectService (DI + odstranění UI závislostí)
+
+### Přidáno
+- zavedení `IProjectStorage` jako nové abstrakční vrstvy pro práci se soubory
+- vytvořen `FileProjectStorage` pro izolaci file I/O a JSON logiky
+- oddělení persistence vrstvy od `ProjectService`
+- příprava architektury pro budoucí Dependency Injection
+
+### Změněno
+- `ProjectService`
+  - odstraněna přímá práce s:
+    - `File.ReadAllText`
+    - `File.WriteAllText`
+    - `JsonSerializer`
+  - Save/Load nyní delegují operace do `_storage`
+- ztenčení role třídy na orchestrátor operací
+- zachována UI integrace (SaveFileDialog, OpenFileDialog, MessageBox) pro další krok refactoru
+
+### Refaktor architektury
+- zaveden pattern Service → Storage separation
+- `ProjectService` již neobsahuje persistence logiku
+- vytvořena první vrstva připravená pro:
+    - unit testování pomocí mock storage
+    - budoucí DB / API backend storage
+
+### Poznámka k návrhu
+- File/JSON logika byla přesunuta do storage vrstvy
+- ProjectService nyní pouze koordinuje operace
+- UI vrstva zatím zůstává součástí service (plánováno k oddělení v dalších krocích)
+- tento krok je základ pro budoucí zavedení Dependency Injection
+
+---
+
 ## [1.7.4] - Integrační testy ProjectService (Save / Load + stabilní test framework)
 
 ### Přidáno

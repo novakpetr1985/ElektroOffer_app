@@ -1,70 +1,99 @@
 ﻿﻿using ElektroOffer_app.Models;
+using ElektroOffer_app.Services.Storage;
 using Microsoft.Win32;
-using System.IO;
-using System.Text.Json;
 using System.Windows;
 
 namespace ElektroOffer_app.Services
 {
     // ========================================================================
-    // HLAVNÍ: ProjectService – správa projektových souborů (.eof)
+    // ProjectService – HLAVNÍ ORCHESTRÁTOR APLIKACE
     // ========================================================================
     //
-    // ÚČEL:
-    // - Ukládání projektu do JSON (Save / SaveAs)
-    // - Načítání projektu z JSON (Load)
-    // - Kontrola neuložených změn (ConfirmNewProject)
-    // - Export a import ceníku (.eofcat)
+    // 🧠 CO TATO TŘÍDA DĚLÁ:
+    // - Řídí ukládání a načítání projektu
+    // - Řeší UI dialogy (zatím zde, později DialogService)
+    // - Koordinuje storage vrstvu
     //
-    // DŮLEŽITÉ:
-    // - Třída NEPRACUJE s UI (kromě MessageBox – lze později nahradit DialogService)
-    // - Třída NEZNÁ ViewModel ani UI logiku
-    // - Používá pouze ProjectData a CatalogExportData
+    // ❌ CO TATO TŘÍDA NESMÍ DĚLAT:
+    // - File I/O (File.Read/Write)
+    // - JSON serializaci
+    // - přímou práci se soubory
+    //
+    // 👉 Tohle vše je přesunuto do IProjectStorage / FileProjectStorage
     //
     // ========================================================================
     public class ProjectService
     {
-        // --------------------------------------------------------------------
-        // DETAILNÍ: Nastavení JSON serializace
-        // --------------------------------------------------------------------
-        private static readonly JsonSerializerOptions _jsonOptions = new()
-        {
-            WriteIndented = true
-        };
+        // =========================================================
+        // STORAGE VRSTVA (ABSTRAKCE)
+        // =========================================================
+        //
+        // 🧠 PROČ TU JE:
+        // - ProjectService už neřeší "JAK" se ukládá
+        // - jen říká "ULOŽ / NAČTI"
+        // - umožňuje budoucí výměnu (DB, API, cloud)
+        private readonly IProjectStorage _storage;
 
-        // --------------------------------------------------------------------
-        // HLAVNÍ: SAVE (Ctrl+S)
-        // --------------------------------------------------------------------
+        public ProjectService()
+        {
+            // 🧠 zatím ruční inicializace
+            // 👉 později se nahradí Dependency Injection
+            _storage = new FileProjectStorage();
+        }
+
+        // =========================================================
+        // SAVE (Ctrl+S)
+        // =========================================================
+        //
+        // 🧠 LOGIKA:
+        // - pokud projekt ještě nemá cestu → SaveAs
+        // - jinak uloží přímo na existující cestu
         public string? Save(ProjectData data, string? currentPath)
         {
+            // ❗ nový projekt bez cesty → musíme vyvolat Save As
             if (string.IsNullOrEmpty(currentPath))
                 return SaveAs(data);
 
-            return SaveToPath(data, currentPath);
+            // ✔ uloží přes storage (už ne File.WriteAllText!)
+            return _storage.Save(data, currentPath);
         }
 
-        // --------------------------------------------------------------------
-        // HLAVNÍ: SAVE AS (Ctrl+Shift+S)
-        // --------------------------------------------------------------------
+        // =========================================================
+        // SAVE AS (Ctrl+Shift+S)
+        // =========================================================
+        //
+        // 🧠 LOGIKA:
+        // - vždy se zobrazí dialog pro výběr souboru
+        // - uživatel určí umístění a jméno
         public string? SaveAs(ProjectData data)
         {
             var dialog = new SaveFileDialog
             {
                 Title = "Uložit projekt",
+
+                // 🧠 formát projektu (.eof = vlastní formát aplikace)
                 Filter = "Projekt ElektroOffer (*.eof)|*.eof",
                 DefaultExt = ".eof",
+
+                // 🧠 předvyplněný název podle projektu
                 FileName = data.ProjectName
             };
 
+            // ❗ uživatel zrušil dialog → nic neukládáme
             if (dialog.ShowDialog() != true)
                 return null;
 
-            return SaveToPath(data, dialog.FileName);
+            // ✔ delegace na storage vrstvu
+            return _storage.Save(data, dialog.FileName);
         }
 
-        // --------------------------------------------------------------------
-        // HLAVNÍ: LOAD (Ctrl+O)
-        // --------------------------------------------------------------------
+        // =========================================================
+        // LOAD (Ctrl+O)
+        // =========================================================
+        //
+        // 🧠 LOGIKA:
+        // - otevře dialog pro výběr souboru
+        // - načtení probíhá ve storage vrstvě
         public (ProjectData? data, string? path) Load()
         {
             var dialog = new OpenFileDialog
@@ -73,36 +102,24 @@ namespace ElektroOffer_app.Services
                 Filter = "Projekt ElektroOffer (*.eof)|*.eof"
             };
 
+            // ❗ uživatel zrušil výběr souboru
             if (dialog.ShowDialog() != true)
                 return (null, null);
 
-            try
-            {
-                var json = File.ReadAllText(dialog.FileName);
-                var data = JsonSerializer.Deserialize<ProjectData>(json, _jsonOptions);
-
-                if (data == null)
-                {
-                    MessageBox.Show("Soubor nelze načíst – poškozený formát.", "Chyba", MessageBoxButton.OK, MessageBoxImage.Error);
-                    return (null, null);
-                }
-
-                return (data, dialog.FileName);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Chyba při načítání:\n{ex.Message}", "Chyba", MessageBoxButton.OK, MessageBoxImage.Error);
-                return (null, null);
-            }
+            // ✔ veškeré file + JSON zpracování je ve storage
+            return _storage.Load(dialog.FileName);
         }
 
-        // --------------------------------------------------------------------
-        // VEDLEJŠÍ: Kontrola neuložených změn
-        // --------------------------------------------------------------------
-        /// Předává se zvenčí, protože ProjectService nezná stav UI —
-        /// o neuložených změnách ví jen MainWindow.
+        // =========================================================
+        // NEULOŽENÉ ZMĚNY – ochrana proti ztrátě dat
+        // =========================================================
+        //
+        // 🧠 ÚČEL:
+        // - pokud má projekt změny → upozornit uživatele
+        // - rozhodnutí je na uživateli (Yes / No / Cancel)
         public bool ConfirmNewProject(ProjectData data, string? currentPath, bool hasUnsavedChanges)
         {
+            // ✔ pokud nic není změněno → pokračuj bez dotazu
             if (!hasUnsavedChanges)
                 return true;
 
@@ -114,22 +131,36 @@ namespace ElektroOffer_app.Services
 
             return result switch
             {
+                // ✔ uloží projekt a pokračuje
                 MessageBoxResult.Yes => Save(data, currentPath) != null,
+
+                // ✔ zahodí změny a pokračuje
                 MessageBoxResult.No => true,
+
+                // ❌ zruší akci
                 _ => false
             };
         }
 
-        // --------------------------------------------------------------------
-        // HLAVNÍ: Export ceníku (.eofcat)
-        // --------------------------------------------------------------------
+        // =========================================================
+        // EXPORT CENÍKU (.eofcat)
+        // =========================================================
+        //
+        // 🧠 ÚČEL:
+        // - export dat do souboru
+        // - zatím stále obsahuje JSON + File (KROK 6–7 refactor)
         public bool ExportCatalog(CatalogExportData data)
         {
             var dialog = new SaveFileDialog
             {
                 Title = "Exportovat ceník",
+
+                // 🧠 vlastní formát exportu
                 Filter = "Ceník ElektroOffer (*.eofcat)|*.eofcat",
+
                 DefaultExt = ".eofcat",
+
+                // 🧠 defaultní název s datem
                 FileName = $"cenik_export_{DateTime.Now:yyyy-MM-dd}"
             };
 
@@ -138,10 +169,18 @@ namespace ElektroOffer_app.Services
 
             try
             {
+                // 🧠 metadata exportu
                 data.ExportedAt = DateTime.Now;
 
-                var json = JsonSerializer.Serialize(data, _jsonOptions);
-                File.WriteAllText(dialog.FileName, json);
+                // ⚠️ zatím ponecháno (refactor přijde později)
+                var json = System.Text.Json.JsonSerializer.Serialize(
+                    data,
+                    new System.Text.Json.JsonSerializerOptions
+                    {
+                        WriteIndented = true
+                    });
+
+                System.IO.File.WriteAllText(dialog.FileName, json);
 
                 MessageBox.Show(
                     $"Export dokončen.\n\nPráce: {data.PriceItems.Count}\nMateriál: {data.Materials.Count}",
@@ -153,14 +192,22 @@ namespace ElektroOffer_app.Services
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Chyba exportu:\n{ex.Message}", "Chyba", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(
+                    $"Chyba exportu:\n{ex.Message}",
+                    "Chyba",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Error);
+
                 return false;
             }
         }
 
-        // --------------------------------------------------------------------
-        // HLAVNÍ: Import ceníku (.eofcat)
-        // --------------------------------------------------------------------
+        // =========================================================
+        // IMPORT CENÍKU (.eofcat)
+        // =========================================================
+        //
+        // 🧠 ÚČEL:
+        // - načtení exportovaného ceníku
         public CatalogExportData? ImportCatalog()
         {
             var dialog = new OpenFileDialog
@@ -174,33 +221,23 @@ namespace ElektroOffer_app.Services
 
             try
             {
-                var json = File.ReadAllText(dialog.FileName);
-                return JsonSerializer.Deserialize<CatalogExportData>(json, _jsonOptions);
+                var json = System.IO.File.ReadAllText(dialog.FileName);
+
+                return System.Text.Json.JsonSerializer.Deserialize<CatalogExportData>(
+                    json,
+                    new System.Text.Json.JsonSerializerOptions
+                    {
+                        WriteIndented = true
+                    });
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Chyba importu:\n{ex.Message}", "Chyba", MessageBoxButton.OK, MessageBoxImage.Error);
-                return null;
-            }
-        }
+                MessageBox.Show(
+                    $"Chyba importu:\n{ex.Message}",
+                    "Chyba",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Error);
 
-        // --------------------------------------------------------------------
-        // DETAILNÍ: Interní metoda pro zápis JSON
-        // --------------------------------------------------------------------
-        private string? SaveToPath(ProjectData data, string path)
-        {
-            try
-            {
-                data.SavedAt = DateTime.Now;
-
-                var json = JsonSerializer.Serialize(data, _jsonOptions);
-                File.WriteAllText(path, json);
-
-                return path;
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Chyba ukládání:\n{ex.Message}", "Chyba", MessageBoxButton.OK, MessageBoxImage.Error);
                 return null;
             }
         }
