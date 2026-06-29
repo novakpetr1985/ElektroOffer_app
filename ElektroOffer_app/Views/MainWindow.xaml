@@ -183,29 +183,57 @@
                     <!-- ========================= -->
                     <Grid Margin="0,8,0,5">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="35"/>
-                            <ColumnDefinition Width="150"/>
-                            <ColumnDefinition Width="150"/>
-                            <ColumnDefinition Width="150"/>
-                            <ColumnDefinition Width="120"/>
-                            <ColumnDefinition Width="60"/>
-                            <ColumnDefinition Width="60"/>
-                            <ColumnDefinition Width="120"/>
-                            <ColumnDefinition Width="70"/>
+                            <ColumnDefinition Width="35"/> <!-- ➖ SMAZÁNÍ ŘÁDKU -->
+                            <ColumnDefinition Width="150"/> <!-- ÚKON -->
+                            <ColumnDefinition Width="150"/> <!-- UPŘESNĚNÍ -->
+                            <ColumnDefinition Width="150"/> <!-- MATERIÁL -->
+                            <ColumnDefinition Width="120"/> <!-- UMÍSTĚNÍ -->
+                            <ColumnDefinition Width="60"/> <!-- MNOŽSTVÍ -->
+                            <ColumnDefinition Width="60"/> <!--🔥 MJ -->
+                            <ColumnDefinition Width="120"/> <!-- 💰 CENA PRÁCE -->
+                            <ColumnDefinition Width="70"/> <!-- 🔄 RESET ŘÁDKU -->
                         </Grid.ColumnDefinitions>
 
-                        <TextBlock Grid.Column="1" Text="Úkon"      FontWeight="Bold"/>
-                        <TextBlock Grid.Column="2" Text="Upřesnění" FontWeight="Bold"/>
-                        <TextBlock Grid.Column="3" Text="Materiál"  FontWeight="Bold"/>
-                        <TextBlock Grid.Column="4" Text="Umístění"  FontWeight="Bold"/>
+                        <!-- ÚKON -->
+                        <TextBlock Grid.Column="1"
+                                   Text="Úkon"
+                                   FontWeight="Bold"/>
 
+                        <!-- UPŘESNĚNÍ -->
+                        <TextBlock Grid.Column="2"
+                                   Text="Upřesnění"
+                                   FontWeight="Bold"/>
+
+                        <!-- MATERIÁL -->
+                        <TextBlock Grid.Column="3"
+                                   Text="Materiál"
+                                   FontWeight="Bold"/>
+
+                        <!-- UMÍSTĚNÍ -->
+                        <TextBlock Grid.Column="4"
+                                   Text="Umístění"
+                                   FontWeight="Bold"/>
+
+                        <!-- MNOŽSTVÍ -->
                         <!-- 🔴 ZMĚNA: číselné sloupce zarovnány shodně s obsahem -->
-                        <TextBlock Grid.Column="5" Text="Množství"  FontWeight="Bold"
-                                   HorizontalAlignment="Right" TextAlignment="Right"/>
-                        <TextBlock Grid.Column="6" Text="MJ"        FontWeight="Bold"
-                                   HorizontalAlignment="Center" TextAlignment="Center"/>
-                        <TextBlock Grid.Column="7" Text="Cena"      FontWeight="Bold"
-                                   HorizontalAlignment="Right" TextAlignment="Right"/>
+                        <TextBlock Grid.Column="5"
+                                   Text="Množství"
+                                   FontWeight="Bold"
+                                   HorizontalAlignment="Right"
+                                   TextAlignment="Right"/>
+
+                        <!--🔥 MJ -->
+                        <TextBlock Grid.Column="6" Text="MJ"
+                                   FontWeight="Bold"
+                                   HorizontalAlignment="Center"
+                                   TextAlignment="Center"/>
+
+                        <!-- 💰 CENA PRÁCE -->
+                        <TextBlock Grid.Column="7"
+                                   Text="Cena"
+                                   FontWeight="Bold"
+                                   HorizontalAlignment="Right"
+                                   TextAlignment="Right"/>
 
                     </Grid>
 
@@ -222,26 +250,26 @@
 
                                     <Grid>
                                         <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="35"/>
-                                            <ColumnDefinition Width="150"/>
-                                            <ColumnDefinition Width="150"/>
-                                            <ColumnDefinition Width="150"/>
-                                            <ColumnDefinition Width="120"/>
-                                            <ColumnDefinition Width="60"/>
-                                            <ColumnDefinition Width="60"/>
-                                            <ColumnDefinition Width="120"/>
-                                            <ColumnDefinition Width="70"/>
+                                            <ColumnDefinition Width="35"/> <!-- ➖ SMAZÁNÍ ŘÁDKU -->
+                                            <ColumnDefinition Width="150"/> <!-- ÚKON -->
+                                            <ColumnDefinition Width="150"/> <!-- UPŘESNĚNÍ -->
+                                            <ColumnDefinition Width="150"/> <!-- MATERIÁL -->
+                                            <ColumnDefinition Width="120"/> <!-- UMÍSTĚNÍ -->
+                                            <ColumnDefinition Width="60"/> <!-- MNOŽSTVÍ -->
+                                            <ColumnDefinition Width="60"/> <!--🔥 MJ -->
+                                            <ColumnDefinition Width="120"/> <!-- 💰 CENA PRÁCE -->
+                                            <ColumnDefinition Width="70"/> <!-- 🔄 RESET ŘÁDKU -->
                                         </Grid.ColumnDefinitions>
 
-                                        <!-- ➖ Smazání řádku -->
+                                        <!-- ➖ SMAZÁNÍ ŘÁDKU -->
                                         <Button Grid.Column="0"
                                                 Content="−"
                                                 Width="25"
                                                 Height="25"
                                                 Background="#E53935"
                                                 Foreground="White"
-                                                ToolTip="Smazat řádek"
-                                                Click="DeleteWorkItem_Click"/>
+                                                Click="DeleteWorkItem_Click"
+                                                ToolTip="Smazat řádek"/>
 
                                         <!-- ÚKON -->
                                         <ComboBox Grid.Column="1"
@@ -272,7 +300,7 @@
                                                  TextAlignment="Right"
                                                  Text="{Binding Quantity, UpdateSourceTrigger=PropertyChanged}"/>
 
-                                        <!-- MJ -->
+                                        <!-- 🔥 MJ -->
                                         <!-- 🔴 ZMĚNA: jednotka vycentrována -->
                                         <TextBlock Grid.Column="6"
                                                    VerticalAlignment="Center"
@@ -296,8 +324,8 @@
                                                 Content="SMAZAT"
                                                 Background="DarkBlue"
                                                 Foreground="White"
-                                                ToolTip="Vymazat data řádku"
-                                                Click="ResetWorkItem_Click"/>
+                                                Click="ResetWorkItem_Click"
+                                                ToolTip="Vymazat data řádku"/>
 
                                     </Grid>
 
@@ -362,23 +390,38 @@
                     <!-- ========================= -->
                     <Grid Margin="0,8,0,5">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="35"/>
-                            <ColumnDefinition Width="300"/>
-                            <ColumnDefinition Width="70"/>
-                            <ColumnDefinition Width="40"/>
-                            <ColumnDefinition Width="120"/>
-                            <ColumnDefinition Width="70"/>
+                            <ColumnDefinition Width="35"/> <!-- ➖ SMAZÁNÍ ŘÁDKU -->
+                            <ColumnDefinition Width="300"/> <!-- NÁZEV -->
+                            <ColumnDefinition Width="70"/> <!-- MNOŽSTVÍ -->
+                            <ColumnDefinition Width="40"/> <!-- 🔥 MJ -->
+                            <ColumnDefinition Width="120"/> <!-- 💰 CENA MATERIÁLU -->
+                            <ColumnDefinition Width="70"/> <!-- 🔄 RESET ŘÁDKU -->
                         </Grid.ColumnDefinitions>
 
-                        <TextBlock Grid.Column="1" Text="Název"    FontWeight="Bold"/>
+                        <!-- NÁZEV -->
+                        <TextBlock Grid.Column="1" Text="Název" FontWeight="Bold"/>
 
+                        <!-- MNOŽSTVÍ -->
                         <!-- 🔴 ZMĚNA: číselné sloupce zarovnány shodně s obsahem -->
-                        <TextBlock Grid.Column="2" Text="Množství" FontWeight="Bold"
-                                   HorizontalAlignment="Right" TextAlignment="Right"/>
-                        <TextBlock Grid.Column="3" Text="MJ"       FontWeight="Bold"
-                                   HorizontalAlignment="Center" TextAlignment="Center"/>
-                        <TextBlock Grid.Column="4" Text="Cena"     FontWeight="Bold"
-                                   HorizontalAlignment="Right" TextAlignment="Right"/>
+                        <TextBlock Grid.Column="2"
+                                   Text="Množství"
+                                   FontWeight="Bold"
+                                   HorizontalAlignment="Right"
+                                   TextAlignment="Right"/>
+
+                        <!-- 🔥 MJ -->
+                        <TextBlock Grid.Column="3"
+                                   Text="MJ"
+                                   FontWeight="Bold"
+                                   HorizontalAlignment="Center"
+                                   TextAlignment="Center"/>
+
+                        <!-- 💰 CENA MATERIÁLU -->
+                        <TextBlock Grid.Column="4"
+                                   Text="Cena"
+                                   FontWeight="Bold"
+                                   HorizontalAlignment="Right"
+                                   TextAlignment="Right"/>
 
                     </Grid>
 
@@ -395,33 +438,37 @@
 
                                     <Grid>
                                         <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="35"/>
-                                            <ColumnDefinition Width="300"/>
-                                            <ColumnDefinition Width="70"/>
-                                            <ColumnDefinition Width="40"/>
-                                            <ColumnDefinition Width="120"/>
-                                            <ColumnDefinition Width="70"/>
+                                            <ColumnDefinition Width="35"/> <!-- ➖ SMAZÁNÍ ŘÁDKU -->
+                                            <ColumnDefinition Width="300"/> <!-- NÁZEV -->
+                                            <ColumnDefinition Width="70"/> <!-- MNOŽSTVÍ -->
+                                            <ColumnDefinition Width="40"/> <!-- 🔥 MJ -->
+                                            <ColumnDefinition Width="120"/> <!-- 💰 CENA MATERIÁLU -->
+                                            <ColumnDefinition Width="70"/> <!-- 🔄 RESET ŘÁDKU -->
                                         </Grid.ColumnDefinitions>
 
+                                        <!-- ➖ SMAZÁNÍ ŘÁDKU -->
                                         <Button Grid.Column="0"
                                                 Content="−"
                                                 Width="25"
                                                 Height="25"
                                                 Background="#E53935"
                                                 Foreground="White"
-                                                ToolTip="Smazat řádek"
-                                                Click="DeleteMaterialItem_Click"/>
+                                                Click="DeleteMaterialItem_Click"
+                                                ToolTip="Smazat řádek"/>
 
+                                        <!-- NÁZEV -->
                                         <ComboBox Grid.Column="1"
                                                   ItemsSource="{Binding DataContext.Materials, RelativeSource={RelativeSource AncestorType=Window}}"
                                                   DisplayMemberPath="Name"
                                                   SelectedItem="{Binding MaterialItem, Mode=TwoWay}"/>
 
+                                        <!-- MNOŽSTVÍ -->
                                         <!-- 🔴 ZMĚNA: číslo zarovnáno doprava -->
                                         <TextBox Grid.Column="2"
                                                  TextAlignment="Right"
                                                  Text="{Binding Quantity, UpdateSourceTrigger=PropertyChanged}"/>
 
+                                        <!-- 🔥 MJ -->
                                         <!-- 🔴 ZMĚNA: jednotka vycentrována -->
                                         <TextBlock Grid.Column="3"
                                                    VerticalAlignment="Center"
@@ -429,20 +476,22 @@
                                                    TextAlignment="Center"
                                                    Text="{Binding MaterialItem.Unit}"/>
 
-                                        <!-- 🔴 ZMĚNA: cena doprava -->
+                                        <!-- 💰 CENA MATERIÁLU -->
+                                        <!-- 🔴 ZMĚNA: zarovnání doprava -->
                                         <TextBlock Grid.Column="4"
                                                    FontWeight="Bold"
                                                    VerticalAlignment="Center"
                                                    HorizontalAlignment="Right"
                                                    TextAlignment="Right"
                                                    Text="{Binding Total, StringFormat={}{0:N0} Kč}"/>
-
+                                        
+                                        <!-- 🔄 RESET ŘÁDKU -->
                                         <Button Grid.Column="5"
                                                 Content="SMAZAT"
                                                 Background="DarkBlue"
                                                 Foreground="White"
-                                                ToolTip="Vymazat data řádku"
-                                                Click="ResetMaterialItem_Click"/>
+                                                Click="ResetMaterialItem_Click"
+                                                ToolTip="Vymazat data řádku"/>
 
                                     </Grid>
 
