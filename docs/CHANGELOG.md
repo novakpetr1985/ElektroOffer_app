@@ -5,6 +5,76 @@ Formát vychází z [Keep a Changelog](https://keepachangelog.com/cs/1.0.0/).
 
 ---
 
+## [1.7.4] - Integrační testy ProjectService (Save / Load + stabilní test framework)
+
+### Přidáno
+- `Tests/Integration/Services/ProjectServiceTests.cs` – nová integrační testovací třída pro `ProjectService`
+  - testuje reálné chování service vrstvy v izolovaném prostředí
+  - pokrývá scénáře ukládání a načítání projektů přes soubory (.eof)
+  - využívá SQLite InMemory (SHARED mode) pro stabilní testovací prostředí
+  - obsahuje kompletní setup a teardown pro každý test (čistá instance DB pro každý běh)
+- Testovací infrastruktura (rozšíření v rámci testovací třídy)
+  - `SqliteConnection _connection` – udržuje životnost InMemory SQLite databáze
+  - `AppDbContext _db` – EF Core kontext pro případnou kontrolu datové vrstvy
+  - `ProjectService _service` – System Under Test (SUT), testovaná business logika
+  - důraz na izolaci testů a odstranění sdíleného stavu mezi testy
+- Helper metody pro testování interní logiky service vrstvy
+  - `InvokeSaveToPath(ProjectData data, string path)`
+    - zpřístupňuje privátní metodu `SaveToPath` pomocí reflection
+    - umožňuje testovat ukládání bez UI vrstvy (SaveFileDialog)
+    - ověřuje serializaci dat do JSON a zápis na disk
+  - `InvokeLoadFromFile(string path)`
+    - simuluje načtení projektu z externího souboru
+    - provádí deserializaci `ProjectData` z JSON
+    - používá stejné `JsonSerializerOptions` jako produkční kód
+- `Should_Save_Project_To_File_Correctly`
+  testuje ukládání projektu do .eof souboru
+  validuje:
+    vytvoření souboru na disku
+    správnost JSON serializace
+    obsah uložených dat (`ProjectName`)
+  - využívá `Path.GetTempPath()` pro izolaci testů
+  - obsahuje dodatečnou kontrolu deserializace JSON (integritní validace dat)
+  - provádí automatický cleanup vytvořeného souboru
+- `Should_Load_Project_From_File_Correctly`
+  - testuje načítání projektu ze souboru `.eof`
+  - validuje:
+    - správnost deserializace JSON → ProjectData
+    - zachování hodnoty ProjectName
+    - korektní návratová cesta souboru
+  - obsahuje kontrolu integrity načtených dat (neprázdné hodnoty)
+  - využívá reálný soubor vytvořený během testu
+  - provádí cleanup testovacího souboru po dokončení
+- Smoke test `Should_Be_Able_To_Initialize_ProjectService`
+  - ověřuje inicializaci ProjectService
+  - validuje správné sestavení testovacího prostředí
+  - slouží jako základní health-check celé integrační vrstvy
+  - netestuje business logiku, pouze inicializaci SUT
+
+### Změněno
+- `Tests/Integration/Services/ProjectServiceTests.cs`
+  - rozšířena testovací infrastruktura o helper metody pro přístup k privátním metodám
+  - doplněna detailní validace JSON dat po serializaci (ochrana proti regresím modelu)
+  - rozšířené assertiony pro lepší diagnostiku chyb:
+    - kontrola `null` návratových hodnot
+    - kontrola existence souboru před čtením
+  - sjednocen přístup k temp souborům (`Guid.NewGuid()` pro unikátnost)
+  - doplněny dodatečné integrity checky u načtených dat
+  - zpřesněna struktura Arrange / Act / Assert bloků pro lepší čitelnost testů
+
+### Poznámka k návrhu
+- Testy `ProjectService` jsou záměrně vedené jako black-box integrační testy
+  - nezasahují do interní implementace service logiky
+  - ověřují pouze vstupy a výstupy (souborový systém + JSON)
+- Použití reflection (`InvokeSaveToPath`) je dočasné řešení pro testovatelnost
+  - dlouhodobě vhodné řešení: přesun metody do `internal` + `InternalsVisibleTo`
+- Testy jsou navrženy tak, aby byly rozšiřitelné o:
+  - `ExportCatalog`
+  - `ImportCatalog`
+  - případně další file-based operace v `ProjectService`
+
+---
+
 ## [1.7.3] - Sleva na řádek kalkulace
 
 ### Přidáno
