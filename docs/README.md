@@ -283,3 +283,4 @@ Projekt používá výhradně `Microsoft.Data.Sqlite` jako SQLite driver – je 
 - [x] NuGet závislosti stabilizovány a zabezpečeny
 - [x] PDF export (aktuálně přes Windows PrintDialog → „Microsoft Print to PDF“)
 - [ ] MVVM refactor (částečný → plný)
+- [ ] Přidání hodnoty navíc ve verzování v okně o aplikaci

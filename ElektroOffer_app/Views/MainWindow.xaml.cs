@@ -399,13 +399,21 @@ namespace ElektroOffer_app
                     SelectedSpecification = x.SelectedSpecification,
                     SelectedMaterial = x.SelectedMaterial,
                     SelectedLocation = x.SelectedLocation,
-                    Quantity = x.Quantity
+                    Quantity = x.Quantity,
+
+                    // SLEVA
+                    IsDiscountEnabled = x.IsDiscountEnabled,
+                    DiscountPercent = x.DiscountPercent
                 }).ToList(),
 
                 MaterialItems = MaterialItems.Select(x => new MaterialItemData
                 {
                     MaterialName = x.MaterialItem?.Name,
-                    Quantity = x.Quantity
+                    Quantity = x.Quantity,
+
+                    // SLEVA
+                    IsDiscountEnabled = x.IsDiscountEnabled,
+                    DiscountPercent = x.DiscountPercent
                 }).ToList()
             };
         }
@@ -425,6 +433,10 @@ namespace ElektroOffer_app
                 item.SelectedLocation = saved.SelectedLocation;
                 item.Quantity = saved.Quantity;
 
+                // SLEVA
+                item.DiscountPercent = saved.DiscountPercent;
+                item.IsDiscountEnabled = saved.IsDiscountEnabled;
+
                 WorkCalcItems.Add(item);
             }
 
@@ -435,6 +447,10 @@ namespace ElektroOffer_app
 
                 item.MaterialItem = Materials.FirstOrDefault(m => m.Name == saved.MaterialName);
                 item.Quantity = saved.Quantity;
+
+                // SLEVA
+                item.DiscountPercent = saved.DiscountPercent;
+                item.IsDiscountEnabled = saved.IsDiscountEnabled;
 
                 MaterialItems.Add(item);
             }
@@ -734,7 +750,11 @@ namespace ElektroOffer_app
                 item.SelectedLocation = null;
                 item.Quantity = 0;
 
-                Recalculate();
+                //SLEVA
+                item.IsDiscountEnabled = false;
+                item.DiscountPercent = null;
+
+            Recalculate();
             }
         }
 
@@ -762,6 +782,10 @@ namespace ElektroOffer_app
 
                 item.MaterialItem = null;
                 item.Quantity = 0;
+
+                //SLEVA
+                item.IsDiscountEnabled = false;
+                item.DiscountPercent = null;
 
                 Recalculate();
             }

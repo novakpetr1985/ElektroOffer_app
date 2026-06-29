@@ -5,6 +5,17 @@ Formát vychází z [Keep a Changelog](https://keepachangelog.com/cs/1.0.0/).
 
 ---
 
+## [1.7.5.1] - BUGFIX: Ukládání a reset slevy (DiscountPercent, IsDiscountEnabled)
+
+## Opraveno
+- stav slevy se nyní správně persistuje do modelu před uložením/serializací
+- `ClearAllItems` doplněno o reset slevy: `IsDiscountEnabled = false`, `DiscountPercent = null`
+- `ResetWorkItem_Click` doplněno o reset slevy: `IsDiscountEnabled = false`, `DiscountPercent = null`
+- `ResetMaterialItem_Click` doplněno o reset slevy: `IsDiscountEnabled = false`, `DiscountPercent = null`
+- přidána synchronizace ViewModel → model (flush/snapshot) před exportem, aby JSON vždy odrážel stav v UI
+
+---
+
 ## [1.7.4] - Integrační testy ProjectService (Save / Load + stabilní test framework)
 
 ### Přidáno
