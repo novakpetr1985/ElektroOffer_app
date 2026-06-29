@@ -29,28 +29,26 @@ Formát vychází z [Keep a Changelog](https://keepachangelog.com/cs/1.0.0/).
   - `TotalDiscount` – celková sleva v Kč (práce + materiál)
   - `GrandTotalBeforeDiscount` – celková cena nabídky před odečtením slev
   - `HasAnyDiscount` – příznak pro XAML Visibility; true pokud existuje alespoň jedna nenulová sleva
-
-TESTY NEDOPLŇĚNY ZATÍM, DOŠLO KE SMAZÁNÍ TESTŮ
-    - `Tests/Unit/LogicTests/PriceCalculationTests.cs`
-      - přidán soubor s testy základní cenové logiky
-      - ověřuje výpočet ceny z `BasePrice × MaterialCoef × PositionCoef`
-      - pokrývá:
-        - základní výpočet
-        - koeficienty = 1 (neutralita)
-        - koeficienty < 1 (snížení ceny)
-        - koeficienty > 1 (navýšení ceny)
-        - nulové hodnoty
-        - záporné hodnoty
-        - zaokrouhlení výsledku
-    - `Tests/Unit/LogicTests/DiscountCalculationTests.cs`
-      - přidán soubor pro testování slevové logiky
-      - ověřuje výpočet slevy `basePrice × (1 - percent / 100)`
-      - pokrývá:
-        - 10 % sleva (běžný scénář)
-        - 0 % sleva (bez změny ceny)
-        - 100 % sleva (nulová cena)
-        - edge case nad 100 % (záporný výsledek)
-        - robustnost výpočtu slevy bez UI vrstvy
+- `Tests/Unit/LogicTests/PriceCalculationTests.cs`
+  - přidán soubor s testy základní cenové logiky
+  - ověřuje výpočet ceny z `BasePrice × MaterialCoef × PositionCoef`
+  - pokrývá:
+    - základní výpočet
+    - koeficienty = 1 (neutralita)
+    - koeficienty < 1 (snížení ceny)
+    - koeficienty > 1 (navýšení ceny)
+    - nulové hodnoty
+    - záporné hodnoty
+    - zaokrouhlení výsledku
+- `Tests/Unit/LogicTests/DiscountCalculationTests.cs`
+  - přidán soubor pro testování slevové logiky
+  - ověřuje výpočet slevy `basePrice × (1 - percent / 100)`
+  - pokrývá:
+    - 10 % sleva (běžný scénář)
+    - 0 % sleva (bez změny ceny)
+    - 100 % sleva (nulová cena)
+    - edge case nad 100 % (záporný výsledek)
+    - správnost výpočtu slevy v izolované logice
 
 ### Změněno
 - `ViewModels/Items/CalculationItemViewModel.cs` – přepočet `Total` rozšířen o aplikaci slevy
@@ -81,6 +79,11 @@ TESTY NEDOPLŇĚNY ZATÍM, DOŠLO KE SMAZÁNÍ TESTŮ
   - `Cena před slevou` – zobrazí se pouze pokud `HasAnyDiscount == true`
   - `Celková sleva` – zobrazí se pouze pokud `HasAnyDiscount == true`
   - `Celková cena nabídky` – vždy viditelná; zobrazuje cenu po odečtení všech slev
+- UNIT testy byly rozděleny do dvou samostatných testovacích tříd:
+  - `PriceCalculationTests` – testy cenové logiky
+  - `DiscountCalculationTests` – testy logiky slev
+- sjednocen styl pojmenování testovacích metod (`Method_Should_ExpectedBehavior`)
+- doplněny XML komentáře (`<summary>`) a podrobné komentáře pro lepší čitelnost a údržbu testů
 
 ### Poznámka k návrhu
 Sleva je záměrně vedena na úrovni jednotlivého řádku (ne celého úseku). Důvod: různé

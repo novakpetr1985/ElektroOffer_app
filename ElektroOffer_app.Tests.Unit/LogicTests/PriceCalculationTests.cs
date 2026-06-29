@@ -4,16 +4,18 @@ using NUnit.Framework;
 namespace ElektroOffer_app.Tests.Unit.LogicTests
 {
     /// <summary>
-    /// Testy výpočtů cen pro model PriceItems.
-    /// Testují kombinace BasePrice, MaterialCoef a PositionCoef.
+    /// UNIT TESTY:
+    /// Testují čistý matematický výpočet ceny z modelu PriceItems.
+    /// 
+    /// Vzorec:
+    /// BasePrice × MaterialCoef × PositionCoef
     /// </summary>
     [TestFixture]
     public class PriceCalculationTests
     {
         /// <summary>
-        /// Pomocná metoda pro výpočet výsledné ceny.
-        /// Pokud máš ve své aplikaci jiný vzorec,
-        /// stačí upravit tuto metodu.
+        /// Pomocná metoda pro výpočet ceny.
+        /// (Zrcadlí logiku aplikace – pokud se změní, upravit i zde.)
         /// </summary>
         private double CalculateFinalPrice(PriceItems item)
         {
@@ -25,7 +27,7 @@ namespace ElektroOffer_app.Tests.Unit.LogicTests
         // ============================================================
 
         /// <summary>
-        /// Ověří, že základní výpočet funguje správně.
+        /// Ověří správný základní výpočet ceny.
         /// </summary>
         [Test]
         public void FinalPrice_Should_Calculate_Correctly()
@@ -47,7 +49,7 @@ namespace ElektroOffer_app.Tests.Unit.LogicTests
         // ============================================================
 
         /// <summary>
-        /// Ověří, že koeficienty 1 nemění cenu.
+        /// Ověří, že koeficienty = 1 nemění cenu.
         /// </summary>
         [Test]
         public void FinalPrice_Should_Not_Change_When_Coefs_Are_One()
@@ -65,11 +67,11 @@ namespace ElektroOffer_app.Tests.Unit.LogicTests
         }
 
         // ============================================================
-        // TEST 3 – KOEFICIENTY < 1 (SLEVY)
+        // TEST 3 – SLEVY (KOEF < 1)
         // ============================================================
 
         /// <summary>
-        /// Ověří, že koeficienty menší než 1 snižují cenu.
+        /// Ověří snížení ceny při koeficientech < 1.
         /// </summary>
         [Test]
         public void FinalPrice_Should_Decrease_With_Lower_Coefs()
@@ -83,16 +85,13 @@ namespace ElektroOffer_app.Tests.Unit.LogicTests
 
             var result = CalculateFinalPrice(item);
 
-            Assert.That(result, Is.EqualTo(144)); // 200 × 0.8 × 0.9
+            Assert.That(result, Is.EqualTo(144));
         }
 
         // ============================================================
-        // TEST 4 – KOEFICIENTY > 1 (ZVÝŠENÍ CENY)
+        // TEST 4 – NAVÝŠENÍ (KOEF > 1)
         // ============================================================
 
-        /// <summary>
-        /// Ověří, že koeficienty větší než 1 zvyšují cenu.
-        /// </summary>
         [Test]
         public void FinalPrice_Should_Increase_With_Higher_Coefs()
         {
@@ -105,7 +104,7 @@ namespace ElektroOffer_app.Tests.Unit.LogicTests
 
             var result = CalculateFinalPrice(item);
 
-            Assert.That(result, Is.EqualTo(240)); // 80 × 1.5 × 2
+            Assert.That(result, Is.EqualTo(240));
         }
 
         // ============================================================
@@ -113,7 +112,7 @@ namespace ElektroOffer_app.Tests.Unit.LogicTests
         // ============================================================
 
         /// <summary>
-        /// Ověří, že výsledek lze správně zaokrouhlit na 2 desetinná místa.
+        /// Ověří zaokrouhlení výsledku (pokud UI pracuje s decimal/double).
         /// </summary>
         [Test]
         public void FinalPrice_Should_Round_To_Two_Decimals()
@@ -126,19 +125,15 @@ namespace ElektroOffer_app.Tests.Unit.LogicTests
             };
 
             var result = CalculateFinalPrice(item);
-
             var rounded = Math.Round(result, 2);
 
             Assert.That(rounded, Is.EqualTo(150.42));
         }
 
         // ============================================================
-        // TEST 6 – NULOVÉ HODNOTY
+        // TEST 6 – NULOVÁ CENA
         // ============================================================
 
-        /// <summary>
-        /// Ověří, že nulová základní cena dává nulový výsledek.
-        /// </summary>
         [Test]
         public void FinalPrice_Should_Be_Zero_When_BasePrice_Is_Zero()
         {
@@ -155,12 +150,12 @@ namespace ElektroOffer_app.Tests.Unit.LogicTests
         }
 
         // ============================================================
-        // TEST 7 – NEGATIVNÍ HODNOTY
+        // TEST 7 – NEGATIVNÍ HODNOTY (EDGE CASE)
         // ============================================================
 
         /// <summary>
-        /// Ověří, že negativní hodnoty se správně násobí.
-        /// (Pokud to aplikace nemá povolit, lze přidat validaci.)
+        /// Ověří chování při záporné ceně.
+        /// (Buď povoleno, nebo později nahradit validací.)
         /// </summary>
         [Test]
         public void FinalPrice_Should_Handle_Negative_Values()
