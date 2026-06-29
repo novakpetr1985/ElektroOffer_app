@@ -47,7 +47,7 @@ Projekt je navržen jako **výuková WPF aplikace s postupným přechodem k odd�
 - UI: WPF (XAML)
 - Logika: Code-behind + Services
 - Data: EF Core + SQLite
-- Export/Import: JSON serializace -> zatím nezavedeno, použítí SAVE/LOAD
+- Export/Import: JSON serializace (ProjectData, CatalogExportData)
 - Testování: Unit + Integration
 - DI: Konstruktorová injekce ve ViewModelech a Services
 
