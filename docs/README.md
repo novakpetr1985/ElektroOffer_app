@@ -3,7 +3,6 @@
 Desktopová WPF aplikace pro kalkulaci elektro prací a materiálu.
 Cílem projektu je vytvořit přehledný nástroj pro tvorbu nabídek (rozpočtů) s možností ukládání, načítání, exportu a budoucím PDF / tisku.
 
-
 ---
 
 ## 📦 Požadavky
