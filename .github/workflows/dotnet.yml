@@ -11,10 +11,10 @@ on:
     branches: [ "**" ]     # spustí se na jakýkoliv PR mezi libovolnými větvemi
 
 # ============================================================
-# 🧪 JOB — build + testy
+# 🧪 JOB — jen testy (UNIT + Integration), bez samostatného buildu
 # ============================================================
 jobs:
-  build-and-test:
+  tests-only:
     runs-on: windows-latest   # WPF + .NET Desktop → musí být Windows runner
 
     steps:
@@ -33,19 +33,8 @@ jobs:
         dotnet-version: '10.0.x'   # tvoje verze .NET podle README
 
     # --------------------------------------------------------
-    # 📦 3) Restore NuGet balíčků
+    # 🧪 3) Spuštění všech testů (Unit + Integration)
+    #     dotnet test si solution sám přeloží (není potřeba samostatný build krok)
     # --------------------------------------------------------
-    - name: Restore dependencies
-      run: dotnet restore ElektroOffer_app.slnx
-
-    # --------------------------------------------------------
-    # 🏗️ 4) Build celé solution
-    # --------------------------------------------------------
-    - name: Build solution
-      run: dotnet build ElektroOffer_app.slnx --configuration Release --no-restore
-
-    # --------------------------------------------------------
-    # 🧪 5) Spuštění všech testů (Unit + Integration)
-    # --------------------------------------------------------
-    - name: Run all tests
-      run: dotnet test ElektroOffer_app.slnx --no-build --verbosity normal
+    - name: Run all tests (Unit + Integration)
+      run: dotnet test ElektroOffer_app.slnx --configuration Release --verbosity normal
