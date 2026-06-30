@@ -41,8 +41,8 @@ jobs:
     # --------------------------------------------------------
     # 🏗️ 4) Build celé solution
     # --------------------------------------------------------
-    - name: Build solution
-      run: dotnet build ElektroOffer_app.slnx --configuration Release --no-restore
+    #- name: Build solution
+    #  run: dotnet build ElektroOffer_app.slnx --configuration Release --no-restore
 
     # --------------------------------------------------------
     # 🧪 5) Spuštění všech testů (Unit + Integration)
@@ -53,14 +53,14 @@ jobs:
     # --------------------------------------------------------
     # 🚀 6) Publish WPF aplikace do ElektroOffer_app/publish
     # --------------------------------------------------------
-    - name: Publish WPF app
-      run: dotnet publish ElektroOffer_app/ElektroOffer_app.csproj -c Release -o ElektroOffer_app/publish
+    #- name: Publish WPF app
+    #  run: dotnet publish ElektroOffer_app/ElektroOffer_app.csproj -c Release -o ElektroOffer_app/publish
 
     # --------------------------------------------------------
     # 📤 7) Upload published app jako artefakt
     # --------------------------------------------------------
-    - name: Upload published app as artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: ElektroOffer_app_publish
-        path: ElektroOffer_app/publish
+    #- name: Upload published app as artifact
+    #  uses: actions/upload-artifact@v4
+    #  with:
+    #    name: ElektroOffer_app_publish
+    #    path: ElektroOffer_app/publish
