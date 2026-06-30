@@ -1,0 +1,66 @@
+name: ElektroOffer CI
+
+# ============================================================
+# 🧩 TRIGGERY — kdy se workflow spustí
+# ============================================================
+on:
+  push:
+    branches: [ "**" ]     # spustí se na jakýkoliv push do libovolné větve
+    tags:     [ "**" ]     # spustí se na jakýkoliv push tagu (v1.7.5, beta, cokoliv)
+  pull_request:
+    branches: [ "**" ]     # spustí se na jakýkoliv PR mezi libovolnými větvemi
+
+# ============================================================
+# 🧪 JOB — build + testy + publish
+# ============================================================
+jobs:
+  build-test-publish:
+    runs-on: windows-latest   # WPF + .NET Desktop → musí být Windows runner
+
+    steps:
+    # --------------------------------------------------------
+    # 📥 1) Stažení repozitáře
+    # --------------------------------------------------------
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    # --------------------------------------------------------
+    # ⚙️ 2) Instalace .NET SDK
+    # --------------------------------------------------------
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '10.0.x'   # tvoje verze .NET podle README
+
+    # --------------------------------------------------------
+    # 📦 3) Restore NuGet balíčků
+    # --------------------------------------------------------
+    - name: Restore dependencies
+      run: dotnet restore ElektroOffer_app.slnx
+
+    # --------------------------------------------------------
+    # 🏗️ 4) Build celé solution
+    # --------------------------------------------------------
+    - name: Build solution
+      run: dotnet build ElektroOffer_app.slnx --configuration Release --no-restore
+
+    # --------------------------------------------------------
+    # 🧪 5) Spuštění všech testů (Unit + Integration)
+    # --------------------------------------------------------
+    - name: Run all tests
+      run: dotnet test ElektroOffer_app.slnx --no-build --verbosity normal
+
+    # --------------------------------------------------------
+    # 🚀 6) Publish WPF aplikace do ElektroOffer_app/publish
+    # --------------------------------------------------------
+    - name: Publish WPF app
+      run: dotnet publish ElektroOffer_app/ElektroOffer_app.csproj -c Release -o ElektroOffer_app/publish
+
+    # --------------------------------------------------------
+    # 📤 7) Upload published app jako artefakt
+    # --------------------------------------------------------
+    - name: Upload published app as artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: ElektroOffer_app_publish
+        path: ElektroOffer_app/publish
