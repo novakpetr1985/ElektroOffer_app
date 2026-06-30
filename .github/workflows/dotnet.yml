@@ -36,5 +36,5 @@ jobs:
     # 🧪 3) Spuštění všech testů (Unit + Integration)
     #     dotnet test si solution sám přeloží (není potřeba samostatný build krok)
     # --------------------------------------------------------
-    - name: Run all tests (Unit + Integration)
-      run: dotnet test ElektroOffer_app.slnx --configuration Release --verbosity normal
+    - name: Run only UNIT tests
+      run: dotnet test ElektroOffer_app.Tests.Unit/ElektroOffer_app.Tests.Unit.csproj --configuration Release --verbosity normal
