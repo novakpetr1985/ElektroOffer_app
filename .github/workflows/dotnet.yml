@@ -11,7 +11,7 @@ on:
     branches: [ "**" ]     # spustí se na jakýkoliv PR mezi libovolnými větvemi
 
 # ============================================================
-# 🧪 JOB — jen testy (UNIT + Integration), bez samostatného buildu
+# 🧪 JOB — jen UNIT testy, bez samostatného buildu
 # ============================================================
 jobs:
   tests-only:
@@ -33,8 +33,7 @@ jobs:
         dotnet-version: '10.0.x'   # tvoje verze .NET podle README
 
     # --------------------------------------------------------
-    # 🧪 3) Spuštění všech testů (Unit + Integration)
-    #     dotnet test si solution sám přeloží (není potřeba samostatný build krok)
+    # 🧪 3) Spuštění pouze UNIT testů
     # --------------------------------------------------------
     - name: Run only UNIT tests
       run: dotnet test ElektroOffer_app.Tests.Unit/ElektroOffer_app.Tests.Unit.csproj --configuration Release --verbosity normal
