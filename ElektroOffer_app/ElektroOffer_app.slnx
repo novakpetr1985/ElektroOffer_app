@@ -1,4 +1,5 @@
 <Solution>
   <Project Path="ElektroOffer_app.csproj" />
-  <Project Path="Tests/ElektroOffer_app.Tests/ElektroOffer_app.Tests.csproj" Id="c31cedd3-6a7c-4061-9959-b827441870c6" />
+  <Project Path="ElektroOffer_app.Tests.Integration/ElektroOffer_app.Tests.Integration.csproj" />
+  <Project Path="ElektroOffer_app.Tests.Unit/ElektroOffer_app.Tests.Unit.csproj" />
 </Solution>
