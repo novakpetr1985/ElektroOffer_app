@@ -5,6 +5,25 @@ Formát vychází z [Keep a Changelog](https://keepachangelog.com/cs/1.0.0/).
 
 ---
 
+## 1.7.5 - skripty 
+
+### Přidáno
+- **scripts/** folder with spouštěcí skripty:
+  - `scripts/run-tests.bat` — dvojklikem spustí testy (Windows).
+  - `scripts/commands/run-tests.ps1` — PowerShell skript spouštějící všechny unit a integration testy
+  - `scripts/run-tests-unit.bat` — dvojklikem spustí UNIT testy (Windows).
+  - `scripts/commands/run-tests-unit.ps1` — PowerShell skript spouštějící unit testy
+  - `scripts/run-testsintegration.bat` — dvojklikem spustí integrační testy (Windows).
+  - `scripts/commands/run-tests-integration.ps1` — PowerShell skript spouštějící integrační testy
+  - `scripts/run-publish.bat` — wrapper pro publikaci.
+  - `scripts/commands/run-publish.ps1` — PowerShell skript pro `dotnet publish`.
+- **CI workflow**: `.github/workflows/dotnet.yml` — automatické restore, build, test a publish artifact při push/pull request a manuálním spuštění.
+
+### Změněno
+- Přidána základní `.gitignore` pravidla pro `bin/`, `obj/` a `publish/`.
+
+---
+
 ## [1.7.5.1] - BUGFIX: Ukládání a reset slevy (DiscountPercent, IsDiscountEnabled)
 
 ## Opraveno

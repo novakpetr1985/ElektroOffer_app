@@ -1,81 +1,66 @@
-name: ElektroOffer CI  # Název workflow, zobrazí se v GitHub Actions UI
+name: ElektroOffer CI
 
 # ============================================================
-# TRIGGERS — kdy se workflow spustí
+# 🧩 TRIGGERY — kdy se workflow spustí
 # ============================================================
 on:
   push:
-    branches: [ "**" ]   # spustí se na push do jakékoliv větve
-    tags:     [ "**" ]   # spustí se i při pushi tagu (např. v1.7.5)
+    branches: [ "**" ]     # spustí se na jakýkoliv push do libovolné větve
+    tags:     [ "**" ]     # spustí se na jakýkoliv push tagu (v1.7.5, beta, cokoliv)
   pull_request:
-    branches: [ "**" ]   # spustí se při PR do jakékoliv větve
+    branches: [ "**" ]     # spustí se na jakýkoliv PR mezi libovolnými větvemi
 
 # ============================================================
-# JOB — pouze UNIT testy (bez spouštění celé solution)
+# 🧪 JOB — build + testy + publish
 # ============================================================
 jobs:
-  tests-only:
-    runs-on: windows-latest   # Windows runner je nutný pro net10.0-windows7.0 / WPF závislosti
+  build-test-publish:
+    runs-on: windows-latest   # WPF + .NET Desktop → musí být Windows runner
 
     steps:
     # --------------------------------------------------------
-    # 1) Checkout repository
+    # 📥 1) Stažení repozitáře
     # --------------------------------------------------------
     - name: Checkout repository
       uses: actions/checkout@v4
-      # Stáhne celý repozitář do pracovního adresáře runneru (defaultně D:\a\<repo>\<repo>).
-      # Bez tohoto kroku by dotnet test neměl zdrojové soubory.
 
     # --------------------------------------------------------
-    # 2) Setup .NET SDK
+    # ⚙️ 2) Instalace .NET SDK
     # --------------------------------------------------------
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: '10.0.x'
-      # Nainstaluje požadovanou verzi .NET SDK.
-      # Musí odpovídat TargetFramework v projektech (např. net10.0-windows7.0).
+        dotnet-version: '10.0.x'   # tvoje verze .NET podle README
 
     # --------------------------------------------------------
-    # 3) Spuštění pouze UNIT testů (konkrétní .csproj)
+    # 📦 3) Restore NuGet balíčků
     # --------------------------------------------------------
-    - name: Run only UNIT tests
-      run: |
-        # Spouštíme přímo projekt .csproj, nikoli solution (.sln).
-        # Důvod: dotnet test <solution> spustí všechny test projekty v solution (UNIT + INTEGRATION).
-        #       dotnet test <project.csproj> spustí pouze testy z daného projektu.
-        #
-        # Použití cesty relativní k repozitáři: ElektroOffer_app.Tests.Unit/ElektroOffer_app.Tests.Unit.csproj
-        # --configuration Release: sjednocuje konfiguraci (Release místo Debug).
-        # --verbosity normal: přiměřená úroveň logování.
-        #
-        # DŮLEŽITÉ:
-        # - Na tomto řádku nesmí být žádné další texty, komentáře nebo metadata za příkazem.
-        # - Pokud se za příkaz přilepí cokoliv (např. "# ...", JSON, nebo jiné texty),
-        #   příkaz se stane neplatným a runner může chybně spustit jiný krok nebo celou solution.
-        dotnet test ElektroOffer_app.Tests.Unit/ElektroOffer_app.Tests.Unit.csproj --configuration Release --verbosity normal
+    - name: Restore dependencies
+      run: dotnet restore ElektroOffer_app.slnx
 
     # --------------------------------------------------------
-    # Poznámky k běhu a ladění
+    # 🏗️ 4) Build celé solution
     # --------------------------------------------------------
-    # - Pokud po pushi stále vidíte v Actions "Total tests: 26" místo očekávaných 20,
-    #   znamená to, že se spustila celá solution (obsahuje UNIT + INTEGRATION).
-    #   To se děje, když příkaz pro spuštění projektu není proveden správně (např. kvůli
-    #   přilepenému textu na stejném řádku) nebo když workflow používá dotnet test na .sln.
-    #
-    # - Jak ověřit přesný příkaz, který runner spustil:
-    #   V Actions UI otevřete log kroku "Run only UNIT tests" a zkontrolujte první řádky,
-    #   kde se vypíše přesný shell příkaz. Musí být identický s tím, co je v tomto souboru.
-    #
-    # - Jak najít a odstranit nežádoucí metadata:
-    #   1) Prohledejte repozitář příkazem: git grep -n "edge_all_open_tabs" || true
-    #   2) Otevřete .github/workflows/dotnet.yml a všechny .csproj soubory v textovém režimu
-    #      a ujistěte se, že soubory končí přesně (YAML: žádné přilepené komentáře; XML: končí </Project>).
-    #
-    # - Lokální ověření:
-    #   Spusťte lokálně: dotnet test ElektroOffer_app.Tests.Unit/ElektroOffer_app.Tests.Unit.csproj --configuration Release --verbosity normal
-    #   Očekávaný výstup: "Total tests: 20" a "Passed: 20" (pokud UNIT testy projdou).
-    #
-    # - Pokud chcete později přidat integrační testy:
-    #   Doporučený přístup: vytvořit samostatný job nebo workflow pro integrační testy,
-    #   spouštět je selektivně (např. jen na PR, jen na tag nebo s manuálním triggerem).
+    - name: Build solution
+      run: dotnet build ElektroOffer_app.slnx --configuration Release --no-restore
+
+    # --------------------------------------------------------
+    # 🧪 5) Spuštění všech testů (Unit + Integration)
+    # --------------------------------------------------------
+    - name: Run all tests
+      run: dotnet test ElektroOffer_app.slnx --no-build --verbosity normal
+
+    # --------------------------------------------------------
+    # 🚀 6) Publish WPF aplikace do ElektroOffer_app/publish
+    # --------------------------------------------------------
+    - name: Publish WPF app
+      run: dotnet publish ElektroOffer_app/ElektroOffer_app.csproj -c Release -o ElektroOffer_app/publish
+
+    # --------------------------------------------------------
+    # 📤 7) Upload published app jako artefakt
+    # --------------------------------------------------------
+    - name: Upload published app as artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: ElektroOffer_app_publish
+        path: ElektroOffer_app/publish

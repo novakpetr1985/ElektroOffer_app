@@ -1,5 +1,0 @@
-Pouze UNIT testy - new
-
-Nově spouštění jen UNIT testů, SPUŠTĚNÍ NOVĚ
-
-test
