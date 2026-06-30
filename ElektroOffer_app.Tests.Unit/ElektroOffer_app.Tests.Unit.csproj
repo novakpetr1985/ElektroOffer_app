@@ -1,52 +1,62 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-	<PropertyGroup>
-		<!-- Cílový framework -->
-		<TargetFramework>net10.0-windows7.0</TargetFramework>
+  <!--
+    Tento soubor je testovací projekt (.csproj) pro UNIT testy.
+    POZOR: žádné externí metadata (např. edge_all_open_tabs) nesmí být v souboru.
+    Soubor musí končit přesně značkou </Project> bez dalších textů za ní.
+  -->
 
-		<!-- Moderní C# -->
-		<LangVersion>latest</LangVersion>
+  <PropertyGroup>
+    <!-- Cílový framework: .NET 10 pro Windows (WPF / desktop) -->
+    <TargetFramework>net10.0-windows7.0</TargetFramework>
 
-		<!-- Automatické usingy -->
-		<ImplicitUsings>enable</ImplicitUsings>
+    <!-- Použít nejnovější dostupnou verzi jazyka C# -->
+    <LangVersion>latest</LangVersion>
 
-		<!-- Nullable reference types -->
-		<Nullable>enable</Nullable>
+    <!-- Implicitní usingy (usnadní psaní testů) -->
+    <ImplicitUsings>enable</ImplicitUsings>
 
-		<!-- Test projekt se nebalí do NuGetu -->
-		<IsPackable>false</IsPackable>
-	</PropertyGroup>
+    <!-- Zapnout nullable reference types pro přísnější kontrolu nullů -->
+    <Nullable>enable</Nullable>
 
-	<ItemGroup>
-		<!-- NUnit 3.x – stabilní verze -->
-		<PackageReference Include="Microsoft.Data.Sqlite" Version="10.0.9" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.9" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.9" />
-		<PackageReference Include="NUnit" Version="3.14.0" />
+    <!-- Test projekt se nepublikuje jako NuGet balíček -->
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
 
-		<!-- Adapter pro Visual Studio Test Explorer -->
-		<PackageReference Include="NUnit3TestAdapter" Version="6.2.0" />
+  <ItemGroup>
+    <!-- Závislosti potřebné pro testy a in-memory SQLite -->
+    <PackageReference Include="Microsoft.Data.Sqlite" Version="10.0.9" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.9" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.9" />
 
-		<!-- Microsoft test runner -->
-		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.7.0" />
+    <!-- Testovací framework -->
+    <PackageReference Include="NUnit" Version="3.14.0" />
 
-		<!-- Code coverage -->
-		<PackageReference Include="coverlet.collector" Version="10.0.1">
-			<PrivateAssets>all</PrivateAssets>
-		</PackageReference>
+    <!-- Adapter pro Test Explorer (Visual Studio) -->
+    <PackageReference Include="NUnit3TestAdapter" Version="6.2.0" />
 
-		<!-- SQLite knihovna -->
-		<PackageReference Include="SQLitePCLRaw.lib.e_sqlite3" Version="3.50.3" />
+    <!-- Microsoft test runner (nutné pro dotnet test / VSTest) -->
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.7.0" />
 
-		<!-- Explicitní pin tranzitivních SQLitePCLRaw balíčků – oprava zranitelnosti GHSA-2m69-gcr7-jv3q -->
-		<PackageReference Include="SQLitePCLRaw.bundle_e_sqlite3" Version="3.0.3" />
-		<PackageReference Include="SQLitePCLRaw.core" Version="3.0.3" />
-		<PackageReference Include="SQLitePCLRaw.provider.e_sqlite3" Version="3.0.3" />
-	</ItemGroup>
+    <!-- Code coverage collector (volitelné) -->
+    <PackageReference Include="coverlet.collector" Version="10.0.1">
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
 
-	<ItemGroup>
-		<!-- Odkaz na hlavní projekt -->
-		<ProjectReference Include="..\ElektroOffer_app\ElektroOffer_app.csproj" />
-	</ItemGroup>
+    <!-- Native SQLite runtime -->
+    <PackageReference Include="SQLitePCLRaw.lib.e_sqlite3" Version="3.50.3" />
+
+    <!-- Explicitní piny tranzitivních balíčků (bezpečnostní oprava) -->
+    <PackageReference Include="SQLitePCLRaw.bundle_e_sqlite3" Version="3.0.3" />
+    <PackageReference Include="SQLitePCLRaw.core" Version="3.0.3" />
+    <PackageReference Include="SQLitePCLRaw.provider.e_sqlite3" Version="3.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Odkaz na hlavní aplikační projekt.
+         Důležité: relativní cesta musí být správná a soubor ElektroOffer_app.csproj
+         musí být v repozitáři. -->
+    <ProjectReference Include="..\ElektroOffer_app\ElektroOffer_app.csproj" />
+  </ItemGroup>
 
 </Project>

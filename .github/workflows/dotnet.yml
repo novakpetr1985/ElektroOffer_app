@@ -1,39 +1,81 @@
-name: ElektroOffer CI
+name: ElektroOffer CI  # Název workflow, zobrazí se v GitHub Actions UI
 
 # ============================================================
-# 🧩 TRIGGERY — kdy se workflow spustí
+# TRIGGERS — kdy se workflow spustí
 # ============================================================
 on:
   push:
-    branches: [ "**" ]     # spustí se na jakýkoliv push do libovolné větve
-    tags:     [ "**" ]     # spustí se na jakýkoliv push tagu (v1.7.5, beta, cokoliv)
+    branches: [ "**" ]   # spustí se na push do jakékoliv větve
+    tags:     [ "**" ]   # spustí se i při pushi tagu (např. v1.7.5)
   pull_request:
-    branches: [ "**" ]     # spustí se na jakýkoliv PR mezi libovolnými větvemi
+    branches: [ "**" ]   # spustí se při PR do jakékoliv větve
 
 # ============================================================
-# 🧪 JOB — jen UNIT testy, bez samostatného buildu
+# JOB — pouze UNIT testy (bez spouštění celé solution)
 # ============================================================
 jobs:
   tests-only:
-    runs-on: windows-latest   # WPF + .NET Desktop → musí být Windows runner
+    runs-on: windows-latest   # Windows runner je nutný pro net10.0-windows7.0 / WPF závislosti
 
     steps:
     # --------------------------------------------------------
-    # 📥 1) Stažení repozitáře
+    # 1) Checkout repository
     # --------------------------------------------------------
     - name: Checkout repository
       uses: actions/checkout@v4
+      # Stáhne celý repozitář do pracovního adresáře runneru (defaultně D:\a\<repo>\<repo>).
+      # Bez tohoto kroku by dotnet test neměl zdrojové soubory.
 
     # --------------------------------------------------------
-    # ⚙️ 2) Instalace .NET SDK
+    # 2) Setup .NET SDK
     # --------------------------------------------------------
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: '10.0.x'   # tvoje verze .NET podle README
+        dotnet-version: '10.0.x'
+      # Nainstaluje požadovanou verzi .NET SDK.
+      # Musí odpovídat TargetFramework v projektech (např. net10.0-windows7.0).
 
     # --------------------------------------------------------
-    # 🧪 3) Spuštění pouze UNIT testů
+    # 3) Spuštění pouze UNIT testů (konkrétní .csproj)
     # --------------------------------------------------------
     - name: Run only UNIT tests
-      run: dotnet test ElektroOffer_app.Tests.Unit/ElektroOffer_app.Tests.Unit.csproj --configuration Release --verbosity normal
+      run: |
+        # Spouštíme přímo projekt .csproj, nikoli solution (.sln).
+        # Důvod: dotnet test <solution> spustí všechny test projekty v solution (UNIT + INTEGRATION).
+        #       dotnet test <project.csproj> spustí pouze testy z daného projektu.
+        #
+        # Použití cesty relativní k repozitáři: ElektroOffer_app.Tests.Unit/ElektroOffer_app.Tests.Unit.csproj
+        # --configuration Release: sjednocuje konfiguraci (Release místo Debug).
+        # --verbosity normal: přiměřená úroveň logování.
+        #
+        # DŮLEŽITÉ:
+        # - Na tomto řádku nesmí být žádné další texty, komentáře nebo metadata za příkazem.
+        # - Pokud se za příkaz přilepí cokoliv (např. "# ...", JSON, nebo jiné texty),
+        #   příkaz se stane neplatným a runner může chybně spustit jiný krok nebo celou solution.
+        dotnet test ElektroOffer_app.Tests.Unit/ElektroOffer_app.Tests.Unit.csproj --configuration Release --verbosity normal
+
+    # --------------------------------------------------------
+    # Poznámky k běhu a ladění
+    # --------------------------------------------------------
+    # - Pokud po pushi stále vidíte v Actions "Total tests: 26" místo očekávaných 20,
+    #   znamená to, že se spustila celá solution (obsahuje UNIT + INTEGRATION).
+    #   To se děje, když příkaz pro spuštění projektu není proveden správně (např. kvůli
+    #   přilepenému textu na stejném řádku) nebo když workflow používá dotnet test na .sln.
+    #
+    # - Jak ověřit přesný příkaz, který runner spustil:
+    #   V Actions UI otevřete log kroku "Run only UNIT tests" a zkontrolujte první řádky,
+    #   kde se vypíše přesný shell příkaz. Musí být identický s tím, co je v tomto souboru.
+    #
+    # - Jak najít a odstranit nežádoucí metadata:
+    #   1) Prohledejte repozitář příkazem: git grep -n "edge_all_open_tabs" || true
+    #   2) Otevřete .github/workflows/dotnet.yml a všechny .csproj soubory v textovém režimu
+    #      a ujistěte se, že soubory končí přesně (YAML: žádné přilepené komentáře; XML: končí </Project>).
+    #
+    # - Lokální ověření:
+    #   Spusťte lokálně: dotnet test ElektroOffer_app.Tests.Unit/ElektroOffer_app.Tests.Unit.csproj --configuration Release --verbosity normal
+    #   Očekávaný výstup: "Total tests: 20" a "Passed: 20" (pokud UNIT testy projdou).
+    #
+    # - Pokud chcete později přidat integrační testy:
+    #   Doporučený přístup: vytvořit samostatný job nebo workflow pro integrační testy,
+    #   spouštět je selektivně (např. jen na PR, jen na tag nebo s manuálním triggerem).
