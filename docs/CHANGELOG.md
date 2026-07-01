@@ -20,7 +20,8 @@ Formát vychází z [Keep a Changelog](https://keepachangelog.com/cs/1.0.0/).
 - **CI workflow**: `.github/workflows/dotnet.yml` — automatické restore, build, test a publish artifact při push/pull request a manuálním spuštění.
 
 ### Změněno
-- Přidána základní `.gitignore` pravidla pro `bin/`, `obj/` a `publish/`.
+- Přidána základní `.gitignore` pravidla pro `bin/`, `obj/` a `publish/`
+- Aktualizováno zobrazování verze aplikace (kompatibilita s .NET 10)
 
 ---
 

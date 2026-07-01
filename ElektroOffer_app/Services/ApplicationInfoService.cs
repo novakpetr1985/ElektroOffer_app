@@ -35,21 +35,30 @@ namespace ElektroOffer_app.Services
             {
                 var assembly = Assembly.GetExecutingAssembly();
 
-                var informationalVersion = assembly
-                    .GetCustomAttribute<AssemblyInformationalVersionAttribute>()
-                    ?.InformationalVersion;
+                // 1) Preferujeme InformationalVersion – obsahuje i suffixy (-dev, -beta, ...)
+                var info = assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>()
+                                ?.InformationalVersion;
 
-                // .NET může za verzi přidat "+commit_hash" suffix (např. "1.7.0+a3f2c8b")
-                // Split('+')[0] vezme pouze část před '+', tedy čisté "1.7.0"
-                if (!string.IsNullOrWhiteSpace(informationalVersion))
-                    return informationalVersion.Split('+')[0];
+                if (!string.IsNullOrWhiteSpace(info))
+                {
+                    // Odstraníme pouze automatický +commit_hash
+                    var clean = info.Split('+')[0];
+                    return clean;
+                }
 
-                // Záložní čtení přes AssemblyName – vrátí např. "1.7.0"
-                var version = assembly.GetName().Version;
+                // 2) Fallback – klasická AssemblyName.Version (bez suffixů)
+                var v = assembly.GetName().Version;
 
-                return version != null
-                    ? $"{version.Major}.{version.Minor}.{version.Build}"
-                    : "neznámá";
+                if (v != null)
+                {
+                    // Pokud máš patch (Build) i revision (Revision), zobrazíme oboje
+                    if (v.Revision > 0)
+                        return $"{v.Major}.{v.Minor}.{v.Build}.{v.Revision}";
+
+                    return $"{v.Major}.{v.Minor}.{v.Build}";
+                }
+
+                return "neznámá";
             }
         }
     }

@@ -87,12 +87,12 @@ jobs:
     # Po dokončení CI bude vhodné Build opět zapnout,
     # aby byly ověřeny všechny projekty před spuštěním testů.
     # ========================================================
-    #- name: Build solution
-    #  run: >
-    #    dotnet build
-    #    ElektroOffer_app.slnx
-    #    --configuration Release
-    #    --no-restore
+    - name: Build solution
+      run: >
+        dotnet build
+        ElektroOffer_app.slnx
+        --configuration Release
+        --no-restore
 
     # ========================================================
     # 🧪 UNIT TESTS
@@ -146,12 +146,12 @@ jobs:
     #
     # Publish vytvoří kompletní distribuční verzi aplikace.
     # ========================================================
-    #- name: Publish application
-    #  run: >
-    #    dotnet publish
-    #    ElektroOffer_app/ElektroOffer_app.csproj
-    #    --configuration Release
-    #    --output ElektroOffer_app/publish
+    - name: Publish application
+      run: >
+        dotnet publish
+        ElektroOffer_app/ElektroOffer_app.csproj
+        --configuration Release
+        --output ElektroOffer_app/publish
 
     # ========================================================
     # 📤 UPLOAD PUBLISH ARTEFAKTU
@@ -161,8 +161,8 @@ jobs:
     # Díky tomu lze výsledný build stáhnout přímo
     # z rozhraní GitHub Actions.
     # ========================================================
-    #- name: Upload publish artifact
-    #  uses: actions/upload-artifact@v4
-    #  with:
-    #    name: ElektroOffer_app_publish
-    #    path: ElektroOffer_app/publish
+    - name: Upload publish artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: ElektroOffer_app_publish
+        path: ElektroOffer_app/publish

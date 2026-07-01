@@ -8,7 +8,7 @@
 
   <PropertyGroup>
     <!-- Cílový framework: .NET 10 pro Windows (WPF / desktop) -->
-    <TargetFramework>net10.0-windows7.0</TargetFramework>
+    <TargetFramework>net10.0-windows</TargetFramework>
 
     <!-- Použít nejnovější dostupnou verzi jazyka C# -->
     <LangVersion>latest</LangVersion>
