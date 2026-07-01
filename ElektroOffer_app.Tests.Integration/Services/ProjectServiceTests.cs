@@ -285,7 +285,7 @@ public class ProjectServiceTests
         Assert.That(deserialized!.ProjectName, Is.EqualTo("Test projekt"));
 
         // CLEANUP
-        File.Delete(savedPath);
+        File.Delete(savedPath!);
     }
 
     // =====================================================================
