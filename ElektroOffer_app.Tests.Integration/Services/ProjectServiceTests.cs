@@ -273,7 +273,7 @@ public class ProjectServiceTests
         Assert.That(savedPath, Is.Not.Null, "SaveToPath vrátil null.");
         Assert.That(File.Exists(savedPath), Is.True, "Soubor nebyl vytvořen.");
 
-        var content = File.ReadAllText(savedPath);
+        var content = File.ReadAllText(savedPath!);
 
         Assert.That(content, Does.Contain("Test projekt"),
             "Data nebyla správně serializována do JSON.");
