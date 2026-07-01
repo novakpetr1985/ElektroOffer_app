@@ -1,67 +1,168 @@
 name: ElektroOffer CI
 
 # ============================================================
-# 🧩 TRIGGERY — kdy se workflow spustí
+# 🚀 ELEKTROOFFER CONTINUOUS INTEGRATION (CI)
+#
+# Workflow ověřuje kvalitu zdrojového kódu po každém:
+#   • Pushi do libovolné větve
+#   • Pushi tagu
+#   • Pull Requestu
+#
+# Aktuálně aktivní:
+#   ✔ Restore NuGet balíčků
+#   ✔ Unit Tests
+#   ✔ Integration Tests
+#
+# Připraveno do budoucna:
+#   • Build aplikace
+#   • Publish aplikace
+#   • Upload publish artefaktu
 # ============================================================
+
+# ============================================================
+# 🧩 TRIGGERY
+# ============================================================
+
 on:
   push:
-    branches: [ "**" ]     # spustí se na jakýkoliv push do libovolné větve
-    tags:     [ "**" ]     # spustí se na jakýkoliv push tagu (v1.7.5, beta, cokoliv)
+    branches: [ "**" ]
+    tags: [ "**" ]
+
   pull_request:
-    branches: [ "**" ]     # spustí se na jakýkoliv PR mezi libovolnými větvemi
+    branches: [ "**" ]
 
 # ============================================================
-# 🧪 JOB — build + testy + publish
+# 🧪 JOBS
 # ============================================================
+
 jobs:
-  build-test-publish:
-    runs-on: windows-latest   # WPF + .NET Desktop → musí být Windows runner
+
+  tests:
+
+    # --------------------------------------------------------
+    # Windows runner je potřeba kvůli WPF projektu.
+    # --------------------------------------------------------
+    runs-on: windows-latest
 
     steps:
-    # --------------------------------------------------------
-    # 📥 1) Stažení repozitáře
-    # --------------------------------------------------------
+
+    # ========================================================
+    # 📥 CHECKOUT REPOSITÁŘE
+    #
+    # Stáhne aktuální commit z GitHub repozitáře.
+    # Bez tohoto kroku runner neobsahuje žádný zdrojový kód.
+    # ========================================================
     - name: Checkout repository
       uses: actions/checkout@v4
 
-    # --------------------------------------------------------
-    # ⚙️ 2) Instalace .NET SDK
-    # --------------------------------------------------------
-    - name: Setup .NET
+    # ========================================================
+    # ⚙️ INSTALACE .NET SDK
+    #
+    # Nainstaluje požadovanou verzi .NET SDK.
+    # Verze by měla odpovídat cílovému frameworku projektu.
+    # ========================================================
+    - name: Setup .NET SDK
       uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: '10.0.x'   # tvoje verze .NET podle README
+        dotnet-version: "10.0.x"
 
-    # --------------------------------------------------------
-    # 📦 3) Restore NuGet balíčků
-    # --------------------------------------------------------
-    - name: Restore dependencies
+    # ========================================================
+    # 📦 RESTORE NUGET BALÍČKŮ
+    #
+    # Restore probíhá nad celou solution.
+    #
+    # Výhoda:
+    # - obnoví závislosti všech projektů
+    # - stačí pouze jeden restore
+    # - nejrychlejší varianta
+    # ========================================================
+    - name: Restore NuGet packages
       run: dotnet restore ElektroOffer_app.slnx
 
-    # --------------------------------------------------------
-    # 🏗️ 4) Build celé solution
-    # --------------------------------------------------------
+    # ========================================================
+    # 🏗️ BUILD SOLUTION
+    #
+    # ZATÍM VYPNUTO.
+    #
+    # Po dokončení CI bude vhodné Build opět zapnout,
+    # aby byly ověřeny všechny projekty před spuštěním testů.
+    # ========================================================
     #- name: Build solution
-    #  run: dotnet build ElektroOffer_app.slnx --configuration Release --no-restore
+    #  run: >
+    #    dotnet build
+    #    ElektroOffer_app.slnx
+    #    --configuration Release
+    #    --no-restore
 
-    # --------------------------------------------------------
-    # 🧪 5) Spuštění všech testů (Unit + Integration)
-    # --------------------------------------------------------
-    - name: Run all tests
-      run: dotnet test ElektroOffer_app.slnx --no-build --verbosity normal
+    # ========================================================
+    # 🧪 UNIT TESTS
+    #
+    # Spouští všechny Unit testy projektu.
+    #
+    # Unit testy ověřují jednotlivé třídy izolovaně.
+    #
+    # Testují např.:
+    #   • business logiku
+    #   • služby
+    #   • helper třídy
+    #   • výpočty
+    #
+    # Nepracují s databází ani souborovým systémem.
+    # ========================================================
+    - name: Run Unit Tests
+      run: >
+        dotnet test
+        ElektroOffer_app.Tests.Unit/ElektroOffer_app.Tests.Unit.csproj
+        --verbosity normal
 
-    # --------------------------------------------------------
-    # 🚀 6) Publish WPF aplikace do ElektroOffer_app/publish
-    # --------------------------------------------------------
-    #- name: Publish WPF app
-    #  run: dotnet publish ElektroOffer_app/ElektroOffer_app.csproj -c Release -o ElektroOffer_app/publish
+    # ========================================================
+    # 🧪 INTEGRATION TESTS
+    #
+    # Spouští integrační testy.
+    #
+    # Testují spolupráci více částí aplikace.
+    #
+    # Typicky:
+    #   • SQLite databázi
+    #   • serializaci
+    #   • ProjectService
+    #   • CatalogService
+    #   • FileStorage
+    #
+    # Jsou odděleny od Unit testů,
+    # aby bylo v GitHub Actions ihned vidět,
+    # která sada testů případně selhala.
+    # ========================================================
+    - name: Run Integration Tests
+      run: >
+        dotnet test
+        ElektroOffer_app.Tests.Integration/ElektroOffer_app.Tests.Integration.csproj
+        --verbosity normal
 
-    # --------------------------------------------------------
-    # 📤 7) Upload published app jako artefakt
-    # --------------------------------------------------------
-    #- name: Upload published app as artifact
+    # ========================================================
+    # 🚀 PUBLISH APLIKACE
+    #
+    # Připraveno pro Release workflow.
+    #
+    # Publish vytvoří kompletní distribuční verzi aplikace.
+    # ========================================================
+    #- name: Publish application
+    #  run: >
+    #    dotnet publish
+    #    ElektroOffer_app/ElektroOffer_app.csproj
+    #    --configuration Release
+    #    --output ElektroOffer_app/publish
+
+    # ========================================================
+    # 📤 UPLOAD PUBLISH ARTEFAKTU
+    #
+    # Nahraje publikovanou aplikaci jako GitHub Artifact.
+    #
+    # Díky tomu lze výsledný build stáhnout přímo
+    # z rozhraní GitHub Actions.
+    # ========================================================
+    #- name: Upload publish artifact
     #  uses: actions/upload-artifact@v4
     #  with:
     #    name: ElektroOffer_app_publish
     #    path: ElektroOffer_app/publish
-    
