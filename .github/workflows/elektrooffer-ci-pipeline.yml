@@ -130,6 +130,10 @@ jobs:
     runs-on: windows-latest
 
     steps:
+      - name: Checkout repository
+        if: always()
+        uses: actions/checkout@v4
+
       - name: Generate Full CI Log (Error)
         if: always()
         run: |
