@@ -92,8 +92,9 @@ jobs:
 
       - name: Publish Application
         run: |
-          dotnet publish ElektroOffer_app/ElektroOffer_app.csproj \
-            --configuration Release \
+          dotnet publish `
+            ElektroOffer_app/ElektroOffer_app.csproj `
+            --configuration Release `
             --output ElektroOffer_app/publish
 
       - name: Upload Publish Artifact
@@ -117,26 +118,25 @@ jobs:
           path: elektrooffer-ci-full.log
 
 # =====================================================================
-# 🟦 JOB 3 — CI diagnostic
-# Běží pouze při ERRORU
-# Obsahuje: Detailní error log
+# 🟦 JOB — CI diagnostic
+# Vygeneruje detailní log pokaždé, když CI-electrooffer nebo Release-build selže
 # =====================================================================
-  CI-diagnostic:
-    if: failure() && !startsWith(github.ref, 'refs/tags/')
-    runs-on: windows-latest
-    needs: CI-electrooffer
+CI-diagnostic:
+  needs: [CI-electrooffer, Release-build]
+  if: needs.CI-electrooffer.result == 'failure' || needs.Release-build.result == 'failure'
+  runs-on: windows-latest
 
-    steps:
-      - name: Generate Full CI Log (Error)
-        run: |
-          echo "=== ERROR CI LOG START ===" > elektrooffer-ci-error.log
-          dotnet build ElektroOffer_app.slnx --configuration Release --verbosity detailed >> elektrooffer-ci-error.log
-          dotnet test ElektroOffer_app.Tests.Unit/ElektroOffer_app.Tests.Unit.csproj --verbosity detailed >> elektrooffer-ci-error.log
-          dotnet test ElektroOffer_app.Tests.Integration/ElektroOffer_app.Tests.Integration.csproj --verbosity detailed >> elektrooffer-ci-error.log
-          echo "=== ERROR CI LOG END ===" >> elektrooffer-ci-error.log
+  steps:
+    - name: Generate Full CI Log (Error)
+      run: |
+        echo "=== ERROR CI LOG START ===" > elektrooffer-ci-error.log
+        dotnet build ElektroOffer_app.slnx --configuration Release --verbosity detailed >> elektrooffer-ci-error.log
+        dotnet test ElektroOffer_app.Tests.Unit/ElektroOffer_app.Tests.Unit.csproj --verbosity detailed >> elektrooffer-ci-error.log
+        dotnet test ElektroOffer_app.Tests.Integration/ElektroOffer_app.Tests.Integration.csproj --verbosity detailed >> elektrooffer-ci-error.log
+        echo "=== ERROR CI LOG END ===" >> elektrooffer-ci-error.log
 
-      - name: Upload CI log error artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: elektrooffer-ci-error-log
-          path: elektrooffer-ci-error.log
+    - name: Upload CI log error artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: elektrooffer-ci-error-log
+        path: elektrooffer-ci-error.log
