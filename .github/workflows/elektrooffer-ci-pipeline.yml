@@ -1,357 +1,149 @@
-name: ElektroOffer CI
+name: ElektroOffer CI Pipeline
 
-
-# =========================================================================
-# 🚀 ELEKTROOFFER CONTINUOUS INTEGRATION (CI)
-#
-# Tento workflow ověřuje kvalitu zdrojového kódu po každém:
-#   • commitu do NECHRÁNĚNÝCH větví (feature/*, release/*)
-#   • pull requestu do CHRÁNĚNÝCH větví (dev, test, main)
-#   • vytvoření TAGU (release verze)
-#
-# Cílem je:
-#   • Zabránit duplikaci CI běhů (push + PR)
-#   • Udržet chráněné větve 100% stabilní
-#   • Poskytovat okamžitou zpětnou vazbu při vývoji
-# =========================================================================
-
+# =====================================================================
+# 🚀 TRIGGERY
+# =====================================================================
 on:
   push:
     branches:
-    - hotfix/**
-    - feature/**
-    - release/**
-    # =====================================================================
-    # 🟩 PUSH TRIGGER
-    # Spouští CI při commitu do všech větví — ale chráněné níže ignorujeme.
-    #
-    # Důvod:
-    #   • Feature/release větve potřebují testy při každém commitu
-    #   • Chráněné větve ignorujeme, protože do nich nelze pushovat
-    #   • Tím zabráníme duplikaci CI běhů (push + PR)
-    # =====================================================================
-
-    # =====================================================================
-    # 🟦 TAG TRIGGER
-    # Spouští CI při vytvoření tagu.
-    #
-    # Důvod:
-    #   • Tag = release verze
-    #   • Tag spouští build + test + publish (release pipeline)
-    # =====================================================================
-    tags: [ "**" ]
-
-    # =====================================================================
-    # 🟥 IGNOROVANÉ VĚTVE (CHRÁNĚNÉ)
-    #
-    # Chráněné větve:
-    #   • dev
-    #   • test
-    #   • main
-    #
-    # Proč je ignorujeme:
-    #   • Do těchto větví se NEpushuje (jsou chráněné)
-    #   • Změny se tam dostanou pouze přes PR
-    #   • Pokud bychom je testovali při push, CI by běželo dvakrát
-    # =====================================================================
-    # branches-ignore:
-    #  - dev
-    #  - test
-    #  - main
-
+      - hotfix/**
+      - feature/**
+      - release/**
   pull_request:
-    # =====================================================================
-    # 🟨 PULL REQUEST TRIGGER
-    # Spouští CI při PR do chráněných větví.
-    #
-    # Důvod:
-    #   • PR je jediný způsob, jak se dostanou změny do dev/test/main
-    #   • CI musí ověřit build + test před mergem
-    #   • Branch protection vyžaduje úspěšné testy
-    #
-    # Výsledek:
-    #   • CI běží jen jednou (jen PR, ne push)
-    #   • Chráněné větve jsou vždy stabilní
-    # =====================================================================
     branches:
       - dev
       - test
       - main
+  # Tag = release pipeline
+  workflow_dispatch:
+  # Tag trigger
+  create:
+    tags:
+      - '*'
 
-
-# =========================================================================
-# 🧪 JOBS
-# =========================================================================
+# =====================================================================
+# 🟩 JOB 1 — CI elektrooffer
+# Běží na: Push (feature/release/hotfix), Pull Request, Tag
+# Obsahuje: Restore, Build, Testy, Minimal Log
+# =====================================================================
 jobs:
-
-  elektrooffer-ci-pipeline:
-    # =====================================================================
-    # 🧠 CI LOGIKA:
-    #
-    # PUSH:
-    #   • feature/** → CI ANO
-    #   • release/** → CI ANO
-    #   • hotfix/**  → CI ANO
-    #
-    # PR:
-    #   • do dev/test/main → CI ANO
-    #   • z release/**     → CI NE (push už testoval)
-    #
-    # =====================================================================
+  CI-electrooffer:
     if: |
       github.event_name == 'push' ||
-      (github.event_name == 'pull_request' &&
-       !startsWith(github.event.pull_request.head.ref, 'release/'))
-
-    # =====================================================================
-    # CI běží na Windows, protože jde o WPF aplikaci.
-    # =====================================================================
+      github.event_name == 'pull_request' ||
+      startsWith(github.ref, 'refs/tags/')
     runs-on: windows-latest
 
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-    # =====================================================================
-    # 📥 CHECKOUT REPOSITÁŘE
-    #
-    # Stáhne aktuální obsah repozitáře do CI prostředí.
-    # Bez tohoto kroku by nebylo co buildit/testovat.
-    # =====================================================================
-    - name: Checkout Repository
-      uses: actions/checkout@v4
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
 
+      - name: Restore NuGet Packages
+        run: dotnet restore ElektroOffer_app.slnx
 
-    # =====================================================================
-    # ⚙️ INSTALACE .NET SDK
-    #
-    # Nainstaluje požadovanou verzi .NET SDK.
-    # Verze musí odpovídat cílovému frameworku projektu.
-    # =====================================================================
-    - name: Setup .NET SDK
-      uses: actions/setup-dotnet@v4
-      with:
-        dotnet-version: "10.0.x"
+      - name: Build Solution
+        run: dotnet build ElektroOffer_app.slnx --configuration Release --no-restore
 
+      - name: Run Unit Tests
+        run: dotnet test ElektroOffer_app.Tests.Unit/ElektroOffer_app.Tests.Unit.csproj --configuration Release --verbosity normal
 
-    # =====================================================================
-    # 📦 RESTORE NUGET BALÍČKŮ
-    #
-    # Restore probíhá nad celou solution.
-    #
-    # Výhody:
-    #   • obnoví závislosti všech projektů
-    #   • stačí pouze jeden restore
-    # =====================================================================
-    - name: Restore NuGet Packages
-      run: dotnet restore ElektroOffer_app.slnx
+      - name: Run Integration Tests
+        run: dotnet test ElektroOffer_app.Tests.Integration/ElektroOffer_app.Tests.Integration.csproj --configuration Release --verbosity normal
 
+      - name: Generate CI Log
+        run: |
+          echo "=== CI LOG START ===" > elektrooffer-ci.log
+          echo "Build + Test summary:" >> elektrooffer-ci.log
+          dotnet build ElektroOffer_app.slnx --configuration Release --verbosity minimal >> elektrooffer-ci.log
+          dotnet test ElektroOffer_app.Tests.Unit/ElektroOffer_app.Tests.Unit.csproj --verbosity minimal >> elektrooffer-ci.log
+          dotnet test ElektroOffer_app.Tests.Integration/ElektroOffer_app.Tests.Integration.csproj --verbosity minimal >> elektrooffer-ci.log
+          echo "=== CI LOG END ===" >> elektrooffer-ci.log
 
-    # =====================================================================
-    # 🏗️ BUILD SOLUTION
-    #
-    # Kompiluje celý projekt v Release konfiguraci.
-    # --no-restore = neznovu stahuje balíčky (už jsou stažené).
-    #
-    # Cíl:
-    #   • ověřit, že projekt lze zkompilovat
-    #   • zachytit chyby v kódu ještě před testy
-    # =====================================================================
-    - name: Build Solution
-      run: >
-        dotnet build
-        ElektroOffer_app.slnx
-        --configuration Release
-        --no-restore
+      - name: Upload CI log artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: elektrooffer-ci-log
+          path: elektrooffer-ci.log
 
+# =====================================================================
+# 🟥 JOB 2 — Release build
+# Běží pouze při TAGU
+# Obsahuje: Publish, Full Log, Artefakty
+# =====================================================================
+  Release-build:
+    if: startsWith(github.ref, 'refs/tags/')
+    runs-on: windows-latest
+    needs: CI-electrooffer
 
-    # =====================================================================
-    # 🧪 UNIT TESTS
-    #
-    # Spouští všechny Unit testy projektu.
-    #
-    # Unit testy ověřují jednotlivé třídy izolovaně.
-    #
-    # Testují např.:
-    #   • business logiku
-    #   • služby
-    #   • helper třídy
-    #   • výpočty
-    #
-    # Nepracují s databází ani souborovým systémem.
-    # =====================================================================
-    - name: Run Unit Tests
-      run: >
-        dotnet test
-        ElektroOffer_app.Tests.Unit/ElektroOffer_app.Tests.Unit.csproj
-        --verbosity normal
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
 
-    # =====================================================================
-    # 🧪 INTEGRATION TESTS
-    #
-    # Spouští integrační testy.
-    # Probíhá vždy — na větvích i při tagu.
-    #
-    # Testují spolupráci více částí aplikace:
-    #   • SQLite databázi
-    #   • serializaci
-    #   • ProjectService
-    #   • CatalogService
-    #   • FileStorage
-    #
-    # Jsou odděleny od Unit testů,
-    # aby bylo v GitHub Actions ihned vidět,
-    # která sada testů případně selhala.
-    # 
-    # =====================================================================
-    - name: Run Integration Tests
-      run: >
-        dotnet test
-        ElektroOffer_app.Tests.Integration/ElektroOffer_app.Tests.Integration.csproj
-        --verbosity normal
+      - name: Publish Application
+        run: |
+          dotnet publish ElektroOffer_app/ElektroOffer_app.csproj \
+            --configuration Release \
+            --output ElektroOffer_app/publish
 
+      - name: Upload Publish Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: elektrooffer-publish
+          path: ElektroOffer_app/publish
 
-    # =====================================================================
-    # 🚀 PUBLISH APLIKACE (POUZE PŘI TAGU)
-    #
-    # Publish proběhne pouze tehdy, pokud je workflow spuštěn
-    # na tagu — tedy při vydání nové verze.
-    #
-    # Podmínka:
-    #   startsWith(github.ref, 'refs/tags/')
-    #
-    # Výstup:
-    #   • kompletní distribuční verze aplikace
-    #   • uložená v ElektroOffer_app/publish
-    # =====================================================================
-    - name: Publish Application
-      if: startsWith(github.ref, 'refs/tags/')
-      run: >
-        dotnet publish
-        ElektroOffer_app/ElektroOffer_app.csproj
-        --configuration Release
-        --output ElektroOffer_app/publish
+      - name: Generate Full CI Log (Release)
+        run: |
+          echo "=== FULL CI LOG START ===" > elektrooffer-ci-full.log
+          dotnet build ElektroOffer_app.slnx --configuration Release --verbosity detailed >> elektrooffer-ci-full.log
+          dotnet test ElektroOffer_app.Tests.Unit/ElektroOffer_app.Tests.Unit.csproj --verbosity detailed >> elektrooffer-ci-full.log
+          dotnet test ElektroOffer_app.Tests.Integration/ElektroOffer_app.Tests.Integration.csproj --verbosity detailed >> elektrooffer-ci-full.log
+          echo "=== FULL CI LOG END ===" >> elektrooffer-ci-full.log
 
+      - name: Upload CI log full artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: elektrooffer-ci-full-log
+          path: elektrooffer-ci-full.log
 
-    # =====================================================================
-    # 📤 UPLOAD PUBLISH ARTEFAKTU (POUZE PŘI TAGU)
-    #
-    # Nahraje publikovanou aplikaci jako GitHub Artifact.
-    #
-    # Proč pouze při tagu?
-    #   • Artefakt je určený pro release verzi
-    #   • Nechceme generovat velké artefakty při každém commitu
-    #
-    # Výhody:
-    #   • Výsledný build lze stáhnout přímo z GitHub Actions → Artifacts
-    # =====================================================================
-    - name: Upload Publish Artifact
-      if: startsWith(github.ref, 'refs/tags/')
-      uses: actions/upload-artifact@v4
-      with:
-        name: ElektroOffer_app_publish
-        path: ElektroOffer_app/publish
+# =====================================================================
+# 🟦 JOB 3 — CI diagnostic
+# Běží pouze při ERRORU
+# Obsahuje: Detailní error log
+# =====================================================================
+  CI-diagnostic:
+    if: failure() && !startsWith(github.ref, 'refs/tags/')
+    runs-on: windows-latest
+    needs: CI-electrooffer
 
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-    # =====================================================================
-    # 📝 CI LOG MINIMÁLNÍ (SPOUŠTÍ SE VŽDY)
-    #
-    # CI vytváří minimální log běhu build/test kroků.
-    # Tento log se generuje vždy — při pushi, PR i tagu.
-    #
-    # Proč je to užitečné?
-    #   • Pomáhá při ladění chyb v CI
-    #   • Umožňuje zpětně dohledat, co přesně CI provedlo
-    #   • Log lze stáhnout přímo z GitHub Actions → Artifacts
-    #
-    # Obsah logu:
-    #   • Build výstup (minimal)
-    #   • Unit testy (minimal)
-    #   • Integration testy (minimal)
-    #
-    # Poznámka:
-    #   • Log je malý → nezatěžuje CI
-    # =====================================================================
-    - name: Generate Minimal CI Log
-      run: |
-        echo "=== CI LOG START ===" > elektrooffer-ci-pipeline.log
-        echo "Build output:" >> elektrooffer-ci-pipeline.log
-        dotnet build ElektroOffer_app.slnx --configuration Release --verbosity minimal >> elektrooffer-ci-pipeline.log
-        echo "" >> elektrooffer-ci-pipeline.log
-        echo "Unit Tests:" >> elektrooffer-ci-pipeline.log
-        dotnet test ElektroOffer_app.Tests.Unit/ElektroOffer_app.Tests.Unit.csproj --verbosity minimal >> elektrooffer-ci-pipeline.log
-        echo "" >> elektrooffer-ci-pipeline.log
-        echo "Integration Tests:" >> elektrooffer-ci-pipeline.log
-        dotnet test ElektroOffer_app.Tests.Integration/ElektroOffer_app.Tests.Integration.csproj --verbosity minimal >> elektrooffer-ci-pipeline.log
-        echo "=== CI LOG END ===" >> elektrooffer-ci-pipeline.log
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
 
-    # =====================================================================
-    # 📤 UPLOAD ARTEFAKTU MINIMÁLNÍHO LOGU (SPOUŠTÍ SE VŽDY)
-    #
-    # Nahraje minimální CI log jako GitHub Artifact.
-    #
-    # Proč vždy?
-    #   • Log je malý
-    #   • Je užitečný při ladění chyb
-    #   • Umožňuje zpětně dohledat průběh CI
-    #
-    # Výstup:
-    #   • Artefakt: elektroOffer_ci_pipeline_log
-    # =====================================================================
-    - name: Upload CI log artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: elektroOffer_ci_pipeline_log
-        path: elektrooffer-ci-pipeline.log
+      - name: Generate Full CI Log (Error)
+        run: |
+          echo "=== ERROR CI LOG START ===" > elektrooffer-ci-error.log
+          dotnet build ElektroOffer_app.slnx --configuration Release --verbosity detailed >> elektrooffer-ci-error.log
+          dotnet test ElektroOffer_app.Tests.Unit/ElektroOffer_app.Tests.Unit.csproj --verbosity detailed >> elektrooffer-ci-error.log
+          dotnet test ElektroOffer_app.Tests.Integration/ElektroOffer_app.Tests.Integration.csproj --verbosity detailed >> elektrooffer-ci-error.log
+          echo "=== ERROR CI LOG END ===" >> elektrooffer-ci-error.log
 
-
-    # =====================================================================
-    # 📝 CI LOG DETAILNÍ (POUZE PŘI TAGU)
-    #
-    # Detailní CI log obsahuje kompletní diagnostiku build/test kroků.
-    # Spouští se pouze při tagu — tedy při vydání nové verze.
-    #
-    # Proč pouze při tagu?
-    #   • Detailní log je velký
-    #   • Nechceme zatěžovat CI při každém pushi
-    #
-    # Obsah logu:
-    #   • Build výstup (detailed)
-    #   • Unit testy (detailed)
-    #   • Integration testy (detailed)
-    #
-    # Výstup:
-    #   • Soubor elektrooffer-ci-pipeline-full.log
-    # ======================================================================
-    - name: Generate Detailed CI Log
-      if: startsWith(github.ref, 'refs/tags/')
-      run: |
-        echo "=== CI LOG FULL START ===" > elektrooffer-ci-pipeline-full.log
-        echo "Build output (detailed):" >> elektrooffer-ci-pipeline-full.log
-        dotnet build ElektroOffer_app.slnx --configuration Release --verbosity detailed >> elektrooffer-ci-pipeline-full.log
-        echo "" >> elektrooffer-ci-pipeline-full.log
-        echo "Unit Tests (detailed):" >> elektrooffer-ci-pipeline-full.log
-        dotnet test ElektroOffer_app.Tests.Unit/ElektroOffer_app.Tests.Unit.csproj --verbosity detailed >> elektrooffer-ci-pipeline-full.log
-        echo "" >> elektrooffer-ci-pipeline-full.log
-        echo "Integration Tests (detailed):" >> elektrooffer-ci-pipeline-full.log
-        dotnet test ElektroOffer_app.Tests.Integration/ElektroOffer_app.Tests.Integration.csproj --verbosity detailed >> elektrooffer-ci-pipeline-full.log
-        echo "=== CI LOG FULL END ===" >> elektrooffer-ci-pipeline-full.log
-
-    # =====================================================================
-    # 📤 UPLOAD ARTEFAKTU DETAILNÍHO LOGU (POUZE PŘI TAGU)
-    #
-    # Nahraje detailní CI log jako GitHub Artifact.
-    #
-    # Proč pouze při tagu?
-    #   • Detailní log je velký
-    #   • Nechceme generovat velké artefakty při každém pushi
-    #
-    # Výstup:
-    #   • Artefakt: elektroOffer_ci_pipeline_full_log
-    # ======================================================================
-
-    - name: Upload CI log full artifact
-      if: startsWith(github.ref, 'refs/tags/')
-      uses: actions/upload-artifact@v4
-      with:
-        name: elektroOffer_ci_pipeline_full_log
-        path: elektrooffer-ci-pipeline-full.log
+      - name: Upload CI log error artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: elektrooffer-ci-error-log
+          path: elektrooffer-ci-error.log
