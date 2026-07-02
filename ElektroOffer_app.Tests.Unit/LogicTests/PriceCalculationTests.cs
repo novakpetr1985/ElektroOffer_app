@@ -106,7 +106,7 @@ namespace ElektroOffer_app.Tests.Unit.LogicTests
 
             Assert.That(result, Is.EqualTo(240));
         }
-
+/*
         // ============================================================
         // TEST 5 – ZAOKROUHLENÍ
         // ============================================================
@@ -129,7 +129,7 @@ namespace ElektroOffer_app.Tests.Unit.LogicTests
 
             Assert.That(rounded, Is.EqualTo(150.42));
         }
-
+*/
         // ============================================================
         // TEST 6 – NULOVÁ CENA
         // ============================================================

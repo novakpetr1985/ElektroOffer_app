@@ -31,7 +31,7 @@
 
 
             <!-- ======================================================= -->
-            <!-- 📛 NÁZEV APLIKACE                                        -->
+            <!-- 📛 NÁZEV APLIKACE                                       -->
             <!-- ======================================================= -->
             <TextBlock Text="ElektroOffer"
                        FontSize="24"
@@ -41,7 +41,8 @@
                        Margin="0,0,0,6"/>
 
             <!-- ======================================================= -->
-            <!-- 🔢 VERZE — načítá se z .csproj přes AssemblyInfo        -->
+            <!-- 🔢 VERZE — načítá se z .csproj přes                     -->
+            <!-- AssemblyInformationalVersion / Version                  -->
             <!-- Text se nastavuje z code-behind při otevření okna       -->
             <!-- ======================================================= -->
             <TextBlock x:Name="VersionText"

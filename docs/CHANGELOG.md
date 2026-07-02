@@ -5,6 +5,44 @@ Formát vychází z [Keep a Changelog](https://keepachangelog.com/cs/1.0.0/).
 
 ---
 
+## 1.7.5 - skripty + Git úpravy
+
+### Přidáno
+- **scripts/** folder with spouštěcí skripty:
+  - `scripts/run-tests.bat` — dvojklikem spustí testy (Windows).
+  - `scripts/commands/run-tests.ps1` — PowerShell skript spouštějící všechny unit a integration testy
+  - `scripts/run-tests-unit.bat` — dvojklikem spustí UNIT testy (Windows).
+  - `scripts/commands/run-tests-unit.ps1` — PowerShell skript spouštějící unit testy
+  - `scripts/run-testsintegration.bat` — dvojklikem spustí integrační testy (Windows).
+  - `scripts/commands/run-tests-integration.ps1` — PowerShell skript spouštějící integrační testy
+  - `scripts/run-publish.bat` — wrapper pro publikaci.
+  - `scripts/commands/run-publish.ps1` — PowerShell skript pro `dotnet publish`
+- **CI workflow**: `.github/workflows/elektrooffer-ci-pipeline.yml` 
+  - CI workflow nyní spouští Publish a upload artefaktu pouze při vytvoření tagu
+  - build, Unit testy a Integration testy se nyní spouští při každém push/pull requestu
+  - `logování stavu`
+    - minimální - vždy --> `elektrooffer_ci_pipeline`
+    - detailní - pouze při tagu --> `elektrooffer_ci_pipeline_full` 
+
+### Změněno
+- přidána základní `.gitignore` pravidla pro `bin/`, `obj/` a `publish/`
+- pktualizováno zobrazování verze aplikace (kompatibilita s .NET 10)
+- Upraven a zpřesněn vývojový workflow: feature → dev → test → main → tag.
+- Aktivovány GitHub Rulesety pro povinné PR a CI na chráněných větvích.
+
+---
+
+## [1.7.5.1] - BUGFIX: Ukládání a reset slevy (DiscountPercent, IsDiscountEnabled)
+
+## Opraveno
+- stav slevy se nyní správně persistuje do modelu před uložením/serializací
+- `ClearAllItems` doplněno o reset slevy: `IsDiscountEnabled = false`, `DiscountPercent = null`
+- `ResetWorkItem_Click` doplněno o reset slevy: `IsDiscountEnabled = false`, `DiscountPercent = null`
+- `ResetMaterialItem_Click` doplněno o reset slevy: `IsDiscountEnabled = false`, `DiscountPercent = null`
+- přidána synchronizace ViewModel → model (flush/snapshot) před exportem, aby JSON vždy odrážel stav v UI
+
+---
+
 ## [1.7.4] - Integrační testy ProjectService (Save / Load + stabilní test framework)
 
 ### Přidáno

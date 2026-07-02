@@ -1,20 +1,53 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <OutputType>WinExe</OutputType>
-    <TargetFramework>net10.0-windows</TargetFramework>
-    <Nullable>enable</Nullable>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <UseWPF>true</UseWPF>
+      <OutputType>WinExe</OutputType>
+      <TargetFramework>net10.0-windows</TargetFramework>
+      <Nullable>enable</Nullable>
+      <ImplicitUsings>enable</ImplicitUsings>
+      <UseWPF>true</UseWPF>
 
-    <!-- =====================================================================
-         VERZOVÁNÍ – měň pouze zde, zbytek aplikace si verzi načte automaticky
-         - ApplicationInfoService.cs čte AssemblyInformationalVersion z buildu
-         - Po změně verze aktualizuj také docs/README.md a docs/CHANGELOG.md
-         ===================================================================== -->
-    <Version>1.7.3</Version>
-    <AssemblyVersion>1.7.3.0</AssemblyVersion>
-    <FileVersion>1.7.3.0</FileVersion>
+      <!-- =====================================================================
+          VERZOVÁNÍ — měň pouze zde, zbytek aplikace si verzi načte automaticky
+
+          ✔ <Version>
+            - hlavní verze aplikace (major.minor.patch)
+            - .NET 10 preview umožňuje používat suffixy přímo zde:
+                1.7.5-dev
+                1.7.5-test
+                1.7.5-beta
+            - tato hodnota se propíše do ProductVersion (před +hash)
+            - doporučený způsob verzování v .NET 10 preview
+
+          ⚠ <AssemblyInformationalVersion>
+            - .NET 10 preview tento atribut ignoruje
+            - suffixy se NEPROPISUJÍ → proto se NEPOUŽÍVÁ
+
+          ✔ <FileVersion>
+            - verze souboru pro Windows Explorer
+            - nemá vliv na zobrazení verze v aplikaci
+
+          ⚠ <AssemblyVersion>
+            - NEPOUŽÍVAT (blokuje generování verzí)
+            - proto je odstraněno
+
+          ⚠ <GenerateAssemblyInfo>
+            - v .NET 10 preview nemá vliv na InformationalVersion
+            - ponecháno kvůli budoucí kompatibilitě
+
+          Po změně verze aktualizuj také:
+            - docs/README.md
+            - docs/CHANGELOG.md
+          ===================================================================== -->
+
+      <!-- Generování assembly atributů (v .NET 10 nemá vliv na InformationalVersion) -->
+      <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
+
+      <!-- Hlavní verze aplikace (suffixy povoleny) -->
+      <Version>1.7.5-feature</Version>
+
+      <!-- Verze souboru (Windows Explorer) -->
+      <FileVersion>1.7.5.0</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>
