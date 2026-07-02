@@ -100,7 +100,4 @@
       </Resource>
   </ItemGroup>
 
-  <!-- Testovací chyba pro build -->
-  <ThisWillFail>true</ThisWillFail>
-
 </Project>

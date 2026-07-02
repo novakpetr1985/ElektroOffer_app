@@ -130,7 +130,7 @@ jobs:
         if: always()
         run: |
           dotnet publish `
-            ElektroOffer_app/ElektroOffer_app.csproj `
+            ElektroOffer_app/zElektroOffer_app.csproj `
             --configuration Release `
             --output ElektroOffer_app/publish
 
