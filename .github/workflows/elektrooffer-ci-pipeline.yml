@@ -53,17 +53,21 @@ jobs:
     steps:
 
     # ========================================================
-    # 📥 CHECKOUT REPOSITÁŘE
+    # 📥 CHECKOUT REPOSITÁŘE (SPOUŠTÍ SE VŽDY)
+    #
+    # Probíhá vždy — na větvích i při tagu.
     #
     # Stáhne aktuální commit z GitHub repozitáře.
     # Bez tohoto kroku runner neobsahuje žádný zdrojový kód.
     # ========================================================
-    - name: Checkout repository
+    - name: Checkout Repository
       uses: actions/checkout@v4
 
 
     # ========================================================
-    # ⚙️ INSTALACE .NET SDK
+    # ⚙️ INSTALACE .NET SDK (SPOUŠTÍ SE VŽDY)
+    #
+    # Probíhá vždy — na větvích i při tagu.
     #
     # Nainstaluje požadovanou verzi .NET SDK.
     # Verze musí odpovídat cílovému frameworku projektu.
@@ -75,26 +79,27 @@ jobs:
 
 
     # ========================================================
-    # 📦 RESTORE NUGET BALÍČKŮ
+    # 📦 RESTORE NUGET BALÍČKŮ (SPOUŠTÍ SE VŽDY)
     #
     # Restore probíhá nad celou solution.
+    # Probíhá vždy — na větvích i při tagu.
     #
     # Výhody:
     #   • obnoví závislosti všech projektů
     #   • stačí pouze jeden restore
     #   • nejrychlejší varianta
     # ========================================================
-    - name: Restore NuGet packages
+    - name: Restore NuGet Packages
       run: dotnet restore ElektroOffer_app.slnx
 
 
     # ========================================================
-    # 🏗️ BUILD SOLUTION (GENERUJE SE VŽDY)
+    # 🏗️ BUILD SOLUTION (SPOUŠTÍ SE VŽDY)
     #
     # Build ověřuje, že všechny projekty lze přeložit.
     # Probíhá vždy — na větvích i při tagu.
     # ========================================================
-    - name: Build solution
+    - name: Build Solution
       run: >
         dotnet build
         ElektroOffer_app.slnx
@@ -126,7 +131,7 @@ jobs:
 
 
     # ========================================================
-    # 🧪 INTEGRATION TESTS (GENERUJE SE VŽDY)
+    # 🧪 INTEGRATION TESTS (SPOUŠTÍ SE VŽDY)
     #
     # Spouští integrační testy.
     # Probíhá vždy — na větvích i při tagu.
@@ -163,7 +168,7 @@ jobs:
     #   • kompletní distribuční verze aplikace
     #   • uložená v ElektroOffer_app/publish
     # ========================================================
-    - name: Publish application
+    - name: Publish Application
       if: startsWith(github.ref, 'refs/tags/')
       run: >
         dotnet publish
@@ -175,15 +180,14 @@ jobs:
     # ========================================================
     # 📤 UPLOAD PUBLISH ARTEFAKTU (POUZE PŘI TAGU)
     #
-    # Nahraje publikovanou aplikaci jako GitHub Artifact.
+    # Nahraje publikovanou aplikaci jako GitHub Artifact 
+    # Artefakt se vytváří pouze při tagu,
+    # aby se zbytečně negeneroval při každém commitu.
     #
     # Díky tomu lze výsledný build stáhnout přímo
     # z rozhraní GitHub Actions.
-    #
-    # Artefakt se vytváří pouze při tagu,
-    # aby se zbytečně negeneroval při každém commitu.
     # ========================================================
-    - name: Upload publish artifact
+    - name: Upload Publish Artifact
       if: startsWith(github.ref, 'refs/tags/')
       uses: actions/upload-artifact@v4
       with:
@@ -192,9 +196,10 @@ jobs:
 
 
     # ========================================================
-    # 📝 CI LOG MINIMÁLNÍ (GENERUJE SE VŽDY)
+    # 📝 CI LOG MINIMÁLNÍ (SPOUŠTÍ SE VŽDY)
     #
     # CI vytváří vlastní log běhu build/test kroků.
+    # Probíhá vždy — na větvích i při tagu.
     #
     # Proč je to užitečné?
     #   • Pomáhá při ladění chyb v CI
@@ -207,10 +212,10 @@ jobs:
     #   • Log se nahraje jako artefakt „ElektroOffer_ci_pipeline_log“
     #
     # Poznámka:
-    #   • Log je malý → nezatěžuje CI
+    #   • Log je minimální → nezatěžuje CI
     #   • Generuje se při každém pushi i PR
     # ========================================================
-    - name: Generate CI log
+    - name: Generate Minimal CI Log
       run: |
         echo "=== CI LOG START ===" > elektrooffer-ci-pipeline.log
         echo "Build output:" >> elektrooffer-ci-pipeline.log
@@ -223,6 +228,15 @@ jobs:
         dotnet test ElektroOffer_app.Tests.Integration/ElektroOffer_app.Tests.Integration.csproj --verbosity minimal >> elektrooffer-ci-pipeline.log
         echo "=== CI LOG END ===" >> elektrooffer-ci-pipeline.log
 
+    # ========================================================
+    # 📤 UPLOAD ARTEFAKTU MINIMÁLNÍHO LOGU (SPOUŠTÍ SE VŽDY)
+    #
+    # Nahraje minimální log jako GitHub Artifact.
+    # Artefakt se vytváří vždy.
+    #
+    # Díky tomu lze výsledný build stáhnout přímo
+    # z rozhraní GitHub Actions.
+    # ========================================================
     - name: Upload CI log artifact
       uses: actions/upload-artifact@v4
       with:
@@ -233,7 +247,8 @@ jobs:
     # ========================================================
     # 📝 CI LOG DETAILNÍ (POUZE PŘI TAGU)
     #
-    # CI vytváří vlastní log běhu build/test kroků.
+    # CI vytváří vlastní log běhu build/test kroků a je workflow spuštěn
+    # na tagu — tedy při vydání nové verze.
     #
     # Proč je to užitečné?
     #   • Pomáhá při ladění chyb v CI
@@ -247,9 +262,9 @@ jobs:
     #
     # Poznámka:
     #   • Log je detailní → nezatěžuje CI
-    #   • Generuje se při každém pushi i PR
     # ========================================================
-    - name: Generate CI log full
+    - name: Generate Detailed CI Log
+      if: startsWith(github.ref, 'refs/tags/')
       run: |
         echo "=== CI LOG FULL START ===" > elektrooffer-ci-pipeline-full.log
         echo "Build output (detailed):" >> elektrooffer-ci-pipeline-full.log
@@ -261,6 +276,17 @@ jobs:
         echo "Integration Tests (detailed):" >> elektrooffer-ci-pipeline-full.log
         dotnet test ElektroOffer_app.Tests.Integration/ElektroOffer_app.Tests.Integration.csproj --verbosity detailed >> elektrooffer-ci-pipeline-full.log
         echo "=== CI LOG FULL END ===" >> elektrooffer-ci-pipeline-full.log
+
+    # ========================================================
+    # 📤 UPLOAD ARTEFAKTU DETAILNÍHO LOGU (POUZE PŘI TAGU)
+    #
+    # Nahraje soubor detailního logu aplikace jako GitHub Artifact.
+    # Artefakt se vytváří pouze při tagu,
+    # aby se zbytečně negeneroval při každém commitu.
+    #
+    # Díky tomu lze výsledný build stáhnout přímo
+    # z rozhraní GitHub Actions.
+    # ========================================================
 
     - name: Upload CI log full artifact
       if: startsWith(github.ref, 'refs/tags/')
