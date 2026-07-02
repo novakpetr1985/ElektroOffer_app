@@ -1,169 +1,394 @@
-# ElektroOffer
+# ⚡ ElektroOffer
 
 Desktopová WPF aplikace pro kalkulaci elektro prací a materiálu.
+Cílem projektu je vytvořit přehledný nástroj pro tvorbu nabídek (rozpočtů) s možností ukládání, načítání, exportu a budoucím PDF / tisku.
 
 ---
 
 ## 📦 Požadavky
 
-- Windows 10/11
-- Visual Studio 2022+ s workload **.NET Desktop Development**
+- Windows 10 / 11
+- Visual Studio 2022+
 - .NET 10 SDK
+- workload: **.NET Desktop Development**
 
 ---
 
-## 🚀 Jak spustit
+## 🚀 Spuštění aplikace
 
-1. Otevři `ElektroOffer_app.slnx` ve Visual Studio
-2. Sestav projekt — `Ctrl+Shift+B`
-3. Spusť — `F5`
+**Visual Studio**
+1. Otevři `ElektroOffer_app.slnx`
+2. Sestav projekt (`Ctrl + Shift + B`)
+3. Spusť aplikaci (`F5`)
 
-Databáze `elektrooffer.db` se vytvoří automaticky při prvním spuštění.  
-Tabulky jsou při prvním spuštění prázdné — ceník importuj přes:
+**Lokální publish (výstup do kořenové složky `publish`)**
+- Dvojklik: `scripts\run-publish.bat` — vytvoří publikovatelnou verzi do `./publish` v kořeni repa.  
+- Nebo z příkazové řádky:  
+  `.\scripts\run-publish.bat "ElektroOffer_app/publish-custom"`
 
-**Soubor → Import ceníku** (`.eofcat`)
+📌 Databáze `elektrooffer.db` se vytvoří automaticky při prvním spuštění.
 
 ---
 
 ## ✨ Hlavní funkce
 
-- Kalkulace práce podle ceníku (`PriceItems`)
-- Kalkulace materiálu (`Materials`)
-- Uložení a načtení projektu (`*.eof`)
-- Export a import ceníku (`*.eofcat`)
-- Přehledný rozpis položek s celkovou cenou
+- 📊 Kalkulace práce podle ceníku (PriceItems)
+- 📦 Kalkulace materiálu (Materials)
+- 🏷️ Sleva na řádek – volitelná procentuální sleva na každou položku práce i materiálu
+- 💾 Ukládání / načítání projektu (*.eof)
+- 📤 Export / import ceníku (*.eofcat)
+- 📑 Detailní rozpis položek (Budget view)
+- 🧾 Tisk (PrintDialog – Windows systémový tisk / PDF přes tiskárnu)
+- 💰 Automatický součet práce + materiálu
+- 🔄 Plná integrace s EF Core + SQLite
+- 🧩 Oddělené modely, služby, viewmodely a testy
+- 🧪 Unit + Integration testy
 
 ---
 
-## 🧠 Technický přehled
+## 🧠 Architektura aplikace
 
-- **Platforma:** .NET 10, WPF
-- **UI:** XAML (`MainWindow`, `AboutWindow`, `Resources/Styles`)
-- **Databáze:** SQLite + Entity Framework Core (`AppDbContext`)
-- **Architektura:** Code-behind + částečné oddělení service vrstvy
+Projekt je navržen jako **výuková WPF aplikace s postupným přechodem k oddělené architektuře**.
 
----
-
-## 🧩 Modely
-
-| Třída | Účel |
-|------|------|
-| `PriceItems` | Ceník práce |
-| `Material` | Ceník materiálu |
-| `ProjectData` | Serializovaný projekt (`.eof`) |
-| `CatalogExportData` | Export/import ceníku (`.eofcat`) |
-| `WorkItemData` | Řádek kalkulace práce |
-| `MaterialItemData` | Řádek kalkulace materiálu |
+- UI: WPF (XAML)
+- Logika: Code-behind + Services
+- Data: EF Core + SQLite
+- Export/Import: JSON serializace (ProjectData, CatalogExportData)
+- Testování: Unit + Integration
+- DI: Konstruktorová injekce ve ViewModelech a Services
 
 ---
 
-## ⚙️ Služby
+## 🧩 Modely (Data vrstva)
 
-| Třída | Účel |
-|------|------|
-| `ProjectService` | Ukládání/načítání projektů + import/export ceníku |
-| `CatalogService` | Načítání ceníku z databáze (testovatelné bez UI) |
-| `DialogService` | Zobrazení MessageBox dialogů |
+| Model               | Popis                               |
+| ------------------- | ----------------------------------- |
+| `PriceItems`        | Ceník práce                         |
+| `Material`          | Ceník materiálu                     |
+| `WorkItemData`      | Řádek kalkulace práce               |
+| `MaterialItemData`  | Řádek kalkulace materiálu           |
+| `ProjectData`       | Celý uložený projekt (``.eof``)     |
+| `CatalogExportData` | Export/import ceníku                |
+| `BudgetItem`        | Sloučený řádek rozpočtu (UI výstup) |
+
+---
+
+## ⚙️ Services (aplikační logika)
+
+| Service                  | Účel                                               |
+| ------------------------ | -------------------------------------------------  |
+| `ProjectService`         | Ukládání / načítání projektů + import/export       |
+| `CatalogService`         | Načítání ceníku z databáze                         |
+| `DialogService`          | Abstrakce MessageBox UI                            |
+| `PrintService`           | Tisk / export nabídky (FlowDocument / PrintDialog) |
+| `ApplicationInfoService` | Informace o aplikaci (verze, metadata)             |
+
+---
+
+## 🖥️ UI vrstva
+
+- `MainWindow.xaml` – hlavní kalkulační rozhraní
+- `AboutWindow.xaml` – informace o aplikaci
+- Toolbar + Menu + StatusBar
+- Dynamické ItemsControl pro práce a materiál
+- Rozpis (BudgetItems)
+- Celková cena (GrandTotal)
 
 ---
 
 ## 📁 Struktura projektu
-ElektroOffer_app.slnx
-├── ElektroOffer_app/
-│ ├── App.xaml
-│ ├── Views/ – MainWindow, AboutWindow
-│ ├── Models/ – datové modely
-│ ├── Data/ – AppDbContext (EF Core)
-│ ├── Services/ – business logika
-│ ├── ViewModels/ – MVVM částečná vrstva
-│ ├── Commands/ – RelayCommand
-│ └── Resources/ – styly, barvy
+
+```
+📁 Core Application
+├── 📁 .github
+│   └── 📁 workflows
+│       └── 📄 elektrooffer-ci-pipeline.yml
 │
-├── ElektroOffer_app.Tests.Unit/
-│ ├── LogicTests
-│ ├── DatabaseTests
-│ └── RepositoryTests
+├── 📁 docs
+│   ├── 📄 CHANGELOG.md
+│   └── 📄 README.md
 │
-├── ElektroOffer_app.Tests.Integration/
-│ ├── Database/
-│ │ ├── DatabaseConnectionTests
-│ │ ├── DatabaseSchemaTests
-│ │ └── DatabaseCrudTests
-│ │
-│ └── Services/
-│ ├── CatalogServiceTests
-│ └── ProjectServiceTests
+├── 📁 scripts
+│   ├── 📄 AllMainFile.py
+│   ├── 📄 run-publish.bat
+│   ├── 📄 run-tests.bat
+│   ├── 📄 run-tests-integration.bat
+│   ├── 📄 run-tests-unit.bat
+│   │ 
+│   ├── 📁 commands
+│   │   ├── 📄 run-publish.bat 
+│   │   ├── 📄 run-tests.bat
+│   │   ├── 📄 run-tests-integration.bat
+│   │   └── 📄 run-tests-unit.bat
+│   │
+│   └── 📁 scripts-output
+│       └── 📄 AllMainFile.txt
+
+
+🖥️ Aplikace
 │
-└── docs/
-├── README.md
-└── CHANGELOG.md
+└── 📁 ElektroOffer_app
+    ├── 📁 Commands
+    │   └── 📄 RelayCommand.cs
+    │
+    ├── 📁 Data
+    │   └── 📄 AppDbContext.cs
+    │
+    ├── 📁 Models
+    │   ├── 📄 BudgetItem.cs
+    │   ├── 📄 CatalogExportData.cs
+    │   ├── 📄 Material.cs
+    │   ├── 📄 MaterialItemData.cs
+    │   ├── 📄 PriceItems.cs
+    │   ├── 📄 ProjectData.cs
+    │   └── 📄 WorkItemData.cs
+    │
+    ├── 📁 Resources
+    │   ├── 📁 Icons
+    │   │   └── 📄 LOGO.jpg
+    │   │
+    │   ├── 📄 Colors.xaml
+    │   └── 📄 Styles.xaml
+    │
+    ├── 📁 Services
+    │   ├── 📄 ApplicationInfoService.cs
+    │   ├── 📄 CatalogService.cs
+    │   ├── 📄 DialogService.cs
+    │   └── 📄 ProjectService.cs
+    │
+    ├── 📁 ViewModels
+    │   ├── 📁 Base
+    │   │    └── 📄 BaseViewModel.cs
+    │   │ 
+    │   ├── 📁 Items
+    │   │    └── 📄 CalculationItemViewModel.cs
+    │   │
+    │   └── 📄 AboutWindowViewModel.cs
+    │
+    ├── 📁 Views
+    │   ├── 📄 AboutWindow.xaml
+    │   ├── 📄 AboutWindow.xaml.cs
+    │   ├── 📄 MainWindow.xaml
+    │   └── 📄 MainWindow.xaml.cs
+    │
+    ├── 📄 App.xaml
+    ├── 📄 App.xaml.cs
+    ├── 📄 elektrooffer.db
+    ├── 📄 elektrooffer.sqbpro
+    ├── 📄 ElektroOffer_app.csproj
+    └── 📄 ElektroOffer_app.slnx
+
+🧪 Testing
+│
+├── 📁 ElektroOffer_app.Tests.Unit
+│   ├── 📁 LogicTests
+│   │   ├── 📄 DiscountCalculationTests.cs
+│   │   ├── 📄 PriceCalculationTests.cs
+│   │   └── 📄 WorkItemCalculationTests.cs -> doplnit
+│   │
+│   ├── 📁 RepositoryTests
+│   │   ├── 📄 MaterialRepositoryTests.cs
+│   │   └── 📄 PriceItemsRepositoryTests.cs
+│   │
+│   └── 📄 ElektroOffer_app.Tests.Unit.csproj
+│
+└── 📁 ElektroOffer_app.Tests.Integration
+    ├── 📁 Database
+    │   ├── 📄 DatabaseConnectionTests.cs
+    │   ├── 📄 DatabaseCrudTests.cs
+    │   └── 📄 DatabaseSchemaTests.cs
+    │
+    ├── 📁 Infrastructure
+    │   ├── 📄 TestDatabaseFactory.cs -> doplnit
+    │   ├── 📄 TestDbContextOptions.cs -> doplnit
+    │   └── 📄 TestFileSystem.cs -> doplnit
+    │
+    ├── 📁 Services
+    │   ├── 📄 CatalogServiceTests.cs
+    │   └── 📄 ProjectServiceTests.cs
+    │
+    └── 📄 ElektroOffer_app.Tests.Integration.csproj
+```
 
 ---
 
 ## 🧪 Testování
 
-Projekt obsahuje dvě úrovně testů:
+- Dvojklik: `scripts\run-tests.bat`, spouští příkaz - `scripts\commands\run-tests.ps1`
+- Nebo z příkazové řádky: `.\scripts\run-tests.bat` , `.\scripts\run-tests.ps1`
 
----
+Projekt obsahuje dvě úrovně testů:
 
 ### 🔬 Unit testy
 
-Umístění: `ElektroOffer_app.Tests.Unit`
+- Dvojklik: `scripts\run-tests-units.bat`, spouští příkaz - `scripts\commands\run-tests-units.ps1`
+- Nebo z příkazové řádky: `.\scripts\run-tests-units.bat` , `.\scripts\run-tests-units.ps1`
 
-Testují izolovanou logiku bez závislosti na databázi nebo UI.
+- izolovaná logika bez DB a UI
+- rychlé testování výpočtů a repository vrstvy
 
-Kategorie:
-- `LogicTests` – výpočty a ViewModel logika
-- `RepositoryTests` – práce s EF Core v izolaci
-- `DatabaseTests` – základní DB operace
-
----
+📌 zaměření:
+- kalkulace cen (`PriceCalculationTests`)
+- repository logika (`MaterialRepositoryTests`, `PriceItemsRepositoryTests`)
+- ViewModel logika
 
 ### 🧪 Integrační testy
 
-Umístění: `ElektroOffer_app.Tests.Integration`
+- Dvojklik: `scripts\run-tests-integration.bat`, spouští příkaz - `scripts\commands\run-tests-integration.ps1`
+- Nebo z příkazové řádky: `.\scripts\run-tests-integration.bat` , `.\scripts\run-tests-integration.ps1`
 
-Testují spolupráci více částí systému.
+Testují spolupráci:
 
-Kategorie:
+- EF Core + SQLite
+- Services + DB
+- kompletní scénáře aplikace
 
-- `DatabaseConnectionTests` – připojení k SQLite
-- `DatabaseSchemaTests` – vytvoření tabulek (EF Core)
-- `DatabaseCrudTests` – CRUD operace nad databází
-- `CatalogServiceTests` – logika načítání ceníku
-- `ProjectServiceTests` – ukládání a načítání projektů (.eof)
+📌 zahrnují:
+- DB schema testy
+- CRUD operace
+- ProjectService testy
+- CatalogService testy
 
----
+### 🧠 Testovací architektura
 
-## 🧠 Testovací architektura
-
-- SQLite InMemory databáze
-- EF Core `DbContext` izolovaný pro každý test
-- oddělení Unit vs Integration testů
-- testování service vrstvy bez UI
-
----
-
-## 📌 Verze
-
-Aktuální verze: **1.6.0 (Integrační testovací základ)**
-
-- databázová vrstva otestována
-- service vrstva otestována
-- připraveno pro PDF export (1.7.0)
+- SQLite InMemory / test DB (izolovaná DB per test, mazaná v `[TearDown]`)
+- EF Core izolované DbContexty
+- oddělení Unit vs Integration projektů
+- testování service vrstvy bez závislosti na UI
+- `Microsoft.Data.Sqlite` API (moderní, bezpečné)
 
 ---
 
-## 🏗️ Architektura — rozhodnutí (ADR)
+## 🧩 CI / GitHub Actions
 
-### Proč SQLite?
-Desktopová aplikace bez serveru → jednoduché nasazení.
+### 🔄 Development workflow
 
-### Proč code-behind + částečné MVVM?
-Výukový projekt → jednoduchost > enterprise složitost.
+Vývoj probíhá přes více větví, aby byla zajištěna stabilita a kontrola nad změnami:
 
-### Proč JSON (.eof)?
-Snadná čitelnost a ladění dat.
+1. feature/* – pracovní větve pro nové funkce a úpravy
+2. dev – integrační větev, kde se slučují dokončené feature větve
+3. test – staging větev pro ověření před nasazením
+4. main – produkční větev
+5. tag – finální verze aplikace (spouští release pipeline)
 
-### Proč CatalogService?
-Oddělení DB logiky od UI → umožňuje testování bez WPF.
+Každá změna prochází přes Pull Request, CI kontrolu a pravidla z GitHub Rulesetu.
+
+
+### 🧩 Typy větví
+
+| Větev   	        | Účel                                               |
+| ----------------- | -------------------------------------------------- |
+| `fix/\*`  	    | Pracovní větve pro konkrétní úkoly. Bez PR.        |
+| `feature/\*`	    | Pracovní větve pro konkrétní úkoly. Bez PR.        |
+| `feature/<verze>` | Hlavní větev dané verze. PR z pracovních větví.    |
+| `dev`	            | Vývojová větev. PR z feature.                      |
+| `test`	        | Staging větev. PR z dev.                           |
+| `main`	        | Produkční větev. PR z test.                        |
+| `tag`	            | Spouští release pipeline (publish + detailní log). |
+
+
+### 🧮 Verzování aplikace
+
+
+| Číslo   |	Příklad   |	Popis                                          |
+| ------- | --------- | ---------------------------------------------- |
+| `MAJOR` |	`1.x.x.`  |	Největší změny, zásadní úpravy, nové generace. |
+| `MINOR` |	`x.7.x.`  |	Větší balík změn, nové funkce.                 |
+| `PATCH` |	`x.x.5.`  |	Menší změny, běžný vývoj verze.                |
+| `FIX`   |	`x.x.x.1` |	Fixy, drobné opravy, interní buildy.           |
+
+
+### Projekt využívá Continuous Integration (CI) přes GitHub Actions.
+
+#### 🔄 Co se spouští automaticky
+
+| Akce                       | Push (všechny větve) | Pull Request  | Tag |
+| -------------------------- | -------------------- | ------------- | ----|
+| `Restore NuGet Packages`   |          ✔          |        ✔      |  ✔  |
+| `Build Solution`           |          ✔          |        ✔      |  ✔  |
+| `Run Unit Tests`           |          ✔          |        ✔      |  ✔  |
+| `Run Integration Tests`    |          ✔          |        ✔      |  ✔  |
+| `Generate Minimal CI Log`  |          ✔          |        ✔      |  ✔  |
+| `Publish Application`      |         ❌          |       ❌      |  ✔  |
+| `Upload Publish Artifact`  |         ❌          |       ❌      |  ✔  |
+| `Generate Detailed CI Log` |         ❌          |       ❌      |  ✔  |
+
+#### 📝 Popis workflow
+
+- Build + testy + artefakt minimálního logu probíhají při každém pushi a pull requestu.  
+- Publish, artefakty upload + detailní logy probíhají pouze při vytvoření tagu (např. `v1.7.5`).  
+- Díky tomu je CI rychlé při vývoji a plně automatické při vydání nové verze.
+
+#### Workflow: 
+
+- `.github/workflows/elektrooffer-ci-pipeline`
+
+```
+📁 Core Application
+└── 📁 .github
+    └── 📁 workflows
+        └── 📄 elektrooffer-ci-pipeline.yml
+```
+
+---
+
+## 📦 NuGet závislosti
+
+### Hlavní projekt (`ElektroOffer_app`)
+
+| Balíček                                | Verze  | Účel                                            |
+| -------------------------------------- | ------ | ----------------------------------------------- |
+| `Microsoft.Data.Sqlite`                | 10.0.9 | SQLite driver pro EF Core                       |
+| `Microsoft.EntityFrameworkCore`        | 10.0.9 | ORM vrstva                                      |
+| `Microsoft.EntityFrameworkCore.Sqlite` | 10.0.9 | SQLite provider pro EF Core                     |
+| `Microsoft.EntityFrameworkCore.Design` | 10.0.9 | Migrace (pouze dev)                             |
+| `Microsoft.EntityFrameworkCore.Tools`  | 10.0.9 | CLI nástroje (pouze dev)                        |
+| `SQLitePCLRaw.lib.e_sqlite3`           | 3.50.3 | Nativní SQLite knihovna (pin kvůli bezpečnosti) |
+| `SQLitePCLRaw.bundle_e_sqlite3`        | 3.0.3  | Tranzitivní pin (bezpečnostní oprava)           |
+| `SQLitePCLRaw.core`                    | 3.0.3  | Tranzitivní pin (bezpečnostní oprava)           |
+| `SQLitePCLRaw.provider.e_sqlite3`      | 3.0.3  | Tranzitivní pin (bezpečnostní oprava)           |
+
+### Testovací projekty (Unit + Integration)
+
+| Balíček                  | Verze  | Účel                         |
+| ------------------------ | ------ | ---------------------------- |
+| `NUnit`                  | 3.14.0 | Testovací framework          |
+| `NUnit3TestAdapter`      | 6.2.0  | Integrace s VS Test Explorer |
+| `Microsoft.NET.Test.Sdk` | 18.7.0 | Test runner                  |
+| `coverlet.collector`     | 10.0.1 | Code coverage                |
+
+> ⚠️ **Poznámka k SQLitePCLRaw:** Balíčky `bundle`, `core` a `provider` jsou explicitně pinovány na verzi `3.0.3` aby přebily tranzitivní požadavek na zranitelnou verzi `2.1.11` ([GHSA-2m69-gcr7-jv3q](https://github.com/advisories/GHSA-2m69-gcr7-jv3q)), která přichází přes strom závislostí EF Core.
+
+---
+
+## 🏗️ Architektonická rozhodnutí (ADR)
+
+### SQLite
+Lokální desktop aplikace → jednoduché nasazení bez serveru.
+
+### Code-behind + Services
+Výukový projekt → jednoduchost + postupný refactoring.
+
+### JSON (.eof)
+Snadná čitelnost, debug a kompatibilita.
+
+### PrintService
+Oddělení exportu/tisku od UI logiky.
+
+### Microsoft.Data.Sqlite (ne System.Data.SQLite)
+Projekt používá výhradně `Microsoft.Data.Sqlite` jako SQLite driver – je to moderní, aktivně vyvíjený balíček integrovaný přímo do ekosystému EF Core a .NET. Starý `System.Data.SQLite` byl odebrán – konfliktoval s EF Core a nepatří do moderního .NET 10 projektu.
+
+---
+
+## 🚧 Roadmap
+
+- [x] Kalkulace práce a materiálu
+- [x] SQLite databáze
+- [x] Ukládání projektu
+- [x] Integrační testy
+- [x] Tisk / PrintDialog
+- [x] NuGet závislosti stabilizovány a zabezpečeny
+- [x] PDF export (aktuálně přes Windows PrintDialog → „Microsoft Print to PDF“)
+- [x] GitHub tests - UNIT + integration + build + minimální CI log při každé akci, detailní log + publish jen při tagu
+- [ ] MVVM refactor (částečný → plný)
+- [ ] Přidání hodnoty navíc ve verzování v okně o aplikaci

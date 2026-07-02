@@ -1,28 +1,86 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <OutputType>WinExe</OutputType>
-    <TargetFramework>net10.0-windows</TargetFramework>
-    <Nullable>enable</Nullable>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <UseWPF>true</UseWPF>
-    <Version>1.6.0</Version>
+      <OutputType>WinExe</OutputType>
+      <TargetFramework>net10.0-windows</TargetFramework>
+      <Nullable>enable</Nullable>
+      <ImplicitUsings>enable</ImplicitUsings>
+      <UseWPF>true</UseWPF>
+
+      <!-- =====================================================================
+          VERZOVÁNÍ — měň pouze zde, zbytek aplikace si verzi načte automaticky
+
+          ✔ <Version>
+            - hlavní verze aplikace (major.minor.patch)
+            - .NET 10 preview umožňuje používat suffixy přímo zde:
+                1.7.5-dev
+                1.7.5-test
+                1.7.5-beta
+            - tato hodnota se propíše do ProductVersion (před +hash)
+            - doporučený způsob verzování v .NET 10 preview
+
+          ⚠ <AssemblyInformationalVersion>
+            - .NET 10 preview tento atribut ignoruje
+            - suffixy se NEPROPISUJÍ → proto se NEPOUŽÍVÁ
+
+          ✔ <FileVersion>
+            - verze souboru pro Windows Explorer
+            - nemá vliv na zobrazení verze v aplikaci
+
+          ⚠ <AssemblyVersion>
+            - NEPOUŽÍVAT (blokuje generování verzí)
+            - proto je odstraněno
+
+          ⚠ <GenerateAssemblyInfo>
+            - v .NET 10 preview nemá vliv na InformationalVersion
+            - ponecháno kvůli budoucí kompatibilitě
+
+          Po změně verze aktualizuj také:
+            - docs/README.md
+            - docs/CHANGELOG.md
+          ===================================================================== -->
+
+      <!-- Generování assembly atributů (v .NET 10 nemá vliv na InformationalVersion) -->
+      <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
+
+      <!-- Hlavní verze aplikace (suffixy povoleny) -->
+      <Version>1.7.5</Version>
+
+      <!-- Verze souboru (Windows Explorer) -->
+      <FileVersion>1.7.5.0</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="coverlet.collector" Version="10.0.1">
+    <!-- ODEBRÁNO: coverlet, Microsoft.NET.Test.Sdk, NUnit, NUnit3TestAdapter -->
+    <!-- Tyto balíčky patří POUZE do testovacího projektu, ne do WPF aplikace -->
+
+    <!-- ZMĚNĚNO: z 11.0.0-preview na 10.0.9 – preview verze patří do .NET 11, ne .NET 10 -->
+    <PackageReference Include="Microsoft.Data.Sqlite" Version="10.0.9" />
+
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.9" />
+
+    <!-- Design a Tools jsou jen pro vývoj (migrace), PrivateAssets=all je správně -->
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.9">
       <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.8" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.8">
+
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.9" />
+
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="10.0.9">
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.8" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="10.0.8">
-      <PrivateAssets>all</PrivateAssets>
-    </PackageReference>
-    <PackageReference Include="System.Data.SQLite.Core" Version="1.0.119" />
+
+    <!-- ZMĚNĚNO: z 2.1.11 na 3.50.3 – oprava bezpečnostní zranitelnosti GHSA-2m69-gcr7-jv3q -->
+    <PackageReference Include="SQLitePCLRaw.lib.e_sqlite3" Version="3.50.3" />
+
+    <!-- Explicitní pin tranzitivních SQLitePCLRaw balíčků – oprava zranitelnosti GHSA-2m69-gcr7-jv3q -->
+    <PackageReference Include="SQLitePCLRaw.bundle_e_sqlite3" Version="3.0.3" />
+    <PackageReference Include="SQLitePCLRaw.core" Version="3.0.3" />
+    <PackageReference Include="SQLitePCLRaw.provider.e_sqlite3" Version="3.0.3" />
+
+    <!-- ODEBRÁNO: System.Data.SQLite.Core -->
+    <!-- Tento balíček je starý wrapper pro System.Data namespace a KONFLIKTUJE -->
+    <!-- s Microsoft.Data.Sqlite + EF Core. Používáš EF Core, tento nepotřebuješ. -->
   </ItemGroup>
 
   <ItemGroup>

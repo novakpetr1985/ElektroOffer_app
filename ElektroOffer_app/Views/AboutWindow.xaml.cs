@@ -14,19 +14,42 @@ namespace ElektroOffer_app
             InitializeComponent();
 
             // =========================================================
-            // 🔢 NAČTENÍ VERZE Z ASSEMBLY
+            // 🔢 NAČTENÍ VERZE APLIKACE (NET 10 – suffixy přes <Version>)
             // =========================================================
-            // Verze se čte automaticky z .csproj souboru (<Version>x.x.x</Version>).
-            // Stačí tedy měnit verzi jen na jednom místě — v .csproj.
-            // Formát: "Verze 1.0.0" — major.minor.patch
+            // .NET 10 preview ignoruje AssemblyInformationalVersion,
+            // ale respektuje hodnotu <Version> včetně suffixů:
+            //
+            //     <Version>1.7.5-dev</Version>
+            //
+            // ProductVersion pak vypadá takto:
+            //
+            //     1.7.5-dev+b5f108402e3003471b7eda7a3a626b7edc0cd879
+            //
+            // Proto se zobrazuje pouze část před znakem '+', tedy:
+            //
+            //     1.7.5-dev
+            //
             // =========================================================
 
-            var version = Assembly.GetExecutingAssembly().GetName().Version;
+            var assembly = Assembly.GetExecutingAssembly();
 
-            // Zobrazíme jen major.minor.patch (bez revision čísla za poslední tečkou)
-            VersionText.Text = version != null
-                ? $"Verze {version.Major}.{version.Minor}.{version.Build}"
-                : "Verze neznámá";
+            // Načteme ProductVersion (obsahuje suffix + hash)
+            var info = assembly
+                .GetCustomAttribute<AssemblyInformationalVersionAttribute>()
+                ?.InformationalVersion;
+
+            // Odstraníme automatický +commit_hash
+            var cleanInfo = info?.Split('+')[0];
+
+            if (!string.IsNullOrWhiteSpace(cleanInfo))
+            {
+                VersionText.Text = $"Verze {cleanInfo}";
+                return;
+            }
+
+            // Fallback (neměl by nastat)
+            VersionText.Text = "Verze neznámá";
+
         }
 
         // =========================================================

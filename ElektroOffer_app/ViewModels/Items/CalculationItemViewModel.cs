@@ -30,6 +30,66 @@ namespace ElektroOffer_app.ViewModels.Items
         private string? _workUnit;
 
         // =========================================================
+        // 💰 SLEVA
+        // =========================================================
+        // 👉 IsDiscountEnabled – přepíná aktivaci slevy
+        //    při vypnutí automaticky vynuluje DiscountPercent
+        //    a vyvolá přepočet Total
+        // 👉 DiscountPercent – procentuální hodnota slevy
+        //    null = sleva není zadána
+        //    změna vždy vyvolá přepočet Total
+        // =========================================================
+
+        private bool _isDiscountEnabled;
+
+        /// <summary>
+        /// Přepínač aktivace slevy na tomto řádku.
+        /// Při vypnutí (false) automaticky vynuluje DiscountPercent → null.
+        /// Změna vždy vyvolá přepočet Total v UI.
+        /// </summary>
+        public bool IsDiscountEnabled
+        {
+            get => _isDiscountEnabled;
+            set
+            {
+                if (_isDiscountEnabled == value) return;
+                _isDiscountEnabled = value;
+
+                // Vypnutí slevy → vynuluj procento
+                // Píšeme přímo do _discountPercent (privátní field),
+                // aby nedošlo ke zbytečnému dvojímu volání OnPropertyChanged
+                if (!value)
+                {
+                    _discountPercent = null;
+                    OnPropertyChanged(nameof(DiscountPercent));
+                }
+
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(Total)); // ← přepočet ceny v UI
+            }
+        }
+
+        private double? _discountPercent;
+
+        /// <summary>
+        /// Procentuální výše slevy (0–100).
+        /// Null = sleva není zadána.
+        /// Změna vždy vyvolá přepočet Total v UI.
+        /// </summary>
+        public double? DiscountPercent
+        {
+            get => _discountPercent;
+            set
+            {
+                if (_discountPercent == value) return;
+                _discountPercent = value;
+
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(Total)); // ← přepočet ceny v UI
+            }
+        }
+
+        // =========================================================
         // 📦 DYNAMICKÉ LISTY PRO COMBOBOXY
         // =========================================================
         public ObservableCollection<string> AvailableSpecifications { get; } = new();
@@ -181,24 +241,44 @@ namespace ElektroOffer_app.ViewModels.Items
         }
 
         // =========================================================
-        // TOTAL (CELKOVÁ CENA ŘÁDKU)
+        // TOTAL (CELKOVÁ CENA ŘÁDKU + SLEVA)
         // =========================================================
         // 👉 Pokud je vybraná práce → BasePrice * MaterialCoef * PositionCoef * Quantity
         // 👉 Pokud je vybraný materiál → Material.Price * Quantity
         // 👉 Jinak 0
         // 👉 Příklad: 150 Kč × 1,2 × 1,0 × 10 m = 1 800 Kč
+        // 👉 Sleva se aplikuje na výsledek pokud IsDiscountEnabled == true
+        //    a DiscountPercent má hodnotu
         // =========================================================
         public double Total
         {
             get
             {
+                double baseTotal;
+
                 if (WorkItem != null)
-                    return WorkItem.BasePrice * WorkItem.MaterialCoef * WorkItem.PositionCoef * Quantity;
+                    baseTotal = WorkItem.BasePrice * WorkItem.MaterialCoef * WorkItem.PositionCoef * Quantity;
 
-                if (MaterialItem != null)
-                    return MaterialItem.Price * Quantity;
+                else if (MaterialItem != null)
+                    baseTotal = MaterialItem.Price * Quantity;
 
-                return 0;
+                else
+                    return 0;
+
+                // =========================
+                // 💰 APLIKACE SLEVY
+                // =========================
+                // Sleva se aplikuje pouze pokud:
+                //   1. IsDiscountEnabled == true  (přepínač je zapnutý)
+                //   2. DiscountPercent má hodnotu  (není null)
+                // Vzorec: baseTotal × (1 - procento / 100)
+                // Příklad: 1 000 Kč × (1 - 10/100) = 1 000 × 0,9 = 900 Kč
+                if (IsDiscountEnabled && DiscountPercent.HasValue)
+                {
+                    return baseTotal * (1 - DiscountPercent.Value / 100.0);
+                }
+
+                return baseTotal;
             }
         }
 
