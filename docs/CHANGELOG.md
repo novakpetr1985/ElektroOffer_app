@@ -17,7 +17,7 @@ Formát vychází z [Keep a Changelog](https://keepachangelog.com/cs/1.0.0/).
   - `scripts/commands/run-tests-integration.ps1` — PowerShell skript spouštějící integrační testy
   - `scripts/run-publish.bat` — wrapper pro publikaci.
   - `scripts/commands/run-publish.ps1` — PowerShell skript pro `dotnet publish`
-- **CI workflow**: `.github/workflows/dotnet.yml` 
+- **CI workflow**: `.github/workflows/elektrooffer-ci-pipeline.yml` 
   - CI workflow nyní spouští Publish a upload artefaktu pouze při vytvoření tagu
   - build, Unit testy a Integration testy se nyní spouští při každém push/pull requestu
   - logování stavu

@@ -42,7 +42,7 @@ on:
 # ============================================================
 jobs:
 
-  CI Pipeline :
+  elektrooffer-ci-pipeline :
 
     # --------------------------------------------------------
     # Windows runner je potřeba kvůli WPF projektu.
