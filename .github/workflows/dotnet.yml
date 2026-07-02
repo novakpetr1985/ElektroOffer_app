@@ -3,41 +3,46 @@ name: ElektroOffer CI
 # ============================================================
 # 🚀 ELEKTROOFFER CONTINUOUS INTEGRATION (CI)
 #
-# Workflow ověřuje kvalitu zdrojového kódu po každém:
+# Tento workflow ověřuje kvalitu zdrojového kódu po každém:
 #   • Pushi do libovolné větve
-#   • Pushi tagu
+#   • Pushi tagu (včetně release tagů)
 #   • Pull Requestu
 #
-# Aktuálně aktivní:
+# Aktivní:
 #   ✔ Restore NuGet balíčků
+#   ✔ Build solution
 #   ✔ Unit Tests
 #   ✔ Integration Tests
+#   ✔ CI log
 #
-# Připraveno do budoucna:
-#   • Build aplikace
-#   • Publish aplikace
-#   • Upload publish artefaktu
+# Aktivní pouze při TAGU:
+#   ✔ Publish aplikace
+#   ✔ Upload publish artefaktu
+#
+# Díky tomu:
+#   • CI běží rychle na větvích
+#   • Publikace proběhne jen při vydání nové verze
 # ============================================================
+
 
 # ============================================================
 # 🧩 TRIGGERY
 # ============================================================
-
 on:
   push:
-    branches: [ "**" ]
-    tags: [ "**" ]
+    branches: [ "**" ]   # Build + Test na všech větvích
+    tags:     [ "**" ]   # Build + Test + Publish při tagu
 
   pull_request:
-    branches: [ "**" ]
+    branches: [ "**" ]   # Build + Test při PR
+
 
 # ============================================================
 # 🧪 JOBS
 # ============================================================
-
 jobs:
 
-  tests:
+  elektrooffer-ci:
 
     # --------------------------------------------------------
     # Windows runner je potřeba kvůli WPF projektu.
@@ -55,37 +60,38 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
 
+
     # ========================================================
     # ⚙️ INSTALACE .NET SDK
     #
     # Nainstaluje požadovanou verzi .NET SDK.
-    # Verze by měla odpovídat cílovému frameworku projektu.
+    # Verze musí odpovídat cílovému frameworku projektu.
     # ========================================================
     - name: Setup .NET SDK
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: "10.0.x"
 
+
     # ========================================================
     # 📦 RESTORE NUGET BALÍČKŮ
     #
     # Restore probíhá nad celou solution.
     #
-    # Výhoda:
-    # - obnoví závislosti všech projektů
-    # - stačí pouze jeden restore
-    # - nejrychlejší varianta
+    # Výhody:
+    #   • obnoví závislosti všech projektů
+    #   • stačí pouze jeden restore
+    #   • nejrychlejší varianta
     # ========================================================
     - name: Restore NuGet packages
       run: dotnet restore ElektroOffer_app.slnx
 
+
     # ========================================================
-    # 🏗️ BUILD SOLUTION
+    # 🏗️ BUILD SOLUTION (GENERUJE SE VŽDY)
     #
-    # ZATÍM VYPNUTO.
-    #
-    # Po dokončení CI bude vhodné Build opět zapnout,
-    # aby byly ověřeny všechny projekty před spuštěním testů.
+    # Build ověřuje, že všechny projekty lze přeložit.
+    # Probíhá vždy — na větvích i při tagu.
     # ========================================================
     - name: Build solution
       run: >
@@ -94,10 +100,12 @@ jobs:
         --configuration Release
         --no-restore
 
+
     # ========================================================
-    # 🧪 UNIT TESTS
+    # 🧪 UNIT TESTS (GENERUJE SE VŽDY)
     #
     # Spouští všechny Unit testy projektu.
+    # Probíhá vždy — na větvích i při tagu.
     #
     # Unit testy ověřují jednotlivé třídy izolovaně.
     #
@@ -115,14 +123,14 @@ jobs:
         ElektroOffer_app.Tests.Unit/ElektroOffer_app.Tests.Unit.csproj
         --verbosity normal
 
+
     # ========================================================
-    # 🧪 INTEGRATION TESTS
+    # 🧪 INTEGRATION TESTS (GENERUJE SE VŽDY)
     #
     # Spouští integrační testy.
+    # Probíhá vždy — na větvích i při tagu.
     #
-    # Testují spolupráci více částí aplikace.
-    #
-    # Typicky:
+    # Testují spolupráci více částí aplikace:
     #   • SQLite databázi
     #   • serializaci
     #   • ProjectService
@@ -132,6 +140,7 @@ jobs:
     # Jsou odděleny od Unit testů,
     # aby bylo v GitHub Actions ihned vidět,
     # která sada testů případně selhala.
+    # 
     # ========================================================
     - name: Run Integration Tests
       run: >
@@ -139,30 +148,82 @@ jobs:
         ElektroOffer_app.Tests.Integration/ElektroOffer_app.Tests.Integration.csproj
         --verbosity normal
 
+
     # ========================================================
-    # 🚀 PUBLISH APLIKACE
+    # 🚀 PUBLISH APLIKACE (POUZE PŘI TAGU)
     #
-    # Připraveno pro Release workflow.
+    # Publish proběhne pouze tehdy, pokud je workflow spuštěn
+    # na tagu — tedy při vydání nové verze.
     #
-    # Publish vytvoří kompletní distribuční verzi aplikace.
+    # Podmínka:
+    #   startsWith(github.ref, 'refs/tags/')
+    #
+    # Výstup:
+    #   • kompletní distribuční verze aplikace
+    #   • uložená v ElektroOffer_app/publish
     # ========================================================
     - name: Publish application
+      if: startsWith(github.ref, 'refs/tags/')
       run: >
         dotnet publish
         ElektroOffer_app/ElektroOffer_app.csproj
         --configuration Release
         --output ElektroOffer_app/publish
 
+
     # ========================================================
-    # 📤 UPLOAD PUBLISH ARTEFAKTU
+    # 📤 UPLOAD PUBLISH ARTEFAKTU (POUZE PŘI TAGU)
     #
     # Nahraje publikovanou aplikaci jako GitHub Artifact.
     #
     # Díky tomu lze výsledný build stáhnout přímo
     # z rozhraní GitHub Actions.
+    #
+    # Artefakt se vytváří pouze při tagu,
+    # aby se zbytečně negeneroval při každém commitu.
     # ========================================================
     - name: Upload publish artifact
+      if: startsWith(github.ref, 'refs/tags/')
       uses: actions/upload-artifact@v4
       with:
         name: ElektroOffer_app_publish
         path: ElektroOffer_app/publish
+
+
+    # ========================================================
+    # 📝 CI LOG (GENERUJE SE VŽDY)
+    #
+    # CI vytváří vlastní log běhu build/test kroků.
+    #
+    # Proč je to užitečné?
+    #   • Pomáhá při ladění chyb v CI
+    #   • Umožňuje zpětně dohledat, co přesně CI provedlo
+    #   • Log lze stáhnout přímo z GitHub Actions → Artifacts
+    #
+    # Co se stane:
+    #   • CI vytvoří soubor ci.log s diagnostickým výstupem
+    #   • Log obsahuje build + test výstup
+    #   • Log se nahraje jako artefakt „ElektroOffer_ci_log“
+    #
+    # Poznámka:
+    #   • Log je malý → nezatěžuje CI
+    #   • Generuje se při každém pushi i PR
+    # ========================================================
+    - name: Generate CI log
+      run: |
+        echo "=== CI LOG START ===" > ci.log
+        echo "Build output:" >> ci.log
+        dotnet build ElektroOffer_app.slnx --configuration Release --verbosity minimal >> ci.log
+        echo "" >> ci.log
+        echo "Unit Tests:" >> ci.log
+        dotnet test ElektroOffer_app.Tests.Unit/ElektroOffer_app.Tests.Unit.csproj --verbosity minimal >> ci.log
+        echo "" >> ci.log
+        echo "Integration Tests:" >> ci.log
+        dotnet test ElektroOffer_app.Tests.Integration/ElektroOffer_app.Tests.Integration.csproj --verbosity minimal >> ci.log
+        echo "=== CI LOG END ===" >> ci.log
+
+    - name: Upload CI log artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: ElektroOffer_ci_log
+        path: ci.log

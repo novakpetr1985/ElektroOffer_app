@@ -5,7 +5,7 @@ Formát vychází z [Keep a Changelog](https://keepachangelog.com/cs/1.0.0/).
 
 ---
 
-## 1.7.5 - skripty 
+## 1.7.5 - skripty + Git úpravy
 
 ### Přidáno
 - **scripts/** folder with spouštěcí skripty:
@@ -16,12 +16,15 @@ Formát vychází z [Keep a Changelog](https://keepachangelog.com/cs/1.0.0/).
   - `scripts/run-testsintegration.bat` — dvojklikem spustí integrační testy (Windows).
   - `scripts/commands/run-tests-integration.ps1` — PowerShell skript spouštějící integrační testy
   - `scripts/run-publish.bat` — wrapper pro publikaci.
-  - `scripts/commands/run-publish.ps1` — PowerShell skript pro `dotnet publish`.
-- **CI workflow**: `.github/workflows/dotnet.yml` — automatické restore, build, test a publish artifact při push/pull request a manuálním spuštění.
+  - `scripts/commands/run-publish.ps1` — PowerShell skript pro `dotnet publish`
+- **CI workflow**: `.github/workflows/dotnet.yml` 
+  - CI workflow nyní spouští Publish a upload artefaktu pouze při vytvoření tagu
+  - build, Unit testy a Integration testy se nyní spouští při každém push/pull requestu
+  - logování stavu
 
 ### Změněno
-- Přidána základní `.gitignore` pravidla pro `bin/`, `obj/` a `publish/`
-- Aktualizováno zobrazování verze aplikace (kompatibilita s .NET 10)
+- přidána základní `.gitignore` pravidla pro `bin/`, `obj/` a `publish/`
+- pktualizováno zobrazování verze aplikace (kompatibilita s .NET 10)
 
 ---
 
