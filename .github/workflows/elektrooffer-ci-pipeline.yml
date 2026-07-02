@@ -51,6 +51,7 @@ on:
     #   • Pokud bychom je testovali při push, CI by běželo dvakrát
     # =====================================================================
     branches-ignore:
+      - release/**
       - dev
       - test
       - main
