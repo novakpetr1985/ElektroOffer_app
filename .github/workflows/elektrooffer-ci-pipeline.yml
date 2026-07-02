@@ -263,7 +263,7 @@ jobs:
         echo "=== CI LOG FULL END ===" >> elektrooffer-ci-pipeline-full.log
 
     - name: Upload CI log full artifact
-      uses: actions/upload-full-artifact@v4
+      uses: actions/upload-artifact@v4
       with:
         name: elektroOffer_ci_pipeline_full_log
         path: elektrooffer-ci-pipeline-full.log
