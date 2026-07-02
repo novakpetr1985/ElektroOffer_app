@@ -36,20 +36,25 @@ jobs:
 
     steps:
       - name: Checkout repository
+        if: always()
         uses: actions/checkout@v4
 
       - name: Setup .NET
+        if: always()
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '10.0.x'
 
       - name: Restore NuGet Packages
+        if: always()
         run: dotnet restore ElektroOffer_app.slnx
 
       - name: Build Solution
+        if: always()
         run: dotnet build ElektroOffer_app.slnx --configuration Release --no-restore
 
       - name: Run Unit Tests
+        if: always()
         run: dotnet test ElektroOffer_app.Tests.Unit/ElektroOffer_app.Tests.Unit.csproj --configuration Release --verbosity normal
 
       - name: Run Integration Tests
@@ -85,14 +90,17 @@ jobs:
 
     steps:
       - name: Checkout repository
+        if: always()
         uses: actions/checkout@v4
 
       - name: Setup .NET
+        if: always()
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '10.0.x'
 
       - name: Publish Application
+        if: always()
         run: |
           dotnet publish `
             ElektroOffer_app/ElektroOffer_app.csproj `
@@ -100,6 +108,7 @@ jobs:
             --output ElektroOffer_app/publish
 
       - name: Upload Publish Artifact
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: elektrooffer-publish
