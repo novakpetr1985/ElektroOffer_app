@@ -26,7 +26,6 @@ on:
     #   • Chráněné větve ignorujeme, protože do nich nelze pushovat
     #   • Tím zabráníme duplikaci CI běhů (push + PR)
     # =====================================================================
-    branches: [ "**" ]
 
     # =====================================================================
     # 🟦 TAG TRIGGER
