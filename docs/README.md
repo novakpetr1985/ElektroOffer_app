@@ -261,28 +261,61 @@ Testují spolupráci:
 
 ## 🧩 CI / GitHub Actions
 
-Projekt využívá Continuous Integration (CI) přes GitHub Actions.
+### 🔧 Git Workflow (stručný postup)
 
-### 🔄 Co se spouští automaticky
+- feature/<verze>-aut-tests-git → (bez PR)
+- feature/<verze>-aut-tests-git → PR → feature/<verze>
+- feature/<verze> → PR → dev
+- dev → PR → test
+- test → PR → main
+- main → TAG → CI spustí tag-only kroky
 
-| Akce                       | Push | Pull | Tag |
-| -------------------------- | ---- | ---- | ----|
-| `**Restore NuGet balíčků**`|  ✔  |   ✔  |  ✔  |
-| `**Build solution**`       |  ✔  |   ✔  |  ✔  |
-| `**Unit testy**`           |  ✔  |   ✔  |  ✔  |
-| `**Integration testy**`    |  ✔  |   ✔  |  ✔  |
-| `**Publish aplikace**`     |  ❌ |  ❌  |  ✔  |
-| `**Upload artefaktu**`     |  ❌ |  ❌  |  ✔  |
-| `**CI log**`               |  ✔  |   ✔  |  ✔  |
-| `**CI log full**`          |  ❌ |  ❌  |  ✔  |
+### 🧩 Typy větví
 
-### 📝 Popis workflow
+| Větev   	        | Účel                                               |
+| ----------------- | -------------------------------------------------- |
+| `fix/\*`  	    | Pracovní větve pro konkrétní úkoly. Bez PR.        |
+| `feature/\*`	    | Pracovní větve pro konkrétní úkoly. Bez PR.        |
+| `feature/<verze>` | Hlavní větev dané verze. PR z pracovních větví.    |
+| `dev`	            | Vývojová větev. PR z feature.                      |
+| `test`	        | Staging větev. PR z dev.                           |
+| `main`	        | Produkční větev. PR z test.                        |
+| `tag`	            | Spouští release pipeline (publish + detailní log). |
 
-- Build + testy probíhají při každém pushi a pull requestu.  
-- Publish a upload artefaktu probíhají pouze při vytvoření tagu (např. `v1.7.5`).  
+
+### 🧮 Verzování aplikace
+
+
+| Číslo   |	Příklad   |	Popis                                          |
+| ------- | --------- | ---------------------------------------------- |
+| `MAJOR` |	`1.x.x.`  |	Největší změny, zásadní úpravy, nové generace. |
+| `MINOR` |	`x.7.x.`  |	Větší balík změn, nové funkce.                 |
+| `PATCH` |	`x.x.5.`  |	Menší změny, běžný vývoj verze.                |
+| `FIX`   |	`x.x.x.1` |	Fixy, drobné opravy, interní buildy.           |
+
+
+### Projekt využívá Continuous Integration (CI) přes GitHub Actions.
+
+#### 🔄 Co se spouští automaticky
+
+| Akce                       | Push (všechny větve) | Pull Request  | Tag |
+| -------------------------- | -------------------- | ------------- | ----|
+| `Restore NuGet Packages`   |          ✔          |        ✔      |  ✔  |
+| `Build Solution`           |          ✔          |        ✔      |  ✔  |
+| `Run Unit Tests`           |          ✔          |        ✔      |  ✔  |
+| `Run Integration Tests`    |          ✔          |        ✔      |  ✔  |
+| `Generate Minimal CI Log`  |          ✔          |        ✔      |  ✔  |
+| `Publish Application`      |         ❌          |       ❌      |  ✔  |
+| `Upload Publish Artifact`  |         ❌          |       ❌      |  ✔  |
+| `Generate Detailed CI Log` |         ❌          |       ❌      |  ✔  |
+
+#### 📝 Popis workflow
+
+- Build + testy + artefakt minimálního logu probíhají při každém pushi a pull requestu.  
+- Publish, artefakty upload + detailní logy probíhají pouze při vytvoření tagu (např. `v1.7.5`).  
 - Díky tomu je CI rychlé při vývoji a plně automatické při vydání nové verze.
 
-### Workflow: 
+#### Workflow: 
 
 - `.github/workflows/elektrooffer-ci-pipeline`
 
@@ -297,17 +330,17 @@ Projekt využívá Continuous Integration (CI) přes GitHub Actions.
 
 ### Hlavní projekt (`ElektroOffer_app`)
 
-| Balíček                               | Verze  | Účel                                            |
-| ------------------------------------- | ------ | ----------------------------------------------- |
-| `Microsoft.Data.Sqlite`               | 10.0.9 | SQLite driver pro EF Core                       |
-| `Microsoft.EntityFrameworkCore`       | 10.0.9 | ORM vrstva                                      |
-| `Microsoft.EntityFrameworkCore.Sqlite`| 10.0.9 | SQLite provider pro EF Core                     |
-| `Microsoft.EntityFrameworkCore.Design`| 10.0.9 | Migrace (pouze dev)                             |
-| `Microsoft.EntityFrameworkCore.Tools` | 10.0.9 | CLI nástroje (pouze dev)                        |
-| `SQLitePCLRaw.lib.e_sqlite3`          | 3.50.3 | Nativní SQLite knihovna (pin kvůli bezpečnosti) |
-| `SQLitePCLRaw.bundle_e_sqlite3`       | 3.0.3  | Tranzitivní pin (bezpečnostní oprava)           |
-| `SQLitePCLRaw.core`                   | 3.0.3  | Tranzitivní pin (bezpečnostní oprava)           |
-| `SQLitePCLRaw.provider.e_sqlite3`     | 3.0.3  | Tranzitivní pin (bezpečnostní oprava)           |
+| Balíček                                | Verze  | Účel                                            |
+| -------------------------------------- | ------ | ----------------------------------------------- |
+| `Microsoft.Data.Sqlite`                | 10.0.9 | SQLite driver pro EF Core                       |
+| `Microsoft.EntityFrameworkCore`        | 10.0.9 | ORM vrstva                                      |
+| `Microsoft.EntityFrameworkCore.Sqlite` | 10.0.9 | SQLite provider pro EF Core                     |
+| `Microsoft.EntityFrameworkCore.Design` | 10.0.9 | Migrace (pouze dev)                             |
+| `Microsoft.EntityFrameworkCore.Tools`  | 10.0.9 | CLI nástroje (pouze dev)                        |
+| `SQLitePCLRaw.lib.e_sqlite3`           | 3.50.3 | Nativní SQLite knihovna (pin kvůli bezpečnosti) |
+| `SQLitePCLRaw.bundle_e_sqlite3`        | 3.0.3  | Tranzitivní pin (bezpečnostní oprava)           |
+| `SQLitePCLRaw.core`                    | 3.0.3  | Tranzitivní pin (bezpečnostní oprava)           |
+| `SQLitePCLRaw.provider.e_sqlite3`      | 3.0.3  | Tranzitivní pin (bezpečnostní oprava)           |
 
 ### Testovací projekty (Unit + Integration)
 
@@ -350,6 +383,6 @@ Projekt používá výhradně `Microsoft.Data.Sqlite` jako SQLite driver – je 
 - [x] Tisk / PrintDialog
 - [x] NuGet závislosti stabilizovány a zabezpečeny
 - [x] PDF export (aktuálně přes Windows PrintDialog → „Microsoft Print to PDF“)
-- [x] GitHub tests - UNIT + integration + build + CI log při každé akci, publish jen při tagu
+- [x] GitHub tests - UNIT + integration + build + minimální CI log při každé akci, detailní log + publish jen při tagu
 - [ ] MVVM refactor (částečný → plný)
 - [ ] Přidání hodnoty navíc ve verzování v okně o aplikaci
