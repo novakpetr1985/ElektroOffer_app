@@ -38,9 +38,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Force CI failure (test)
-        run: exit 1
-
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
@@ -72,6 +69,10 @@ jobs:
         with:
           name: elektrooffer-ci-log
           path: elektrooffer-ci.log
+
+      - name: Force CI failure (test)
+        run: exit 1
+
 
 # =====================================================================
 # 🟥 JOB 2 — Release build
@@ -129,14 +130,6 @@ jobs:
     needs: CI-electrooffer
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: '10.0.x'
-
       - name: Generate Full CI Log (Error)
         run: |
           echo "=== ERROR CI LOG START ===" > elektrooffer-ci-error.log
