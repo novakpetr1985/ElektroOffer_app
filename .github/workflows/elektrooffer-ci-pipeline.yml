@@ -131,6 +131,7 @@ jobs:
 
     steps:
       - name: Generate Full CI Log (Error)
+        if: always()
         run: |
           echo "=== ERROR CI LOG START ===" > elektrooffer-ci-error.log
           dotnet build ElektroOffer_app.slnx --configuration Release --verbosity detailed >> elektrooffer-ci-error.log
@@ -139,6 +140,7 @@ jobs:
           echo "=== ERROR CI LOG END ===" >> elektrooffer-ci-error.log
 
       - name: Upload CI log error artifact
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: elektrooffer-ci-error-log
