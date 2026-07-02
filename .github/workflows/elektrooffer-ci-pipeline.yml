@@ -70,9 +70,6 @@ jobs:
           name: elektrooffer-ci-log
           path: elektrooffer-ci.log
 
-      - name: Force CI failure (test)
-        run: exit 1
-
 
 # =====================================================================
 # 🟥 JOB 2 — Release build
