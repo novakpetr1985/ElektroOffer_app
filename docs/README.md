@@ -265,11 +265,13 @@ Testují spolupráci:
 
 Vývoj probíhá přes více větví, aby byla zajištěna stabilita a kontrola nad změnami:
 
-1. feature/* – pracovní větve pro nové funkce a úpravy
-2. dev – integrační větev, kde se slučují dokončené feature větve
-3. test – staging větev pro ověření před nasazením
-4. main – produkční větev
-5. tag – finální verze aplikace (spouští release pipeline)
+1. hotfix/* – větve pro hotfixy bugů
+2. feature/* – pracovní větve pro nové funkce a úpravy
+3. release/* – větev pro vydání verzí do dev, test a main větví
+4. dev – integrační větev, kde se slučují dokončené feature větve
+5. test – staging větev pro ověření před nasazením
+6. main – produkční větev
+7. tag – finální verze aplikace (spouští release pipeline)
 
 Každá změna prochází přes Pull Request, CI kontrolu a pravidla z GitHub Rulesetu.
 
@@ -278,9 +280,10 @@ Každá změna prochází přes Pull Request, CI kontrolu a pravidla z GitHub Ru
 
 | Větev   	        | Účel                                               |
 | ----------------- | -------------------------------------------------- |
-| `fix/\*`  	    | Pracovní větve pro konkrétní úkoly. Bez PR.        |
-| `feature/\*`	    | Pracovní větve pro konkrétní úkoly. Bez PR.        |
+| `hotfix/*`  	    | Větev pro hotfixy                                  |
+| `feature/*`	    | Pracovní větve pro konkrétní úkoly. Bez PR.        |
 | `feature/<verze>` | Hlavní větev dané verze. PR z pracovních větví.    |
+| `release/<verze>` | Release větev dané verze. Pro dev, test a main     |
 | `dev`	            | Vývojová větev. PR z feature.                      |
 | `test`	        | Staging větev. PR z dev.                           |
 | `main`	        | Produkční větev. PR z test.                        |
@@ -302,16 +305,18 @@ Každá změna prochází přes Pull Request, CI kontrolu a pravidla z GitHub Ru
 
 #### 🔄 Co se spouští automaticky
 
-| Akce                       | Push (všechny větve) | Pull Request  | Tag |
-| -------------------------- | -------------------- | ------------- | ----|
-| `Restore NuGet Packages`   |          ✔          |        ✔      |  ✔  |
-| `Build Solution`           |          ✔          |        ✔      |  ✔  |
-| `Run Unit Tests`           |          ✔          |        ✔      |  ✔  |
-| `Run Integration Tests`    |          ✔          |        ✔      |  ✔  |
-| `Generate Minimal CI Log`  |          ✔          |        ✔      |  ✔  |
-| `Publish Application`      |         ❌          |       ❌      |  ✔  |
-| `Upload Publish Artifact`  |         ❌          |       ❌      |  ✔  |
-| `Generate Detailed CI Log` |         ❌          |       ❌      |  ✔  |
+| Akce                          | Push (všechny větve) | Pull Request  | Tag |
+| ----------------------------- | -------------------- | ------------- | ----|
+| `Restore NuGet Packages`      |          ✔          |        ✔      |  ✔  |
+| `Build Solution`              |          ✔          |        ✔      |  ✔  |
+| `Run Unit Tests`              |          ✔          |        ✔      |  ✔  |
+| `Run Integration Tests`       |          ✔          |        ✔      |  ✔  |
+| `Generate Minimal CI Log`     |          ✔          |        ✔      |  ✔  |
+| `Upload CI log artifact`      |          ✔          |        ✔      |  ✔  |
+| `Publish Application`         |         ❌          |       ❌      |  ✔  |
+| `Upload Publish Artifact`     |         ❌          |       ❌      |  ✔  |
+| `Generate Detailed CI Log`    |         ❌          |       ❌      |  ✔  |
+| `Upload CI log full artifact` |         ❌          |       ❌      |  ✔  |
 
 #### 📝 Popis workflow
 
@@ -322,6 +327,9 @@ Každá změna prochází přes Pull Request, CI kontrolu a pravidla z GitHub Ru
 #### Workflow: 
 
 - `.github/workflows/elektrooffer-ci-pipeline`
+- build + testy + minimální log probíhají při každém pushi a pull requestu
+- publish + upload artefaktů + detailní logy probíhají pouze při vytvoření tagu (např. v1.7.6).
+- CI je díky tomu rychlé při vývoji a plně automatické při vydání nové verze.
 
 ```
 📁 Core Application
@@ -389,6 +397,5 @@ Projekt používá výhradně `Microsoft.Data.Sqlite` jako SQLite driver – je 
 - [x] Tisk / PrintDialog
 - [x] NuGet závislosti stabilizovány a zabezpečeny
 - [x] PDF export (aktuálně přes Windows PrintDialog → „Microsoft Print to PDF“)
-- [x] GitHub tests - UNIT + integration + build + minimální CI log při každé akci, detailní log + publish jen při tagu
+- [x] GitHub tests - UNIT + integration + build + minimální CI log při každé akci; detailní log + publish jen při tagu
 - [ ] MVVM refactor (částečný → plný)
-- [ ] Přidání hodnoty navíc ve verzování v okně o aplikaci
