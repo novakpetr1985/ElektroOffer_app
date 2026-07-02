@@ -1,4 +1,5 @@
-﻿using ElektroOffer_app.ViewModels.Base;
+﻿using ElektroOffer_app.Services;
+using ElektroOffer_app.ViewModels.Base;
 
 namespace ElektroOffer_app.ViewModels
 {
@@ -8,7 +9,7 @@ namespace ElektroOffer_app.ViewModels
     public class AboutWindowViewModel : BaseViewModel
     {
         private string _appName = "ElektroOffer";
-        private string _version = "1.5.1";
+        private string _version = ApplicationInfoService.Version;
         private string _author = "Petr";
         private string _description =
             "Aplikace pro kalkulaci elektro zakázek.\n" +

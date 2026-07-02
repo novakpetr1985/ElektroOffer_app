@@ -2,7 +2,7 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="Elektro Offer - Kalkulace"
-        Height="1000"
+        Height="1200"
         Width="1000">
 
     <!-- =========================================================== -->
@@ -46,15 +46,11 @@
                           InputGestureText="Ctrl+Shift+S"
                           Click="MenuSaveAs_Click"/>
 
-                <!-- ADD-KOMENT: PDF export — implementovat až bude finální struktura dokumentu (sekce zákazníka) -->
-                <!-- ADD-KOMENT: Plánovaná knihovna: QuestPDF — nainstalovat přes NuGet: Install-Package QuestPDF -->
-                <!--
-                <MenuItem Header="Export _PDF (kalkulace)"
-                          Click="MenuExportPdf_Click"/>
 
-                <MenuItem Header="Export PDF (_ceník)"
-                          Click="MenuExportPricePdf_Click"/>
-                -->
+                <!-- Tisk nabídky-->
+                <MenuItem Header="_Tisk"
+                          InputGestureText="Ctrl+P"
+                          Click="MenuPrint_Click"/>
 
                 <!-- Konec — ukončí aplikaci (zeptá se na uložení) -->
                 <MenuItem Header="_Konec"
@@ -107,6 +103,12 @@
                 <Button Content="💾 Uložit jako"
                         ToolTip="Uložit jako... (Ctrl+Shift+S)"
                         Click="MenuSaveAs_Click"
+                        Margin="2"/>
+
+                <!-- Tisk -->
+                <Button Content="🖨️ Tisk"
+                        ToolTip="Tisk"
+                        Click="MenuPrint_Click"
                         Margin="2"/>
 
                 <Separator/>
@@ -181,29 +183,64 @@
                     <!-- ========================= -->
                     <Grid Margin="0,8,0,5">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="35"/>
-                            <ColumnDefinition Width="150"/>
-                            <ColumnDefinition Width="150"/>
-                            <ColumnDefinition Width="150"/>
-                            <ColumnDefinition Width="120"/>
-                            <ColumnDefinition Width="60"/>
-                            <ColumnDefinition Width="60"/>
-                            <ColumnDefinition Width="120"/>
-                            <ColumnDefinition Width="70"/>
+                            <ColumnDefinition Width="35"/>  <!-- ➖ SMAZÁNÍ ŘÁDKU -->
+                            <ColumnDefinition Width="150"/> <!-- ÚKON -->
+                            <ColumnDefinition Width="150"/> <!-- UPŘESNĚNÍ -->
+                            <ColumnDefinition Width="150"/> <!-- MATERIÁL -->
+                            <ColumnDefinition Width="120"/> <!-- UMÍSTĚNÍ -->
+                            <ColumnDefinition Width="60"/>  <!-- MNOŽSTVÍ -->
+                            <ColumnDefinition Width="40"/>  <!-- 🔥 MJ -->
+                            <ColumnDefinition Width="80"/>  <!-- 💰 CENA PRÁCE -->
+                            <ColumnDefinition Width="70"/>  <!-- 🔄 RESET ŘÁDKU -->
+                            <ColumnDefinition Width="60"/>  <!-- 💸 SLEVA -->
                         </Grid.ColumnDefinitions>
 
-                        <TextBlock Grid.Column="1" Text="Úkon"      FontWeight="Bold"/>
-                        <TextBlock Grid.Column="2" Text="Upřesnění" FontWeight="Bold"/>
-                        <TextBlock Grid.Column="3" Text="Materiál"  FontWeight="Bold"/>
-                        <TextBlock Grid.Column="4" Text="Umístění"  FontWeight="Bold"/>
+                        <!-- ÚKON -->
+                        <TextBlock Grid.Column="1"
+                                   Text="Úkon"
+                                   FontWeight="Bold"/>
 
-                        <!-- 🔴 ZMĚNA: číselné sloupce zarovnány shodně s obsahem -->
-                        <TextBlock Grid.Column="5" Text="Množství"  FontWeight="Bold"
-                                   HorizontalAlignment="Right" TextAlignment="Right"/>
-                        <TextBlock Grid.Column="6" Text="MJ"        FontWeight="Bold"
-                                   HorizontalAlignment="Center" TextAlignment="Center"/>
-                        <TextBlock Grid.Column="7" Text="Cena"      FontWeight="Bold"
-                                   HorizontalAlignment="Right" TextAlignment="Right"/>
+                        <!-- UPŘESNĚNÍ -->
+                        <TextBlock Grid.Column="2"
+                                   Text="Upřesnění"
+                                   FontWeight="Bold"/>
+
+                        <!-- MATERIÁL -->
+                        <TextBlock Grid.Column="3"
+                                   Text="Materiál"
+                                   FontWeight="Bold"/>
+
+                        <!-- UMÍSTĚNÍ -->
+                        <TextBlock Grid.Column="4"
+                                   Text="Umístění"
+                                   FontWeight="Bold"/>
+
+                        <!-- MNOŽSTVÍ -->
+                        <TextBlock Grid.Column="5"
+                                   Text="Množství"
+                                   FontWeight="Bold"
+                                   HorizontalAlignment="Right"
+                                   TextAlignment="Right"/>
+
+                        <!-- 🔥 MJ -->
+                        <TextBlock Grid.Column="6"
+                                   Text="MJ"
+                                   FontWeight="Bold"
+                                   HorizontalAlignment="Center"
+                                   TextAlignment="Center"/>
+
+                        <!-- 💰 CENA PRÁCE -->
+                        <TextBlock Grid.Column="7"
+                                   Text="Cena"
+                                   FontWeight="Bold"
+                                   HorizontalAlignment="Right"
+                                   TextAlignment="Right"/>
+
+                        <!-- 💸 SLEVA -->
+                        <TextBlock Grid.Column="9"
+                                   Text="Sleva %"
+                                   FontWeight="Bold"
+                                   HorizontalAlignment="Center"/>
 
                     </Grid>
 
@@ -220,26 +257,27 @@
 
                                     <Grid>
                                         <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="35"/>
-                                            <ColumnDefinition Width="150"/>
-                                            <ColumnDefinition Width="150"/>
-                                            <ColumnDefinition Width="150"/>
-                                            <ColumnDefinition Width="120"/>
-                                            <ColumnDefinition Width="60"/>
-                                            <ColumnDefinition Width="60"/>
-                                            <ColumnDefinition Width="120"/>
-                                            <ColumnDefinition Width="70"/>
+                                            <ColumnDefinition Width="35"/>  <!-- ➖ SMAZÁNÍ ŘÁDKU -->
+                                            <ColumnDefinition Width="150"/> <!-- ÚKON -->
+                                            <ColumnDefinition Width="150"/> <!-- UPŘESNĚNÍ -->
+                                            <ColumnDefinition Width="150"/> <!-- MATERIÁL -->
+                                            <ColumnDefinition Width="120"/> <!-- UMÍSTĚNÍ -->
+                                            <ColumnDefinition Width="60"/>  <!-- MNOŽSTVÍ -->
+                                            <ColumnDefinition Width="40"/>  <!-- 🔥 MJ -->
+                                            <ColumnDefinition Width="80"/>  <!-- 💰 CENA PRÁCE -->
+                                            <ColumnDefinition Width="70"/>  <!-- 🔄 RESET ŘÁDKU -->
+                                            <ColumnDefinition Width="60"/>  <!-- 💸 SLEVA -->
                                         </Grid.ColumnDefinitions>
 
-                                        <!-- ➖ Smazání řádku -->
+                                        <!-- ➖ SMAZÁNÍ ŘÁDKU -->
                                         <Button Grid.Column="0"
                                                 Content="−"
                                                 Width="25"
                                                 Height="25"
                                                 Background="#E53935"
                                                 Foreground="White"
-                                                ToolTip="Smazat řádek"
-                                                Click="DeleteWorkItem_Click"/>
+                                                Click="DeleteWorkItem_Click"
+                                                ToolTip="Smazat řádek"/>
 
                                         <!-- ÚKON -->
                                         <ComboBox Grid.Column="1"
@@ -265,13 +303,11 @@
                                                   SelectedItem="{Binding SelectedLocation, Mode=TwoWay}"/>
 
                                         <!-- MNOŽSTVÍ -->
-                                        <!-- 🔴 ZMĚNA: číslo zarovnáno doprava -->
                                         <TextBox Grid.Column="5"
                                                  TextAlignment="Right"
                                                  Text="{Binding Quantity, UpdateSourceTrigger=PropertyChanged}"/>
 
-                                        <!-- MJ -->
-                                        <!-- 🔴 ZMĚNA: jednotka vycentrována -->
+                                        <!-- 🔥 MJ -->
                                         <TextBlock Grid.Column="6"
                                                    VerticalAlignment="Center"
                                                    HorizontalAlignment="Center"
@@ -280,7 +316,6 @@
                                                    Text="{Binding WorkUnit}"/>
 
                                         <!-- 💰 CENA PRÁCE -->
-                                        <!-- 🔴 ZMĚNA: zarovnání doprava -->
                                         <TextBlock Grid.Column="7"
                                                    FontWeight="Bold"
                                                    Foreground="DarkBlue"
@@ -294,8 +329,28 @@
                                                 Content="SMAZAT"
                                                 Background="DarkBlue"
                                                 Foreground="White"
-                                                ToolTip="Vymazat data řádku"
-                                                Click="ResetWorkItem_Click"/>
+                                                Click="ResetWorkItem_Click"
+                                                ToolTip="Vymazat data řádku"/>
+
+                                        <!-- 💸 SLEVA -->
+                                        <StackPanel Grid.Column="9"
+                                                    Orientation="Horizontal"
+                                                    HorizontalAlignment="Center"
+                                                    VerticalAlignment="Center">
+
+                                            <CheckBox IsChecked="{Binding IsDiscountEnabled}"
+                                                      VerticalAlignment="Center"/>
+
+                                            <TextBox Width="25"
+                                                     Margin="5,0,0,0"
+                                                     TextAlignment="Right"
+                                                     IsEnabled="{Binding IsDiscountEnabled}"
+                                                     Text="{Binding DiscountPercent, UpdateSourceTrigger=PropertyChanged}"/>
+
+                                            <TextBlock Text="%"
+                                                       Margin="2,0,0,0"
+                                                       Foreground="Gray"/>
+                                        </StackPanel>
 
                                     </Grid>
 
@@ -308,7 +363,6 @@
                     <!-- ========================================================= -->
                     <!-- ➕ SOUČET PRÁCE -->
                     <!-- ========================================================= -->
-                    <!-- 🔴 ZMĚNA: StackPanel -> Grid kvůli zarovnání -->
                     <Border Margin="0,10,0,0"
                             Padding="10"
                             BorderBrush="Gray"
@@ -360,23 +414,46 @@
                     <!-- ========================= -->
                     <Grid Margin="0,8,0,5">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="35"/>
-                            <ColumnDefinition Width="300"/>
-                            <ColumnDefinition Width="70"/>
-                            <ColumnDefinition Width="40"/>
-                            <ColumnDefinition Width="120"/>
-                            <ColumnDefinition Width="70"/>
+                            <ColumnDefinition Width="35"/>  <!-- ➖ SMAZÁNÍ ŘÁDKU -->
+                            <ColumnDefinition Width="300"/> <!-- NÁZEV -->
+                            <ColumnDefinition Width="70"/>  <!-- MNOŽSTVÍ -->
+                            <ColumnDefinition Width="40"/>  <!-- 🔥 MJ -->
+                            <ColumnDefinition Width="80"/>  <!-- 💰 CENA MATERIÁLU -->
+                            <ColumnDefinition Width="70"/>  <!-- 🔄 RESET ŘÁDKU -->
+                            <ColumnDefinition Width="60"/>  <!-- 💸 SLEVA -->
                         </Grid.ColumnDefinitions>
 
-                        <TextBlock Grid.Column="1" Text="Název"    FontWeight="Bold"/>
+                        <!-- NÁZEV -->
+                        <TextBlock Grid.Column="1"
+                                   Text="Název"
+                                   FontWeight="Bold"/>
 
-                        <!-- 🔴 ZMĚNA: číselné sloupce zarovnány shodně s obsahem -->
-                        <TextBlock Grid.Column="2" Text="Množství" FontWeight="Bold"
-                                   HorizontalAlignment="Right" TextAlignment="Right"/>
-                        <TextBlock Grid.Column="3" Text="MJ"       FontWeight="Bold"
-                                   HorizontalAlignment="Center" TextAlignment="Center"/>
-                        <TextBlock Grid.Column="4" Text="Cena"     FontWeight="Bold"
-                                   HorizontalAlignment="Right" TextAlignment="Right"/>
+                        <!-- MNOŽSTVÍ -->
+                        <TextBlock Grid.Column="2"
+                                   Text="Množství"
+                                   FontWeight="Bold"
+                                   HorizontalAlignment="Right"
+                                   TextAlignment="Right"/>
+
+                        <!-- 🔥 MJ -->
+                        <TextBlock Grid.Column="3"
+                                   Text="MJ"
+                                   FontWeight="Bold"
+                                   HorizontalAlignment="Center"
+                                   TextAlignment="Center"/>
+
+                        <!-- 💰 CENA MATERIÁLU -->
+                        <TextBlock Grid.Column="4"
+                                   Text="Cena"
+                                   FontWeight="Bold"
+                                   HorizontalAlignment="Right"
+                                   TextAlignment="Right"/>
+
+                        <!-- 💸 SLEVA -->
+                        <TextBlock Grid.Column="6"
+                                   Text="Sleva %"
+                                   FontWeight="Bold"
+                                   HorizontalAlignment="Center"/>
 
                     </Grid>
 
@@ -393,41 +470,44 @@
 
                                     <Grid>
                                         <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="35"/>
-                                            <ColumnDefinition Width="300"/>
-                                            <ColumnDefinition Width="70"/>
-                                            <ColumnDefinition Width="40"/>
-                                            <ColumnDefinition Width="120"/>
-                                            <ColumnDefinition Width="70"/>
+                                            <ColumnDefinition Width="35"/>  <!-- ➖ SMAZÁNÍ ŘÁDKU -->
+                                            <ColumnDefinition Width="300"/> <!-- NÁZEV -->
+                                            <ColumnDefinition Width="70"/>  <!-- MNOŽSTVÍ -->
+                                            <ColumnDefinition Width="40"/>  <!-- 🔥 MJ -->
+                                            <ColumnDefinition Width="80"/>  <!-- 💰 CENA MATERIÁLU -->
+                                            <ColumnDefinition Width="70"/>  <!-- 🔄 RESET ŘÁDKU -->
+                                            <ColumnDefinition Width="60"/>  <!-- 💸 SLEVA -->
                                         </Grid.ColumnDefinitions>
 
+                                        <!-- ➖ SMAZÁNÍ ŘÁDKU -->
                                         <Button Grid.Column="0"
                                                 Content="−"
                                                 Width="25"
                                                 Height="25"
                                                 Background="#E53935"
                                                 Foreground="White"
-                                                ToolTip="Smazat řádek"
-                                                Click="DeleteMaterialItem_Click"/>
+                                                Click="DeleteMaterialItem_Click"
+                                                ToolTip="Smazat řádek"/>
 
+                                        <!-- NÁZEV -->
                                         <ComboBox Grid.Column="1"
                                                   ItemsSource="{Binding DataContext.Materials, RelativeSource={RelativeSource AncestorType=Window}}"
                                                   DisplayMemberPath="Name"
                                                   SelectedItem="{Binding MaterialItem, Mode=TwoWay}"/>
 
-                                        <!-- 🔴 ZMĚNA: číslo zarovnáno doprava -->
+                                        <!-- MNOŽSTVÍ -->
                                         <TextBox Grid.Column="2"
                                                  TextAlignment="Right"
                                                  Text="{Binding Quantity, UpdateSourceTrigger=PropertyChanged}"/>
 
-                                        <!-- 🔴 ZMĚNA: jednotka vycentrována -->
+                                        <!-- 🔥 MJ -->
                                         <TextBlock Grid.Column="3"
                                                    VerticalAlignment="Center"
                                                    HorizontalAlignment="Center"
                                                    TextAlignment="Center"
                                                    Text="{Binding MaterialItem.Unit}"/>
 
-                                        <!-- 🔴 ZMĚNA: cena doprava -->
+                                        <!-- 💰 CENA MATERIÁLU -->
                                         <TextBlock Grid.Column="4"
                                                    FontWeight="Bold"
                                                    VerticalAlignment="Center"
@@ -435,12 +515,33 @@
                                                    TextAlignment="Right"
                                                    Text="{Binding Total, StringFormat={}{0:N0} Kč}"/>
 
+                                        <!-- 🔄 RESET ŘÁDKU -->
                                         <Button Grid.Column="5"
                                                 Content="SMAZAT"
                                                 Background="DarkBlue"
                                                 Foreground="White"
-                                                ToolTip="Vymazat data řádku"
-                                                Click="ResetMaterialItem_Click"/>
+                                                Click="ResetMaterialItem_Click"
+                                                ToolTip="Vymazat data řádku"/>
+
+                                        <!-- 💸 SLEVA -->
+                                        <StackPanel Grid.Column="6"
+                                                    Orientation="Horizontal"
+                                                    HorizontalAlignment="Center"
+                                                    VerticalAlignment="Center">
+
+                                            <CheckBox IsChecked="{Binding IsDiscountEnabled}"
+                                                      VerticalAlignment="Center"/>
+
+                                            <TextBox Width="25"
+                                                     Margin="5,0,0,0"
+                                                     TextAlignment="Right"
+                                                     IsEnabled="{Binding IsDiscountEnabled}"
+                                                     Text="{Binding DiscountPercent, UpdateSourceTrigger=PropertyChanged}"/>
+
+                                            <TextBlock Text="%"
+                                                       Margin="2,0,0,0"
+                                                       Foreground="Gray"/>
+                                        </StackPanel>
 
                                     </Grid>
 
@@ -453,7 +554,6 @@
                     <!-- ========================================================= -->
                     <!-- ➕ SOUČET MATERIÁLU -->
                     <!-- ========================================================= -->
-                    <!-- 🔴 ZMĚNA: StackPanel -> Grid -->
                     <Border Margin="0,10,0,0"
                             Padding="10"
                             BorderBrush="Gray"
@@ -468,7 +568,6 @@
                             <TextBlock Text="Součet materiálu"
                                        FontWeight="Bold"/>
 
-                            <!-- 🔴 ZMĚNA: chybějící HorizontalAlignment="Right" doplněn -->
                             <TextBlock Grid.Column="1"
                                        Text="{Binding MaterialTotal, StringFormat={}{0:N0} Kč}"
                                        FontSize="16"
@@ -505,7 +604,7 @@
                                                 Width="350"
                                                 DisplayMemberBinding="{Binding Description}"/>
 
-                                <!-- ✔ NOVĚ: Množství + MJ -->
+                                <!-- Množství + MJ -->
                                 <GridViewColumn Width="100">
                                     <GridViewColumn.HeaderTemplate>
                                         <DataTemplate>
@@ -518,7 +617,6 @@
 
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
-                                            <!-- ✔ OPRAVA: zobrazí "Xm" místo pouhého "m" -->
                                             <TextBlock HorizontalAlignment="Right"
                                                        TextAlignment="Right"
                                                        Width="100">
@@ -533,7 +631,7 @@
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
 
-                                <!-- Cena -->
+                                <!-- Cena (se slevou) -->
                                 <GridViewColumn Width="120">
                                     <GridViewColumn.HeaderTemplate>
                                         <DataTemplate>
@@ -555,6 +653,55 @@
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
 
+                                <!-- 🏷️ Sleva % -->
+                                <!-- Pokud je DiscountPercent null → zobrazí se prázdná buňka -->
+                                <GridViewColumn Width="80">
+                                    <GridViewColumn.HeaderTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="Sleva %"
+                                                       HorizontalAlignment="Right"
+                                                       TextAlignment="Right"
+                                                       Width="60"/>
+                                        </DataTemplate>
+                                    </GridViewColumn.HeaderTemplate>
+
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding DiscountPercent,
+                                                               TargetNullValue='',
+                                                               StringFormat={}{0:N0} %}"
+                                                       HorizontalAlignment="Right"
+                                                       TextAlignment="Right"
+                                                       Width="60"/>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+
+                                <!-- 🏷️ Sleva Kč -->
+                                <!-- Pokud je DiscountAmount null → zobrazí se prázdná buňka -->
+                                <GridViewColumn Width="120">
+                                    <GridViewColumn.HeaderTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="Sleva Kč"
+                                                       HorizontalAlignment="Right"
+                                                       TextAlignment="Right"
+                                                       Width="100"/>
+                                        </DataTemplate>
+                                    </GridViewColumn.HeaderTemplate>
+
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding DiscountAmount,
+                                                               TargetNullValue='',
+                                                               StringFormat={}{0:N0} Kč}"
+                                                       HorizontalAlignment="Right"
+                                                       TextAlignment="Right"
+                                                       Foreground="DarkRed"
+                                                       Width="100"/>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+
                             </GridView>
                         </ListView.View>
 
@@ -565,7 +712,7 @@
                 <!-- ========================================================= -->
                 <!-- 💰 CELKOVÁ CENA (GRAND TOTAL) -->
                 <!-- ========================================================= -->
-                <!-- 🔴 ZMĚNA: StackPanel -> Grid kvůli zarovnání -->
+                <!-- 🔴 ZMĚNA: Grid rozšířen o 3 řádky — před slevou / sleva / po slevě -->
                 <Grid Grid.Row="3"
                       Margin="0,10,0,20">
 
@@ -574,11 +721,119 @@
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
 
-                    <TextBlock Text="Celková cena nabídky:"
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="8" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <!-- ── Řádek 0: Cena před slevou ── -->
+                    <!-- Zobrazí se pouze pokud existuje alespoň jedna sleva -->
+                    <TextBlock Grid.Row="0"
+                               Grid.Column="0"
+                               Text="Cena před slevou:"
+                               FontSize="15"
+                               Foreground="Gray">
+                        <TextBlock.Style>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding HasAnyDiscount}" Value="True">
+                                        <Setter Property="Visibility" Value="Visible"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBlock.Style>
+                    </TextBlock>
+
+                    <TextBlock Grid.Row="0"
+                               Grid.Column="1"
+                               FontSize="15"
+                               Foreground="Gray"
+                               HorizontalAlignment="Right"
+                               TextAlignment="Right"
+                               Text="{Binding GrandTotalBeforeDiscount, StringFormat={}{0:N0} Kč}">
+                        <TextBlock.Style>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding HasAnyDiscount}" Value="True">
+                                        <Setter Property="Visibility" Value="Visible"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBlock.Style>
+                    </TextBlock>
+
+                    <!-- ── Řádek 1: Celková sleva ── -->
+                    <!-- Zobrazí se pouze pokud existuje alespoň jedna sleva -->
+                    <TextBlock Grid.Row="1"
+                               Grid.Column="0"
+                               Text="Celková sleva:"
+                               FontSize="15"
+                               Foreground="DarkRed">
+                        <TextBlock.Style>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding HasAnyDiscount}" Value="True">
+                                        <Setter Property="Visibility" Value="Visible"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBlock.Style>
+                    </TextBlock>
+
+                    <TextBlock Grid.Row="1"
+                               Grid.Column="1"
+                               FontSize="15"
+                               Foreground="DarkRed"
+                               HorizontalAlignment="Right"
+                               TextAlignment="Right"
+                               Text="{Binding TotalDiscount, StringFormat={}{0:N0} Kč}">
+                        <TextBlock.Style>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding HasAnyDiscount}" Value="True">
+                                        <Setter Property="Visibility" Value="Visible"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBlock.Style>
+                    </TextBlock>
+
+                    <!-- ── Řádek 2: Oddělovač ── -->
+                    <!-- Zobrazí se pouze pokud existuje alespoň jedna sleva -->
+                    <Border Grid.Row="2"
+                            Grid.Column="0"
+                            Grid.ColumnSpan="2"
+                            BorderBrush="LightGray"
+                            BorderThickness="0,0,0,1"
+                            Margin="0,4,0,0">
+                        <Border.Style>
+                            <Style TargetType="Border">
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding HasAnyDiscount}" Value="True">
+                                        <Setter Property="Visibility" Value="Visible"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Border.Style>
+                    </Border>
+
+                    <!-- ── Řádek 3: Celková cena po slevě ── -->
+                    <!-- Vždy viditelný -->
+                    <TextBlock Grid.Row="3"
+                               Grid.Column="0"
+                               Text="Celková cena nabídky:"
                                FontSize="20"
                                FontWeight="SemiBold"/>
 
-                    <TextBlock Grid.Column="1"
+                    <TextBlock Grid.Row="3"
+                               Grid.Column="1"
                                FontSize="26"
                                FontWeight="Bold"
                                Foreground="DarkGreen"

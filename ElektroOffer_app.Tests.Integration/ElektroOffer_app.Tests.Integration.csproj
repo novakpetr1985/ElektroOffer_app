@@ -1,25 +1,37 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFramework>net10.0-windows7.0</TargetFramework>
+		<TargetFramework>net10.0-windows</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
+		<IsTestProject>true</IsTestProject>
 
 		<RootNamespace>ElektroOffer_app.Tests.Integration</RootNamespace>
 		<AssemblyName>ElektroOffer_app.Tests.Integration</AssemblyName>
 	</PropertyGroup>
 
 	<ItemGroup>
-		<!-- Testovací framework -->
-		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.10.0" />
+		<!-- Testovací framework – sjednoceno s hlavním projektem -->
+		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.9" />
+		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.7.0" />
 		<PackageReference Include="NUnit" Version="3.14.0" />
-		<PackageReference Include="NUnit3TestAdapter" Version="4.5.0" />
-		<PackageReference Include="coverlet.collector" Version="6.0.0" />
+		<PackageReference Include="NUnit3TestAdapter" Version="6.2.0" />  <!-- bylo 4.5.0 -->
+		<PackageReference Include="coverlet.collector" Version="10.0.1">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
 
-		<!-- Pro integrační testy (DB, DI, hostování) - sjednoceno na 10.0.8 -->
-		<PackageReference Include="Microsoft.Extensions.Hosting" Version="10.0.8" />
-		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.8" />
-		<PackageReference Include="Microsoft.Data.Sqlite" Version="10.0.8" />
+		<!-- DI / Hosting – sjednoceno s hlavním projektem -->          <!-- bylo 10.0.8 -->
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.9" /> <!-- bylo 10.0.8 -->
+
+		<!-- SQLite -->
+		<PackageReference Include="Microsoft.Data.Sqlite" Version="10.0.9" />
+		<!-- Override zranitelné verze 2.1.11 – fix bezpečnostní chyby GHSA-2m69-gcr7-jv3q -->
+		<PackageReference Include="SQLitePCLRaw.lib.e_sqlite3" Version="3.50.3" />
+		<!-- Explicitní pin tranzitivních SQLitePCLRaw balíčků – oprava zranitelnosti GHSA-2m69-gcr7-jv3q -->
+		<PackageReference Include="SQLitePCLRaw.bundle_e_sqlite3" Version="3.0.3" />
+		<PackageReference Include="SQLitePCLRaw.core" Version="3.0.3" />
+		<PackageReference Include="SQLitePCLRaw.provider.e_sqlite3" Version="3.0.3" />
 	</ItemGroup>
 
 	<ItemGroup>
