@@ -54,10 +54,10 @@ on:
     #   • Změny se tam dostanou pouze přes PR
     #   • Pokud bychom je testovali při push, CI by běželo dvakrát
     # =====================================================================
-    branches-ignore:
-      - dev
-      - test
-      - main
+    # branches-ignore:
+    #  - dev
+    #  - test
+    #  - main
 
   pull_request:
     # =====================================================================
