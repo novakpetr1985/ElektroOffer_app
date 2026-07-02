@@ -319,10 +319,12 @@ Testují spolupráci:
 
 - `.github/workflows/elektrooffer-ci-pipeline`
 
+```
 📁 Core Application
 └── 📁 .github
     └── 📁 workflows
         └── 📄 elektrooffer-ci-pipeline.yml
+```
 
 ---
 
