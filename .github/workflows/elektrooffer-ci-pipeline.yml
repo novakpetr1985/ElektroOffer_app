@@ -64,12 +64,38 @@ jobs:
       - name: Generate CI Log
         if: always()
         run: |
-          echo "=== CI LOG START ===" > elektrooffer-ci.log
-          echo "Build + Test summary:" >> elektrooffer-ci.log
+          echo "============================================================" > elektrooffer-ci.log
+          echo "🟩 CI SHORT LOG" >> elektrooffer-ci.log
+          echo "Timestamp: $(date)" >> elektrooffer-ci.log
+          echo "Working directory: $(pwd)" >> elektrooffer-ci.log
+          echo "============================================================" >> elektrooffer-ci.log
+
+          echo "" >> elektrooffer-ci.log
+          echo "------------------------------------------------------------" >> elektrooffer-ci.log
+          echo "🔧 BUILD (minimal)" >> elektrooffer-ci.log
+          echo "------------------------------------------------------------" >> elektrooffer-ci.log
           dotnet build ElektroOffer_app.slnx --configuration Release --verbosity minimal >> elektrooffer-ci.log
+          echo "Exit code (build): $?" >> elektrooffer-ci.log
+
+          echo "" >> elektrooffer-ci.log
+          echo "------------------------------------------------------------" >> elektrooffer-ci.log
+          echo "🧪 UNIT TESTS (minimal)" >> elektrooffer-ci.log
+          echo "------------------------------------------------------------" >> elektrooffer-ci.log
           dotnet test ElektroOffer_app.Tests.Unit/ElektroOffer_app.Tests.Unit.csproj --verbosity minimal >> elektrooffer-ci.log
+          echo "Exit code (unit tests): $?" >> elektrooffer-ci.log
+
+          echo "" >> elektrooffer-ci.log
+          echo "------------------------------------------------------------" >> elektrooffer-ci.log
+          echo "🧪 INTEGRATION TESTS (minimal)" >> elektrooffer-ci.log
+          echo "------------------------------------------------------------" >> elektrooffer-ci.log
           dotnet test ElektroOffer_app.Tests.Integration/ElektroOffer_app.Tests.Integration.csproj --verbosity minimal >> elektrooffer-ci.log
-          echo "=== CI LOG END ===" >> elektrooffer-ci.log
+          echo "Exit code (integration tests): $?" >> elektrooffer-ci.log
+
+          echo "" >> elektrooffer-ci.log
+          echo "============================================================" >> elektrooffer-ci.log
+          echo "🟩 CI SHORT LOG END" >> elektrooffer-ci.log
+          echo "============================================================" >> elektrooffer-ci.log
+
 
       - name: Upload CI log artifact
         if: always()
@@ -137,37 +163,37 @@ jobs:
       - name: Generate Full CI Log (Error)
         if: always()
         run: |
-        echo "============================================================" > elektrooffer-ci-error.log
-        echo "🔴 CI DIAGNOSTIC LOG" >> elektrooffer-ci-error.log
-        echo "Timestamp: $(date)" >> elektrooffer-ci-error.log
-        echo "Working directory: $(pwd)" >> elektrooffer-ci-error.log
-        echo "============================================================" >> elektrooffer-ci-error.log
+          echo "============================================================" > elektrooffer-ci-error.log
+          echo "🔴 CI DIAGNOSTIC LOG" >> elektrooffer-ci-error.log
+          echo "Timestamp: $(date)" >> elektrooffer-ci-error.log
+          echo "Working directory: $(pwd)" >> elektrooffer-ci-error.log
+          echo "============================================================" >> elektrooffer-ci-error.log
 
-        echo "" >> elektrooffer-ci-error.log
-        echo "------------------------------------------------------------" >> elektrooffer-ci-error.log
-        echo "🔧 BUILD (detailed)" >> elektrooffer-ci-error.log
-        echo "------------------------------------------------------------" >> elektrooffer-ci-error.log
-        dotnet build ElektroOffer_app.slnx --configuration Release --verbosity detailed >> elektrooffer-ci-error.log
-        echo "Exit code (build): $?" >> elektrooffer-ci-error.log
+          echo "" >> elektrooffer-ci-error.log
+          echo "------------------------------------------------------------" >> elektrooffer-ci-error.log
+          echo "🔧 BUILD (detailed)" >> elektrooffer-ci-error.log
+          echo "------------------------------------------------------------" >> elektrooffer-ci-error.log
+          dotnet build ElektroOffer_app.slnx --configuration Release --verbosity detailed >> elektrooffer-ci-error.log
+          echo "Exit code (build): $?" >> elektrooffer-ci-error.log
 
-        echo "" >> elektrooffer-ci-error.log
-        echo "------------------------------------------------------------" >> elektrooffer-ci-error.log
-        echo "🧪 UNIT TESTS (detailed)" >> elektrooffer-ci-error.log
-        echo "------------------------------------------------------------" >> elektrooffer-ci-error.log
-        dotnet test ElektroOffer_app.Tests.Unit/ElektroOffer_app.Tests.Unit.csproj --verbosity detailed >> elektrooffer-ci-error.log
-        echo "Exit code (unit tests): $?" >> elektrooffer-ci-error.log
+          echo "" >> elektrooffer-ci-error.log
+          echo "------------------------------------------------------------" >> elektrooffer-ci-error.log
+          echo "🧪 UNIT TESTS (detailed)" >> elektrooffer-ci-error.log
+          echo "------------------------------------------------------------" >> elektrooffer-ci-error.log
+          dotnet test ElektroOffer_app.Tests.Unit/ElektroOffer_app.Tests.Unit.csproj --verbosity detailed >> elektrooffer-ci-error.log
+          echo "Exit code (unit tests): $?" >> elektrooffer-ci-error.log
 
-        echo "" >> elektrooffer-ci-error.log
-        echo "------------------------------------------------------------" >> elektrooffer-ci-error.log
-        echo "🧪 INTEGRATION TESTS (detailed)" >> elektrooffer-ci-error.log
-        echo "------------------------------------------------------------" >> elektrooffer-ci-error.log
-        dotnet test ElektroOffer_app.Tests.Integration/ElektroOffer_app.Tests.Integration.csproj --verbosity detailed >> elektrooffer-ci-error.log
-        echo "Exit code (integration tests): $?" >> elektrooffer-ci-error.log
+          echo "" >> elektrooffer-ci-error.log
+          echo "------------------------------------------------------------" >> elektrooffer-ci-error.log
+          echo "🧪 INTEGRATION TESTS (detailed)" >> elektrooffer-ci-error.log
+          echo "------------------------------------------------------------" >> elektrooffer-ci-error.log
+          dotnet test ElektroOffer_app.Tests.Integration/ElektroOffer_app.Tests.Integration.csproj --verbosity detailed >> elektrooffer-ci-error.log
+          echo "Exit code (integration tests): $?" >> elektrooffer-ci-error.log
 
-        echo "" >> elektrooffer-ci-error.log
-        echo "============================================================" >> elektrooffer-ci-error.log
-        echo "🔴 CI DIAGNOSTIC LOG END" >> elektrooffer-ci-error.log
-        echo "============================================================" >> elektrooffer-ci-error.log
+          echo "" >> elektrooffer-ci-error.log
+          echo "============================================================" >> elektrooffer-ci-error.log
+          echo "🔴 CI DIAGNOSTIC LOG END" >> elektrooffer-ci-error.log
+          echo "============================================================" >> elektrooffer-ci-error.log
 
       - name: Upload CI log error artifact
         if: always()
@@ -175,3 +201,4 @@ jobs:
         with:
           name: elektrooffer-ci-error-log
           path: elektrooffer-ci-error.log
+
