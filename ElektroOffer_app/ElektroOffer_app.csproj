@@ -100,4 +100,6 @@
     </Resource>
   </ItemGroup>
 
+  <ThisWillFail>true</ThisWillFail>
+
 </Project>

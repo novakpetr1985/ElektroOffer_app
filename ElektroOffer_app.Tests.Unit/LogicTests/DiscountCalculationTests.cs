@@ -71,14 +71,5 @@ namespace ElektroOffer_app.Tests.Unit.LogicTests
 
             Assert.That(result, Is.EqualTo(-50));
         }
-        
-        // ============================================================
-        // FORCED ERROR FOR CI TESTING
-        // ============================================================
-        [Test]
-        public void ForceError()
-        {
-            Assert.Fail("Forced test error for CI diagnostic");
-        }
     }
 }
