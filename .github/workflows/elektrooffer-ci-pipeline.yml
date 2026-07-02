@@ -17,6 +17,10 @@ name: ElektroOffer CI
 
 on:
   push:
+    branches:
+    - hotfix/**
+    - feature/**
+    - release/**
     # =====================================================================
     # 🟩 PUSH TRIGGER
     # Spouští CI při commitu do všech větví — ale chráněné níže ignorujeme.
@@ -51,7 +55,6 @@ on:
     #   • Pokud bychom je testovali při push, CI by běželo dvakrát
     # =====================================================================
     branches-ignore:
-      - release/**
       - dev
       - test
       - main
@@ -82,6 +85,23 @@ on:
 jobs:
 
   elektrooffer-ci-pipeline:
+    # =====================================================================
+    # 🧠 CI LOGIKA:
+    #
+    # PUSH:
+    #   • feature/** → CI ANO
+    #   • release/** → CI ANO
+    #   • hotfix/**  → CI ANO
+    #
+    # PR:
+    #   • do dev/test/main → CI ANO
+    #   • z release/**     → CI NE (push už testoval)
+    #
+    # =====================================================================
+    if: |
+      github.event_name == 'push' ||
+      (github.event_name == 'pull_request' &&
+       !startsWith(github.event.pull_request.head.ref, 'release/'))
 
     # =====================================================================
     # CI běží na Windows, protože jde o WPF aplikaci.
