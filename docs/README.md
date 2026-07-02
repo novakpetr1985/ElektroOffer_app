@@ -303,20 +303,23 @@ Každá změna prochází přes Pull Request, CI kontrolu a pravidla z GitHub Ru
 
 ### Projekt využívá Continuous Integration (CI) přes GitHub Actions.
 
-#### 🔄 Co se spouští automaticky
+#### 📊 CI Pipeline – Matice běhu akcí
 
-| Akce                          | Push (všechny větve) | Pull Request  | Tag |
-| ----------------------------- | -------------------- | ------------- | ----|
-| `Restore NuGet Packages`      |          ✔          |        ✔      |  ✔  |
-| `Build Solution`              |          ✔          |        ✔      |  ✔  |
-| `Run Unit Tests`              |          ✔          |        ✔      |  ✔  |
-| `Run Integration Tests`       |          ✔          |        ✔      |  ✔  |
-| `Generate Minimal CI Log`     |          ✔          |        ✔      |  ✔  |
-| `Upload CI log artifact`      |          ✔          |        ✔      |  ✔  |
-| `Publish Application`         |         ❌          |       ❌      |  ✔  |
-| `Upload Publish Artifact`     |         ❌          |       ❌      |  ✔  |
-| `Generate Detailed CI Log`    |         ❌          |       ❌      |  ✔  |
-| `Upload CI log full artifact` |         ❌          |       ❌      |  ✔  |
+| Akce                                    | Push | Pull Request | Tag | Error |
+| --------------------------------------- | ---- | ------------ | --- | ----- |
+| `Restore NuGet Packages`                |  ✔   |      ✔      |  ✔  |  ❌  |
+| `Build Solution`                        |  ✔   |      ✔      |  ✔  |  ❌  |
+| `Run Unit Tests`                        |  ✔   |      ✔      |  ✔  |  ❌  |
+| `Run Integration Tests`                 |  ✔   |      ✔      |  ✔  |  ❌  |
+| `Generate Minimal CI Log`               |  ✔   |      ✔      |  ✔  |  ❌  |
+| `Upload CI log artifact`                |  ✔   |      ✔      |  ✔  |  ❌  |
+| `Publish Application`                   |  ❌  |      ❌     |  ✔  |  ❌  |
+| `Upload Publish Artifact`               |  ❌  |      ❌     |  ✔  |  ❌  |
+| `Generate Detailed CI Log (release)`    |  ❌  |      ❌     |  ✔  |  ❌  |
+| `Upload CI log full artifact (release)` |  ❌  |      ❌     |  ✔  |  ❌  |
+| `Generate Detailed CI Log (error)`      |  ❌  |      ❌     |  ❌ |   ✔  |
+| `Upload CI log error artifact`          |  ❌  |      ❌     |  ❌ |   ✔  |
+
 
 #### 📝 Popis workflow
 
