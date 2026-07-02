@@ -123,7 +123,8 @@ jobs:
 # =====================================================================
 CI-diagnostic:
   needs: [CI-electrooffer, Release-build]
-  if: needs.CI-electrooffer.result == 'failure' || needs.Release-build.result == 'failure'
+  if: needs.CI-electrooffer.result == 'failure' ||
+      needs.Release-build.result == 'failure'
   runs-on: windows-latest
 
   steps:
