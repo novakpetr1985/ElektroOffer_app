@@ -27,6 +27,8 @@ Formát vychází z [Keep a Changelog](https://keepachangelog.com/cs/1.0.0/).
 ### Změněno
 - přidána základní `.gitignore` pravidla pro `bin/`, `obj/` a `publish/`
 - pktualizováno zobrazování verze aplikace (kompatibilita s .NET 10)
+- Upraven a zpřesněn vývojový workflow: feature → dev → test → main → tag.
+- Aktivovány GitHub Rulesety pro povinné PR a CI na chráněných větvích.
 
 ---
 

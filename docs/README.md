@@ -261,14 +261,18 @@ Testují spolupráci:
 
 ## 🧩 CI / GitHub Actions
 
-### 🔧 Git Workflow (stručný postup)
+### 🔄 Development workflow
 
-- feature/<verze>-aut-tests-git → (bez PR)
-- feature/<verze>-aut-tests-git → PR → feature/<verze>
-- feature/<verze> → PR → dev
-- dev → PR → test
-- test → PR → main
-- main → TAG → CI spustí tag-only kroky
+Vývoj probíhá přes více větví, aby byla zajištěna stabilita a kontrola nad změnami:
+
+1. feature/* – pracovní větve pro nové funkce a úpravy
+2. dev – integrační větev, kde se slučují dokončené feature větve
+3. test – staging větev pro ověření před nasazením
+4. main – produkční větev
+5. tag – finální verze aplikace (spouští release pipeline)
+
+Každá změna prochází přes Pull Request, CI kontrolu a pravidla z GitHub Rulesetu.
+
 
 ### 🧩 Typy větví
 
