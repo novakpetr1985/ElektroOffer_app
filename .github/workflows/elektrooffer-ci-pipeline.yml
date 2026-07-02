@@ -14,6 +14,7 @@ name: ElektroOffer CI
 #   ✔ Unit Tests
 #   ✔ Integration Tests
 #   ✔ CI log
+#   ✔ CI log full
 #
 # Aktivní pouze při TAGU:
 #   ✔ Publish aplikace
@@ -42,7 +43,7 @@ on:
 # ============================================================
 jobs:
 
-  elektrooffer-ci-pipeline :
+  elektrooffer-ci-pipeline:
 
     # --------------------------------------------------------
     # Windows runner je potřeba kvůli WPF projektu.
@@ -191,7 +192,7 @@ jobs:
 
 
     # ========================================================
-    # 📝 CI LOG (GENERUJE SE VŽDY)
+    # 📝 CI LOG MINIMÁLNÍ (GENERUJE SE VŽDY)
     #
     # CI vytváří vlastní log běhu build/test kroků.
     #
@@ -203,7 +204,7 @@ jobs:
     # Co se stane:
     #   • CI vytvoří soubor ci.log s diagnostickým výstupem
     #   • Log obsahuje build + test výstup
-    #   • Log se nahraje jako artefakt „ElektroOffer_ci_log“
+    #   • Log se nahraje jako artefakt „ElektroOffer_ci_pipeline_log“
     #
     # Poznámka:
     #   • Log je malý → nezatěžuje CI
@@ -211,19 +212,58 @@ jobs:
     # ========================================================
     - name: Generate CI log
       run: |
-        echo "=== CI LOG START ===" > ci.log
-        echo "Build output:" >> ci.log
-        dotnet build ElektroOffer_app.slnx --configuration Release --verbosity minimal >> ci.log
-        echo "" >> ci.log
-        echo "Unit Tests:" >> ci.log
-        dotnet test ElektroOffer_app.Tests.Unit/ElektroOffer_app.Tests.Unit.csproj --verbosity minimal >> ci.log
-        echo "" >> ci.log
-        echo "Integration Tests:" >> ci.log
-        dotnet test ElektroOffer_app.Tests.Integration/ElektroOffer_app.Tests.Integration.csproj --verbosity minimal >> ci.log
-        echo "=== CI LOG END ===" >> ci.log
+        echo "=== CI LOG START ===" > elektrooffer-ci-pipeline.log
+        echo "Build output:" >> elektrooffer-ci-pipeline.log
+        dotnet build ElektroOffer_app.slnx --configuration Release --verbosity minimal >> elektrooffer-ci-pipeline.log
+        echo "" >> elektrooffer-ci-pipeline.log
+        echo "Unit Tests:" >> elektrooffer-ci-pipeline.log
+        dotnet test ElektroOffer_app.Tests.Unit/ElektroOffer_app.Tests.Unit.csproj --verbosity minimal >> elektrooffer-ci-pipeline.log
+        echo "" >> elektrooffer-ci-pipeline.log
+        echo "Integration Tests:" >> elektrooffer-ci-pipeline.log
+        dotnet test ElektroOffer_app.Tests.Integration/ElektroOffer_app.Tests.Integration.csproj --verbosity minimal >> elektrooffer-ci-pipeline.log
+        echo "=== CI LOG END ===" >> elektrooffer-ci-pipeline.log
 
     - name: Upload CI log artifact
       uses: actions/upload-artifact@v4
       with:
-        name: ElektroOffer_ci_log
-        path: ci.log
+        name: elektroOffer_ci_pipeline_log
+        path: elektrooffer-ci-pipeline.log
+
+
+    # ========================================================
+    # 📝 CI LOG DETAILNÍ (POUZE PŘI TAGU)
+    #
+    # CI vytváří vlastní log běhu build/test kroků.
+    #
+    # Proč je to užitečné?
+    #   • Pomáhá při ladění chyb v CI
+    #   • Umožňuje zpětně dohledat, co přesně CI provedlo
+    #   • Log lze stáhnout přímo z GitHub Actions → Artifacts
+    #
+    # Co se stane:
+    #   • CI vytvoří soubor ci.log s diagnostickým výstupem
+    #   • Log obsahuje build + test výstup
+    #   • Log se nahraje jako artefakt „ElektroOffer_ci_pipeline_full_log“
+    #
+    # Poznámka:
+    #   • Log je detailní → nezatěžuje CI
+    #   • Generuje se při každém pushi i PR
+    # ========================================================
+    - name: Generate CI log full
+      run: |
+        echo "=== CI LOG FULL START ===" > elektrooffer-ci-pipeline-full.log
+        echo "Build output (detailed):" >> elektrooffer-ci-pipeline-full.log
+        dotnet build ElektroOffer_app.slnx --configuration Release --verbosity detailed >> elektrooffer-ci-pipeline-full.log
+        echo "" >> elektrooffer-ci-pipeline-full.log
+        echo "Unit Tests (detailed):" >> elektrooffer-ci-pipeline-full.log
+        dotnet test ElektroOffer_app.Tests.Unit/ElektroOffer_app.Tests.Unit.csproj --verbosity detailed >> elektrooffer-ci-pipeline-full.log
+        echo "" >> elektrooffer-ci-pipeline-full.log
+        echo "Integration Tests (detailed):" >> elektrooffer-ci-pipeline-full.log
+        dotnet test ElektroOffer_app.Tests.Integration/ElektroOffer_app.Tests.Integration.csproj --verbosity detailed >> elektrooffer-ci-pipeline-full.log
+        echo "=== CI LOG FULL END ===" >> elektrooffer-ci-pipeline-full.log
+
+    - name: Upload CI log full artifact
+      uses: actions/upload-full-artifact@v4
+      with:
+        name: elektroOffer_ci_pipeline_full_log
+        path: elektrooffer-ci-pipeline-full.log

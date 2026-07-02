@@ -20,7 +20,9 @@ Formát vychází z [Keep a Changelog](https://keepachangelog.com/cs/1.0.0/).
 - **CI workflow**: `.github/workflows/elektrooffer-ci-pipeline.yml` 
   - CI workflow nyní spouští Publish a upload artefaktu pouze při vytvoření tagu
   - build, Unit testy a Integration testy se nyní spouští při každém push/pull requestu
-  - logování stavu
+  - `logování stavu`
+    - minimální - vždy --> `elektrooffer_ci_pipeline`
+    - detailní - pouze při tagu --> `elektrooffer_ci_pipeline_full` 
 
 ### Změněno
 - přidána základní `.gitignore` pravidla pro `bin/`, `obj/` a `publish/`
