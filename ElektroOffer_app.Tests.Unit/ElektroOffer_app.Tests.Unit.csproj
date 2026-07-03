@@ -59,4 +59,6 @@
     <ProjectReference Include="..\ElektroOffer_app\ElektroOffer_app.csproj" />
   </ItemGroup>
 
+  <test>error</test>
+
 </Project>
