@@ -95,9 +95,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="Resources\Icons\LOGO.jpg">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </Resource>
+      <Resource Include="Resources\Icons\LOGO.jpg">
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </Resource>
   </ItemGroup>
 
 </Project>
