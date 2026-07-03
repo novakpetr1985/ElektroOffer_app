@@ -150,8 +150,7 @@ jobs:
     needs: [CI-elektrooffer, Release-build]
     if: always() && (
           needs.CI-elektrooffer.result == 'failure' ||
-          needs.Release-build.result == 'failure' # ||
-#         needs.Release-build.result == 'skipped'
+          needs.Release-build.result == 'failure'
         )
     runs-on: windows-latest
 
