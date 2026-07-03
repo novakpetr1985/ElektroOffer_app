@@ -5,6 +5,18 @@ Formát vychází z [Keep a Changelog](https://keepachangelog.com/cs/1.0.0/).
 
 ---
 
+## 1.7.6 - UNIT testy
+
+### Přidáno
+- Unit test `VersionTests` ověřující správné nastavení verze aplikace (assembly metadata).
+  Test kontroluje:
+  - že verze není prázdná
+  - že má validní formát
+  - že není defaultní `1.0.0.0`
+
+
+---
+
 ## 1.7.5 - skripty + Git úpravy
 
 ### Přidáno

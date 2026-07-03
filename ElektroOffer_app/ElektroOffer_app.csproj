@@ -44,7 +44,7 @@
       <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
 
       <!-- Hlavní verze aplikace (suffixy povoleny) -->
-      <Version>1.7.5-dev</Version>
+      <Version>1.76-feature</Version>
 
       <!-- Verze souboru (Windows Explorer) -->
       <FileVersion>1.7.5.0</FileVersion>
