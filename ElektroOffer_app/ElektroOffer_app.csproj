@@ -44,7 +44,7 @@
       <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
 
       <!-- Hlavní verze aplikace (suffixy povoleny) -->
-      <Version>1.7.5-test</Version>
+      <Version>1.7.5-dev</Version>
 
       <!-- Verze souboru (Windows Explorer) -->
       <FileVersion>1.7.5.0</FileVersion>
@@ -95,9 +95,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="Resources\Icons\LOGO.jpg">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </Resource>
+      <Resource Include="Resources\Icons\LOGO.jpg">
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </Resource>
   </ItemGroup>
 
 </Project>
