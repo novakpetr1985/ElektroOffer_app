@@ -64,7 +64,6 @@ jobs:
       - name: Generate CI Log
         if: always()
         run: |
-          echo "" >> elektrooffer-ci.log
           echo "============================================================" > elektrooffer-ci.log
           echo "🟩 CI SHORT LOG" >> elektrooffer-ci.log
           echo "Timestamp: $(date)" >> elektrooffer-ci.log
@@ -82,47 +81,20 @@ jobs:
           echo "------------------------------------------------------------" >> elektrooffer-ci.log
           echo "🧪 UNIT TESTS (minimal)" >> elektrooffer-ci.log
           echo "------------------------------------------------------------" >> elektrooffer-ci.log
+          dotnet test ElektroOffer_app.Tests.Unit/ElektroOffer_app.Tests.Unit.csproj --verbosity minimal >> elektrooffer-ci.log
+          echo "Exit code (unit tests): $?" >> elektrooffer-ci.log
 
-          powershell -Command "
-            \$result = dotnet test ElektroOffer_app.Tests.Unit/ElektroOffer_app.Tests.Unit.csproj --verbosity minimal
-            Add-Content elektrooffer-ci.log 'UNIT TESTS RESULT:'
-            Add-Content elektrooffer-ci.log '----------------------------------------'
+          echo "" >> elektrooffer-ci.log
+          echo "------------------------------------------------------------" >> elektrooffer-ci.log
+          echo "🧪 INTEGRATION TESTS (minimal)" >> elektrooffer-ci.log
+          echo "------------------------------------------------------------" >> elektrooffer-ci.log
+          dotnet test ElektroOffer_app.Tests.Integration/ElektroOffer_app.Tests.Integration.csproj --verbosity minimal >> elektrooffer-ci.log
+          echo "Exit code (integration tests): $?" >> elektrooffer-ci.log
 
-            \$summary = \$result | Select-String 'Passed!'
-            if (\$summary) {
-                \$parts = \$summary.ToString().Split(',')
-                foreach (\$p in \$parts) {
-                    Add-Content elektrooffer-ci.log ('  ' + \$p.Trim())
-                }
-            } else {
-                Add-Content elektrooffer-ci.log '  (No summary found)'
-            }
-
-            Add-Content elektrooffer-ci.log ''
-            Add-Content elektrooffer-ci.log ('Exit code (unit tests): ' + \$LASTEXITCODE)"
-
-            echo "" >> elektrooffer-ci.log
-            echo "------------------------------------------------------------" >> elektrooffer-ci.log
-            echo "🧪 INTEGRATION TESTS (detailed)" >> elektrooffer-ci.log
-            echo "------------------------------------------------------------" >> elektrooffer-ci.log
-
-            powershell -Command "
-              \$result = dotnet test ElektroOffer_app.Tests.Integration/ElektroOffer_app.Tests.Integration.csproj --verbosity minimal
-              Add-Content elektrooffer-ci.log 'INTEGRATION TESTS RESULT:'
-              Add-Content elektrooffer-ci.log '----------------------------------------'
-
-              \$summary = \$result | Select-String 'Passed!'
-              if (\$summary) {
-                  \$parts = \$summary.ToString().Split(',')
-                  foreach (\$p in \$parts) {
-                      Add-Content elektrooffer-ci.log ('  ' + \$p.Trim())
-                  }
-              } else {
-                  Add-Content elektrooffer-ci.log '  (No summary found)'
-              }
-
-              Add-Content elektrooffer-ci.log ''
-              Add-Content elektrooffer-ci.log ('Exit code (integration tests): ' + \$LASTEXITCODE)"
+          echo "" >> elektrooffer-ci.log
+          echo "============================================================" >> elektrooffer-ci.log
+          echo "🟩 CI SHORT LOG END" >> elektrooffer-ci.log
+          echo "============================================================" >> elektrooffer-ci.log
 
 
       - name: Upload CI log artifact
@@ -139,7 +111,7 @@ jobs:
 # Obsahuje: Publish, Full Log, Artefakty
 # =====================================================================
   Release-build:
-    if: startsWith(github.ref, 'refs/tags/')
+#    if: startsWith(github.ref, 'refs/tags/')
     runs-on: windows-latest
     needs: CI-elektrooffer
 
@@ -207,47 +179,20 @@ jobs:
           echo "------------------------------------------------------------" >> elektrooffer-ci-error.log
           echo "🧪 UNIT TESTS (detailed)" >> elektrooffer-ci-error.log
           echo "------------------------------------------------------------" >> elektrooffer-ci-error.log
-
-          powershell -Command "
-            \$result = dotnet test ElektroOffer_app.Tests.Unit/ElektroOffer_app.Tests.Unit.csproj --verbosity minimal
-            Add-Content elektrooffer-ci-error.log 'UNIT TESTS RESULT:'
-            Add-Content elektrooffer-ci-error.log '----------------------------------------'
-
-            \$summary = \$result | Select-String 'Passed!'
-            if (\$summary) {
-                \$parts = \$summary.ToString().Split(',')
-                foreach (\$p in \$parts) {
-                    Add-Content elektrooffer-ci-error.log ('  ' + \$p.Trim())
-                }
-            } else {
-                Add-Content elektrooffer-ci-error.log '  (No summary found)'
-            }
-
-            Add-Content elektrooffer-ci-error.log ''
-            Add-Content elektrooffer-ci-error.log ('Exit code (unit tests): ' + \$LASTEXITCODE)"
+          dotnet test ElektroOffer_app.Tests.Unit/ElektroOffer_app.Tests.Unit.csproj --verbosity detailed >> elektrooffer-ci-error.log
+          echo "Exit code (unit tests): $?" >> elektrooffer-ci-error.log
 
           echo "" >> elektrooffer-ci-error.log
           echo "------------------------------------------------------------" >> elektrooffer-ci-error.log
           echo "🧪 INTEGRATION TESTS (detailed)" >> elektrooffer-ci-error.log
           echo "------------------------------------------------------------" >> elektrooffer-ci-error.log
+          dotnet test ElektroOffer_app.Tests.Integration/ElektroOffer_app.Tests.Integration.csproj --verbosity detailed >> elektrooffer-ci-error.log
+          echo "Exit code (integration tests): $?" >> elektrooffer-ci-error.log
 
-          powershell -Command "
-            \$result = dotnet test ElektroOffer_app.Tests.Integration/ElektroOffer_app.Tests.Integration.csproj --verbosity minimal
-            Add-Content elektrooffer-ci-error.log 'INTEGRATION TESTS RESULT:'
-            Add-Content elektrooffer-ci-error.log '----------------------------------------'
-
-            \$summary = \$result | Select-String 'Passed!'
-            if (\$summary) {
-                \$parts = \$summary.ToString().Split(',')
-                foreach (\$p in \$parts) {
-                    Add-Content elektrooffer-ci-error.log ('  ' + \$p.Trim())
-                }
-            } else {
-                Add-Content elektrooffer-ci-error.log '  (No summary found)'
-            }
-
-            Add-Content elektrooffer-ci-error.log ''
-            Add-Content elektrooffer-ci-error.log ('Exit code (integration tests): ' + \$LASTEXITCODE)"
+          echo "" >> elektrooffer-ci-error.log
+          echo "============================================================" >> elektrooffer-ci-error.log
+          echo "🔴 CI DIAGNOSTIC LOG END" >> elektrooffer-ci-error.log
+          echo "============================================================" >> elektrooffer-ci-error.log
 
       - name: Upload CI log error artifact
         if: always()
