@@ -69,14 +69,32 @@ namespace ElektroOffer_app.Tests.Unit.ViewModels
         [Test]
         public void Total_Should_Calculate_MaterialItem_When_WorkItem_Is_Null()
         {
-            var vm = new CalculationItemViewModel
+            // 🔹 1) Připravíme InMemory SQLite databázi pro AppDbContext
+            var options = new DbContextOptionsBuilder<AppDbContext>()
+                .UseInMemoryDatabase("TestDb_MaterialOnly")
+                .Options;
+
+            var db = new AppDbContext(options);
+
+            // 🔹 2) Vytvoříme CalculationItemViewModel s DI kontextem
+            var vm = new CalculationItemViewModel(db)
             {
+                // Množství (Quantity)
                 Quantity = 5,
+
+                // Práce (WorkItem) je NULL → musí se použít materiál
                 WorkItem = null,
-                MaterialItem = new Material { Price = 200 }
+
+                // Materiál s cenou 200 Kč / MJ
+                MaterialItem = new Material
+                {
+                    Price = 200
+                }
             };
 
-            Assert.AreEqual(1000, vm.Total, 0.001);
+            // 🔹 3) Očekáváme: Total = 5 × 200 = 1000
+            Assert.AreEqual(1000, vm.Total, 0.001,
+                "Pokud WorkItem == null, musí se cena počítat z MaterialItem.Price × Quantity.");
         }
 
         // -----------------------------------------------------------------

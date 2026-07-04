@@ -5,6 +5,49 @@ Formát vychází z [Keep a Changelog](https://keepachangelog.com/cs/1.0.0/).
 
 ---
 
+## [1.7.7] – Stabilizace MVVM refaktoringu
+
+### Opraveno
+- **XAML parsing crash v `MainWindow.xaml`**
+  Odstraněny cizí texty vložené do `MainWindow.xaml`, které způsobovaly `XamlParseException` a znemožňovaly načtení okna.
+
+- **Chybějící `ICommand` vlastnosti v `MainViewModel`**
+  Po přechodu na plné MVVM (`MainViewModel` jako náhrada `MainWindow.xaml.cs`) obsahoval ViewModel pouze obyčejné metody (`Save()`, `Load()`, `Print()`, `DeleteWorkItem(object?)`, atd.), ale žádné `ICommand` vlastnosti, na které se XAML bindoval (`{Binding SaveCommand}` apod.). To způsobovalo binding chyby typu *"Vlastnost XCommand se v objektu typu MainViewModel nenašla"* a nefunkční tlačítka/menu za běhu.
+  Přidány a inicializovány veřejné `ICommand` vlastnosti používané v XAML: `NewProjectCommand`, `LoadCommand`, `SaveCommand`, `SaveAsCommand`, `PrintCommand`, `ExitCommand`, `AboutCommand`, `AddWorkItemCommand`, `DeleteWorkItemCommand`, `ResetWorkItemCommand`, `DeleteMaterialItemCommand`, `ResetMaterialItemCommand` – napojených na existující metody přes `RelayCommand`.
+
+- **`IFileDialogService is not configured` v `MainWindow.xaml.cs`**
+  Po refaktoringu na `MainViewModel` se `ProjectService` v konstruktoru `MainWindow` opět vytvářel přes bezparametrový konstruktor (`new ProjectService()`), takže interní `IFileDialogService`, `IFileSystemService` a `IMessageBoxService` zůstaly `null` a `Save()`/`Load()` vyhazovaly `InvalidOperationException`.
+  Opraveno předáním reálných implementací z 1.7.6 (`RealFileDialogService`, `RealFileSystemService`, `RealMessageBoxService`) do DI konstruktoru `ProjectService`.
+
+- **Pořadí inicializace `DataContext` v `MainWindow`**
+  `MainWindow` nyní nejprve vytváří sdílený `AppDbContext` a všechny služby (`ProjectService`, `CatalogService`, `CalculationCascadeService`, `CalculationPriceService`, `MessageService`, `PrintService`, `ApplicationService`, `WindowService`), a teprve poté vytváří `MainViewModel` a nastavuje ho jako `DataContext` – zajišťuje, že ViewModel má při inicializaci k dispozici všechny závislosti.
+  Odstraněno duplicitní nastavování `DataContext` v `MainWindow.xaml.cs`.
+
+- **Chování při zavírání okna (`CanClose()`)**
+  Opraveno chování `MainWindow` při zavírání – `OnClosing` nyní korektně volá `MainViewModel.CanClose()` a v případě neuložených změn zabrání zavření okna (`e.Cancel = true`).
+
+- **`WindowService.ShowAbout()`**
+  Zajištěno správné vytvoření a zobrazení `AboutWindow` s nastaveným `Owner = Application.Current.MainWindow` a použitím `ShowDialog()` pro stabilní chování.
+
+- **Bindingy v XAML**
+  Opraveny bindingy v `ItemsControl`/`DataTemplate` u položek práce a materiálu, v sekci rozpisu rozpočtu (práce + materiál), u slev (`DiscountPercent`, `DiscountAmount`) a u celkových součtů (`GrandTotalBeforeDiscount`, `GrandTotal`) – nově navázané na `MainViewModel` místo bývalého code-behind.
+
+### Přidáno
+- **Spolehlivá implementace `RelayCommand`**
+  Jednoduchá, otestovaná implementace `ICommand` pro MVVM (`Action<object?> execute`, volitelný `Func<object?, bool>? canExecute`), použitá pro všechny nové Command vlastnosti v `MainViewModel`.
+
+- **Službová vrstva pro `MainViewModel`**
+  Zavedeny UI abstrakce `MessageService`, `PrintService`, `ApplicationService` a `WindowService`, díky nimž `MainViewModel` nevolá WPF přímo (viz `IMessageService`, `IPrintService`, `IApplicationService`, `IWindowService`).
+
+### Odstraněno
+- **`DialogService.cs`** – nepoužívaná služba (Info/Warning/Error/Confirm dialogy). Ověřeno přes "Find All References" – žádné odkazy v celém řešení. `MainViewModel` používá pro potvrzovací dialogy `IMessageService`/`MessageService` (`ShowYesNo`, `ShowYesNoCancel`).
+
+### Poznámka k návrhu
+- **Bindingy v `DataTemplate`**
+  Pokud tlačítko uvnitř `DataTemplate` (např. u položek `WorkCalcItems`/`MaterialItems`) nemá `DataContext` nastavený přímo na `Window`, doporučuje se u Command bindingu použít `ElementName` nebo ověřit `AncestorType` v `RelativeSource`, aby binding správně našel `MainViewModel`.
+
+---
+
 ## [1.7.6] – DI refaktoring, testovací pokrytí a stabilizace ProjectService / CalculationItemViewModel (UNIT + INTEGRATION)
 
 ### Přidáno
