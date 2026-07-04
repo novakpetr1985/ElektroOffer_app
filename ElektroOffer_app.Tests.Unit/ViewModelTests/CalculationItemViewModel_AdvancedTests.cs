@@ -10,13 +10,36 @@ namespace ElektroOffer_app.Tests.Unit.ViewModels
 {
     /// =====================================================================
     /// 🧪 ADVANCED UNIT TESTS — CalculationItemViewModel
-    /// Testy PropertyChanged, resetů a edge-case scénářů.
+    /// =====================================================================
+    /// Tyto testy ověřují pokročilé chování ViewModelu, které:
+    ///   • vyžaduje databázi (SQLite InMemory)
+    ///   • zahrnuje reset logiky při změně Task/Specification/Material
+    ///   • ověřuje PropertyChanged události související s databází
+    ///   • testuje edge-case scénáře, které nejsou pokryty základními testy
+    ///
+    /// Základní testy (výpočty Total, slevy, koeficienty, základní PropertyChanged)
+    /// jsou umístěny v CalculationItemViewModelTests.cs.
+    ///
+    /// Tento soubor obsahuje pouze testy, které:
+    ///   • pracují s databází
+    ///   • testují reset kaskády výběru
+    ///   • testují načítání dostupných hodnot z DB
+    ///   • testují načítání WorkUnit a ukládání WorkItem
+    ///
     /// =====================================================================
     public class CalculationItemViewModel_AdvancedTests
     {
         private SqliteConnection? _connection;
         private AppDbContext? _db;
 
+        // ------------------------------------------------------------------
+        // 🧰 SETUP — vytvoření izolované SQLite InMemory databáze
+        // ------------------------------------------------------------------
+        /// Používáme SQLite InMemory, protože:
+        ///   • je extrémně rychlá
+        ///   • chová se stejně jako skutečná SQLite DB
+        ///   • EF Core nad ní funguje plnohodnotně (migrace, LINQ, tracking)
+        ///   • testy jsou izolované — po každém testu se DB zahodí
         [SetUp]
         public void Setup()
         {
@@ -30,7 +53,7 @@ namespace ElektroOffer_app.Tests.Unit.ViewModels
             _db = new AppDbContext(options);
             _db.Database.EnsureCreated();
 
-            // Seed – jeden záznam PriceItems
+            // Seed — vložíme jeden záznam PriceItems, aby testy měly data
             _db.PriceItems.Add(new PriceItems
             {
                 Task = "Montáž",
@@ -46,6 +69,13 @@ namespace ElektroOffer_app.Tests.Unit.ViewModels
             _db.SaveChanges();
         }
 
+        // ------------------------------------------------------------------
+        // 🧹 TEARDOWN — uzavření DB po testu
+        // ------------------------------------------------------------------
+        /// Uzavření připojení je důležité:
+        ///   • uvolní paměť
+        ///   • zabrání únikům handle
+        ///   • zajistí čisté prostředí pro další test
         [TearDown]
         public void Cleanup()
         {
@@ -53,8 +83,12 @@ namespace ElektroOffer_app.Tests.Unit.ViewModels
         }
 
         // ------------------------------------------------------------------
-        // 🧪 TEST: PropertyChanged při změně Quantity
+        // 🧪 TEST 1: PropertyChanged při změně Quantity
         // ------------------------------------------------------------------
+        /// Ověřuje:
+        ///   • že změna Quantity vyvolá PropertyChanged("Total")
+        ///   • že ViewModel správně reaguje na změnu vstupních dat
+        ///   • že MVVM notifikace funguje i při použití DB
         [Test]
         public void Quantity_Should_Raise_PropertyChanged_For_Total()
         {
@@ -77,8 +111,12 @@ namespace ElektroOffer_app.Tests.Unit.ViewModels
         }
 
         // ------------------------------------------------------------------
-        // 🧪 TEST: PropertyChanged při změně slevy
+        // 🧪 TEST 2: PropertyChanged při změně slevy
         // ------------------------------------------------------------------
+        /// Ověřuje:
+        ///   • že změna DiscountPercent vyvolá PropertyChanged("Total")
+        ///   • že sleva je součástí výpočtu Total
+        ///   • že MVVM notifikace funguje správně
         [Test]
         public void DiscountPercent_Should_Raise_PropertyChanged_For_Total()
         {
@@ -101,8 +139,11 @@ namespace ElektroOffer_app.Tests.Unit.ViewModels
         }
 
         // ------------------------------------------------------------------
-        // 🧪 TEST: PropertyChanged při změně WorkItem
+        // 🧪 TEST 3: PropertyChanged při změně WorkItem
         // ------------------------------------------------------------------
+        /// Ověřuje:
+        ///   • že změna WorkItem ovlivní Total
+        ///   • že ViewModel správně reaguje na změnu cenové položky
         [Test]
         public void WorkItem_Should_Raise_PropertyChanged_For_Total()
         {
@@ -123,8 +164,11 @@ namespace ElektroOffer_app.Tests.Unit.ViewModels
         }
 
         // ------------------------------------------------------------------
-        // 🧪 TEST: PropertyChanged při změně MaterialItem
+        // 🧪 TEST 4: PropertyChanged při změně MaterialItem
         // ------------------------------------------------------------------
+        /// Ověřuje:
+        ///   • že změna MaterialItem ovlivní Total
+        ///   • že ViewModel správně přepíná mezi WorkItem a MaterialItem
         [Test]
         public void MaterialItem_Should_Raise_PropertyChanged_For_Total()
         {
@@ -144,8 +188,13 @@ namespace ElektroOffer_app.Tests.Unit.ViewModels
         }
 
         // ------------------------------------------------------------------
-        // 🧪 TEST: ResetBelowTask()
+        // 🧪 TEST 5: ResetBelowTask()
         // ------------------------------------------------------------------
+        /// Ověřuje:
+        ///   • že změna Task resetuje celou kaskádu výběru
+        ///   • že ViewModel se vrátí do konzistentního stavu
+        ///   • že se vymažou dostupné hodnoty (Specifications, Materials, Locations)
+        ///   • že se vymaže WorkItem i WorkUnit
         [Test]
         public void ResetBelowTask_Should_Clear_All_Selections()
         {
@@ -157,7 +206,7 @@ namespace ElektroOffer_app.Tests.Unit.ViewModels
             vm.SelectedLocation = "Stěna";
             vm.Quantity = 10;
 
-            vm.SelectedTask = null; // vyvolá ResetBelowTask()
+            vm.SelectedTask = null;
 
             Assert.IsNull(vm.SelectedSpecification);
             Assert.IsNull(vm.SelectedMaterial);
@@ -170,8 +219,11 @@ namespace ElektroOffer_app.Tests.Unit.ViewModels
         }
 
         // ------------------------------------------------------------------
-        // 🧪 TEST: ResetBelowSpecification()
+        // 🧪 TEST 6: ResetBelowSpecification()
         // ------------------------------------------------------------------
+        /// Ověřuje:
+        ///   • že změna Specification resetuje Material a Location
+        ///   • že ViewModel neumožní nekonzistentní stav
         [Test]
         public void ResetBelowSpecification_Should_Clear_Material_And_Location()
         {
@@ -182,7 +234,7 @@ namespace ElektroOffer_app.Tests.Unit.ViewModels
             vm.SelectedMaterial = "CYKY";
             vm.SelectedLocation = "Stěna";
 
-            vm.SelectedSpecification = null; // vyvolá ResetBelowSpecification()
+            vm.SelectedSpecification = null;
 
             Assert.IsNull(vm.SelectedMaterial);
             Assert.IsNull(vm.SelectedLocation);
@@ -191,8 +243,11 @@ namespace ElektroOffer_app.Tests.Unit.ViewModels
         }
 
         // ------------------------------------------------------------------
-        // 🧪 TEST: ResetBelowMaterial()
+        // 🧪 TEST 7: ResetBelowMaterial()
         // ------------------------------------------------------------------
+        /// Ověřuje:
+        ///   • že změna Material resetuje Location
+        ///   • že ViewModel udržuje konzistentní výběr
         [Test]
         public void ResetBelowMaterial_Should_Clear_Location()
         {
@@ -203,15 +258,18 @@ namespace ElektroOffer_app.Tests.Unit.ViewModels
             vm.SelectedMaterial = "CYKY";
             vm.SelectedLocation = "Stěna";
 
-            vm.SelectedMaterial = null; // vyvolá ResetBelowMaterial()
+            vm.SelectedMaterial = null;
 
             Assert.IsNull(vm.SelectedLocation);
             Assert.IsEmpty(vm.AvailableLocations);
         }
 
         // ------------------------------------------------------------------
-        // 🧪 TEST: Edge-case — Quantity = 0
+        // 🧪 TEST 8: Edge-case — Quantity = 0
         // ------------------------------------------------------------------
+        /// Ověřuje:
+        ///   • že Total je 0, pokud Quantity = 0
+        ///   • že ViewModel správně ošetřuje nulové množství
         [Test]
         public void Total_Should_Be_Zero_When_Quantity_Is_Zero()
         {
@@ -230,8 +288,11 @@ namespace ElektroOffer_app.Tests.Unit.ViewModels
         }
 
         // ------------------------------------------------------------------
-        // 🧪 TEST: Edge-case — sleva 100 %
+        // 🧪 TEST 9: Edge-case — sleva 100 %
         // ------------------------------------------------------------------
+        /// Ověřuje:
+        ///   • že sleva 100 % vynuluje Total
+        ///   • že ViewModel správně aplikuje maximální slevu
         [Test]
         public void Total_Should_Be_Zero_When_Discount_Is_100_Percent()
         {
@@ -252,8 +313,11 @@ namespace ElektroOffer_app.Tests.Unit.ViewModels
         }
 
         // ------------------------------------------------------------------
-        // 🧪 TEST: Edge-case — sleva > 100 %
+        // 🧪 TEST 10: Edge-case — sleva > 100 %
         // ------------------------------------------------------------------
+        /// Ověřuje:
+        ///   • že sleva > 100 % nevede k záporné ceně
+        ///   • že Total je správně oříznut na 0
         [Test]
         public void Total_Should_Not_Be_Negative_When_Discount_Above_100()
         {
@@ -268,9 +332,9 @@ namespace ElektroOffer_app.Tests.Unit.ViewModels
 
             vm.Quantity = 5;
             vm.IsDiscountEnabled = true;
-            vm.DiscountPercent = 150; // 150 % sleva
+            vm.DiscountPercent = 150;
 
-            Assert.AreEqual(0, vm.Total); // logicky nesmí být záporné
+            Assert.AreEqual(0, vm.Total);
         }
     }
 }
