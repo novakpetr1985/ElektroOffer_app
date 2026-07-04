@@ -47,7 +47,7 @@
       <Version>1.7.5</Version>
 
       <!-- Verze souboru (Windows Explorer) -->
-      <FileVersion>1.7.5.0</FileVersion>
+      <FileVersion>1.7.6.0</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>

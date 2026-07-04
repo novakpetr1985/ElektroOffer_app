@@ -5,6 +5,76 @@ Formát vychází z [Keep a Changelog](https://keepachangelog.com/cs/1.0.0/).
 
 ---
 
+## [1.7.6] – DI refaktoring, testovací pokrytí a stabilizace ProjectService / CalculationItemViewModel (UNIT + INTEGRATION)
+
+### Přidáno
+- **DI konstruktor pro `CalculationItemViewModel`**
+  Umožňuje předat `AppDbContext` zvenčí (aplikace → `elektrooffer.db`, testy → SQLite InMemory).
+- **Rozhraní pro abstrakce služeb** (`Services/Abstractions/`):
+  - `IFileDialogService.cs` – práce se souborovými dialogy (Open/SaveFileDialog)
+  - `IFileSystemService.cs` – práce se souborovým systémem (`File.ReadAllText` / `WriteAllText`)
+  - `IMessageBoxService.cs` – zobrazování MessageBoxů (Yes/No/Cancel)
+  
+  *(Původní sloučený soubor `Abstractions.cs` byl rozdělen do samostatných souborů výše a smazán.)*
+
+- **Reálné implementace služeb** (`Services/Implementations/`) pro integrační testy:
+  - `RealFileDialogService.cs` – skutečné WPF dialogy pro ukládání/načítání
+  - `RealFileSystemService.cs` – skutečné čtení/zápis souborů na disk
+  - `RealMessageBoxService.cs` – skutečné WPF MessageBox dialogy
+  
+  Tyto třídy neobsahují žádnou logiku `ProjectService` – pouze zprostředkovávají reálné chování. Unit testy nadále používají mocky (`Mock<IFileDialogService>` atd.).
+
+- **Ochrana proti záporné ceně při slevě:**
+  - Sleva ≥ 100 % → `Total` = 0
+  - Sleva < 0 % → sleva se ignoruje
+
+- **Nové UNIT testy:**
+  - `VersionTests` – ověřuje správné nastavení verze aplikace (assembly metadata): že verze není prázdná, má validní formát a není defaultní `1.0.0.0`
+  - `CalculationItemViewModelTests` (základní logika: Total, sleva, Quantity)
+  - `CalculationItemViewModel_AdvancedTests` (PropertyChanged, edge-case scénáře, reset kaskády)
+  - `RelayCommandTests` (MVVM command logika)
+  - `RepositoryEdgeCaseTests` (CRUD chybové stavy — null objekt, update/delete neexistujícího záznamu)
+  - `CatalogServiceTests` – načítání ceníku práce a materiálu, `Distinct()` u Tasks, `IsCatalogEmpty()`, práce se SQLite InMemory databází
+  - `ProjectServiceTests` – `Save`, `SaveAs`, `Load`, `ConfirmNewProject`, `ExportCatalog`, `ImportCatalog` (s mockováním dialogů, MessageBoxů a souborových operací)
+  - `RealFileSystemServiceTests` – ověřuje základní funkčnost reálné implementace: zápis textu do souboru, čtení textu ze souboru, smazání souboru. Test je izolovaný, nepoužívá `ProjectService` ani databázi.
+
+- **Nové INTEGRATION testy:**
+  - `ProjectServiceTests_Advanced` (reálné ukládání/načítání projektů)
+  - `CatalogServiceTests_Advanced` (reálné načítání ceníku ze SQLite InMemory DB)
+  - `CalculationItemViewModelIntegrationTests` (ViewModel + reálná DB)
+  - `CalculationItemViewModel_CascadeTests` (kompletní kaskáda Task → Specification → Material → Location: resety, načítání dostupných hodnot, PropertyChanged, přepočet Total)
+  - `RealFileDialogServiceTests` (`[Explicit]`) – ověřuje, že metody služby nevyhodí výjimku a lze je bezpečně volat v testovacím prostředí. Reálné dialogy se v testu neotevírají – cílem je ověřit stabilitu implementace, ne UI chování.
+  - `RealMessageBoxServiceTests` (`[Explicit]`) – ověřuje, že metoda nevyhodí výjimku a vrátí validní `MessageBoxResult`. Reálné UI dialogy se v testovacím prostředí neotevírají – jde o smoke-test, ne funkční test UI.
+
+### Změněno
+- `CalculationItemViewModel` už nevytváří vlastní `AppDbContext`. Všechny metody (`LoadSpecifications`, `LoadMaterials`, `LoadLocations`, `LoadWorkUnit`, `UpdateWorkItem`) nyní jednotně používají injektovaný `_db`.
+- Refactoring výpočtu `Total`: sjednocený výpočet pro práci i materiál, bezpečná aplikace slevy, přehlednější komentáře.
+- Testy upraveny tak, aby používaly SQLite InMemory databázi místo EF InMemory provideru (odpovídá reálnému chování `AppDbContext`).
+- Testovací dvojník přejmenován na `CalculationItemViewModelStub.cs` pro jasné odlišení od produkčního ViewModelu.
+- Integrace `ProjectService` nyní používá DI konstruktor se skutečnými implementacemi služeb → integrační testy korektně ověřují reálné chování aplikace (File I/O, MessageBox, dialogy).
+- Přejmenováno: `versionTests.cs` (soubor) → `VersionService.cs`.
+- **UI integrační testy `RealFileDialogServiceTests` a `RealMessageBoxServiceTests`** byly přesunuty z unit testů do integračních testů, protože využívají WPF dialogy (`OpenFileDialog`, `SaveFileDialog`, `MessageBox`), které vyžadují STA thread a nejsou kompatibilní s běžným unit test runnerem.
+- Oba testy byly označeny jako `[Explicit]`, aby se nespouštěly automaticky v CI pipeline, která běží v prostředí bez UI (GitHub Actions). Lokálně je lze spouštět ručně přes Test Explorer.
+- Testy běží v STA threadu (`[Apartment(ApartmentState.STA)]`), což je nutné pro WPF dialogy.
+- Testy nyní automaticky vytvářejí testovací `.txt` soubor v `TempPath`, aby měly stabilní výchozí cestu a nevyužívaly poslední uloženou cestu Windows.
+
+### Opraveno
+- **Duplicitní property `SelectedMaterial`** — druhá kopie (ve skutečnosti určená jako `SelectedLocation`) vznikla copy-paste chybou a způsobovala chyby kompilace (nejednoznačnost `CS0102` + „SelectedLocation neexistuje").
+- **Testovací DB izolace** — metody `LoadWorkUnit()`, `LoadMaterials()` a `UpdateWorkItem()` si vytvářely vlastní `new AppDbContext()` místo použití injektovaného `_db`, takže v testech ignorovaly testovací in-memory databázi a dotazovaly se prázdné produkční DB → test `Changing_Specification_Should_Load_New_Materials` padal s `Expected: 1, But was: 0`.
+- Sleva ≥ 100 % už nezpůsobuje záporné `Total`.
+- Záporná sleva (< 0 %) se nyní správně ignoruje místo nesprávného chování.
+- **UNIT testy ProjectService** nyní používají DI konstruktor místo defaultního.
+  Dříve testy vytvářely `new ProjectService()` → interní služby (`IFileSystemService`, `IFileDialogService`, `IMessageBoxService`) byly `null` → reflexní volání `SaveToPath()` vyhazovalo výjimku *"IFileSystemService is not configured"*.
+  Testy byly upraveny tak, aby používaly mockované služby.
+- **Inicializace ProjectService v MainWindow.**
+  Dříve se `ProjectService` vytvářel defaultním konstruktorem, což vedlo k runtime chybám typu *"IFileDialogService is not configured"* při volání `Load()` a `Save()`.
+  `MainWindow` nyní inicializuje `ProjectService` přes DI (`RealFileDialogService`, `RealFileSystemService`, `RealMessageBoxService`).
+
+### Odstraněno
+- Odstraněny původní unit testy pro UI služby (`RealFileDialogServiceTests`, `RealMessageBoxServiceTests` v Unit projektu), které způsobovaly zasekávání test runneru a CI pipeline.
+
+---
+
 ## 1.7.5 - skripty + Git úpravy
 
 ### Přidáno

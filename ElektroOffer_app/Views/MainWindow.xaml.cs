@@ -1,4 +1,10 @@
-﻿using System;
+﻿using ElektroOffer_app.Commands;
+using ElektroOffer_app.Data;
+using ElektroOffer_app.Models;
+using ElektroOffer_app.Services;
+using ElektroOffer_app.Services.Implementations;
+using ElektroOffer_app.ViewModels.Items;
+using System;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
@@ -9,12 +15,6 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Media;
-
-using ElektroOffer_app.Commands;
-using ElektroOffer_app.Data;
-using ElektroOffer_app.Models;
-using ElektroOffer_app.Services;
-using ElektroOffer_app.ViewModels.Items;
 
 namespace ElektroOffer_app
 {
@@ -219,30 +219,43 @@ namespace ElektroOffer_app
         // =========================================================
         // START
         // =========================================================
+        // =========================================================
+        // START — upravený konstruktor s DI pro ProjectService
+        // =========================================================
         public MainWindow()
         {
             InitializeComponent();
             DataContext = this;
 
+            // 🔧 DI služby pro ProjectService
+            var dialogs = new RealFileDialogService();      // Open/Save dialog
+            var fs = new RealFileSystemService();           // File.Read/Write
+            var msg = new RealMessageBoxService();          // MessageBox
+
+            // ✔ Správná inicializace ProjectService
+            _projectService = new ProjectService(dialogs, fs, msg);
+
+            // ✔ Inicializace databáze
             using (var db = new AppDbContext())
             {
                 db.Database.EnsureCreated();
             }
 
-            // 🔄 SPRÁVNÉ NAČTENÍ DAT PRO WPF
+            // 🔄 Načtení katalogu z DB
             LoadCatalogDataFromDb();
 
+            // 🧪 Dummy položky pro start
             for (int i = 0; i < 5; i++)
             {
                 AddWorkItemInternal();
                 AddMaterialItemInternal();
             }
 
+            // 🔄 Reakce na změny kolekcí
             WorkCalcItems.CollectionChanged += WorkCalcItems_CollectionChanged;
             MaterialItems.CollectionChanged += MaterialItems_CollectionChanged;
 
-            // Klávesové zkratky pro Save/Load
-            // Ctrl+S, Ctrl+Shift+S, Ctrl+O, Ctrl+N
+            // ⌨ Klávesové zkratky (Ctrl+S, Ctrl+Shift+S, Ctrl+O, Ctrl+N)
             RegisterKeyboardShortcuts();
         }
 
