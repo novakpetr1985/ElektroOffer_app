@@ -39,6 +39,7 @@ Formát vychází z [Keep a Changelog](https://keepachangelog.com/cs/1.0.0/).
 - **Duplicitní property `SelectedMaterial`** — druhá kopie (ve skutečnosti určená jako `SelectedLocation`) vznikla copy-paste chybou a způsobovala chyby kompilace (nejednoznačnost `CS0102` + „SelectedLocation neexistuje").
 - **Testovací DB izolace** — metody `LoadWorkUnit()`, `LoadMaterials()` a `UpdateWorkItem()` si vytvářely vlastní `new AppDbContext()` místo použití injektovaného `_db`, takže v testech ignorovaly testovací in-memory databázi a dotazovaly se prázdné produkční DB → test `Changing_Specification_Should_Load_New_Materials` padal s `Expected: 1, But was: 0`.
 - Sleva ≥ 100 % už nezpůsobuje záporné `Total`.
+- Záporná sleva (< 0 %) se nyní správně ignoruje místo nesprávného chování.
 
 ---
 
