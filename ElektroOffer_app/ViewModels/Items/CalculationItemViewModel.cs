@@ -18,6 +18,19 @@ namespace ElektroOffer_app.ViewModels.Items
     // =========================================================
     public class CalculationItemViewModel : INotifyPropertyChanged
     {
+        private readonly AppDbContext _db;
+
+    // Konstruktor pro aplikaci – používá elektrooffer.db
+    public CalculationItemViewModel() : this(new AppDbContext())
+    {
+    }
+
+    // Konstruktor pro testy – dostane SQLite InMemory DB
+    public CalculationItemViewModel(AppDbContext db)
+    {
+        _db = db;
+    }
+
         private PriceItems? _workItem;
         private Material? _materialItem;
         private double _quantity;
@@ -171,8 +184,15 @@ namespace ElektroOffer_app.ViewModels.Items
                 if (_selectedMaterial == value) return;
                 _selectedMaterial = value;
 
-                ResetBelowMaterial();
-                LoadLocations();
+                // 1) Reset
+                ResetBelowMaterial();   // nastaví SelectedLocation = null
+
+                // 2) Naplnění kolekce
+                LoadLocations();        // WPF zde vybere první položku
+
+                // 3) Kritické: znovu vynutit null
+                //    protože WPF po naplnění kolekce automaticky vybere první položku
+                SelectedLocation = null;
 
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(CanSelectLocation));
@@ -182,6 +202,18 @@ namespace ElektroOffer_app.ViewModels.Items
         // =========================================================
         // LOCATION
         // =========================================================
+        // 🔴 ZMĚNA: Tady byla ve skutečnosti druhá, chybná kopie property
+        //    SelectedMaterial (copy-paste chyba) – proto kompilátor hlásil
+        //    "nejednoznačnost mezi SelectedMaterial a SelectedMaterial"
+        //    (dvě stejnojmenné property v jedné třídě) a zároveň
+        //    "SelectedLocation v aktuálním kontextu neexistuje"
+        //    (protože property SelectedLocation jako taková nikdy
+        //    nevznikla – existoval jen soukromý field _selectedLocation,
+        //    ke kterému se nikdo přes get/set nedostal).
+        //
+        //    Oprava: property se teď skutečně jmenuje SelectedLocation
+        //    a pracuje s vlastním fieldem _selectedLocation (ne s
+        //    _selectedMaterial, který patří té předchozí property výše).
         public string? SelectedLocation
         {
             get => _selectedLocation;
@@ -190,11 +222,21 @@ namespace ElektroOffer_app.ViewModels.Items
                 if (_selectedLocation == value) return;
                 _selectedLocation = value;
 
+                // Location je poslední úroveň kaskády (Task → Specification
+                // → Material → Location), takže pod ní už není nic dalšího
+                // k resetování ani žádná další kolekce k načtení.
+
+                // Jakmile je vybrána Location, máme kompletní kombinaci
+                // Task + Specification + Material + Location → dohledáme
+                // konkrétní záznam v tabulce PriceItems, ze kterého se
+                // pak počítá Total.
                 UpdateWorkItem();
 
                 OnPropertyChanged();
+                OnPropertyChanged(nameof(Total));
             }
         }
+
 
         // =========================================================
         // WORK ITEM (ZÁZNAM Z TABULKY PRICEITEMS)
@@ -243,12 +285,25 @@ namespace ElektroOffer_app.ViewModels.Items
         // =========================================================
         // TOTAL (CELKOVÁ CENA ŘÁDKU + SLEVA)
         // =========================================================
-        // 👉 Pokud je vybraná práce → BasePrice * MaterialCoef * PositionCoef * Quantity
-        // 👉 Pokud je vybraný materiál → Material.Price * Quantity
-        // 👉 Jinak 0
-        // 👉 Příklad: 150 Kč × 1,2 × 1,0 × 10 m = 1 800 Kč
-        // 👉 Sleva se aplikuje na výsledek pokud IsDiscountEnabled == true
-        //    a DiscountPercent má hodnotu
+        // 👉 Pokud je vybraná práce:
+        //      BasePrice × MaterialCoef × PositionCoef × Quantity
+        //
+        // 👉 Pokud je vybraný materiál:
+        //      Material.Price × Quantity
+        //
+        // 👉 Pokud není vybráno nic → 0
+        //
+        // 👉 Sleva:
+        //      • Aplikuje se pouze pokud IsDiscountEnabled == true
+        //      • DiscountPercent má hodnotu (není null)
+        //      • Sleva NIKDY nesmí způsobit zápornou cenu
+        //        → pokud je sleva >= 100 %, výsledná cena je 0
+        //      • Záporná sleva (< 0 %) se ignoruje
+        //
+        // 👉 Příklady:
+        //      150 Kč × 1,2 × 1,0 × 10 m = 1 800 Kč
+        //      Sleva 10 % → 1 800 × 0,9 = 1 620 Kč
+        //      Sleva 150 % → 0 Kč (chráněno proti záporné hodnotě)
         // =========================================================
         public double Total
         {
@@ -275,6 +330,14 @@ namespace ElektroOffer_app.ViewModels.Items
                 // Příklad: 1 000 Kč × (1 - 10/100) = 1 000 × 0,9 = 900 Kč
                 if (IsDiscountEnabled && DiscountPercent.HasValue)
                 {
+                    // Sleva >= 100 % → nesmí být záporné
+                    if (DiscountPercent.Value >= 100)
+                        return 0;
+
+                    // Sleva < 0 → ignorovat (nebo můžeš udělat zdražení, pokud chceš)
+                    if (DiscountPercent.Value < 0)
+                        return baseTotal;
+
                     return baseTotal * (1 - DiscountPercent.Value / 100.0);
                 }
 
@@ -289,9 +352,14 @@ namespace ElektroOffer_app.ViewModels.Items
         // =========================================================
         private void LoadWorkUnit()
         {
-            using var db = new AppDbContext();
-
-            WorkUnit = db.PriceItems
+            // 🔴 ZMĚNA: dřív se tu vytvářela NOVÁ instance `new AppDbContext()`,
+            //    která se vždy připojila ke skutečné produkční databázi
+            //    (elektrooffer.db) – ignorovala injektovanou testovací DB (_db).
+            //    V testech (in-memory SQLite se seedovanými daty) to způsobovalo,
+            //    že se dotaz ptal "špatné" databáze a vracel prázdné výsledky.
+            //    Oprava: používáme vždy `_db`, které si ViewModel dostal
+            //    do konstruktoru (buď produkční, nebo testovací).
+            WorkUnit = _db.PriceItems
                 .Where(x => x.Specification == SelectedSpecification)
                 .Select(x => x.Unit)
                 .FirstOrDefault();
@@ -306,13 +374,18 @@ namespace ElektroOffer_app.ViewModels.Items
         {
             AvailableSpecifications.Clear();
 
-            using var db = new AppDbContext();
+            // 🔴 ZMĚNA: dřív se tu vytvářela nepoužitá proměnná
+            //    `using var db = new AppDbContext();`, která se nikde
+            //    dál nepoužila (dotaz níže správně používal _db).
+            //    Zbytečně by otevírala další připojení k databázi,
+            //    proto ji odstraňuji.
 
-            var list = db.PriceItems
+            var list = _db.PriceItems
                 .Where(x => x.Task == SelectedTask)
                 .Select(x => x.Specification)
                 .Distinct()
                 .ToList();
+
 
             foreach (var item in list)
                 AvailableSpecifications.Add(item);
@@ -327,9 +400,17 @@ namespace ElektroOffer_app.ViewModels.Items
         {
             AvailableMaterials.Clear();
 
-            using var db = new AppDbContext();
-
-            var list = db.PriceItems
+            // 🔴 ZMĚNA (HLAVNÍ OPRAVA): dřív se tu vytvářela NOVÁ instance
+            //    `new AppDbContext()` a dotaz se ptal jí (`db.PriceItems`)
+            //    místo injektované `_db`. To znamenalo, že se metoda vždy
+            //    připojila ke skutečné produkční databázi elektrooffer.db,
+            //    i když test poslal ViewModelu vlastní in-memory testovací
+            //    databázi přes konstruktor.
+            //    Důsledek: test "Changing_Specification_Should_Load_New_Materials"
+            //    padal s "Expected: 1, But was: 0" – testovací data v seedu
+            //    byla v _db, ale dotaz se ptal jiné (prázdné) databáze.
+            //    Oprava: používáme vždy _db.
+            var list = _db.PriceItems
                 .Where(x => x.Task == SelectedTask &&
                             x.Specification == SelectedSpecification)
                 .Select(x => x.Material)
@@ -349,19 +430,26 @@ namespace ElektroOffer_app.ViewModels.Items
         {
             AvailableLocations.Clear();
 
-            using var db = new AppDbContext();
+            if (SelectedTask == null ||
+                SelectedSpecification == null ||
+                SelectedMaterial == null)
+                return;
 
-            var list = db.PriceItems
-                .Where(x => x.Task == SelectedTask &&
-                            x.Specification == SelectedSpecification &&
-                            x.Material == SelectedMaterial)
-                .Select(x => x.Location)
+            var locations = _db.PriceItems
+                .Where(p => p.Task == SelectedTask &&
+                            p.Specification == SelectedSpecification &&
+                            p.Material == SelectedMaterial)
+                .Select(p => p.Location)
                 .Distinct()
                 .ToList();
 
-            foreach (var item in list)
-                AvailableLocations.Add(item);
+            foreach (var loc in locations)
+                AvailableLocations.Add(loc);
+
+            // ❌ Tohle musí pryč:
+            // SelectedLocation = AvailableLocations.FirstOrDefault();
         }
+
 
         // =========================================================
         // UPDATE RESULT (NAČTENÍ KONKRÉTNÍHO ZÁZNAMU PRÁCE)
@@ -377,9 +465,10 @@ namespace ElektroOffer_app.ViewModels.Items
                 return;
             }
 
-            using var db = new AppDbContext();
-
-            WorkItem = db.PriceItems
+            // 🔴 ZMĚNA: stejná chyba jako v LoadMaterials/LoadWorkUnit –
+            //    nová instance `new AppDbContext()` ignorovala injektovanou
+            //    testovací databázi. Používáme _db.
+            WorkItem = _db.PriceItems
                 .FirstOrDefault(x =>
                     x.Task == SelectedTask &&
                     x.Specification == SelectedSpecification &&
@@ -390,14 +479,21 @@ namespace ElektroOffer_app.ViewModels.Items
         // =========================================================
         // RESETY KASKÁDY
         // =========================================================
-        // 👉 Používají privátní fieldy přímo → nezpůsobí rekurzivní kaskádu
-        // 👉 Kolekce se čistí ručně, notify se posílá cíleně
+        // 👉 Nově používáme PUBLIC PROPERTY settery místo přímých fieldů:
+        //    • tím se vždy správně vyvolá PropertyChanged
+        //    • zachová se veškerá logika v settere (např. CanSelect...)
+        // 👉 Kolekce (Available*) se dál čistí ručně – to je v pořádku
+        // 👉 WorkItem / WorkUnit se ruší na nejvyšší úrovni, kde to dává smysl
         // =========================================================
+
         private void ResetBelowTask()
         {
-            _selectedSpecification = null;
-            _selectedMaterial = null;
-            _selectedLocation = null;
+            // ✅ Změna: používáme settery, ne fieldy
+            // Task je nejvyšší úroveň → musíme shodit vše pod ním:
+            //   Specification, Material, Location, WorkItem, WorkUnit
+            SelectedSpecification = null;
+            SelectedMaterial = null;
+            SelectedLocation = null;
 
             AvailableSpecifications.Clear();
             AvailableMaterials.Clear();
@@ -406,37 +502,36 @@ namespace ElektroOffer_app.ViewModels.Items
             WorkItem = null;
             WorkUnit = null;
 
-            OnPropertyChanged(nameof(SelectedSpecification));
-            OnPropertyChanged(nameof(SelectedMaterial));
-            OnPropertyChanged(nameof(SelectedLocation));
-            OnPropertyChanged(nameof(CanSelectMaterial));
-            OnPropertyChanged(nameof(CanSelectLocation));
+            // ❌ OnPropertyChanged(...) už není potřeba ručně volat:
+            //    settery SelectedSpecification/Material/Location ho vyvolají samy.
+            //    CanSelectMaterial/Location se přepočítají přes jejich logiku.
         }
 
         private void ResetBelowSpecification()
         {
-            _selectedMaterial = null;
-            _selectedLocation = null;
+            // ✅ Změna: používáme settery, ne fieldy
+            // Specification je druhá úroveň → shazujeme Material + Location
+            SelectedMaterial = null;
+            SelectedLocation = null;
 
             AvailableMaterials.Clear();
             AvailableLocations.Clear();
 
             WorkItem = null;
 
-            OnPropertyChanged(nameof(SelectedMaterial));
-            OnPropertyChanged(nameof(SelectedLocation));
-            OnPropertyChanged(nameof(CanSelectLocation));
+            // ❌ Opět není potřeba ručně volat OnPropertyChanged – settery to řeší.
         }
 
         private void ResetBelowMaterial()
         {
-            _selectedLocation = null;
+            // ✅ Tohle už máš správně – používáme setter SelectedLocation
+            // Material je třetí úroveň → shazujeme jen Location
+            SelectedLocation = null;
 
             AvailableLocations.Clear();
-
             WorkItem = null;
 
-            OnPropertyChanged(nameof(SelectedLocation));
+            // ❌ Žádné ruční OnPropertyChanged – setter SelectedLocation se postará.
         }
 
         // =========================================================

@@ -5,7 +5,7 @@ Formát vychází z [Keep a Changelog](https://keepachangelog.com/cs/1.0.0/).
 
 ---
 
-## 1.7.6 - UNIT testy
+## [1.7.6] – Testovací pokrytí CalculationItemViewModel + oprava DB izolace - UNIT, INTEGRATION
 
 ### Přidáno
 - Unit test `VersionTests` ověřující správné nastavení verze aplikace (assembly metadata).
@@ -13,7 +13,32 @@ Formát vychází z [Keep a Changelog](https://keepachangelog.com/cs/1.0.0/).
   - že verze není prázdná
   - že má validní formát
   - že není defaultní `1.0.0.0`
+- **DI konstruktor pro `CalculationItemViewModel`**
+  Umožňuje předat `AppDbContext` zvenčí (aplikace → `elektrooffer.db`, testy → SQLite InMemory).
+- **Kompletní sada UNIT testů:**
+  - `CalculationItemViewModelTests` (základní logika: Total, sleva, Quantity)
+  - `CalculationItemViewModel_AdvancedTests` (PropertyChanged, edge-case scénáře, reset kaskády)
+  - `RelayCommandTests` (MVVM command logika)
+  - `RepositoryEdgeCaseTests` (CRUD chybové stavy — null objekt, update/delete neexistujícího záznamu)
+- **Kompletní sada INTEGRATION testů:**
+  - `ProjectServiceTests_Advanced` (reálné ukládání/načítání projektů)
+  - `CatalogServiceTests_Advanced` (reálné načítání ceníku ze SQLite InMemory DB)
+  - `CalculationItemViewModelIntegrationTests` (ViewModel + reálná DB)
+  - `CalculationItemViewModel_CascadeTests` (kompletní kaskáda Task → Specification → Material → Location: resety, načítání dostupných hodnot, PropertyChanged, přepočet Total)
+- **Ochrana proti záporné ceně při slevě:**
+  - Sleva ≥ 100 % → `Total` = 0
+  - Sleva < 0 % → sleva se ignoruje
 
+### Změněno
+- `CalculationItemViewModel` už nevytváří vlastní `AppDbContext`. Všechny metody (`LoadSpecifications`, `LoadMaterials`, `LoadLocations`, `LoadWorkUnit`, `UpdateWorkItem`) nyní jednotně používají injektovaný `_db`.
+- Refactoring výpočtu `Total`: sjednocený výpočet pro práci i materiál, bezpečná aplikace slevy, přehlednější komentáře.
+- Testy upraveny tak, aby používaly SQLite InMemory databázi místo EF InMemory provideru (odpovídá reálnému chování `AppDbContext`).
+- Testovací dvojník přejmenován na `CalculationItemViewModelStub.cs` pro jasné odlišení od produkčního ViewModelu.
+
+### Opraveno
+- **Duplicitní property `SelectedMaterial`** — druhá kopie (ve skutečnosti určená jako `SelectedLocation`) vznikla copy-paste chybou a způsobovala chyby kompilace (nejednoznačnost `CS0102` + „SelectedLocation neexistuje").
+- **Testovací DB izolace** — metody `LoadWorkUnit()`, `LoadMaterials()` a `UpdateWorkItem()` si vytvářely vlastní `new AppDbContext()` místo použití injektovaného `_db`, takže v testech ignorovaly testovací in-memory databázi a dotazovaly se prázdné produkční DB → test `Changing_Specification_Should_Load_New_Materials` padal s `Expected: 1, But was: 0`.
+- Sleva ≥ 100 % už nezpůsobuje záporné `Total`.
 
 ---
 

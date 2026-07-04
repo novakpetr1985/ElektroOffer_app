@@ -229,10 +229,11 @@ Projekt obsahuje dvě úrovně testů:
 - rychlé testování výpočtů a repository vrstvy
 
 📌 zaměření:
-- kalkulace cen (`PriceCalculationTests`)
-- repository logika (`MaterialRepositoryTests`, `PriceItemsRepositoryTests`)
-- ViewModel logika
-- Kontrola verze aplikace
+- kalkulace cen a slev (`PriceCalculationTests`, `DiscountCalculationTests`)
+- repository logika + edge-case scénáře (`MaterialRepositoryTests`, `PriceItemsRepositoryTests`, `RepositoryEdgeCaseTests`)
+- ViewModel logika (`CalculationItemViewModelTests`, `CalculationItemViewModel_AdvancedTests`)
+- MVVM command logika (`RelayCommandTests`)
+- kontrola verze aplikace (`VersionTests`)
 
 ### 🧪 Integrační testy
 
@@ -248,8 +249,9 @@ Testují spolupráci:
 📌 zahrnují:
 - DB schema testy
 - CRUD operace
-- ProjectService testy
-- CatalogService testy
+- ProjectService testy (`ProjectServiceTests`, `ProjectServiceTests_Advanced`)
+- CatalogService testy (`CatalogServiceTests`, `CatalogServiceTests_Advanced`)
+- kompletní kaskáda ViewModelu Task → Specification → Material → Location (`CalculationItemViewModelIntegrationTests`, `CalculationItemViewModel_CascadeTests`)
 
 ### 🧠 Testovací architektura
 
