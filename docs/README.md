@@ -221,7 +221,8 @@ Tato změna zajišťuje stabilní běh aplikace a eliminuje chyby typu
 │   │
 │   ├── 📁 Services
 │   │   ├── 📄 CatalogServiceTests.cs
-│   │   └── 📄 ProjectServiceTests.cs
+│   │   ├── 📄 ProjectServiceTests.cs
+│   │   └── 📄 RealFileSystemServiceTests.cs
 │   │
 │   ├── 📁 ViewModelTests
 │   │   └── 📄 CalculationItemViewModelTests.cs
@@ -246,7 +247,10 @@ Tato změna zajišťuje stabilní běh aplikace a eliminuje chyby typu
     │   ├── 📄 CatalogServiceTests.cs
     │   ├── 📄 ProjectServiceTests.cs
     │   ├── 📄 ProjectServiceTests_Advanced.cs
-    │   └── 📄 CatalogServiceTests_Advanced.cs
+    │   ├── 📄 CatalogServiceTests_Advanced.cs
+    │   ├── 📄 RealFileDialogServiceTests.cs [Explicit]
+    │   └── 📄 RealMessageBoxServiceTests.cs [Explicit]
+
     │
     ├── 📁 ViewModels
     │   ├── 📄 CalculationItemViewModelIntegrationTests.cs
@@ -279,6 +283,7 @@ Projekt obsahuje dvě úrovně testů:
 - ViewModel logika (`CalculationItemViewModelTests`, `CalculationItemViewModel_AdvancedTests`)
 - MVVM command logika (`RelayCommandTests`)
 - kontrola verze aplikace (`VersionTests`)
+- reálná implementace file systému (`RealFileSystemServiceTests`)
 
 ### 🧪 Integrační testy
 
@@ -297,6 +302,7 @@ Testují spolupráci:
 - ProjectService testy (`ProjectServiceTests`, `ProjectServiceTests_Advanced`)
 - CatalogService testy (`CatalogServiceTests`, `CatalogServiceTests_Advanced`)
 - kompletní kaskáda ViewModelu Task → Specification → Material → Location (`CalculationItemViewModelIntegrationTests`, `CalculationItemViewModel_CascadeTests`)
+- UI dialogové služby (`RealFileDialogServiceTests`, `RealMessageBoxServiceTests`) – `[Explicit]`, spouští se pouze ručně
 
 ### 🧠 Testovací architektura
 
