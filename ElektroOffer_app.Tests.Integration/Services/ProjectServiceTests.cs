@@ -1,6 +1,7 @@
 using ElektroOffer_app.Data;
 using ElektroOffer_app.Models;
 using ElektroOffer_app.Services;
+using ElektroOffer_app.Services.Implementations;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using NUnit.Framework;
@@ -177,7 +178,12 @@ public class ProjectServiceTests
         // -------------------------------------------------------------
         // 6. Inicializace Service vrstvy (SUT)
         // -------------------------------------------------------------
-        _service = new ProjectService();
+        _service = new ProjectService(
+            new RealFileDialogService(),
+            new RealFileSystemService(),
+            new RealMessageBoxService()
+        );
+
     }
 
     // =====================================================================

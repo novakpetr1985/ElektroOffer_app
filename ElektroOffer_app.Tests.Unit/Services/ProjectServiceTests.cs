@@ -1,5 +1,5 @@
-﻿﻿using ElektroOffer_app.Models;
-using ElektroOffer_app.Services.Abstractions;   // 🧩 Rozhraní pro DI (mockovatelné v testech)
+using ElektroOffer_app.Models;
+using ElektroOffer_app.Services.Abstractions;   // 🧩 DI rozhraní (mockovatelné v testech)
 using Microsoft.Win32;                          // 📁 OpenFileDialog / SaveFileDialog
 using System.IO;                                // 📄 File.ReadAllText / WriteAllText
 using System.Text.Json;                         // 🔧 JSON serializace
@@ -25,7 +25,7 @@ namespace ElektroOffer_app.Services
     public class ProjectService
     {
         // ------------------------------------------------------------------------
-        // 🔌 DI závislosti – nullable, protože existuje defaultní konstruktor
+        // 🔌 DI závislosti – nullable, protože defaultní konstruktor je povolen
         // ------------------------------------------------------------------------
         private readonly IFileDialogService? _dialogs;   // 🧩 Abstrakce pro dialogy
         private readonly IFileSystemService? _fs;        // 🧩 Abstrakce pro File.Read/Write
@@ -62,11 +62,9 @@ namespace ElektroOffer_app.Services
         // ============================================================================
         public string? Save(ProjectData data, string? currentPath)
         {
-            // Pokud projekt ještě nemá cestu → SaveAs
             if (string.IsNullOrEmpty(currentPath))
                 return SaveAs(data);
 
-            // Jinak ukládáme na existující cestu
             return SaveToPath(data, currentPath);
         }
 
@@ -75,7 +73,7 @@ namespace ElektroOffer_app.Services
         // ============================================================================
         public string? SaveAs(ProjectData data)
         {
-            EnsureDialogService(); // 🛡️ Ochrana: služba musí být nastavena
+            EnsureDialogService();
 
             var path = _dialogs!.ShowSaveFileDialog(
                 "Projekt ElektroOffer (*.eof)|*.eof",
@@ -107,7 +105,7 @@ namespace ElektroOffer_app.Services
 
             try
             {
-                var json = _fs!.ReadAllText(path);   // 🧩 DI – testy nečtou disk
+                var json = _fs!.ReadAllText(path);
                 var data = JsonSerializer.Deserialize<ProjectData>(json, _jsonOptions);
 
                 if (data == null)
