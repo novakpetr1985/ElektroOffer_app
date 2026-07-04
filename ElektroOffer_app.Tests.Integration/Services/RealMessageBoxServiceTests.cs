@@ -8,17 +8,26 @@ namespace ElektroOffer_app.Tests.Integration.Services
     // ============================================================================
     // 🧪 INTEGRATION TEST – RealMessageBoxService
     // ----------------------------------------------------------------------------
-    // MessageBox.Show:
-    //  • vyžaduje STA thread
-    //  • v testovacím prostředí se NEotevře
-    //  • vrátí defaultní hodnotu (většinou OK)
+    // Proč integrační test?
+    //  • MessageBox.Show je WPF UI dialog → vyžaduje STA thread
+    //  • GitHub Actions běží bez UI → dialog nelze otevřít
+    //
+    // Proto je test označen jako [Explicit]:
+    //  • Lokálně se spustí
+    //  • V CI se přeskočí → pipeline se nezasekne
+    //
+    // Co testujeme:
+    //  • Metoda nevyhodí výjimku
+    //  • Vrátí validní MessageBoxResult
+    //
+    // Dialog se NEotevře → testovací runner nemá UI okno.
     // ============================================================================
 
     [TestFixture]
     [Apartment(ApartmentState.STA)]
     public class RealMessageBoxServiceTests
     {
-        [Test]
+        [Test, Explicit("UI dialog – spouštět pouze lokálně, CI nemá UI prostředí")]
         public void Show_Should_Not_Throw_And_Return_Valid_Result()
         {
             var service = new RealMessageBoxService();

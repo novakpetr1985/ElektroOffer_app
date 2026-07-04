@@ -8,12 +8,21 @@ namespace ElektroOffer_app.Tests.Integration.Services
     // ============================================================================
     // 🧪 INTEGRATION TEST – RealFileDialogService
     // ----------------------------------------------------------------------------
-    // Tento test:
-    //  • automaticky vytvoří testovací .txt soubor
-    //  • nastaví dialog tak, aby se NEpokoušel otevřít poslední cestu Windows
-    //  • běží v STA threadu (nutné pro WPF dialogy)
-    //  • ověřuje, že dialog lze bezpečně vytvořit a zavolat
-    //  • dialog se NEotevře (ShowDialog vrátí false)
+    // Proč integrační test?
+    //  • Třída používá skutečné WPF dialogy (OpenFileDialog / SaveFileDialog)
+    //  • Tyto dialogy vyžadují STA thread → unit test runner by se zasekl
+    //  • GitHub Actions běží bez UI → dialogy nelze spouštět automaticky
+    //
+    // Proto jsou testy označeny jako [Explicit]:
+    //  • Lokálně se spustí normálně
+    //  • V CI pipeline se přeskočí → pipeline se nezasekne
+    //
+    // Co testujeme:
+    //  • Metoda nevyhodí výjimku
+    //  • Dialog lze bezpečně vytvořit
+    //  • Dialog se v testovacím prostředí NEotevře (ShowDialog vrátí false)
+    //
+    // Test NENÍ funkční test UI → je to smoke-test stability implementace.
     // ============================================================================
 
     [TestFixture]
@@ -37,7 +46,7 @@ namespace ElektroOffer_app.Tests.Integration.Services
                 File.Delete(_testFilePath);
         }
 
-        [Test]
+        [Test, Explicit("UI dialog – spouštět pouze lokálně, CI nemá UI prostředí")]
         public void ShowOpenFileDialog_Should_Not_Throw()
         {
             var service = new RealFileDialogService();
@@ -56,7 +65,7 @@ namespace ElektroOffer_app.Tests.Integration.Services
             });
         }
 
-        [Test]
+        [Test, Explicit("UI dialog – spouštět pouze lokálně, CI nemá UI prostředí")]
         public void ShowSaveFileDialog_Should_Not_Throw()
         {
             var service = new RealFileDialogService();
