@@ -5,137 +5,85 @@
         Height="1200"
         Width="1000">
 
-    <!-- =========================================================== -->
-    <!-- HLAVNÍ LAYOUT: Menu + Toolbar + Obsah                        -->
-    <!-- DockPanel umožňuje menu a toolbar "přilepit" nahoru a        -->
-    <!-- obsahu nechat zbytek prostoru (LastChildFill=True)           -->
-    <!-- =========================================================== -->
     <DockPanel LastChildFill="True">
 
-        <!-- ======================================================= -->
-        <!-- 📋 MENU — klasické menu nahoře (File | ...)             -->
-        <!-- ======================================================= -->
+        <!-- MENU -->
         <Menu DockPanel.Dock="Top">
 
-            <!-- ===================== -->
-            <!-- SOUBOR                -->
-            <!-- ===================== -->
             <MenuItem Header="_Soubor">
 
-                <!-- Nový projekt — resetuje celou kalkulaci -->
                 <MenuItem Header="_Nový projekt"
                           InputGestureText="Ctrl+N"
-                          Click="MenuNewProject_Click"/>
+                          Command="{Binding NewProjectCommand}" />
 
                 <Separator/>
 
-                <!-- Otevřít — načte projekt z .eof souboru -->
                 <MenuItem Header="_Otevřít..."
                           InputGestureText="Ctrl+O"
-                          Click="MenuLoad_Click"/>
+                          Command="{Binding LoadCommand}" />
 
                 <Separator/>
 
-                <!-- Uložit — uloží na aktuální cestu (nebo vyvolá Save As) -->
                 <MenuItem Header="_Uložit"
                           InputGestureText="Ctrl+S"
-                          Click="MenuSave_Click"/>
+                          Command="{Binding SaveCommand}" />
 
-                <!-- Uložit jako — vždy otevře dialog pro výběr cesty -->
                 <MenuItem Header="Uložit _jako..."
                           InputGestureText="Ctrl+Shift+S"
-                          Click="MenuSaveAs_Click"/>
+                          Command="{Binding SaveAsCommand}" />
 
-
-                <!-- Tisk nabídky-->
                 <MenuItem Header="_Tisk"
                           InputGestureText="Ctrl+P"
-                          Click="MenuPrint_Click"/>
+                          Command="{Binding PrintCommand}" />
 
-                <!-- Konec — ukončí aplikaci (zeptá se na uložení) -->
                 <MenuItem Header="_Konec"
                           InputGestureText="Alt+F4"
-                          Click="MenuExit_Click"/>
+                          Command="{Binding ExitCommand}" />
 
             </MenuItem>
 
-            <!-- ===================== -->
-            <!-- NÁPOVĚDA             -->
-            <!-- ===================== -->
             <MenuItem Header="_Nápověda">
-
-                <!-- O aplikaci — zobrazí logo, verzi a autora -->
                 <MenuItem Header="_O aplikaci..."
-                          Click="MenuAbout_Click"/>
-
+                          Command="{Binding AboutCommand}" />
             </MenuItem>
 
         </Menu>
 
-        <!-- ======================================================= -->
-        <!-- 🔧 TOOLBAR — tlačítka pod menu pro rychlý přístup       -->
-        <!-- ToolBar.Band / BandIndex řídí řazení na toolbaru        -->
-        <!-- ======================================================= -->
+        <!-- TOOLBAR -->
         <ToolBarTray DockPanel.Dock="Top">
             <ToolBar>
 
-                <!-- Nový projekt -->
                 <Button Content="🆕 Nový"
                         ToolTip="Nový projekt (Ctrl+N)"
-                        Click="MenuNewProject_Click"
+                        Command="{Binding NewProjectCommand}"
                         Margin="2"/>
 
                 <Separator/>
 
-                <!-- Otevřít -->
                 <Button Content="📂 Otevřít"
                         ToolTip="Načíst projekt (Ctrl+O)"
-                        Click="MenuLoad_Click"
+                        Command="{Binding LoadCommand}"
                         Margin="2"/>
 
-                <!-- Uložit -->
                 <Button Content="💾 Uložit"
                         ToolTip="Uložit projekt (Ctrl+S)"
-                        Click="MenuSave_Click"
+                        Command="{Binding SaveCommand}"
                         Margin="2"/>
 
-                <!-- Uložit jako -->
                 <Button Content="💾 Uložit jako"
                         ToolTip="Uložit jako... (Ctrl+Shift+S)"
-                        Click="MenuSaveAs_Click"
+                        Command="{Binding SaveAsCommand}"
                         Margin="2"/>
 
-                <!-- Tisk -->
                 <Button Content="🖨️ Tisk"
                         ToolTip="Tisk"
-                        Click="MenuPrint_Click"
+                        Command="{Binding PrintCommand}"
                         Margin="2"/>
-
-                <Separator/>
-
-                <!-- ADD-KOMENT: PDF tlačítka v toolbaru — odkomentovat až bude PDF export implementován -->
-                <!--
-                <Separator/>
-
-                <Button Content="📄 PDF kalkulace"
-                        ToolTip="Exportovat kalkulaci do PDF"
-                        Click="MenuExportPdf_Click"
-                        Margin="2"/>
-
-                <Button Content="📄 PDF ceník"
-                        ToolTip="Exportovat ceník do PDF"
-                        Click="MenuExportPricePdf_Click"
-                        Margin="2"/>
-                -->
 
             </ToolBar>
         </ToolBarTray>
 
-        <!-- ======================================================= -->
-        <!-- 📌 STAVOVÝ ŘÁDEK — název projektu + stav uložení        -->
-        <!-- Zobrazuje aktuální název souboru a zda jsou neuložené    -->
-        <!-- změny (hvězdička * v titulku je běžná konvence v IT)    -->
-        <!-- ======================================================= -->
+        <!-- STATUS BAR -->
         <StatusBar DockPanel.Dock="Bottom">
             <StatusBarItem>
                 <TextBlock Text="{Binding StatusText}"
@@ -144,10 +92,7 @@
             </StatusBarItem>
         </StatusBar>
 
-        <!-- ======================================================= -->
-        <!-- 📄 HLAVNÍ OBSAH — původní Grid s kalkulací              -->
-        <!-- Přesunut dovnitř DockPanelu, jinak vše stejné           -->
-        <!-- ======================================================= -->
+        <!-- HLAVNÍ OBSAH -->
         <ScrollViewer VerticalScrollBarVisibility="Auto">
             <Grid Margin="20">
 
@@ -159,14 +104,9 @@
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
 
-                <!-- ========================================================= -->
-                <!-- 🔧 SEKCE: PRÁCE -->
-                <!-- ========================================================= -->
+                <!-- PRÁCE -->
                 <StackPanel Grid.Row="0" Margin="0,0,0,20">
 
-                    <!-- ========================= -->
-                    <!-- HLAVIČKA SEKCE -->
-                    <!-- ========================= -->
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="PRÁCE"
                                    FontSize="18"
@@ -174,7 +114,7 @@
                         <Button Content="+"
                                 Width="30"
                                 Margin="10,0,0,0"
-                                Click="AddWorkItem_Click"
+                                Command="{Binding AddWorkItemCommand}"
                                 ToolTip="Přidat řádek práce"/>
                     </StackPanel>
 
@@ -276,60 +216,62 @@
                                                 Height="25"
                                                 Background="#E53935"
                                                 Foreground="White"
-                                                Click="DeleteWorkItem_Click"
+                                                Command="{Binding DataContext.DeleteWorkItemCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                CommandParameter="{Binding}"
                                                 ToolTip="Smazat řádek"/>
 
                                         <!-- ÚKON -->
                                         <ComboBox Grid.Column="1"
-                                                  ItemsSource="{Binding DataContext.Tasks, RelativeSource={RelativeSource AncestorType=Window}}"
-                                                  SelectedItem="{Binding SelectedTask, Mode=TwoWay}"/>
+                                                ItemsSource="{Binding DataContext.Tasks, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                SelectedItem="{Binding SelectedTask, Mode=TwoWay}"/>
 
                                         <!-- UPŘESNĚNÍ -->
                                         <ComboBox Grid.Column="2"
-                                                  IsEnabled="{Binding CanSelectSpecification}"
-                                                  ItemsSource="{Binding AvailableSpecifications}"
-                                                  SelectedItem="{Binding SelectedSpecification, Mode=TwoWay}"/>
+                                                IsEnabled="{Binding CanSelectSpecification}"
+                                                ItemsSource="{Binding AvailableSpecifications}"
+                                                SelectedItem="{Binding SelectedSpecification, Mode=TwoWay}"/>
 
                                         <!-- MATERIÁL -->
                                         <ComboBox Grid.Column="3"
-                                                  IsEnabled="{Binding CanSelectMaterial}"
-                                                  ItemsSource="{Binding AvailableMaterials}"
-                                                  SelectedItem="{Binding SelectedMaterial, Mode=TwoWay}"/>
+                                                IsEnabled="{Binding CanSelectMaterial}"
+                                                ItemsSource="{Binding AvailableMaterials}"
+                                                SelectedItem="{Binding SelectedMaterial, Mode=TwoWay}"/>
 
                                         <!-- UMÍSTĚNÍ -->
                                         <ComboBox Grid.Column="4"
-                                                  IsEnabled="{Binding CanSelectLocation}"
-                                                  ItemsSource="{Binding AvailableLocations}"
-                                                  SelectedItem="{Binding SelectedLocation, Mode=TwoWay}"/>
+                                                IsEnabled="{Binding CanSelectLocation}"
+                                                ItemsSource="{Binding AvailableLocations}"
+                                                SelectedItem="{Binding SelectedLocation, Mode=TwoWay}"/>
 
                                         <!-- MNOŽSTVÍ -->
                                         <TextBox Grid.Column="5"
-                                                 TextAlignment="Right"
-                                                 Text="{Binding Quantity, UpdateSourceTrigger=PropertyChanged}"/>
+                                                TextAlignment="Right"
+                                                Text="{Binding Quantity, UpdateSourceTrigger=PropertyChanged}"/>
 
                                         <!-- 🔥 MJ -->
                                         <TextBlock Grid.Column="6"
-                                                   VerticalAlignment="Center"
-                                                   HorizontalAlignment="Center"
-                                                   TextAlignment="Center"
-                                                   Foreground="Gray"
-                                                   Text="{Binding WorkUnit}"/>
+                                                VerticalAlignment="Center"
+                                                HorizontalAlignment="Center"
+                                                TextAlignment="Center"
+                                                Foreground="Gray"
+                                                Text="{Binding WorkUnit}"/>
 
                                         <!-- 💰 CENA PRÁCE -->
                                         <TextBlock Grid.Column="7"
-                                                   FontWeight="Bold"
-                                                   Foreground="DarkBlue"
-                                                   VerticalAlignment="Center"
-                                                   HorizontalAlignment="Right"
-                                                   TextAlignment="Right"
-                                                   Text="{Binding Total, StringFormat={}{0:N0} Kč}"/>
+                                                FontWeight="Bold"
+                                                Foreground="DarkBlue"
+                                                VerticalAlignment="Center"
+                                                HorizontalAlignment="Right"
+                                                TextAlignment="Right"
+                                                Text="{Binding Total, StringFormat={}{0:N0} Kč}"/>
 
                                         <!-- 🔄 RESET ŘÁDKU -->
                                         <Button Grid.Column="8"
                                                 Content="SMAZAT"
                                                 Background="DarkBlue"
                                                 Foreground="White"
-                                                Click="ResetWorkItem_Click"
+                                                Command="{Binding DataContext.ResetWorkItemCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                CommandParameter="{Binding}"
                                                 ToolTip="Vymazat data řádku"/>
 
                                         <!-- 💸 SLEVA -->
@@ -339,17 +281,17 @@
                                                     VerticalAlignment="Center">
 
                                             <CheckBox IsChecked="{Binding IsDiscountEnabled}"
-                                                      VerticalAlignment="Center"/>
+                                                    VerticalAlignment="Center"/>
 
                                             <TextBox Width="25"
-                                                     Margin="5,0,0,0"
-                                                     TextAlignment="Right"
-                                                     IsEnabled="{Binding IsDiscountEnabled}"
-                                                     Text="{Binding DiscountPercent, UpdateSourceTrigger=PropertyChanged}"/>
+                                                    Margin="5,0,0,0"
+                                                    TextAlignment="Right"
+                                                    IsEnabled="{Binding IsDiscountEnabled}"
+                                                    Text="{Binding DiscountPercent, UpdateSourceTrigger=PropertyChanged}"/>
 
                                             <TextBlock Text="%"
-                                                       Margin="2,0,0,0"
-                                                       Foreground="Gray"/>
+                                                    Margin="2,0,0,0"
+                                                    Foreground="Gray"/>
                                         </StackPanel>
 
                                     </Grid>
@@ -359,55 +301,6 @@
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
-
-                    <!-- ========================================================= -->
-                    <!-- ➕ SOUČET PRÁCE -->
-                    <!-- ========================================================= -->
-                    <Border Margin="0,10,0,0"
-                            Padding="10"
-                            BorderBrush="Gray"
-                            BorderThickness="1">
-
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="Auto" />
-                            </Grid.ColumnDefinitions>
-
-                            <TextBlock Text="Součet práce"
-                                       FontWeight="Bold"/>
-
-                            <TextBlock Grid.Column="1"
-                                       Text="{Binding WorkTotal, StringFormat={}{0:N0} Kč}"
-                                       FontSize="16"
-                                       FontWeight="Bold"
-                                       Foreground="DarkBlue"
-                                       HorizontalAlignment="Right"
-                                       TextAlignment="Right"/>
-                        </Grid>
-
-                    </Border>
-
-                </StackPanel>
-
-                <!-- ========================================================= -->
-                <!-- 📦 SEKCE: MATERIÁL -->
-                <!-- ========================================================= -->
-                <StackPanel Grid.Row="1" Margin="0,0,0,20">
-
-                    <!-- ========================= -->
-                    <!-- HLAVIČKA SEKCE -->
-                    <!-- ========================= -->
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="MATERIÁL"
-                                   FontSize="18"
-                                   FontWeight="Bold"/>
-                        <Button Content="+"
-                                Width="30"
-                                Margin="10,0,0,0"
-                                Click="AddMaterialsItem_Click"
-                                ToolTip="Přidat řádek materiálu"/>
-                    </StackPanel>
 
                     <!-- ========================= -->
                     <!-- HLAVIČKA TABULKY -->
@@ -423,38 +316,15 @@
                             <ColumnDefinition Width="60"/>  <!-- 💸 SLEVA -->
                         </Grid.ColumnDefinitions>
 
-                        <!-- NÁZEV -->
-                        <TextBlock Grid.Column="1"
-                                   Text="Název"
-                                   FontWeight="Bold"/>
-
-                        <!-- MNOŽSTVÍ -->
-                        <TextBlock Grid.Column="2"
-                                   Text="Množství"
-                                   FontWeight="Bold"
-                                   HorizontalAlignment="Right"
-                                   TextAlignment="Right"/>
-
-                        <!-- 🔥 MJ -->
-                        <TextBlock Grid.Column="3"
-                                   Text="MJ"
-                                   FontWeight="Bold"
-                                   HorizontalAlignment="Center"
-                                   TextAlignment="Center"/>
-
-                        <!-- 💰 CENA MATERIÁLU -->
-                        <TextBlock Grid.Column="4"
-                                   Text="Cena"
-                                   FontWeight="Bold"
-                                   HorizontalAlignment="Right"
-                                   TextAlignment="Right"/>
-
-                        <!-- 💸 SLEVA -->
-                        <TextBlock Grid.Column="6"
-                                   Text="Sleva %"
-                                   FontWeight="Bold"
-                                   HorizontalAlignment="Center"/>
-
+                        <TextBlock Grid.Column="1" Text="Název" FontWeight="Bold"/>
+                        <TextBlock Grid.Column="2" Text="Množství" FontWeight="Bold"
+                                HorizontalAlignment="Right" TextAlignment="Right"/>
+                        <TextBlock Grid.Column="3" Text="MJ" FontWeight="Bold"
+                                HorizontalAlignment="Center" TextAlignment="Center"/>
+                        <TextBlock Grid.Column="4" Text="Cena" FontWeight="Bold"
+                                HorizontalAlignment="Right" TextAlignment="Right"/>
+                        <TextBlock Grid.Column="6" Text="Sleva %" FontWeight="Bold"
+                                HorizontalAlignment="Center"/>
                     </Grid>
 
                     <!-- ========================= -->
@@ -486,41 +356,43 @@
                                                 Height="25"
                                                 Background="#E53935"
                                                 Foreground="White"
-                                                Click="DeleteMaterialItem_Click"
+                                                Command="{Binding DataContext.DeleteMaterialItemCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                CommandParameter="{Binding}"
                                                 ToolTip="Smazat řádek"/>
 
                                         <!-- NÁZEV -->
                                         <ComboBox Grid.Column="1"
-                                                  ItemsSource="{Binding DataContext.Materials, RelativeSource={RelativeSource AncestorType=Window}}"
-                                                  DisplayMemberPath="Name"
-                                                  SelectedItem="{Binding MaterialItem, Mode=TwoWay}"/>
+                                                ItemsSource="{Binding DataContext.Materials, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                DisplayMemberPath="Name"
+                                                SelectedItem="{Binding MaterialItem, Mode=TwoWay}"/>
 
                                         <!-- MNOŽSTVÍ -->
                                         <TextBox Grid.Column="2"
-                                                 TextAlignment="Right"
-                                                 Text="{Binding Quantity, UpdateSourceTrigger=PropertyChanged}"/>
+                                                TextAlignment="Right"
+                                                Text="{Binding Quantity, UpdateSourceTrigger=PropertyChanged}"/>
 
                                         <!-- 🔥 MJ -->
                                         <TextBlock Grid.Column="3"
-                                                   VerticalAlignment="Center"
-                                                   HorizontalAlignment="Center"
-                                                   TextAlignment="Center"
-                                                   Text="{Binding MaterialItem.Unit}"/>
+                                                VerticalAlignment="Center"
+                                                HorizontalAlignment="Center"
+                                                TextAlignment="Center"
+                                                Text="{Binding MaterialItem.Unit}"/>
 
                                         <!-- 💰 CENA MATERIÁLU -->
                                         <TextBlock Grid.Column="4"
-                                                   FontWeight="Bold"
-                                                   VerticalAlignment="Center"
-                                                   HorizontalAlignment="Right"
-                                                   TextAlignment="Right"
-                                                   Text="{Binding Total, StringFormat={}{0:N0} Kč}"/>
+                                                FontWeight="Bold"
+                                                VerticalAlignment="Center"
+                                                HorizontalAlignment="Right"
+                                                TextAlignment="Right"
+                                                Text="{Binding Total, StringFormat={}{0:N0} Kč}"/>
 
                                         <!-- 🔄 RESET ŘÁDKU -->
                                         <Button Grid.Column="5"
                                                 Content="SMAZAT"
                                                 Background="DarkBlue"
                                                 Foreground="White"
-                                                Click="ResetMaterialItem_Click"
+                                                Command="{Binding DataContext.ResetMaterialItemCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                CommandParameter="{Binding}"
                                                 ToolTip="Vymazat data řádku"/>
 
                                         <!-- 💸 SLEVA -->
@@ -530,17 +402,17 @@
                                                     VerticalAlignment="Center">
 
                                             <CheckBox IsChecked="{Binding IsDiscountEnabled}"
-                                                      VerticalAlignment="Center"/>
+                                                    VerticalAlignment="Center"/>
 
                                             <TextBox Width="25"
-                                                     Margin="5,0,0,0"
-                                                     TextAlignment="Right"
-                                                     IsEnabled="{Binding IsDiscountEnabled}"
-                                                     Text="{Binding DiscountPercent, UpdateSourceTrigger=PropertyChanged}"/>
+                                                    Margin="5,0,0,0"
+                                                    TextAlignment="Right"
+                                                    IsEnabled="{Binding IsDiscountEnabled}"
+                                                    Text="{Binding DiscountPercent, UpdateSourceTrigger=PropertyChanged}"/>
 
                                             <TextBlock Text="%"
-                                                       Margin="2,0,0,0"
-                                                       Foreground="Gray"/>
+                                                    Margin="2,0,0,0"
+                                                    Foreground="Gray"/>
                                         </StackPanel>
 
                                     </Grid>
@@ -551,9 +423,9 @@
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
 
-                    <!-- ========================================================= -->
+                    <!-- ========================= -->
                     <!-- ➕ SOUČET MATERIÁLU -->
-                    <!-- ========================================================= -->
+                    <!-- ========================= -->
                     <Border Margin="0,10,0,0"
                             Padding="10"
                             BorderBrush="Gray"
@@ -566,19 +438,19 @@
                             </Grid.ColumnDefinitions>
 
                             <TextBlock Text="Součet materiálu"
-                                       FontWeight="Bold"/>
+                                    FontWeight="Bold"/>
 
                             <TextBlock Grid.Column="1"
-                                       Text="{Binding MaterialTotal, StringFormat={}{0:N0} Kč}"
-                                       FontSize="16"
-                                       FontWeight="Bold"
-                                       Foreground="DarkBlue"
-                                       HorizontalAlignment="Right"
-                                       TextAlignment="Right"/>
+                                    Text="{Binding MaterialTotal, StringFormat={}{0:N0} Kč}"
+                                    FontSize="16"
+                                    FontWeight="Bold"
+                                    Foreground="DarkBlue"
+                                    HorizontalAlignment="Right"
+                                    TextAlignment="Right"/>
                         </Grid>
 
                     </Border>
-
+              
                 </StackPanel>
 
                 <!-- ========================================================= -->
