@@ -1,4 +1,4 @@
-﻿<Window x:Class="ElektroOffer_app.AboutWindow"
+﻿<Window x:Class="ElektroOffer_app.Views.AboutWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="O aplikaci"
@@ -8,12 +8,10 @@
         ResizeMode="NoResize"
         WindowStartupLocation="CenterOwner"
         ShowInTaskbar="False">
-
     <!-- =========================================================== -->
     <!-- HLAVNÍ LAYOUT: ScrollViewer pro případ velkého obsahu        -->
     <!-- =========================================================== -->
     <ScrollViewer VerticalScrollBarVisibility="Auto">
-
         <StackPanel Margin="30"
                     HorizontalAlignment="Center">
 
@@ -28,7 +26,6 @@
                    Stretch="Uniform"
                    HorizontalAlignment="Center"
                    Margin="0,0,0,20"/>
-
 
             <!-- ======================================================= -->
             <!-- 📛 NÁZEV APLIKACE                                       -->
@@ -81,9 +78,6 @@
                     Width="100"
                     HorizontalAlignment="Center"
                     Click="CloseButton_Click"/>
-
         </StackPanel>
-
     </ScrollViewer>
-
 </Window>

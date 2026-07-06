@@ -1,7 +1,7 @@
 ﻿using System.Reflection;
 using System.Windows;
 
-namespace ElektroOffer_app
+namespace ElektroOffer_app.Views   // ⚠ MUSÍ být přesně tento namespace
 {
     /// <summary>
     /// Okno "O aplikaci" — zobrazí logo, verzi a autora.
@@ -11,24 +11,10 @@ namespace ElektroOffer_app
     {
         public AboutWindow()
         {
-            InitializeComponent();
+            InitializeComponent();   // ⚠ Funguje jen pokud XAML má správný x:Class
 
             // =========================================================
             // 🔢 NAČTENÍ VERZE APLIKACE (NET 10 – suffixy přes <Version>)
-            // =========================================================
-            // .NET 10 preview ignoruje AssemblyInformationalVersion,
-            // ale respektuje hodnotu <Version> včetně suffixů:
-            //
-            //     <Version>1.7.5-dev</Version>
-            //
-            // ProductVersion pak vypadá takto:
-            //
-            //     1.7.5-dev+b5f108402e3003471b7eda7a3a626b7edc0cd879
-            //
-            // Proto se zobrazuje pouze část před znakem '+', tedy:
-            //
-            //     1.7.5-dev
-            //
             // =========================================================
 
             var assembly = Assembly.GetExecutingAssembly();
@@ -49,16 +35,11 @@ namespace ElektroOffer_app
 
             // Fallback (neměl by nastat)
             VersionText.Text = "Verze neznámá";
-
         }
 
         // =========================================================
-        // ✅ ZAVŘENÍ OKNA
+        // 🔘 ZAVŘENÍ OKNA
         // =========================================================
-
-        /// <summary>
-        /// Tlačítko Zavřít — zavře okno O aplikaci.
-        /// </summary>
         private void CloseButton_Click(object sender, RoutedEventArgs e)
             => Close();
     }
