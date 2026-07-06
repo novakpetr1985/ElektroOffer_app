@@ -12,13 +12,19 @@ namespace ElektroOffer_app.ViewModels.Items
     {
         private readonly AppDbContext _db;
         private readonly CalculationCascadeService _cascade;
+        private readonly MaterialCascadeService _materialCascade; // NOVĚ - kaskáda produktového materiálu
         private readonly CalculationPriceService _price;
 
         public CalculationItemViewModel(AppDbContext db)
         {
             _db = db ?? throw new ArgumentNullException(nameof(db));
             _cascade = new CalculationCascadeService(db);
+            _materialCascade = new MaterialCascadeService(db);
             _price = new CalculationPriceService();
+
+            // ZMĚNA: LoadCategories místo LoadMaterialNames -
+            // Kategorie je teď první krok kaskády, ne Nazev
+            _materialCascade.LoadCategories(this);
         }
 
         public static CalculationItemViewModel CreateDefault()
@@ -42,6 +48,20 @@ namespace ElektroOffer_app.ViewModels.Items
         private bool _isDiscountEnabled;
         private double? _discountPercent;
 
+        // ---------------------------------------------------------
+        // NOVĚ: Fields pro kaskádu PRODUKTOVÉHO materiálu
+        // (Kategorie → Nazev → Dodavatel → Materiál)
+        //
+        // ZMĚNA: Kategorie je nyní AKTIVNÍ VÝBĚR (první krok kaskády),
+        // ne jen zobrazení - proto "SelectedCategory" místo dřívějšího
+        // "CategoryDisplay". CategoryDisplay byl odstraněn.
+        // ---------------------------------------------------------
+        private string? _selectedCategory;
+        private string? _selectedProductName;
+        private string? _selectedSupplier;
+        private string? _selectedOffer;
+        private MaterialPrice? _selectedMaterialPrice;
+
         // =========================================================
         // PUBLIC COLLECTIONS (UI)
         // =========================================================
@@ -49,6 +69,36 @@ namespace ElektroOffer_app.ViewModels.Items
         public ObservableCollection<string> AvailableSpecifications { get; } = new();
         public ObservableCollection<string> AvailableMaterials { get; } = new();
         public ObservableCollection<string> AvailableLocations { get; } = new();
+
+        // ---------------------------------------------------------
+        // NOVĚ: Kolekce pro kaskádu produktového materiálu
+        // ---------------------------------------------------------
+
+        /// <summary>
+        /// Seznam kategorií (Category.Name) - první krok kaskády,
+        /// nezávisí na ničem. Plní se jednorázově v konstruktoru.
+        /// </summary>
+        public ObservableCollection<string> AvailableCategories { get; } = new();
+
+        /// <summary>
+        /// Seznam kanonických názvů materiálu (Material.Name), FILTROVANÝ
+        /// podle vybrané SelectedCategory.
+        /// </summary>
+        public ObservableCollection<string> AvailableMaterialNames { get; } = new();
+
+        /// <summary>
+        /// Seznam dodavatelů (Supplier.Name), kteří nabízejí vybraný
+        /// produktový materiál (SelectedProductName).
+        /// </summary>
+        public ObservableCollection<string> AvailableSuppliers { get; } = new();
+
+        /// <summary>
+        /// Seznam názvů položky OD DODAVATELE (MaterialPrice.SupplierName)
+        /// pro dvojici SelectedProductName + SelectedSupplier. Zobrazuje se
+        /// JEN název, bez kódu a bez ceny (ty se zobrazí až v detailním
+        /// rozpočtu později).
+        /// </summary>
+        public ObservableCollection<string> AvailableOffers { get; } = new();
 
         // =========================================================
         // DISCOUNT
@@ -109,6 +159,13 @@ namespace ElektroOffer_app.ViewModels.Items
         public bool CanSelectMaterial => !string.IsNullOrWhiteSpace(SelectedSpecification);
         public bool CanSelectLocation => !string.IsNullOrWhiteSpace(SelectedMaterial);
 
+        // ---------------------------------------------------------
+        // NOVĚ: Enable flagy pro kaskádu produktového materiálu
+        // ---------------------------------------------------------
+        public bool CanSelectProductName => !string.IsNullOrWhiteSpace(SelectedCategory);
+        public bool CanSelectSupplier => !string.IsNullOrWhiteSpace(SelectedProductName);
+        public bool CanSelectOffer => !string.IsNullOrWhiteSpace(SelectedSupplier);
+
         // =========================================================
         // TASK
         // =========================================================
@@ -151,7 +208,7 @@ namespace ElektroOffer_app.ViewModels.Items
         }
 
         // =========================================================
-        // MATERIAL
+        // MATERIAL (typ materiálu v rámci ceníku PRÁCE - beze změny)
         // =========================================================
 
         public string? SelectedMaterial
@@ -192,6 +249,81 @@ namespace ElektroOffer_app.ViewModels.Items
         }
 
         // =========================================================
+        // NOVĚ: SELECTED CATEGORY (první krok - výběr kategorie)
+        // =========================================================
+        public string? SelectedCategory
+        {
+            get => _selectedCategory;
+            set
+            {
+                if (_selectedCategory == value) return;
+                _selectedCategory = value;
+
+                _materialCascade.ResetBelowCategory(this);
+                _materialCascade.LoadMaterialNames(this);
+
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(CanSelectProductName));
+            }
+        }
+
+        // =========================================================
+        // SELECTED PRODUCT NAME (výběr konkrétního produktu)
+        // =========================================================
+        public string? SelectedProductName
+        {
+            get => _selectedProductName;
+            set
+            {
+                if (_selectedProductName == value) return;
+                _selectedProductName = value;
+
+                _materialCascade.ResetBelowMaterialName(this);
+                _materialCascade.LoadSuppliers(this);
+
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(CanSelectSupplier));
+            }
+        }
+
+        // =========================================================
+        // SELECTED SUPPLIER (výběr dodavatele pro vybraný produkt)
+        // =========================================================
+        public string? SelectedSupplier
+        {
+            get => _selectedSupplier;
+            set
+            {
+                if (_selectedSupplier == value) return;
+                _selectedSupplier = value;
+
+                _materialCascade.ResetBelowSupplier(this);
+                _materialCascade.LoadOffers(this);
+                _materialCascade.UpdateSelectedPrice(this);
+
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(CanSelectOffer));
+            }
+        }
+
+        // =========================================================
+        // SELECTED OFFER (finální výběr - název položky od dodavatele)
+        // =========================================================
+        public string? SelectedOffer
+        {
+            get => _selectedOffer;
+            set
+            {
+                if (_selectedOffer == value) return;
+                _selectedOffer = value;
+
+                _materialCascade.UpdateSelectedPrice(this);
+
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(Total));
+            }
+        }
+        // =========================================================
         // WORK ITEM / MATERIAL ITEM
         // =========================================================
 
@@ -212,6 +344,46 @@ namespace ElektroOffer_app.ViewModels.Items
             set
             {
                 _materialItem = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(Total));
+            }
+        }
+
+        // =========================================================
+        // NOVĚ: SELECTED MATERIAL PRICE (výsledek celé nové kaskády)
+        // =========================================================
+        //
+        // Obsahuje finální vybranou cenu OD KONKRÉTNÍHO DODAVATELE
+        // (objekt MaterialPrice - nese Price, SupplierCode,
+        // SupplierName, Unit, Currency). Nastavuje ho výhradně
+        // MaterialCascadeService.UpdateSelectedPrice().
+        //
+        // PROČ SE TADY ZÁROVEŇ NASTAVUJE MaterialItem:
+        // - CalculationPriceService (výpočet Total) byl původně
+        //   napsaný tak, že čte cenu ze STARÉHO pole MaterialItem.Price
+        //   (jedna pevná cena na Material, bez dodavatelů). Aby appka
+        //   dál fungovala i BEZ úpravy CalculationPriceService, tenhle
+        //   setter si při každé změně SelectedMaterialPrice zároveň
+        //   dotáhne odpovídající Material entitu do MaterialItem -
+        //   je to dočasné "přemostění" mezi starým a novým modelem.
+        //
+        // TODO (budoucí patch): Až bude CalculationPriceService
+        // upravený, aby počítal cenu přímo z SelectedMaterialPrice.Price
+        // (cena od KONKRÉTNÍHO vybraného dodavatele) místo starého
+        // MaterialItem.Price (jediná univerzální cena bez dodavatele),
+        // půjde tohle přemostění bezpečně odstranit.
+        // =========================================================
+
+        public MaterialPrice? SelectedMaterialPrice
+        {
+            get => _selectedMaterialPrice;
+            set
+            {
+                if (_selectedMaterialPrice == value) return;
+                _selectedMaterialPrice = value;
+
+                MaterialItem = value?.Material;
+
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(Total));
             }

@@ -81,31 +81,36 @@ Tato změna zajišťuje stabilní běh aplikace a eliminuje chyby typu.
 
 ## 🧩 Modely (Data vrstva)
 
-| Model               | Popis                               |
-| ------------------- | ----------------------------------- |
-| `PriceItems`        | Ceník práce                         |
-| `Material`          | Ceník materiálu                     |
-| `WorkItemData`      | Řádek kalkulace práce               |
-| `MaterialItemData`  | Řádek kalkulace materiálu           |
-| `ProjectData`       | Celý uložený projekt (``.eof``)     |
-| `CatalogExportData` | Export/import ceníku                |
-| `BudgetItem`        | Sloučený řádek rozpočtu (UI výstup) |
+| Model               | Popis                                                                   |
+| ------------------- | ----------------------------------------------------------------------- |
+| `PriceItems`        | Ceník práce                                                             |
+| `Material`          | Ceník materiálu                                                         |
+| `Category`          | Kategorie materiálu (Kabely, Jističe, Chrániče...)                      |
+| `Supplier`          | Dodavatel materiálu (ELKOV, EMAS...)                                    |
+| `MaterialPrice`     | Cena materiálu od konkrétního dodavatele (M:N mezi Material a Supplier) |
+| `WorkItemData`      | Řádek kalkulace práce                                                   |
+| `MaterialItemData`  | Řádek kalkulace materiálu                                               |
+| `ProjectData`       | Celý uložený projekt (``.eof``)                                         |
+| `CatalogExportData` | Export/import ceníku                                                    |
+| `BudgetItem`        | Sloučený řádek rozpočtu (UI výstup)                                     |
 
 ---
 
 ## ⚙️ Services (aplikační logika)
 
-| Service                     | Účel                                                                                           |
-| --------------------------- | ---------------------------------------------------------------------------------------------- |
-| `ProjectService`            | Ukládání / načítání projektů + import/export                                                   |
-| `CatalogService`            | Načítání ceníku z databáze                                                                     |
-| `CalculationCascadeService` | Kaskádová logika Task → Specification → Material → Location                                    |
-| `CalculationPriceService`   | Výpočet cen a slev                                                                             |
-| `PrintService`              | Tisk / export nabídky (FlowDocument / PrintDialog)                                             |
-| `MessageService`            | UI abstrakce pro potvrzovací dialogy (`ShowYesNo`, `ShowYesNoCancel`) volaná z `MainViewModel` |
-| `ApplicationService`        | UI abstrakce pro `Application.Shutdown()`                                                      |
-| `WindowService`             | UI abstrakce pro otevírání oken (např. `AboutWindow`)                                          |
-| `ApplicationInfoService`    | Informace o aplikaci (verze, metadata)                                                         |
+| Service                     | Účel                                                                                                                               |
+| ---------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| `ProjectService`             | Ukládání / načítání projektů + import/export                                                                                      |
+| `CatalogService`             | Načítání ceníku z databáze                                                                                                        |
+| `CalculationCascadeService`  | Kaskádová logika Task → Specification → Material → Location                                                                       |
+| `MaterialCascadeService`     | Kaskádová logika Kategorie → Název → Dodavatel → Materiál pro výběr produktového materiálu s cenou od konkrétního dodavatele      |
+| `CalculationPriceService`    | Výpočet cen a slev (práce i materiál, včetně ceny od vybraného dodavatele)                                                        |
+| `MaterialImportService`      | Import ceníku materiálu z CSV s upsert logikou podle (SupplierId, SupplierCode); zatím nevyzkoušeno s reálnými daty, viz Roadmapa |
+| `PrintService`               | Tisk / export nabídky (FlowDocument / PrintDialog)                                                                                |
+| `MessageService`             | UI abstrakce pro potvrzovací dialogy (`ShowYesNo`, `ShowYesNoCancel`) volaná z `MainViewModel`                                    |
+| `ApplicationService`         | UI abstrakce pro `Application.Shutdown()`                                                                                         |
+| `WindowService`              | UI abstrakce pro otevírání oken (např. `AboutWindow`)                                                                             |
+| `ApplicationInfoService`     | Informace o aplikaci (verze, metadata)                                                                                            |
 
 ---
 
@@ -161,10 +166,14 @@ Tato změna zajišťuje stabilní běh aplikace a eliminuje chyby typu.
     ├── 📁 Models
     │   ├── 📄 BudgetItem.cs
     │   ├── 📄 CatalogExportData.cs
+    │   ├── 📄 Category.cs
     │   ├── 📄 Material.cs
+    │   ├── 📄 Materials.cs
     │   ├── 📄 MaterialItemData.cs
+    │   ├── 📄 MaterialPrice.cs
     │   ├── 📄 PriceItems.cs
     │   ├── 📄 ProjectData.cs
+    │   ├── 📄 Supplier.cs
     │   └── 📄 WorkItemData.cs
     │
     ├── 📁 Resources
@@ -194,6 +203,9 @@ Tato změna zajišťuje stabilní běh aplikace a eliminuje chyby typu.
     │   │
     │   ├── 📄 ApplicationInfoService.cs
     │   ├── 📄 CatalogService.cs
+    │   ├── 📄 CalculationCascadeService.cs
+    │   ├── 📄 CalculationPriceService.cs
+    │   ├── 📄 MaterialCascadeService.cs
     │   ├── 📄 PrintService.cs
     │   ├── 📄 ProjectService.cs
     │   └── 📄 VersionService.cs
@@ -461,7 +473,12 @@ Oddělení exportu/tisku od UI logiky.
 ### Microsoft.Data.Sqlite (ne System.Data.SQLite)
 Projekt používá výhradně `Microsoft.Data.Sqlite` jako SQLite driver – je to moderní, aktivně vyvíjený balíček integrovaný přímo do ekosystému EF Core a .NET. Starý `System.Data.SQLite` byl odebrán – konfliktoval s EF Core a nepatří do moderního .NET 10 projektu.
 
+### Multi-dodavatelské ceny materiálu (Category / Supplier / MaterialPrice)
+Původní model `Material` měl jedinou cenu na položku, což neumožňovalo porovnání nabídek od více dodavatelů. Řešením je normalizovaná struktura `Category` + `Supplier` + `MaterialPrice` (spojovací tabulka nesoucí cenu, kód a název položky konkrétního dodavatele). Staré pole `Material.Price` je zatím ponecháno pro zpětnou kompatibilitu a bude odstraněno po úplném přechodu na `MaterialPrice` napříč aplikací.
+
 ---
+
+## 🚧 Roadmap
 
 ## 🚧 Roadmap
 
@@ -469,9 +486,12 @@ Projekt používá výhradně `Microsoft.Data.Sqlite` jako SQLite driver – je 
 - [x] SQLite databáze
 - [x] Ukládání projektu
 - [x] Integrační testy
-- [x] Tisk / PrintDialog
 - [x] NuGet závislosti stabilizovány a zabezpečeny
 - [x] PDF export (aktuálně přes Windows PrintDialog → „Microsoft Print to PDF“)
 - [x] GitHub tests - UNIT + integration + build + minimální CI log při každé akci; detailní log + publish jen při tagu
 - [x] MVVM refactor – `MainViewModel` jako náhrada `MainWindow.xaml.cs`, `ICommand` bindings, UI služby oddělené od ViewModelu
+- [x] Multi-dodavatelské ceny materiálu (`Category`, `Supplier`, `MaterialPrice`) + kaskádový výběr Kategorie → Název → Dodavatel → Materiál
 - [ ] MVVM refactor – `AboutWindow` (zatím code-behind: `VersionText`, `CloseButton_Click`)
+- [ ] Reálné vyzkoušení importu ceníku materiálu z CSV přes `MaterialImportService` (zatím jen ručně vložená testovací data přes SQL)
+- [ ] Zobrazení kódu a ceny konkrétní nabídky (`SupplierCode`, `Price`) v detailním rozpočtu
+- [ ] Odstranění staršího pole `Material.Price` po úplném přechodu na `MaterialPrice`
