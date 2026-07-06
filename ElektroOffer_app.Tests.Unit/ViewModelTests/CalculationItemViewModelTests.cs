@@ -1,4 +1,7 @@
 using NUnit.Framework;
+using Microsoft.EntityFrameworkCore;     // OPRAVA: chybělo → potřebné pro DbContextOptionsBuilder<>
+using Microsoft.Data.Sqlite;             // OPRAVA: chybělo → potřebné pro SqliteConnection (SQLite InMemory)
+using ElektroOffer_app.Data;
 using ElektroOffer_app.ViewModels.Items;
 using ElektroOffer_app.Models;
 
@@ -16,12 +19,69 @@ namespace ElektroOffer_app.Tests.Unit.ViewModels
     //   • reakci na změnu Quantity
     //   • reset slevy při vypnutí IsDiscountEnabled
     //
+    // DŮLEŽITÁ ZMĚNA (oprava po refaktoringu 1.7.6):
+    // -----------------------------------------------------------------------
+    // CalculationItemViewModel už NEMÁ bezparametrický konstruktor.
+    // Po opravě bugu s izolací databázového kontextu (_db vs. new AppDbContext())
+    // vyžaduje konstruktor povinný parametr AppDbContext db.
+    //
+    // Proto zde v [SetUp] vytváříme jednu sdílenou SQLite InMemory databázi
+    // pro každý jednotlivý test (ne pro celou třídu!) a předáváme ji do
+    // konstruktoru ViewModelu. Používáme Microsoft.Data.Sqlite InMemory,
+    // NE EF InMemory provider (UseInMemoryDatabase) – to je záměrné a
+    // odpovídá principu zavedenému napříč projektem: reálné SQLite chování
+    // (typy sloupců, omezení, chování transakcí) se chová jinak než
+    // zjednodušený EF InMemory provider, a testy tak lépe odpovídají realitě.
+    //
     // Testy zde pokrývají základní scénáře, které musí fungovat deterministicky
     // bez ohledu na databázi nebo UI. Pokročilé testy (DB, kaskáda, reset logiky)
     // jsou v CalculationItemViewModel_AdvancedTests.cs.
     // =====================================================================
     public class CalculationItemViewModelTests
     {
+        // Pole na úrovni třídy – drží otevřené připojení a kontext po dobu
+        // běhu JEDNOHO testu. NUnit vytvoří novou instanci třídy pro každý
+        // test, takže tahle pole nejsou sdílená mezi testy (žádné riziko
+        // "prosakování" dat mezi testy).
+        private SqliteConnection _connection = null!;
+        private AppDbContext _db = null!;
+
+        // -----------------------------------------------------------------
+        // 🔧 SETUP – spustí se PŘED každým testem
+        // -----------------------------------------------------------------
+        // Vytvoří čerstvou SQLite databázi v paměti (":memory:") a nový
+        // AppDbContext nad ní. Připojení musí zůstat OTEVŘENÉ po celou dobu
+        // testu – jakmile se SqliteConnection zavře, in-memory databáze
+        // zanikne i se všemi daty.
+        [SetUp]
+        public void Setup()
+        {
+            _connection = new SqliteConnection("DataSource=:memory:");
+            _connection.Open();
+
+            var options = new DbContextOptionsBuilder<AppDbContext>()
+                .UseSqlite(_connection)
+                .Options;
+
+            _db = new AppDbContext(options);
+
+            // Vytvoří schéma (tabulky) podle DbSetů v AppDbContext.
+            // Bez tohoto volání by databáze byla prázdná i strukturně (bez tabulek).
+            _db.Database.EnsureCreated();
+        }
+
+        // -----------------------------------------------------------------
+        // 🔧 TEARDOWN – spustí se PO každém testu
+        // -----------------------------------------------------------------
+        // Uvolní databázový kontext a zavře připojení. Důležité pro čistotu
+        // testů – bez tohoto by mohly zůstávat otevřené SQLite handly.
+        [TearDown]
+        public void TearDown()
+        {
+            _db.Dispose();
+            _connection.Dispose();
+        }
+
         // -----------------------------------------------------------------
         // 🧪 TEST 1: Výpočet ceny práce (WorkItem)
         // -----------------------------------------------------------------
@@ -36,10 +96,13 @@ namespace ElektroOffer_app.Tests.Unit.ViewModels
         //   • chybně aplikované koeficienty
         //   • chybné zaokrouhlování
         //   • použití staré hodnoty Quantity
+        //
+        // OPRAVA: přidán argument (_db) do konstruktoru – bez něj test
+        // nejde ani zkompilovat po refaktoringu 1.7.6.
         [Test]
         public void Total_Should_Calculate_WorkItem_Correctly()
         {
-            var vm = new CalculationItemViewModel
+            var vm = new CalculationItemViewModel(_db)
             {
                 Quantity = 10
             };
@@ -66,18 +129,17 @@ namespace ElektroOffer_app.Tests.Unit.ViewModels
         // Tento test odhalí chyby typu:
         //   • ignorování MaterialItem
         //   • chybné větvení logiky (např. WorkItem preferován i když je null)
+        //
+        // OPRAVA: Původně si tento test vytvářel VLASTNÍ databázi přes
+        // EF InMemory provider (UseInMemoryDatabase). To je nekonzistentní
+        // s principem projektu (SQLite InMemory) a navíc balíček
+        // Microsoft.EntityFrameworkCore.InMemory není ani přidaný v .csproj
+        // – proto by to samo o sobě padalo na chybu chybějícího typu/metody.
+        // Nahrazeno sdíleným _db ze [SetUp], stejně jako ostatní testy.
         [Test]
         public void Total_Should_Calculate_MaterialItem_When_WorkItem_Is_Null()
         {
-            // 🔹 1) Připravíme InMemory SQLite databázi pro AppDbContext
-            var options = new DbContextOptionsBuilder<AppDbContext>()
-                .UseInMemoryDatabase("TestDb_MaterialOnly")
-                .Options;
-
-            var db = new AppDbContext(options);
-
-            // 🔹 2) Vytvoříme CalculationItemViewModel s DI kontextem
-            var vm = new CalculationItemViewModel(db)
+            var vm = new CalculationItemViewModel(_db)
             {
                 // Množství (Quantity)
                 Quantity = 5,
@@ -92,7 +154,7 @@ namespace ElektroOffer_app.Tests.Unit.ViewModels
                 }
             };
 
-            // 🔹 3) Očekáváme: Total = 5 × 200 = 1000
+            // Očekáváme: Total = 5 × 200 = 1000
             Assert.AreEqual(1000, vm.Total, 0.001,
                 "Pokud WorkItem == null, musí se cena počítat z MaterialItem.Price × Quantity.");
         }
@@ -100,19 +162,11 @@ namespace ElektroOffer_app.Tests.Unit.ViewModels
         // -----------------------------------------------------------------
         // 🧪 TEST 3: Sleva se správně aplikuje
         // -----------------------------------------------------------------
-        // Ověřuje:
-        //   • že sleva se aplikuje pouze pokud IsDiscountEnabled == true
-        //   • že DiscountPercent je správně převeden na faktor (1 - p/100)
-        //   • že výsledek je správně přepočítán
-        //
-        // Tento test odhalí chyby typu:
-        //   • sleva se aplikuje i když je vypnutá
-        //   • špatný výpočet procent (např. dělení 10 místo 100)
-        //   • chybné pořadí operací
+        // OPRAVA: přidán argument (_db).
         [Test]
         public void Total_Should_Apply_Discount()
         {
-            var vm = new CalculationItemViewModel
+            var vm = new CalculationItemViewModel(_db)
             {
                 Quantity = 2,
                 IsDiscountEnabled = true,
@@ -134,17 +188,11 @@ namespace ElektroOffer_app.Tests.Unit.ViewModels
         // -----------------------------------------------------------------
         // 🧪 TEST 4: Sleva se NEaplikuje, pokud IsDiscountEnabled = false
         // -----------------------------------------------------------------
-        // Ověřuje:
-        //   • že DiscountPercent je ignorováno, pokud je sleva vypnutá
-        //   • že Total se počítá bez slevy
-        //
-        // Tento test odhalí chyby typu:
-        //   • sleva se aplikuje i když je vypnutá
-        //   • logika ignoruje IsDiscountEnabled
+        // OPRAVA: přidán argument (_db).
         [Test]
         public void Total_Should_Not_Apply_Discount_When_Disabled()
         {
-            var vm = new CalculationItemViewModel
+            var vm = new CalculationItemViewModel(_db)
             {
                 Quantity = 2,
                 IsDiscountEnabled = false,
@@ -164,17 +212,11 @@ namespace ElektroOffer_app.Tests.Unit.ViewModels
         // -----------------------------------------------------------------
         // 🧪 TEST 5: Vypnutí slevy vynuluje DiscountPercent
         // -----------------------------------------------------------------
-        // Ověřuje:
-        //   • že při vypnutí slevy se DiscountPercent automaticky nastaví na null
-        //   • že ViewModel udržuje konzistentní stav
-        //
-        // Tento test odhalí chyby typu:
-        //   • DiscountPercent zůstává nastavené → nekonzistentní stav
-        //   • Total se počítá se starou slevou
+        // OPRAVA: přidán argument (_db).
         [Test]
         public void IsDiscountEnabled_False_Should_Reset_DiscountPercent()
         {
-            var vm = new CalculationItemViewModel
+            var vm = new CalculationItemViewModel(_db)
             {
                 Quantity = 1,
                 IsDiscountEnabled = true,
@@ -189,17 +231,11 @@ namespace ElektroOffer_app.Tests.Unit.ViewModels
         // -----------------------------------------------------------------
         // 🧪 TEST 6: Kombinace koeficientů
         // -----------------------------------------------------------------
-        // Ověřuje:
-        //   • že MaterialCoef a PositionCoef se správně násobí
-        //   • že koeficienty mohou být > 1 i < 1
-        //
-        // Tento test odhalí chyby typu:
-        //   • ignorování jednoho z koeficientů
-        //   • chybné pořadí násobení
+        // OPRAVA: přidán argument (_db).
         [Test]
         public void Total_Should_Respect_Material_And_Position_Coefs()
         {
-            var vm = new CalculationItemViewModel
+            var vm = new CalculationItemViewModel(_db)
             {
                 Quantity = 7
             };
@@ -217,17 +253,11 @@ namespace ElektroOffer_app.Tests.Unit.ViewModels
         // -----------------------------------------------------------------
         // 🧪 TEST 7: Quantity = 0 → Total musí být 0
         // -----------------------------------------------------------------
-        // Ověřuje:
-        //   • že nulové množství vždy vede k Total = 0
-        //   • že koeficienty ani BasePrice nemají vliv
-        //
-        // Tento test odhalí chyby typu:
-        //   • Total se počítá i při Quantity = 0
-        //   • chybné větvení logiky
+        // OPRAVA: přidán argument (_db).
         [Test]
         public void Total_Should_Be_Zero_When_Quantity_Is_Zero()
         {
-            var vm = new CalculationItemViewModel
+            var vm = new CalculationItemViewModel(_db)
             {
                 Quantity = 0
             };
@@ -245,16 +275,11 @@ namespace ElektroOffer_app.Tests.Unit.ViewModels
         // -----------------------------------------------------------------
         // 🧪 TEST 8: BasePrice = 0 → Total musí být 0
         // -----------------------------------------------------------------
-        // Ověřuje:
-        //   • že nulová základní cena vede k Total = 0
-        //   • že koeficienty ani Quantity nemají vliv
-        //
-        // Tento test odhalí chyby typu:
-        //   • Total se počítá i při BasePrice = 0
+        // OPRAVA: přidán argument (_db).
         [Test]
         public void Total_Should_Be_Zero_When_BasePrice_Is_Zero()
         {
-            var vm = new CalculationItemViewModel
+            var vm = new CalculationItemViewModel(_db)
             {
                 Quantity = 10
             };
@@ -272,17 +297,11 @@ namespace ElektroOffer_app.Tests.Unit.ViewModels
         // -----------------------------------------------------------------
         // 🧪 TEST 9: Oba zdroje jsou null → Total = 0
         // -----------------------------------------------------------------
-        // Ověřuje:
-        //   • že pokud není vybrána práce ani materiál, Total = 0
-        //   • že ViewModel nepadá na null referencích
-        //
-        // Tento test odhalí chyby typu:
-        //   • NullReferenceException při přístupu k WorkItem/MaterialItem
-        //   • chybné větvení logiky
+        // OPRAVA: přidán argument (_db).
         [Test]
         public void Total_Should_Be_Zero_When_WorkItem_And_MaterialItem_Are_Null()
         {
-            var vm = new CalculationItemViewModel
+            var vm = new CalculationItemViewModel(_db)
             {
                 Quantity = 10,
                 WorkItem = null,
@@ -295,19 +314,11 @@ namespace ElektroOffer_app.Tests.Unit.ViewModels
         // -----------------------------------------------------------------
         // 🧪 TEST 10: Pokud existuje WorkItem i MaterialItem, použije se WorkItem
         // -----------------------------------------------------------------
-        // Ověřuje:
-        //   • že WorkItem má vyšší prioritu než MaterialItem
-        //   • že logika výpočtu Total správně preferuje práci před materiálem
-        //   • že MaterialItem je ignorován, pokud je WorkItem nastaven
-        //
-        // Tento test odhalí chyby typu:
-        //   • Total se počítá z materiálu místo práce
-        //   • kombinace obou zdrojů vede k součtu (což je špatně)
-        //   • chybné větvení logiky (např. MaterialItem má přednost)
+        // OPRAVA: přidán argument (_db).
         [Test]
         public void Total_Should_Use_WorkItem_When_Both_WorkItem_And_MaterialItem_Are_Set()
         {
-            var vm = new CalculationItemViewModel
+            var vm = new CalculationItemViewModel(_db)
             {
                 Quantity = 3
             };
@@ -330,19 +341,11 @@ namespace ElektroOffer_app.Tests.Unit.ViewModels
         // -----------------------------------------------------------------
         // 🧪 TEST 11: Sleva 100 % → Total musí být 0
         // -----------------------------------------------------------------
-        // Ověřuje:
-        //   • že sleva 100 % vynuluje Total
-        //   • že logika správně aplikuje maximální možnou slevu
-        //   • že nedojde k chybě typu záporná cena
-        //
-        // Tento test odhalí chyby typu:
-        //   • sleva se aplikuje špatně (např. 100 % → 100 % zůstane)
-        //   • Total je záporný
-        //   • chybné pořadí operací při aplikaci slevy
+        // OPRAVA: přidán argument (_db).
         [Test]
         public void Total_Should_Be_Zero_When_Discount_Is_100_Percent()
         {
-            var vm = new CalculationItemViewModel
+            var vm = new CalculationItemViewModel(_db)
             {
                 Quantity = 5,
                 IsDiscountEnabled = true,
@@ -362,17 +365,11 @@ namespace ElektroOffer_app.Tests.Unit.ViewModels
         // -----------------------------------------------------------------
         // 🧪 TEST 12: Sleva > 100 % → Total nesmí být záporný
         // -----------------------------------------------------------------
-        // Ověřuje:
-        //   • že sleva nad 100 % je oříznuta (clamp) na 0
-        //   • že Total nikdy nemůže být záporný
-        //
-        // Tento test odhalí chyby typu:
-        //   • záporné výsledky (např. -200)
-        //   • chybné ošetření extrémních hodnot DiscountPercent
+        // OPRAVA: přidán argument (_db).
         [Test]
         public void Total_Should_Not_Be_Negative_When_Discount_Above_100()
         {
-            var vm = new CalculationItemViewModel
+            var vm = new CalculationItemViewModel(_db)
             {
                 Quantity = 5,
                 IsDiscountEnabled = true,
@@ -392,17 +389,11 @@ namespace ElektroOffer_app.Tests.Unit.ViewModels
         // -----------------------------------------------------------------
         // 🧪 TEST 13: Záporná sleva (< 0) se ignoruje
         // -----------------------------------------------------------------
-        // Ověřuje:
-        //   • že záporné hodnoty slevy jsou ignorovány
-        //   • že Total se počítá bez slevy
-        //
-        // Tento test odhalí chyby typu:
-        //   • záporná sleva se aplikuje jako zvýšení ceny
-        //   • logika nevaliduje DiscountPercent
+        // OPRAVA: přidán argument (_db).
         [Test]
         public void Total_Should_Ignore_Negative_Discount()
         {
-            var vm = new CalculationItemViewModel
+            var vm = new CalculationItemViewModel(_db)
             {
                 Quantity = 2,
                 IsDiscountEnabled = true,
@@ -422,18 +413,11 @@ namespace ElektroOffer_app.Tests.Unit.ViewModels
         // -----------------------------------------------------------------
         // 🧪 TEST 14: Změna Quantity vyvolá PropertyChanged pro Total
         // -----------------------------------------------------------------
-        // Ověřuje:
-        //   • že změna Quantity vyvolá PropertyChanged("Quantity")
-        //   • že změna Quantity vyvolá PropertyChanged("Total")
-        //   • že MVVM notifikace funguje správně
-        //
-        // Tento test odhalí chyby typu:
-        //   • Total se neaktualizuje při změně Quantity
-        //   • PropertyChanged se nevyvolá → UI se neaktualizuje
+        // OPRAVA: přidán argument (_db).
         [Test]
         public void Quantity_Should_Raise_PropertyChanged_For_Total()
         {
-            var vm = new CalculationItemViewModel
+            var vm = new CalculationItemViewModel(_db)
             {
                 Quantity = 1
             };
@@ -461,17 +445,11 @@ namespace ElektroOffer_app.Tests.Unit.ViewModels
         // -----------------------------------------------------------------
         // 🧪 TEST 15: Změna WorkItem vyvolá PropertyChanged pro Total
         // -----------------------------------------------------------------
-        // Ověřuje:
-        //   • že změna WorkItem vyvolá PropertyChanged("WorkItem")
-        //   • že změna WorkItem vyvolá PropertyChanged("Total")
-        //
-        // Tento test odhalí chyby typu:
-        //   • Total se neaktualizuje při změně WorkItem
-        //   • PropertyChanged se nevyvolá → UI zůstane se starou cenou
+        // OPRAVA: přidán argument (_db).
         [Test]
         public void WorkItem_Should_Raise_PropertyChanged_For_Total()
         {
-            var vm = new CalculationItemViewModel
+            var vm = new CalculationItemViewModel(_db)
             {
                 Quantity = 1
             };
@@ -497,18 +475,11 @@ namespace ElektroOffer_app.Tests.Unit.ViewModels
         // -----------------------------------------------------------------
         // 🧪 TEST 16: Změna MaterialItem vyvolá PropertyChanged pro Total
         // -----------------------------------------------------------------
-        // Ověřuje:
-        //   • že změna MaterialItem vyvolá PropertyChanged("MaterialItem")
-        //   • že změna MaterialItem vyvolá PropertyChanged("Total")
-        //   • že logika správně přepíná mezi WorkItem a MaterialItem
-        //
-        // Tento test odhalí chyby typu:
-        //   • Total se neaktualizuje při změně MaterialItem
-        //   • PropertyChanged se nevyvolá → UI se neaktualizuje
+        // OPRAVA: přidán argument (_db).
         [Test]
         public void MaterialItem_Should_Raise_PropertyChanged_For_Total()
         {
-            var vm = new CalculationItemViewModel
+            var vm = new CalculationItemViewModel(_db)
             {
                 Quantity = 1,
                 WorkItem = null
@@ -533,18 +504,11 @@ namespace ElektroOffer_app.Tests.Unit.ViewModels
         // -----------------------------------------------------------------
         // 🧪 TEST 17: Změna DiscountPercent vyvolá PropertyChanged pro Total
         // -----------------------------------------------------------------
-        // Ověřuje:
-        //   • že změna DiscountPercent vyvolá PropertyChanged("DiscountPercent")
-        //   • že změna DiscountPercent vyvolá PropertyChanged("Total")
-        //   • že sleva je správně zahrnuta do výpočtu
-        //
-        // Tento test odhalí chyby typu:
-        //   • Total se neaktualizuje při změně slevy
-        //   • PropertyChanged se nevyvolá → UI zůstane se starou cenou
+        // OPRAVA: přidán argument (_db).
         [Test]
         public void DiscountPercent_Should_Raise_PropertyChanged_For_Total()
         {
-            var vm = new CalculationItemViewModel
+            var vm = new CalculationItemViewModel(_db)
             {
                 Quantity = 2,
                 IsDiscountEnabled = true,
