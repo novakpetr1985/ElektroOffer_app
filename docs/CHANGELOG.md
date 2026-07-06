@@ -5,6 +5,36 @@ Formát vychází z [Keep a Changelog](https://keepachangelog.com/cs/1.0.0/).
 
 ---
 
+## [1.8.0] - Více dodavatelů materiálu - DB + UI
+
+### Přidáno
+- Podpora více dodavatelů u materiálu – nové entity `Category`, `Supplier`, `MaterialPrice`
+- Kaskádový výběr materiálu v kalkulaci: Kategorie → Název → Dodavatel → Materiál
+  (obdobně jako existující kaskáda Task → Specification → Material → Location u práce)
+- `MaterialCascadeService` – řízení kaskády výběru materiálu a dotažení ceny
+- `MaterialImportService`, `ImportCsvReader`, `Import` (`Services/DataImport/`)
+  - import ceníku materiálu z CSV exportu Excel listu Import_Master, s upsert logikou podle dvojice (SupplierId, SupplierCode) pro bezpečné opakované importy
+- Unikátní databázový index na `MaterialPrices (SupplierId, SupplierCode)`
+- Testovací sada 10 materiálů (kabely, chráničky, spínače, zásuvky, rozvaděče,  jističe, chrániče) s cenami od dvou dodavatelů (ELKOV, EMAS)
+
+### Změněno
+- `Material` rozšířen o vazbu na `Category` (partial třída, `Materials.cs`)
+- `CalculationItemViewModel` doplněn o novou kaskádu produktového materiálu (`SelectedCategory`, `SelectedProductName`, `SelectedSupplier`, `SelectedOffer`, `SelectedMaterialPrice`) vedle stávající kaskády práce
+- `CalculationPriceService.CalculateBaseTotal` – výpočet ceny materiálu nyní čte `SelectedMaterialPrice.Price` (cena od konkrétního vybraného dodavatele) místo dřívějšího jednotného `Material.Price`
+- `MainWindow.xaml` – tabulka materiálu rozšířena o sloupce Kategorie, Dodavatel a Materiál (název položky od dodavatele)
+
+### Poznámky k migraci dat
+- Staré pole `Material.Price` ponecháno pro zpětnou kompatibilitu, plánováno k odstranění v pozdějším úklidovém patchi až po úplném přechodu na `MaterialPrice`
+- Databázové tabulky (`Categories`, `Suppliers`, `MaterialPrices`, rozšíření `Materials` o `CategoryId`) vytvořeny ručně přes SQL (testovací data, bez EF Core migrace)
+
+### Na obzoru
+- Reálné vyzkoušení importu ceníku materiálu z CSV přes `MaterialImportService` (zatím jen ručně vložená testovací data přes SQL)
+- Zobrazení kódu a ceny konkrétní nabídky (`SupplierCode`, `Price`) v detailním rozpočtu
+  - aktuálně se v kalkulaci zobrazuje jen název položky od dodavatele
+- Odstranění staršího pole `Material.Price` po úplném přechodu na `MaterialPrice`
+
+---
+
 ## [1.7.7] – Stabilizace MVVM refaktoringu
 
 ### Opraveno
