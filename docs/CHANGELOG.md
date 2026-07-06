@@ -5,6 +5,55 @@ Formát vychází z [Keep a Changelog](https://keepachangelog.com/cs/1.0.0/).
 
 ---
 
+## [1.7.7] – Stabilizace MVVM refaktoringu
+
+### Opraveno
+- **XAML parsing crash v `MainWindow.xaml`**
+  Odstraněny cizí texty vložené do `MainWindow.xaml`, které způsobovaly `XamlParseException` a znemožňovaly načtení okna.
+- **Chybějící `ICommand` vlastnosti v `MainViewModel`**
+  - po přechodu na plné MVVM (`MainViewModel` jako náhrada `MainWindow.xaml.cs`) obsahoval ViewModel pouze obyčejné metody (`Save()`, `Load()`, `Print()`, `DeleteWorkItem(object?)`, atd.), ale žádné `ICommand` vlastnosti, na které se XAML bindoval (`{Binding SaveCommand}` apod.). To způsobovalo binding chyby typu *"Vlastnost XCommand se v objektu typu MainViewModel nenašla"* a nefunkční tlačítka/menu za běhu
+  - přidány a inicializovány veřejné `ICommand` vlastnosti používané v XAML: `NewProjectCommand`, `LoadCommand`, `SaveCommand`, `SaveAsCommand`, `PrintCommand`, `ExitCommand`, `AboutCommand`, `AddWorkItemCommand`, `DeleteWorkItemCommand`, `ResetWorkItemCommand`, DeleteMaterialItemCommand`, `ResetMaterialItemCommand` – napojených na existující metody přes `RelayCommand`
+- **`IFileDialogService is not configured` v `MainWindow.xaml.cs`**
+  po refaktoringu na `MainViewModel` se `ProjectService` v konstruktoru `MainWindow` opět vytvářel přes bezparametrový konstruktor (`new ProjectService()`), takže interní `IFileDialogService`, `IFileSystemService` a `IMessageBoxService` zůstaly `null` a `Save()`/`Load()` vyhazovaly `InvalidOperationException`
+  opraveno předáním reálných implementací z 1.7.6 (`RealFileDialogService`, `RealFileSystemService`, `RealMessageBoxService`) do DI konstruktoru `ProjectService`
+- **Pořadí inicializace `DataContext` v `MainWindow`**
+  - `MainWindow` nyní nejprve vytváří sdílený `AppDbContext` a všechny služby (`ProjectService`, `CatalogService`, `CalculationCascadeService`, `CalculationPriceService`, `MessageService`, `PrintService`, `ApplicationService`, `WindowService`), a teprve poté vytváří `MainViewModel` a nastavuje ho jako `DataContext`
+    - zajišťuje, že ViewModel má při inicializaci k dispozici všechny závislosti
+  - odstraněno duplicitní nastavování `DataContext` v `MainWindow.xaml.cs`.
+- **Chování při zavírání okna (`CanClose()`)**
+  - opraveno chování `MainWindow` při zavírání – `OnClosing` nyní korektně volá `MainViewModel.CanClose()` a v případě neuložených změn zabrání zavření okna (`e.Cancel = true`)
+- **`WindowService.ShowAbout()`**
+  - zajištěno správné vytvoření a zobrazení `AboutWindow` s nastaveným `Owner = Application.Current.MainWindow` a použitím `ShowDialog()` pro stabilní chování
+- **Bindingy v XAML**
+  - opraveny bindingy v `ItemsControl`/`DataTemplate` u položek práce a materiálu, v sekci rozpisu rozpočtu (práce + materiál), u slev (`DiscountPercent`, `DiscountAmount`) a u celkových součtů (`GrandTotalBeforeDiscount`, `GrandTotal`) – nově navázané na `MainViewModel` místo bývalého code-behind
+- **`CalculationItemViewModelTests.cs`**
+  - testy nekompilovaly po zavedení povinného DI konstruktoru `CalculationItemViewModel(AppDbContext db)` v 1.7.6
+  - doplněn chybějící `using Microsoft.EntityFrameworkCore;` (chyba *"Typ nebo název oboru názvů DbContextOptionsBuilder<> se nenašel"*)
+  - doplněn chybějící `using Microsoft.Data.Sqlite;`
+  - všechna volání `new CalculationItemViewModel { ... }` upravena na `new CalculationItemViewModel(_db) { ... }` (16 výskytů)
+  - zaveden sdílený `[SetUp]`/`[TearDown]` vytvářející SQLite InMemory databázi (`SqliteConnection` + `AppDbContext`) pro každý test
+  - test `Total_Should_Calculate_MaterialItem_When_WorkItem_Is_Null` přepsán z EF InMemory provideru (`UseInMemoryDatabase`) na SQLite InMemory
+    - sjednoceno s principem projektu a opraven chybějící balíček `Microsoft.EntityFrameworkCore.InMemory`, který ani nebyl v `.csproj`
+
+### Přidáno
+- **Spolehlivá implementace `RelayCommand`**
+  - jednoduchá, otestovaná implementace `ICommand` pro MVVM (`Action<object?> execute`, volitelný `Func<object?, bool>? canExecute`), použitá pro všechny nové Command vlastnosti v `MainViewModel`
+- **Službová vrstva pro `MainViewModel`**
+  - zavedeny UI abstrakce `MessageService`, `PrintService`, `ApplicationService` a `WindowService`, díky nimž `MainViewModel` nevolá WPF přímo (viz `IMessageService`, `IPrintService`, `IApplicationService`, `IWindowService`)
+
+### Odstraněno
+- **`DialogService.cs`** – nepoužívaná služba (Info/Warning/Error/Confirm dialogy). Ověřeno přes "Find All References" – žádné odkazy v celém řešení. `MainViewModel` používá pro potvrzovací dialogy `IMessageService`/`MessageService` (`ShowYesNo`, `ShowYesNoCancel`)
+
+### Poznámka k návrhu
+- **Bindingy v `DataTemplate`**
+  - pokud tlačítko uvnitř `DataTemplate` (např. u položek `WorkCalcItems`/`MaterialItems`) nemá `DataContext` nastavený přímo na `Window`, doporučuje se u Command bindingu použít `ElementName` nebo ověřit `AncestorType` v `RelativeSource`, aby binding správně našel `MainViewModel`
+- Potvrzeno, že `CalculationItemViewModelTests.cs` odpovídá zavedenému
+  vzoru testovací DB izolace (viz `CalculationItemViewModel_AdvancedTests.cs`
+  a integrační testy) – SQLite InMemory přes otevřené připojení, ne EF
+  InMemory provider
+
+---
+
 ## [1.7.6] – DI refaktoring, testovací pokrytí a stabilizace ProjectService / CalculationItemViewModel (UNIT + INTEGRATION)
 
 ### Přidáno
@@ -13,21 +62,16 @@ Formát vychází z [Keep a Changelog](https://keepachangelog.com/cs/1.0.0/).
 - **Rozhraní pro abstrakce služeb** (`Services/Abstractions/`):
   - `IFileDialogService.cs` – práce se souborovými dialogy (Open/SaveFileDialog)
   - `IFileSystemService.cs` – práce se souborovým systémem (`File.ReadAllText` / `WriteAllText`)
-  - `IMessageBoxService.cs` – zobrazování MessageBoxů (Yes/No/Cancel)
-  
+  - `IMessageBoxService.cs` – zobrazování MessageBoxů (Yes/No/Cancel) 
   *(Původní sloučený soubor `Abstractions.cs` byl rozdělen do samostatných souborů výše a smazán.)*
-
 - **Reálné implementace služeb** (`Services/Implementations/`) pro integrační testy:
   - `RealFileDialogService.cs` – skutečné WPF dialogy pro ukládání/načítání
   - `RealFileSystemService.cs` – skutečné čtení/zápis souborů na disk
-  - `RealMessageBoxService.cs` – skutečné WPF MessageBox dialogy
-  
+  - `RealMessageBoxService.cs` – skutečné WPF MessageBox dialogy 
   Tyto třídy neobsahují žádnou logiku `ProjectService` – pouze zprostředkovávají reálné chování. Unit testy nadále používají mocky (`Mock<IFileDialogService>` atd.).
-
 - **Ochrana proti záporné ceně při slevě:**
   - Sleva ≥ 100 % → `Total` = 0
   - Sleva < 0 % → sleva se ignoruje
-
 - **Nové UNIT testy:**
   - `VersionTests` – ověřuje správné nastavení verze aplikace (assembly metadata): že verze není prázdná, má validní formát a není defaultní `1.0.0.0`
   - `CalculationItemViewModelTests` (základní logika: Total, sleva, Quantity)
@@ -36,42 +80,41 @@ Formát vychází z [Keep a Changelog](https://keepachangelog.com/cs/1.0.0/).
   - `RepositoryEdgeCaseTests` (CRUD chybové stavy — null objekt, update/delete neexistujícího záznamu)
   - `CatalogServiceTests` – načítání ceníku práce a materiálu, `Distinct()` u Tasks, `IsCatalogEmpty()`, práce se SQLite InMemory databází
   - `ProjectServiceTests` – `Save`, `SaveAs`, `Load`, `ConfirmNewProject`, `ExportCatalog`, `ImportCatalog` (s mockováním dialogů, MessageBoxů a souborových operací)
-  - `RealFileSystemServiceTests` – ověřuje základní funkčnost reálné implementace: zápis textu do souboru, čtení textu ze souboru, smazání souboru. Test je izolovaný, nepoužívá `ProjectService` ani databázi.
-
+  - `RealFileSystemServiceTests` – ověřuje základní funkčnost reálné implementace: zápis textu do souboru, čtení textu ze souboru, smazání souboru. Test je izolovaný, nepoužívá `ProjectService` ani databázi
 - **Nové INTEGRATION testy:**
   - `ProjectServiceTests_Advanced` (reálné ukládání/načítání projektů)
   - `CatalogServiceTests_Advanced` (reálné načítání ceníku ze SQLite InMemory DB)
   - `CalculationItemViewModelIntegrationTests` (ViewModel + reálná DB)
   - `CalculationItemViewModel_CascadeTests` (kompletní kaskáda Task → Specification → Material → Location: resety, načítání dostupných hodnot, PropertyChanged, přepočet Total)
-  - `RealFileDialogServiceTests` (`[Explicit]`) – ověřuje, že metody služby nevyhodí výjimku a lze je bezpečně volat v testovacím prostředí. Reálné dialogy se v testu neotevírají – cílem je ověřit stabilitu implementace, ne UI chování.
-  - `RealMessageBoxServiceTests` (`[Explicit]`) – ověřuje, že metoda nevyhodí výjimku a vrátí validní `MessageBoxResult`. Reálné UI dialogy se v testovacím prostředí neotevírají – jde o smoke-test, ne funkční test UI.
+  - `RealFileDialogServiceTests` (`[Explicit]`) – ověřuje, že metody služby nevyhodí výjimku a lze je bezpečně volat v testovacím prostředí. Reálné dialogy se v testu neotevírají – cílem je ověřit stabilitu implementace, ne UI chování
+  - `RealMessageBoxServiceTests` (`[Explicit]`) – ověřuje, že metoda nevyhodí výjimku a vrátí validní `MessageBoxResult`. Reálné UI dialogy se v testovacím prostředí neotevírají – jde o smoke-test, ne funkční test UI
 
 ### Změněno
-- `CalculationItemViewModel` už nevytváří vlastní `AppDbContext`. Všechny metody (`LoadSpecifications`, `LoadMaterials`, `LoadLocations`, `LoadWorkUnit`, `UpdateWorkItem`) nyní jednotně používají injektovaný `_db`.
-- Refactoring výpočtu `Total`: sjednocený výpočet pro práci i materiál, bezpečná aplikace slevy, přehlednější komentáře.
-- Testy upraveny tak, aby používaly SQLite InMemory databázi místo EF InMemory provideru (odpovídá reálnému chování `AppDbContext`).
-- Testovací dvojník přejmenován na `CalculationItemViewModelStub.cs` pro jasné odlišení od produkčního ViewModelu.
-- Integrace `ProjectService` nyní používá DI konstruktor se skutečnými implementacemi služeb → integrační testy korektně ověřují reálné chování aplikace (File I/O, MessageBox, dialogy).
-- Přejmenováno: `versionTests.cs` (soubor) → `VersionService.cs`.
-- **UI integrační testy `RealFileDialogServiceTests` a `RealMessageBoxServiceTests`** byly přesunuty z unit testů do integračních testů, protože využívají WPF dialogy (`OpenFileDialog`, `SaveFileDialog`, `MessageBox`), které vyžadují STA thread a nejsou kompatibilní s běžným unit test runnerem.
-- Oba testy byly označeny jako `[Explicit]`, aby se nespouštěly automaticky v CI pipeline, která běží v prostředí bez UI (GitHub Actions). Lokálně je lze spouštět ručně přes Test Explorer.
-- Testy běží v STA threadu (`[Apartment(ApartmentState.STA)]`), což je nutné pro WPF dialogy.
-- Testy nyní automaticky vytvářejí testovací `.txt` soubor v `TempPath`, aby měly stabilní výchozí cestu a nevyužívaly poslední uloženou cestu Windows.
+- `CalculationItemViewModel` už nevytváří vlastní `AppDbContext`. Všechny metody (`LoadSpecifications`, `LoadMaterials`, `LoadLocations`, `LoadWorkUnit`, `UpdateWorkItem`) nyní jednotně používají injektovaný `_db`
+- refactoring výpočtu `Total`: sjednocený výpočet pro práci i materiál, bezpečná aplikace slevy, přehlednější komentáře
+- testy upraveny tak, aby používaly SQLite InMemory databázi místo EF InMemory provideru (odpovídá reálnému chování `AppDbContext`)
+- testovací dvojník přejmenován na `CalculationItemViewModelStub.cs` pro jasné odlišení od produkčního ViewModelu
+- integrace `ProjectService` nyní používá DI konstruktor se skutečnými implementacemi služeb → integrační testy korektně ověřují reálné chování aplikace (File I/O, MessageBox, dialogy)
+- přejmenováno: `versionTests.cs` (soubor) → `VersionService.cs`
+- **UI integrační testy `RealFileDialogServiceTests` a `RealMessageBoxServiceTests`** byly přesunuty z unit testů do integračních testů, protože využívají WPF dialogy (`OpenFileDialog`, `SaveFileDialog`, `MessageBox`), které vyžadují STA thread a nejsou kompatibilní s běžným unit test runnerem
+- oba testy byly označeny jako `[Explicit]`, aby se nespouštěly automaticky v CI pipeline, která běží v prostředí bez UI (GitHub Actions). Lokálně je lze spouštět ručně přes Test Explorer
+- testy běží v STA threadu (`[Apartment(ApartmentState.STA)]`), což je nutné pro WPF dialogy
+- testy nyní automaticky vytvářejí testovací `.txt` soubor v `TempPath`, aby měly stabilní výchozí cestu a nevyužívaly poslední uloženou cestu Windows
 
 ### Opraveno
-- **Duplicitní property `SelectedMaterial`** — druhá kopie (ve skutečnosti určená jako `SelectedLocation`) vznikla copy-paste chybou a způsobovala chyby kompilace (nejednoznačnost `CS0102` + „SelectedLocation neexistuje").
-- **Testovací DB izolace** — metody `LoadWorkUnit()`, `LoadMaterials()` a `UpdateWorkItem()` si vytvářely vlastní `new AppDbContext()` místo použití injektovaného `_db`, takže v testech ignorovaly testovací in-memory databázi a dotazovaly se prázdné produkční DB → test `Changing_Specification_Should_Load_New_Materials` padal s `Expected: 1, But was: 0`.
-- Sleva ≥ 100 % už nezpůsobuje záporné `Total`.
-- Záporná sleva (< 0 %) se nyní správně ignoruje místo nesprávného chování.
-- **UNIT testy ProjectService** nyní používají DI konstruktor místo defaultního.
+- **Duplicitní property `SelectedMaterial`** — druhá kopie (ve skutečnosti určená jako `SelectedLocation`) vznikla copy-paste chybou a způsobovala chyby kompilace (nejednoznačnost `CS0102` + „SelectedLocation neexistuje")
+- **Testovací DB izolace** — metody `LoadWorkUnit()`, `LoadMaterials()` a `UpdateWorkItem()` si vytvářely vlastní `new AppDbContext()` místo použití injektovaného `_db`, takže v testech ignorovaly testovací in-memory databázi a dotazovaly se prázdné produkční DB → test `Changing_Specification_Should_Load_New_Materials` padal s `Expected: 1, But was: 0`
+- sleva ≥ 100 % už nezpůsobuje záporné `Total`
+- záporná sleva (< 0 %) se nyní správně ignoruje místo nesprávného chování
+- **UNIT testy ProjectService** nyní používají DI konstruktor místo defaultního
   Dříve testy vytvářely `new ProjectService()` → interní služby (`IFileSystemService`, `IFileDialogService`, `IMessageBoxService`) byly `null` → reflexní volání `SaveToPath()` vyhazovalo výjimku *"IFileSystemService is not configured"*.
-  Testy byly upraveny tak, aby používaly mockované služby.
-- **Inicializace ProjectService v MainWindow.**
-  Dříve se `ProjectService` vytvářel defaultním konstruktorem, což vedlo k runtime chybám typu *"IFileDialogService is not configured"* při volání `Load()` a `Save()`.
-  `MainWindow` nyní inicializuje `ProjectService` přes DI (`RealFileDialogService`, `RealFileSystemService`, `RealMessageBoxService`).
+  Testy byly upraveny tak, aby používaly mockované služby
+- **Inicializace ProjectService v MainWindow**
+  Dříve se `ProjectService` vytvářel defaultním konstruktorem, což vedlo k runtime chybám typu *"IFileDialogService is not configured"* při volání `Load()` a `Save()`
+  `MainWindow` nyní inicializuje `ProjectService` přes DI (`RealFileDialogService`, `RealFileSystemService`, `RealMessageBoxService`)
 
 ### Odstraněno
-- Odstraněny původní unit testy pro UI služby (`RealFileDialogServiceTests`, `RealMessageBoxServiceTests` v Unit projektu), které způsobovaly zasekávání test runneru a CI pipeline.
+- odstraněny původní unit testy pro UI služby (`RealFileDialogServiceTests`, `RealMessageBoxServiceTests` v Unit projektu), které způsobovaly zasekávání test runneru a CI pipeline
 
 ---
 
@@ -97,8 +140,8 @@ Formát vychází z [Keep a Changelog](https://keepachangelog.com/cs/1.0.0/).
 ### Změněno
 - přidána základní `.gitignore` pravidla pro `bin/`, `obj/` a `publish/`
 - aktualizováno zobrazování verze aplikace (kompatibilita s .NET 10)
-- Upraven a zpřesněn vývojový workflow: feature → dev → test → main → tag.
-- Aktivovány GitHub Rulesety pro povinné PR a CI na chráněných větvích.
+- upraven a zpřesněn vývojový workflow: feature → dev → test → main → tag
+- aktivovány GitHub Rulesety pro povinné PR a CI na chráněných větvích
 
 ---
 
