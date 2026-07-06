@@ -128,9 +128,11 @@ Tato změna zajišťuje stabilní běh aplikace a eliminuje chyby typu.
 │   └── 📁 workflows
 │       └── 📄 elektrooffer-ci-pipeline.yml
 │
-├── 📁 docs
-│   ├── 📄 CHANGELOG.md
-│   └── 📄 README.md
+├── 📁 DB
+│   ├── 📁 Import
+│   │   └── 📄 import_master.csv
+│   │
+│   └── 📄 Materials.xlsx
 │
 ├── 📁 scripts
 │   ├── 📄 AllMainFile.py
@@ -183,6 +185,12 @@ Tato změna zajišťuje stabilní běh aplikace a eliminuje chyby typu.
     │   │   ├── 📄 IPrintService.cs
     │   │   ├── 📄 IApplicationService.cs
     │   │   └── 📄 IWindowService.cs
+    │   │
+    │   ├── 📁 DataImport/
+    │   │   ├── 📄 Import.cs
+    │   │   ├── 📄 ImportCsvReader.cs
+    │   │   └── 📄 MaterialImportService.cs
+    │
     │   │
     │   ├── 📁 Implementations
     │   │   ├── 📄 RealFileDialogService.cs

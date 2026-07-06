@@ -15,7 +15,7 @@
     // - Price → cena za jednotku
     // - Unit  → měrná jednotka (m, ks, balení, …)
     // =========================================================================
-    public class Material
+    public partial class Material
     {
         public int Id { get; set; }
 
