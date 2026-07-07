@@ -12,20 +12,47 @@ Formát vychází z [Keep a Changelog](https://keepachangelog.com/cs/1.0.0/).
 - Kaskádový výběr materiálu v kalkulaci: Kategorie → Název → Dodavatel → Materiál
   (obdobně jako existující kaskáda Task → Specification → Material → Location u práce)
 - `MaterialCascadeService` – řízení kaskády výběru materiálu a dotažení ceny
-- `MaterialImportService`, `ImportCsvReader`, `Import` (`Services/DataImport/`)
-  - import ceníku materiálu z CSV exportu Excel listu Import_Master, s upsert logikou podle dvojice (SupplierId, SupplierCode) pro bezpečné opakované importy
+(- `MaterialImportService`, `ImportCsvReader`, `Import` (`Services/DataImport/`)
+  - import ceníku materiálu z CSV exportu Excel listu Import_Master, s upsert logikou podle dvojice (SupplierId, SupplierCode) pro bezpečné opakované importy)
 - Unikátní databázový index na `MaterialPrices (SupplierId, SupplierCode)`
 - Testovací sada 10 materiálů (kabely, chráničky, spínače, zásuvky, rozvaděče,  jističe, chrániče) s cenami od dvou dodavatelů (ELKOV, EMAS)
+- uložené hodnoty pro práci `SelectedWorkPrice`, `SelectedWorkUnit`
+- uložené hodnoty pro materiál `SelectedMaterialPriceValue`, `SelectedMaterialUnit`
 
 ### Změněno
 - `Material` rozšířen o vazbu na `Category` (partial třída, `Materials.cs`)
 - `CalculationItemViewModel` doplněn o novou kaskádu produktového materiálu (`SelectedCategory`, `SelectedProductName`, `SelectedSupplier`, `SelectedOffer`, `SelectedMaterialPrice`) vedle stávající kaskády práce
 - `CalculationPriceService.CalculateBaseTotal` – výpočet ceny materiálu nyní čte `SelectedMaterialPrice.Price` (cena od konkrétního vybraného dodavatele) místo dřívějšího jednotného `Material.Price`
 - `MainWindow.xaml` – tabulka materiálu rozšířena o sloupce Kategorie, Dodavatel a Materiál (název položky od dodavatele)
+- Opraveno chování tlačítka „SMAZAT“ / „RESET“
+  - Reset nyní správně maže:
+    - Kategorie `SelectedCategory`
+    - Název `SelectedProductName`
+    - Dodavatele `SelectedSupplier`
+    - Nabídku `SelectedOffer`
+    - Cenu `SelectedMaterialPrice`
+  - Starý model `MaterialItem`
+        - Množství, slevu, cenu řádku
+- Oddělení datového modelu do tří sekcí:
+  - `WorkItems` – pracovní hodnoty
+  - `MaterialItems` – produktový materiál
+  - `CommonItems` – společné hodnoty (množství, sleva, total)
+- upraveno formátování slevy — vizuálně „–“, interně kladná hodnota
+- výpočet ceny před slevou (`GrandTotalBeforeDiscount`)  
+  - nyní z původních cen položek
+- výpočet slevy u materiálu
+  - používá `SelectedMaterialPrice.Price`
+- výpočet MaterialDiscountTotal
+  - sleva se zobrazuje jako kladná hodnota.
 
 ### Poznámky k migraci dat
 - Staré pole `Material.Price` ponecháno pro zpětnou kompatibilitu, plánováno k odstranění v pozdějším úklidovém patchi až po úplném přechodu na `MaterialPrice`
 - Databázové tabulky (`Categories`, `Suppliers`, `MaterialPrices`, rozšíření `Materials` o `CategoryId`) vytvořeny ručně přes SQL (testovací data, bez EF Core migrace)
+
+### Stabilizováno
+- `ApplyProjectData()` korektně načítá tři oddělené datové sekce
+- `BuildProjectData()` generuje čistý, přehledný JSON bez míchání dat
+- výpočet Total je plně delegován do `CalculationPriceService`
 
 ### Na obzoru
 - Reálné vyzkoušení importu ceníku materiálu z CSV přes `MaterialImportService` (zatím jen ručně vložená testovací data přes SQL)

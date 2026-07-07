@@ -278,7 +278,21 @@ namespace ElektroOffer_app.ViewModels
         {
             if (obj is CalculationItemViewModel item)
             {
+                // Kategorie + Název (to ti chybělo)
+                item.SelectedCategory = null;
+                item.SelectedProductName = null;
+
+                // Dodavatel + nabídka
+                item.SelectedSupplier = null;
+                item.SelectedOffer = null;
+
+                // Cena od dodavatele
+                item.SelectedMaterialPrice = null;
+
+                // Starý model
                 item.MaterialItem = null;
+
+                // Množství + sleva
                 item.Quantity = 0;
                 item.IsDiscountEnabled = false;
                 item.DiscountPercent = null;
@@ -306,22 +320,33 @@ namespace ElektroOffer_app.ViewModels
         // =========================================================
         // RECALCULATE
         // =========================================================
-
         public void Recalculate()
         {
             static double BaseTotal(CalculationItemViewModel x)
             {
                 if (x.WorkItem != null)
                     return x.WorkItem.BasePrice * x.WorkItem.MaterialCoef * x.WorkItem.PositionCoef * x.Quantity;
+
+                // ✔ Tady je oprava – materiál počítat ze SelectedMaterialPrice
+                if (x.SelectedMaterialPrice != null)
+                    return (double)x.SelectedMaterialPrice.Price * x.Quantity;
+
                 if (x.MaterialItem != null)
                     return x.MaterialItem.Price * x.Quantity;
+
                 return 0;
             }
 
+            // ============================
+            // 1) CELKOVÉ CENY PO SLEVĚ
+            // ============================
             WorkTotal = WorkCalcItems.Sum(x => x.Total);
             MaterialTotal = MaterialItems.Sum(x => x.Total);
             GrandTotal = WorkTotal + MaterialTotal;
 
+            // ============================
+            // 2) SLEVY (KOLIK SE UŠETŘILO)
+            // ============================
             WorkDiscountTotal = WorkCalcItems
                 .Where(x => x.IsDiscountEnabled && x.DiscountPercent.HasValue)
                 .Sum(x => BaseTotal(x) - x.Total);
@@ -331,10 +356,25 @@ namespace ElektroOffer_app.ViewModels
                 .Sum(x => BaseTotal(x) - x.Total);
 
             TotalDiscount = WorkDiscountTotal + MaterialDiscountTotal;
-            GrandTotalBeforeDiscount = GrandTotal + TotalDiscount;
 
-            HasAnyDiscount = TotalDiscount > 0.0001;
+            // ============================
+            // 3) CENA PŘED SLEVOU (SPRÁVNĚ)
+            // ============================
+            double workBefore = WorkCalcItems.Sum(x => BaseTotal(x));
+            double materialBefore = MaterialItems.Sum(x => BaseTotal(x));
+            GrandTotalBeforeDiscount = workBefore + materialBefore;
 
+            // ============================
+            // 4) VIDITELNOST SEKCE SLEV
+            // ============================
+            HasAnyDiscount =
+                WorkCalcItems.Any(x => x.IsDiscountEnabled && x.DiscountPercent.HasValue)
+                || MaterialItems.Any(x => x.IsDiscountEnabled && x.DiscountPercent.HasValue);
+
+
+            // ============================
+            // 5) DETAILNÍ ROZPOČET
+            // ============================
             BudgetItems.Clear();
 
             foreach (var x in WorkCalcItems.Where(x => x.Total > 0))
@@ -354,16 +394,16 @@ namespace ElektroOffer_app.ViewModels
                 });
             }
 
-            foreach (var x in MaterialItems.Where(x => x.Total > 0 && x.MaterialItem != null))
+            foreach (var x in MaterialItems.Where(x => x.SelectedMaterialPrice != null))
             {
-                double basePrice = BaseTotal(x);
+                double basePrice = (double)x.SelectedMaterialPrice!.Price * x.Quantity;
                 double discountAmount = basePrice - x.Total;
 
                 BudgetItems.Add(new BudgetItem
                 {
                     Type = "MATERIÁL",
-                    Description = x.MaterialItem!.Name,
-                    Unit = x.MaterialItem?.Unit ?? "",
+                    Description = x.SelectedOffer ?? "",
+                    Unit = x.SelectedMaterialPrice?.Unit ?? "",
                     Quantity = x.Quantity,
                     Price = x.Total,
                     DiscountPercent = (x.IsDiscountEnabled && x.DiscountPercent.HasValue) ? x.DiscountPercent : null,
@@ -396,7 +436,11 @@ namespace ElektroOffer_app.ViewModels
             var savedPath = _projectService.Save(data, _currentFilePath);
 
             if (savedPath != null)
-                OnProjectSaved(savedPath);
+            {
+                _currentFilePath = savedPath;
+                _hasUnsavedChanges = false;
+                StatusText = savedPath;
+            }
         }
 
         public void SaveAs()
@@ -405,7 +449,11 @@ namespace ElektroOffer_app.ViewModels
             var savedPath = _projectService.SaveAs(data);
 
             if (savedPath != null)
-                OnProjectSaved(savedPath);
+            {
+                _currentFilePath = savedPath;
+                _hasUnsavedChanges = false;
+                StatusText = savedPath;
+            }
         }
 
         public void Load()
@@ -454,9 +502,38 @@ namespace ElektroOffer_app.ViewModels
         }
 
         // =========================================================
-        // BUILD / APPLY PROJECT DATA
+        // BUILD PROJECT DATA – vytvoření kompletního ProjectData objektu
         // =========================================================
-
+        //
+        // Tento blok vytváří tři oddělené datové sekce:
+        //
+        //   1) WorkItems            → pouze pracovní hodnoty (WorkItemData)
+        //   2) MaterialItems        → pouze materiálové hodnoty (MaterialItemData)
+        //   3) CommonItems          → společné hodnoty (CalculationItemData)
+        //
+        // Díky tomu:
+        // - JSON je čistý a přehledný
+        // - PRÁCE a MATERIÁL se nemíchají
+        // - společné hodnoty jsou opravdu společné
+        // - Load/Save je stabilní
+        // - UI je přehledné
+        //
+        // =========================================================
+        // BUILD PROJECT DATA – vytvoření kompletního ProjectData objektu
+        // =========================================================
+        //
+        // Tento blok vytváří tři oddělené datové sekce:
+        //
+        //   1) WorkItems        → pracovní hodnoty (WorkItemData)
+        //   2) MaterialItems    → materiálové hodnoty (MaterialItemData)
+        //   3) CommonItems      → společné hodnoty (CalculationItemData)
+        //
+        // Díky tomu:
+        // - PRÁCE a MATERIÁL se nemíchají
+        // - společné hodnoty jsou opravdu společné
+        // - JSON je čistý a přehledný
+        // - Load/Save je stabilní
+        //
         private ProjectData BuildProjectData()
         {
             return new ProjectData
@@ -464,74 +541,171 @@ namespace ElektroOffer_app.ViewModels
                 ProjectName = _currentFilePath != null
                     ? System.IO.Path.GetFileNameWithoutExtension(_currentFilePath)
                     : "Nový projekt",
+
                 SavedAt = DateTime.Now,
 
+                // =====================================================================
+                // 🔧 PRÁCE → WorkItemData
+                // =====================================================================
+                //
+                // Ukládají se pouze pracovní hodnoty:
+                // - SelectedTask
+                // - SelectedSpecification
+                // - SelectedMaterial
+                // - SelectedLocation
+                // - SelectedWorkPrice (volitelné)
+                // - SelectedWorkUnit  (volitelné)
+                //
                 WorkItems = WorkCalcItems.Select(x => new WorkItemData
                 {
                     SelectedTask = x.SelectedTask,
                     SelectedSpecification = x.SelectedSpecification,
                     SelectedMaterial = x.SelectedMaterial,
                     SelectedLocation = x.SelectedLocation,
-                    Quantity = x.Quantity,
-                    IsDiscountEnabled = x.IsDiscountEnabled,
-                    DiscountPercent = x.DiscountPercent
+
+                    // Cena práce (volitelné)
+                    SelectedWorkPrice = x.SelectedWorkPrice,
+                    SelectedWorkUnit = x.SelectedWorkUnit
+
                 }).ToList(),
 
+                // =====================================================================
+                // 📦 MATERIÁL → MaterialItemData
+                // =====================================================================
+                //
+                // Ukládají se pouze materiálové hodnoty:
+                // - SelectedCategory
+                // - SelectedProductName
+                // - SelectedSupplier
+                // - SelectedOffer
+                // - SelectedMaterialPrice (volitelné)
+                // - SelectedMaterialUnit  (volitelné)
+                //
                 MaterialItems = MaterialItems.Select(x => new MaterialItemData
                 {
-                    MaterialName = x.MaterialItem?.Name,
-                    Quantity = x.Quantity,
-                    IsDiscountEnabled = x.IsDiscountEnabled,
-                    DiscountPercent = x.DiscountPercent
-                }).ToList()
+                    SelectedCategory = x.SelectedCategory,
+                    SelectedProductName = x.SelectedProductName,
+                    SelectedSupplier = x.SelectedSupplier,
+                    SelectedOffer = x.SelectedOffer,
+
+                    // Cena materiálu (volitelné)
+                    SelectedMaterialPrice = x.SelectedMaterialPriceValue,
+                    SelectedMaterialUnit = x.SelectedMaterialUnit
+
+                }).ToList(),
+
+                // =====================================================================
+                // 🧮 SPOLEČNÉ → CalculationItemData
+                // =====================================================================
+                //
+                // Společné hodnoty jsou stejné pro PRÁCI i MATERIÁL:
+                // - Quantity
+                // - DiscountPercent
+                // - IsDiscountEnabled
+                // - Total
+                //
+                // Ukládají se odděleně, aby se nemíchaly s pracovními/materiálovými daty.
+                //
+                CommonItems = WorkCalcItems
+                    .Select(x => new CalculationItemData
+                    {
+                        Quantity = x.Quantity,
+                        DiscountPercent = x.DiscountPercent,
+                        IsDiscountEnabled = x.IsDiscountEnabled,
+                        Total = x.Total
+                    })
+                    .Concat(
+                        MaterialItems.Select(x => new CalculationItemData
+                        {
+                            Quantity = x.Quantity,
+                            DiscountPercent = x.DiscountPercent,
+                            IsDiscountEnabled = x.IsDiscountEnabled,
+                            Total = x.Total
+                        })
+                    )
+                    .ToList()
             };
         }
 
+        // ============================================================================
+        // 📥 APPLY PROJECT DATA – načtení uloženého projektu do ViewModelů
+        // ============================================================================
+        //
+        // Nový datový model:
+        //   • WorkItems        → pouze pracovní hodnoty
+        //   • MaterialItems    → pouze materiálové hodnoty
+        //   • CommonItems      → Quantity, sleva, Total
+        //
+        // Proto se PRÁCE a MATERIÁL načítají odděleně,
+        // ale společné hodnoty se načítají z CommonItems podle indexu.
+        //
         private void ApplyProjectData(ProjectData data, string path)
         {
             ClearAllItems();
 
-            foreach (var saved in data.WorkItems)
+            var workItems = data.WorkItems;
+            var materialItems = data.MaterialItems;
+            var commonItems = data.CommonItems;
+
+            // =====================================================================
+            // 🔧 PRÁCE – načtení WorkItemData + společných hodnot
+            // =====================================================================
+            for (int i = 0; i < workItems.Count; i++)
             {
+                var savedWork = workItems[i];
+                var savedCommon = commonItems[i]; // stejné indexy
+
                 var item = new CalculationItemViewModel(_db);
                 item.PropertyChanged += Item_PropertyChanged;
 
-                item.SelectedTask = saved.SelectedTask;
-                item.SelectedSpecification = saved.SelectedSpecification;
-                item.SelectedMaterial = saved.SelectedMaterial;
-                item.SelectedLocation = saved.SelectedLocation;
-                item.Quantity = saved.Quantity;
-                item.DiscountPercent = saved.DiscountPercent;
-                item.IsDiscountEnabled = saved.IsDiscountEnabled;
+                // ---------------------- PRÁCE ----------------------
+                item.SelectedTask = savedWork.SelectedTask;
+                item.SelectedSpecification = savedWork.SelectedSpecification;
+                item.SelectedMaterial = savedWork.SelectedMaterial;
+                item.SelectedLocation = savedWork.SelectedLocation;
 
+                item.SelectedWorkPrice = savedWork.SelectedWorkPrice;
+                item.SelectedWorkUnit = savedWork.SelectedWorkUnit;
+
+                // ---------------------- SPOLEČNÉ ----------------------
+                item.Quantity = savedCommon.Quantity;
+                item.DiscountPercent = savedCommon.DiscountPercent;
+                item.IsDiscountEnabled = savedCommon.IsDiscountEnabled;
+
+                // Total se neukládá přímo – vypočítá se automaticky
                 WorkCalcItems.Add(item);
             }
 
-            foreach (var saved in data.MaterialItems)
+            // =====================================================================
+            // 📦 MATERIÁL – načtení MaterialItemData + společných hodnot
+            // =====================================================================
+            for (int i = 0; i < materialItems.Count; i++)
             {
+                var savedMaterial = materialItems[i];
+                var savedCommon = commonItems[workItems.Count + i];
+                // společné hodnoty materiálu začínají až za pracovními
+
                 var item = new CalculationItemViewModel(_db);
                 item.PropertyChanged += Item_PropertyChanged;
 
-                item.MaterialItem = Materials.FirstOrDefault(m => m.Name == saved.MaterialName);
-                item.Quantity = saved.Quantity;
-                item.DiscountPercent = saved.DiscountPercent;
-                item.IsDiscountEnabled = saved.IsDiscountEnabled;
+                // ---------------------- MATERIÁL ----------------------
+                item.SelectedCategory = savedMaterial.SelectedCategory;
+                item.SelectedProductName = savedMaterial.SelectedProductName;
+                item.SelectedSupplier = savedMaterial.SelectedSupplier;
+                item.SelectedOffer = savedMaterial.SelectedOffer;
+
+                item.SelectedMaterialPriceValue = savedMaterial.SelectedMaterialPrice;
+                item.SelectedMaterialUnit = savedMaterial.SelectedMaterialUnit;
+
+                // ---------------------- SPOLEČNÉ ----------------------
+                item.Quantity = savedCommon.Quantity;
+                item.DiscountPercent = savedCommon.DiscountPercent;
+                item.IsDiscountEnabled = savedCommon.IsDiscountEnabled;
 
                 MaterialItems.Add(item);
             }
 
-            _currentFilePath = path;
-            _hasUnsavedChanges = false;
-
-            StatusText = path;
             Recalculate();
-        }
-
-        private void OnProjectSaved(string path)
-        {
-            _currentFilePath = path;
-            _hasUnsavedChanges = false;
-            StatusText = path;
         }
 
         // =========================================================

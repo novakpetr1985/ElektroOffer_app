@@ -302,6 +302,34 @@
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
 
+                    <!-- ========================= -->
+                    <!-- 🛠️ SOUČET PRÁCE -->
+                    <!-- ========================= -->
+                    <Border Margin="0,10,0,0"
+                            Padding="10"
+                            BorderBrush="Gray"
+                            BorderThickness="1">
+
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock Text="Součet práce"
+                                    FontWeight="Bold"/>
+
+                            <TextBlock Grid.Column="1"
+                                    Text="{Binding WorkTotal, StringFormat={}{0:N0} Kč}"
+                                    FontSize="16"
+                                    FontWeight="Bold"
+                                    Foreground="DarkGreen"
+                                    HorizontalAlignment="Right"
+                                    TextAlignment="Right"/>
+                        </Grid>
+
+                    </Border>
+
                 <!-- ========================= -->
                 <!-- HLAVIČKA TABULKY -->
                 <!-- ========================= -->
@@ -420,6 +448,7 @@
                                             Command="{Binding DataContext.ResetMaterialItemCommand, RelativeSource={RelativeSource AncestorType=Window}}"
                                             CommandParameter="{Binding}"
                                             ToolTip="Vymazat data řádku"/>
+
 
                                     <!-- 💸 SLEVA -->
                                     <StackPanel Grid.Column="9"
@@ -666,11 +695,13 @@
 
                     <!-- ── Řádek 1: Celková sleva ── -->
                     <!-- Zobrazí se pouze pokud existuje alespoň jedna sleva -->
+                    <!-- ── Řádek 1: Celková sleva ── -->
                     <TextBlock Grid.Row="1"
                                Grid.Column="0"
-                               Text="Celková sleva:"
                                FontSize="15"
-                               Foreground="DarkRed">
+                               Foreground="DarkRed"
+                               HorizontalAlignment="Left"
+                               Text="Celková sleva:">
                         <TextBlock.Style>
                             <Style TargetType="TextBlock">
                                 <Setter Property="Visibility" Value="Collapsed"/>
@@ -688,8 +719,7 @@
                                FontSize="15"
                                Foreground="DarkRed"
                                HorizontalAlignment="Right"
-                               TextAlignment="Right"
-                               Text="{Binding TotalDiscount, StringFormat={}{0:N0} Kč}">
+                               Text="{Binding TotalDiscount, StringFormat={}- {0:N0} Kč}">
                         <TextBlock.Style>
                             <Style TargetType="TextBlock">
                                 <Setter Property="Visibility" Value="Collapsed"/>
