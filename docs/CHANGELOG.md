@@ -5,6 +5,21 @@ Formát vychází z [Keep a Changelog](https://keepachangelog.com/cs/1.0.0/).
 
 ---
 
+## [1.8.0.1] - UI vylepšení PRÁCE a MATERIÁL
+
+### Přidáno
+- Ikona WORK v sekci PRÁCE (zobrazení před nadpisem)
+
+### Opraveno
+- tlačítka u MATERIÁLU (přidání/mazání řádků)
+- zarovnání a layout prvků v sekci PRÁCE a MATERIÁL
+
+### Změněno
+- odstraněny pokusy o Geometry ikonky (nekompatibilní s WPF)
+- ikony nyní vloženy přímo jako Image (stabilní řešení)
+
+---
+
 ## [1.8.0] - Více dodavatelů materiálu - DB + UI
 
 ### Přidáno

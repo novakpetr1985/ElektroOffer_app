@@ -3,76 +3,104 @@ using System.Windows.Input;
 
 namespace ElektroOffer_app.Commands
 {
-    // =========================================================================
-    // 🎛 RelayCommand – univerzální příkaz pro WPF / MVVM
-    // =========================================================================
+    // ============================================================================
+    // 🎛 RELAY COMMAND (ICommand) - univerzální příkaz pro WPF / MVVM
+    // ============================================================================
     //
-    // K čemu slouží:
-    // - Implementuje rozhraní ICommand (standardní WPF příkaz)
-    // - Umožňuje předat logiku Execute a CanExecute jako delegáty (Action/Func)
-    // - Nemusíš vytvářet samostatnou třídu pro každý příkaz
+    // Univerzální implementace příkazu pro WPF / MVVM.
     //
-    // Kde se používá v projektu:
-    // - V MainWindow pro klávesové zkratky (Ctrl+S, Ctrl+O, …)
-    // - Může se použít i ve ViewModelech (pokud je přidáš později)
+    // Proč existuje:
+    //   - WPF používá ICommand pro tlačítka, menu, klávesové zkratky.
+    //   - RelayCommand umožňuje předat logiku příkazu jako delegát (Action/Func),
+    //     takže nemusíš vytvářet samostatné třídy pro každý příkaz.
+    //
+    // Kde se používá:
+    //   - V MainViewModelu pro všechny příkazy (AddWorkItem, AddMaterialItem, Save, Load…)
+    //   - V MainWindow pro klávesové zkratky (Ctrl+S, Ctrl+O…)
     //
     // Jak funguje:
-    // - Konstruktor dostane:
-    //     - execute(object?) → co se má stát při spuštění příkazu
-    //     - canExecute(object?) → kdy je příkaz povolen (např. tlačítko aktivní)
-    // - WPF volá CanExecute, aby zjistilo, zda má být tlačítko povolené
-    // - WPF volá Execute, když uživatel klikne nebo stiskne klávesovou zkratku
-    // =========================================================================
+    //   - Execute(object?) → provede akci
+    //   - CanExecute(object?) → určí, zda je příkaz povolen (tlačítko aktivní)
+    //   - RaiseCanExecuteChanged() → oznámí WPF, že se má znovu vyhodnotit CanExecute
+    //
+    // ============================================================================
     public class RelayCommand : ICommand
     {
-        // ---------------------------------------------------------------------
-        // Delegáty – uložená logika příkazu
-        // ---------------------------------------------------------------------
+        // ------------------------------------------------------------------------
+        // 🔧 Delegáty – uložená logika příkazu
+        // ------------------------------------------------------------------------
+        //
+        // _execute:
+        //   - Metoda, která se má provést při Execute().
+        //   - Action<object?> → může přijmout parametr z CommandParameter.
+        //
+        // _canExecute:
+        //   - Funkce, která vrací true/false podle toho, zda je příkaz povolen.
+        //   - Pokud je null → příkaz je vždy povolen.
+        //
         private readonly Action<object?> _execute;
         private readonly Func<object?, bool>? _canExecute;
 
-        /// <summary>
-        /// Vytvoří nový příkaz.
-        /// </summary>
-        /// <param name="execute">
-        /// Akce, která se provede při Execute().
-        /// Nesmí být null – jinak ArgumentNullException.
-        /// </param>
-        /// <param name="canExecute">
-        /// Funkce, která vrací true/false podle toho, zda je příkaz povolen.
-        /// Pokud je null → příkaz je vždy povolen.
-        /// </param>
+        // ------------------------------------------------------------------------
+        // 🧩 Konstruktor
+        // ------------------------------------------------------------------------
+        //
+        // Příklad použití:
+        //   SaveCommand = new RelayCommand(_ => SaveProject());
+        //   DeleteItemCommand = new RelayCommand(_ => DeleteItem(), _ => CanDeleteItem());
+        //
         public RelayCommand(Action<object?> execute, Func<object?, bool>? canExecute = null)
         {
+            // Execute je povinné – bez něj příkaz nedává smysl
             _execute = execute ?? throw new ArgumentNullException(nameof(execute));
+
+            // CanExecute je volitelné – pokud není, příkaz je vždy povolen
             _canExecute = canExecute;
         }
 
-        /// <summary>
-        /// Určuje, zda je příkaz aktuálně povolen.
-        /// WPF tuto metodu volá automaticky (např. při změně fokusu, dat apod.).
-        /// </summary>
-        /// <param name="parameter">Parametr předaný z UI (většinou se nepoužívá).</param>
+        // ------------------------------------------------------------------------
+        // 🔒 CanExecute – zda je příkaz povolen
+        // ------------------------------------------------------------------------
+        //
+        // WPF tuto metodu volá automaticky:
+        //   - při změně fokusu
+        //   - při změně dat
+        //   - při volání RaiseCanExecuteChanged()
+        //
         public bool CanExecute(object? parameter)
             => _canExecute?.Invoke(parameter) ?? true;
 
-        /// <summary>
-        /// Provede logiku příkazu.
-        /// </summary>
-        /// <param name="parameter">Parametr předaný z UI (např. CommandParameter).</param>
+        // ------------------------------------------------------------------------
+        // ▶ Execute – provedení příkazu
+        // ------------------------------------------------------------------------
+        //
+        // WPF zavolá tuto metodu, když:
+        //   - uživatel klikne na tlačítko
+        //   - stiskne klávesovou zkratku
+        //   - vyvolá se CommandBinding
+        //
         public void Execute(object? parameter)
             => _execute(parameter);
 
-        /// <summary>
-        /// Událost, kterou WPF sleduje pro znovuvyhodnocení CanExecute.
-        /// Když se vyvolá, WPF znovu zavolá CanExecute a podle toho povolí/zakáže tlačítka.
-        /// </summary>
+        // ------------------------------------------------------------------------
+        // 🔔 CanExecuteChanged – událost sledovaná WPF
+        // ------------------------------------------------------------------------
+        //
+        // WPF se na tuto událost přihlásí a když se vyvolá,
+        // znovu zavolá CanExecute() → povolí/zakáže tlačítka.
+        //
         public event EventHandler? CanExecuteChanged;
 
-        /// <summary>
-        /// Vyvolá událost CanExecuteChanged.
-        /// Použij, pokud se změnily podmínky, za kterých je příkaz povolen.
-        /// </summary>
+        // ------------------------------------------------------------------------
+        // 🔄 RaiseCanExecuteChanged – ruční vyvolání události
+        // ------------------------------------------------------------------------
+        //
+        // Používá se, když se změní podmínky, které ovlivňují CanExecute.
+        //
+        // Příklad:
+        //   - tlačítko „Smazat“ má být aktivní jen když je vybraná položka
+        //   - po změně výběru zavoláš DeleteCommand.RaiseCanExecuteChanged()
+        //
         public void RaiseCanExecuteChanged()
             => CanExecuteChanged?.Invoke(this, EventArgs.Empty);
     }

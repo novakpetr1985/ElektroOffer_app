@@ -104,22 +104,25 @@
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
 
-                <!-- PRÁCE -->
+                <!-- ========================= -->
+                <!-- 🛠️ PRÁCE -->
+                <!-- ========================= -->
                 <StackPanel Grid.Row="0" Margin="0,0,0,20">
-
+                        
                     <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="PRÁCE"
-                                   FontSize="18"
-                                   FontWeight="Bold"/>
+                        <TextBlock Text="🛠️ PRÁCE"
+                        FontSize="18"
+                        FontWeight="Bold"/>
                         <Button Content="+"
-                                Width="30"
-                                Margin="10,0,0,0"
-                                Command="{Binding AddWorkItemCommand}"
-                                ToolTip="Přidat řádek práce"/>
-                    </StackPanel>
+                        Width="30"
+                        Margin="10,0,0,0"
+                        Command="{Binding AddWorkItemCommand}"
+                        ToolTip="Přidat řádek práce"/>
 
-                    <!-- ========================= -->
-                    <!-- HLAVIČKA TABULKY -->
+                </StackPanel>
+
+                    <!-- ================================ -->
+                    <!-- 🛠️ PRÁCE - HLAVIČKA TABULKY -->
                     <!-- ========================= -->
                     <Grid Margin="0,8,0,5">
                         <Grid.ColumnDefinitions>
@@ -185,7 +188,7 @@
                     </Grid>
 
                     <!-- ========================= -->
-                    <!-- ITEM LIST: PRÁCE -->
+                    <!-- 🛠️ PRÁCE - ITEM LIST -->
                     <!-- ========================= -->
                     <ItemsControl ItemsSource="{Binding WorkCalcItems}">
                         <ItemsControl.ItemTemplate>
@@ -326,186 +329,203 @@
                                     Foreground="DarkGreen"
                                     HorizontalAlignment="Right"
                                     TextAlignment="Right"/>
+
                         </Grid>
 
                     </Border>
 
-                <!-- ========================= -->
-                <!-- HLAVIČKA TABULKY -->
-                <!-- ========================= -->
-                <Grid Margin="0,8,0,5">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="35"/>  <!-- ➖ SMAZÁNÍ ŘÁDKU -->
-                        <ColumnDefinition Width="110"/> <!-- 🏷️ KATEGORIE -->
-                        <ColumnDefinition Width="170"/> <!-- NÁZEV -->
-                        <ColumnDefinition Width="80"/>  <!-- 🚚 DODAVATEL -->
-                        <ColumnDefinition Width="190"/> <!-- 📦 MATERIÁL (název od dodavatele) -->
-                        <ColumnDefinition Width="70"/>  <!-- MNOŽSTVÍ -->
-                        <ColumnDefinition Width="40"/>  <!-- 🔥 MJ -->
-                        <ColumnDefinition Width="80"/>  <!-- 💰 CENA CELKEM -->
-                        <ColumnDefinition Width="70"/>  <!-- 🔄 RESET ŘÁDKU -->
-                        <ColumnDefinition Width="60"/>  <!-- 💸 SLEVA -->
-                    </Grid.ColumnDefinitions>
-
-                    <TextBlock Grid.Column="1" Text="Kategorie" FontWeight="Bold"/>
-                    <TextBlock Grid.Column="2" Text="Název" FontWeight="Bold"/>
-                    <TextBlock Grid.Column="3" Text="Dodavatel" FontWeight="Bold"/>
-                    <TextBlock Grid.Column="4" Text="Materiál" FontWeight="Bold"/>
-                    <TextBlock Grid.Column="5" Text="Množství" FontWeight="Bold"
-                            HorizontalAlignment="Right" TextAlignment="Right"/>
-                    <TextBlock Grid.Column="6" Text="MJ" FontWeight="Bold"
-                            HorizontalAlignment="Center" TextAlignment="Center"/>
-                    <TextBlock Grid.Column="7" Text="Cena" FontWeight="Bold"
-                            HorizontalAlignment="Right" TextAlignment="Right"/>
-                    <TextBlock Grid.Column="9" Text="Sleva %" FontWeight="Bold"
-                            HorizontalAlignment="Center"/>
-                </Grid>
+                </StackPanel>
 
                 <!-- ========================= -->
-                <!-- ITEM LIST: MATERIÁL -->
+                <!-- 🧱 MATERIÁL -->
                 <!-- ========================= -->
-                <ItemsControl ItemsSource="{Binding MaterialItems}">
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
+                <StackPanel Grid.Row="1" Margin="0,0,0,20">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="🧱 MATERIÁL"
+                                FontSize="18"
+                                FontWeight="Bold"/>
+                        <Button Content="+"
+                                Width="30"
+                                Margin="10,0,0,0"
+                                Command="{Binding AddMaterialItemCommand}"
+                                ToolTip="Přidat řádek materiálu"/>
+                </StackPanel>
 
-                            <Border BorderBrush="#E0E0E0"
-                                    BorderThickness="0,0,0,1"
-                                    Padding="0,5">
-
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="35"/>  <!-- ➖ SMAZÁNÍ ŘÁDKU -->
-                                        <ColumnDefinition Width="110"/> <!-- 🏷️ KATEGORIE -->
-                                        <ColumnDefinition Width="170"/> <!-- NÁZEV (produkt) -->
-                                        <ColumnDefinition Width="80"/>  <!-- 🚚 DODAVATEL -->
-                                        <ColumnDefinition Width="190"/> <!-- 📦 NABÍDKA -->
-                                        <ColumnDefinition Width="70"/>  <!-- MNOŽSTVÍ -->
-                                        <ColumnDefinition Width="40"/>  <!-- 🔥 MJ -->
-                                        <ColumnDefinition Width="80"/>  <!-- 💰 CENA CELKEM -->
-                                        <ColumnDefinition Width="70"/>  <!-- 🔄 RESET ŘÁDKU -->
-                                        <ColumnDefinition Width="60"/>  <!-- 💸 SLEVA -->
-                                    </Grid.ColumnDefinitions>
-
-                                    <!-- ➖ SMAZÁNÍ ŘÁDKU -->
-                                    <Button Grid.Column="0"
-                                            Content="−"
-                                            Width="25"
-                                            Height="25"
-                                            Background="#E53935"
-                                            Foreground="White"
-                                            Command="{Binding DataContext.DeleteMaterialItemCommand, RelativeSource={RelativeSource AncestorType=Window}}"
-                                            CommandParameter="{Binding}"
-                                            ToolTip="Smazat řádek"/>
-
-                                    <!-- 🏷️ KATEGORIE (nyní VÝBĚR, ne jen zobrazení) -->
-                                    <ComboBox Grid.Column="1"
-                                            ItemsSource="{Binding AvailableCategories}"
-                                            SelectedItem="{Binding SelectedCategory, Mode=TwoWay}"/>
-
-                                    <!-- NÁZEV (produktový materiál) -->
-                                    <ComboBox Grid.Column="2"
-                                            ItemsSource="{Binding AvailableMaterialNames}"
-                                            SelectedItem="{Binding SelectedProductName, Mode=TwoWay}"
-                                            IsEnabled="{Binding CanSelectProductName}"/>
-
-                                        <!-- 🚚 DODAVATEL -->
-                                    <ComboBox Grid.Column="3"
-                                            ItemsSource="{Binding AvailableSuppliers}"
-                                            SelectedItem="{Binding SelectedSupplier, Mode=TwoWay}"
-                                            IsEnabled="{Binding CanSelectSupplier}"/>
-
-                                    <!-- 📦 MATERIÁL (jen název od dodavatele, bez kódu a ceny) -->
-                                    <ComboBox Grid.Column="4"
-                                            ItemsSource="{Binding AvailableOffers}"
-                                            SelectedItem="{Binding SelectedOffer, Mode=TwoWay}"
-                                            IsEnabled="{Binding CanSelectOffer}"/>
-
-                                    <!-- MNOŽSTVÍ -->
-                                    <TextBox Grid.Column="5"
-                                            TextAlignment="Right"
-                                            Text="{Binding Quantity, UpdateSourceTrigger=PropertyChanged}"/>
-
-                                    <!-- 🔥 MJ -->
-                                    <TextBlock Grid.Column="6"
-                                            VerticalAlignment="Center"
-                                            HorizontalAlignment="Center"
-                                            TextAlignment="Center"
-                                            Text="{Binding SelectedMaterialPrice.Unit}"/>
-                                            
-                                    <!-- 💰 CENA CELKEM -->
-                                    <TextBlock Grid.Column="7"
-                                            FontWeight="Bold"
-                                            VerticalAlignment="Center"
-                                            HorizontalAlignment="Right"
-                                            TextAlignment="Right"
-                                            Text="{Binding Total, StringFormat={}{0:N0} Kč}"/>
-
-                                    <!-- 🔄 RESET ŘÁDKU -->
-                                    <Button Grid.Column="8"
-                                            Content="SMAZAT"
-                                            Background="DarkBlue"
-                                            Foreground="White"
-                                            Command="{Binding DataContext.ResetMaterialItemCommand, RelativeSource={RelativeSource AncestorType=Window}}"
-                                            CommandParameter="{Binding}"
-                                            ToolTip="Vymazat data řádku"/>
-
-
-                                    <!-- 💸 SLEVA -->
-                                    <StackPanel Grid.Column="9"
-                                                Orientation="Horizontal"
-                                                HorizontalAlignment="Center"
-                                                VerticalAlignment="Center">
-
-                                        <CheckBox IsChecked="{Binding IsDiscountEnabled}"
-                                                VerticalAlignment="Center"/>
-
-                                        <TextBox Width="25"
-                                                Margin="5,0,0,0"
-                                                TextAlignment="Right"
-                                                IsEnabled="{Binding IsDiscountEnabled}"
-                                                Text="{Binding DiscountPercent, UpdateSourceTrigger=PropertyChanged}"/>
-
-                                        <TextBlock Text="%"
-                                                Margin="2,0,0,0"
-                                                Foreground="Gray"/>
-                                    </StackPanel>
-
-                                </Grid>
-
-                            </Border>
-
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
-
-                <!-- ========================= -->
-                <!-- ➕ SOUČET MATERIÁLU -->
-                <!-- ========================= -->
-                <Border Margin="0,10,0,0"
-                        Padding="10"
-                        BorderBrush="Gray"
-                        BorderThickness="1">
-
-                    <Grid>
+                    <!-- ================================ -->
+                    <!-- 🧱 MATERIÁL - HLAVIČKA TABULKY -->
+                    <!-- ================================ -->
+                    <Grid Margin="0,8,0,5">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="35"/>  <!-- ➖ SMAZÁNÍ ŘÁDKU -->
+                            <ColumnDefinition Width="110"/> <!-- 🏷️ KATEGORIE -->
+                            <ColumnDefinition Width="170"/> <!-- NÁZEV -->
+                            <ColumnDefinition Width="80"/>  <!-- 🚚 DODAVATEL -->
+                            <ColumnDefinition Width="190"/> <!-- 📦 MATERIÁL (název od dodavatele) -->
+                            <ColumnDefinition Width="70"/>  <!-- MNOŽSTVÍ -->
+                            <ColumnDefinition Width="40"/>  <!-- 🔥 MJ -->
+                            <ColumnDefinition Width="80"/>  <!-- 💰 CENA CELKEM -->
+                            <ColumnDefinition Width="70"/>  <!-- 🔄 RESET ŘÁDKU -->
+                            <ColumnDefinition Width="60"/>  <!-- 💸 SLEVA -->
                         </Grid.ColumnDefinitions>
 
-                        <TextBlock Text="Součet materiálu"
-                                FontWeight="Bold"/>
-
-                        <TextBlock Grid.Column="1"
-                                Text="{Binding MaterialTotal, StringFormat={}{0:N0} Kč}"
-                                FontSize="16"
-                                FontWeight="Bold"
-                                Foreground="DarkBlue"
-                                HorizontalAlignment="Right"
-                                TextAlignment="Right"/>
+                        <TextBlock Grid.Column="1" Text="Kategorie" FontWeight="Bold"/>
+                        <TextBlock Grid.Column="2" Text="Název" FontWeight="Bold"/>
+                        <TextBlock Grid.Column="3" Text="Dodavatel" FontWeight="Bold"/>
+                        <TextBlock Grid.Column="4" Text="Materiál" FontWeight="Bold"/>
+                        <TextBlock Grid.Column="5" Text="Množství" FontWeight="Bold"
+                                HorizontalAlignment="Right" TextAlignment="Right"/>
+                        <TextBlock Grid.Column="6" Text="MJ" FontWeight="Bold"
+                                HorizontalAlignment="Center" TextAlignment="Center"/>
+                        <TextBlock Grid.Column="7" Text="Cena" FontWeight="Bold"
+                                HorizontalAlignment="Right" TextAlignment="Right"/>
+                        <TextBlock Grid.Column="9" Text="Sleva %" FontWeight="Bold"
+                                HorizontalAlignment="Center"/>
                     </Grid>
 
-                </Border> 
-             
+                    <!-- ================================ -->
+                    <!-- 🧱 MATERIÁL - ITEM LIST -->
+                    <!-- ================================ -->
+                    <ItemsControl ItemsSource="{Binding MaterialItems}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+
+                                <Border BorderBrush="#E0E0E0"
+                                        BorderThickness="0,0,0,1"
+                                        Padding="0,5">
+
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="35"/>  <!-- ➖ SMAZÁNÍ ŘÁDKU -->
+                                            <ColumnDefinition Width="110"/> <!-- 🏷️ KATEGORIE -->
+                                            <ColumnDefinition Width="170"/> <!-- NÁZEV (produkt) -->
+                                            <ColumnDefinition Width="80"/>  <!-- 🚚 DODAVATEL -->
+                                            <ColumnDefinition Width="190"/> <!-- 📦 NABÍDKA -->
+                                            <ColumnDefinition Width="70"/>  <!-- MNOŽSTVÍ -->
+                                            <ColumnDefinition Width="40"/>  <!-- 🔥 MJ -->
+                                            <ColumnDefinition Width="80"/>  <!-- 💰 CENA CELKEM -->
+                                            <ColumnDefinition Width="70"/>  <!-- 🔄 RESET ŘÁDKU -->
+                                            <ColumnDefinition Width="60"/>  <!-- 💸 SLEVA -->
+                                        </Grid.ColumnDefinitions>
+
+                                        <!-- ➖ SMAZÁNÍ ŘÁDKU -->
+                                        <Button Grid.Column="0"
+                                                Content="−"
+                                                Width="25"
+                                                Height="25"
+                                                Background="#E53935"
+                                                Foreground="White"
+                                                Command="{Binding DataContext.DeleteMaterialItemCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                CommandParameter="{Binding}"
+                                                ToolTip="Smazat řádek"/>
+
+                                        <!-- 🏷️ KATEGORIE (nyní VÝBĚR, ne jen zobrazení) -->
+                                        <ComboBox Grid.Column="1"
+                                                ItemsSource="{Binding AvailableCategories}"
+                                                SelectedItem="{Binding SelectedCategory, Mode=TwoWay}"/>
+
+                                        <!-- NÁZEV (produktový materiál) -->
+                                        <ComboBox Grid.Column="2"
+                                                ItemsSource="{Binding AvailableMaterialNames}"
+                                                SelectedItem="{Binding SelectedProductName, Mode=TwoWay}"
+                                                IsEnabled="{Binding CanSelectProductName}"/>
+
+                                            <!-- 🚚 DODAVATEL -->
+                                        <ComboBox Grid.Column="3"
+                                                ItemsSource="{Binding AvailableSuppliers}"
+                                                SelectedItem="{Binding SelectedSupplier, Mode=TwoWay}"
+                                                IsEnabled="{Binding CanSelectSupplier}"/>
+
+                                        <!-- 📦 MATERIÁL (jen název od dodavatele, bez kódu a ceny) -->
+                                        <ComboBox Grid.Column="4"
+                                                ItemsSource="{Binding AvailableOffers}"
+                                                SelectedItem="{Binding SelectedOffer, Mode=TwoWay}"
+                                                IsEnabled="{Binding CanSelectOffer}"/>
+
+                                        <!-- MNOŽSTVÍ -->
+                                        <TextBox Grid.Column="5"
+                                                TextAlignment="Right"
+                                                Text="{Binding Quantity, UpdateSourceTrigger=PropertyChanged}"/>
+
+                                        <!-- 🔥 MJ -->
+                                        <TextBlock Grid.Column="6"
+                                                VerticalAlignment="Center"
+                                                HorizontalAlignment="Center"
+                                                TextAlignment="Center"
+                                                Text="{Binding SelectedMaterialPrice.Unit}"/>
+                                                
+                                        <!-- 💰 CENA CELKEM -->
+                                        <TextBlock Grid.Column="7"
+                                                FontWeight="Bold"
+                                                VerticalAlignment="Center"
+                                                HorizontalAlignment="Right"
+                                                TextAlignment="Right"
+                                                Text="{Binding Total, StringFormat={}{0:N0} Kč}"/>
+
+                                        <!-- 🔄 RESET ŘÁDKU -->
+                                        <Button Grid.Column="8"
+                                                Content="SMAZAT"
+                                                Background="DarkBlue"
+                                                Foreground="White"
+                                                Command="{Binding DataContext.ResetMaterialItemCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                CommandParameter="{Binding}"
+                                                ToolTip="Vymazat data řádku"/>
+
+
+                                        <!-- 💸 SLEVA -->
+                                        <StackPanel Grid.Column="9"
+                                                    Orientation="Horizontal"
+                                                    HorizontalAlignment="Center"
+                                                    VerticalAlignment="Center">
+
+                                            <CheckBox IsChecked="{Binding IsDiscountEnabled}"
+                                                    VerticalAlignment="Center"/>
+
+                                            <TextBox Width="25"
+                                                    Margin="5,0,0,0"
+                                                    TextAlignment="Right"
+                                                    IsEnabled="{Binding IsDiscountEnabled}"
+                                                    Text="{Binding DiscountPercent, UpdateSourceTrigger=PropertyChanged}"/>
+
+                                            <TextBlock Text="%"
+                                                    Margin="2,0,0,0"
+                                                    Foreground="Gray"/>
+                                        </StackPanel>
+
+                                    </Grid>
+
+                                </Border>
+
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+
+                    <!-- ========================= -->
+                    <!-- 🧱 SOUČET MATERIÁLU -->
+                    <!-- ========================= -->
+                    <Border Margin="0,10,0,0"
+                            Padding="10"
+                            BorderBrush="Gray"
+                            BorderThickness="1">
+
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock Text="Součet materiálu"
+                                    FontWeight="Bold"/>
+
+                            <TextBlock Grid.Column="1"
+                                    Text="{Binding MaterialTotal, StringFormat={}{0:N0} Kč}"
+                                    FontSize="16"
+                                    FontWeight="Bold"
+                                    Foreground="DarkBlue"
+                                    HorizontalAlignment="Right"
+                                    TextAlignment="Right"/>
+                        </Grid>
+                    </Border> 
+
                 </StackPanel>
 
                 <!-- ========================================================= -->
@@ -771,7 +791,7 @@
 
                 </Grid>
 
-            </Grid>
+             </Grid>
         </ScrollViewer>
 
     </DockPanel>
