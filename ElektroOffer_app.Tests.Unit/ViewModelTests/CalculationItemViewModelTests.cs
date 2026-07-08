@@ -119,44 +119,50 @@ namespace ElektroOffer_app.Tests.Unit.ViewModels
         }
 
         // -----------------------------------------------------------------
-        // 🧪 TEST 2: Výpočet ceny materiálu (MaterialItem)
+        // 🧪 TEST 2: Výpočet ceny materiálu (MaterialItem) pokud WorkItem == null
         // -----------------------------------------------------------------
-        // Ověřuje:
-        //   • že pokud WorkItem == null, použije se MaterialItem
-        //   • že Total = Material.Price × Quantity
-        //   • že WorkItem má prioritu, ale pokud není, logika přepne na materiál
+        // Kontext změn (verze 1.8.0):
+        //  • Materiálová cena se již NEbere z Material.Price (legacy pole)
+        //  • Výpočet materiálu používá SelectedMaterialPrice.Price (nový model)
+        //  • Pokud není vyplněná materiálová kaskáda → SelectedMaterialPrice = null
+        //  • Výpočet Total padne na NullReferenceException
         //
-        // Tento test odhalí chyby typu:
-        //   • ignorování MaterialItem
-        //   • chybné větvení logiky (např. WorkItem preferován i když je null)
+        // Proč původní test padal:
+        //  • vm.Total je double → Assert musí porovnávat double × double
+        //  • expected byl decimal → decimal × double → CS0019
+        //  • Quantity je double → decimal × double → CS0019
         //
-        // OPRAVA: Původně si tento test vytvářel VLASTNÍ databázi přes
-        // EF InMemory provider (UseInMemoryDatabase). To je nekonzistentní
-        // s principem projektu (SQLite InMemory) a navíc balíček
-        // Microsoft.EntityFrameworkCore.InMemory není ani přidaný v .csproj
-        // – proto by to samo o sobě padalo na chybu chybějícího typu/metody.
-        // Nahrazeno sdíleným _db ze [SetUp], stejně jako ostatní testy.
+        // Co testujeme:
+        //  • CalculationItemViewModel správně vypočítá cenu materiálu
+        //  • WorkItem je null → testujeme čistě materiálovou větev
+        //  • Používáme fake SelectedMaterialPrice (bez DB), protože Material.Price je ignorován
+        //
+        // Poznámka:
+        //  • expected musí být double, protože vm.Total je double
+        // -----------------------------------------------------------------
+
         [Test]
         public void Total_Should_Calculate_MaterialItem_When_WorkItem_Is_Null()
         {
             var vm = new CalculationItemViewModel(_db)
             {
-                // Množství (Quantity)
                 Quantity = 5,
-
-                // Práce (WorkItem) je NULL → musí se použít materiál
-                WorkItem = null,
-
-                // Materiál s cenou 200 Kč / MJ
-                MaterialItem = new Material
-                {
-                    Price = 200
-                }
+                WorkItem = null
             };
 
-            // Očekáváme: Total = 5 × 200 = 1000
-            Assert.AreEqual(1000, vm.Total, 0.001,
-                "Pokud WorkItem == null, musí se cena počítat z MaterialItem.Price × Quantity.");
+            vm.SelectedMaterialPrice = new MaterialPrice
+            {
+                Price = 25.90m,
+                SupplierCode = "TEST",
+                SupplierId = 1,
+                MaterialId = 1
+            };
+
+            // 🔍 Očekávaný výsledek (decimal × decimal → decimal → double)
+            double expected = (double)(vm.SelectedMaterialPrice.Price * (decimal)vm.Quantity);
+
+            Assert.AreEqual(expected, vm.Total, 0.001,
+                "Výpočet ceny materiálu neodpovídá SelectedMaterialPrice.Price × Quantity.");
         }
 
         // -----------------------------------------------------------------
