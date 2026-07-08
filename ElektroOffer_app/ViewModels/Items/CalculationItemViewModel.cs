@@ -123,7 +123,7 @@ namespace ElektroOffer_app.ViewModels.Items
                 }
 
                 OnPropertyChanged();
-                OnPropertyChanged(nameof(Total));
+                NotifyCalculatedProperties();   // 🔥 OPRAVA – přepočet Total + IsEmpty
             }
         }
 
@@ -132,11 +132,15 @@ namespace ElektroOffer_app.ViewModels.Items
             get => _discountPercent;
             set
             {
+                if (value.HasValue)
+                    value = Math.Clamp(value.Value, 0d, 100d);   // 🔥 OPRAVA – clamp
+
                 if (_discountPercent == value) return;
+
                 _discountPercent = value;
 
                 OnPropertyChanged();
-                OnPropertyChanged(nameof(Total));
+                NotifyCalculatedProperties();   // 🔥 OPRAVA – přepočet Total + IsEmpty
             }
         }
 
@@ -152,6 +156,7 @@ namespace ElektroOffer_app.ViewModels.Items
                 if (_workUnit == value) return;
                 _workUnit = value;
                 OnPropertyChanged();
+                NotifyCalculatedProperties();   // 🔥 OPRAVA – ovlivňuje IsEmpty
             }
         }
 
@@ -186,6 +191,7 @@ namespace ElektroOffer_app.ViewModels.Items
 
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(CanSelectSpecification));
+                NotifyCalculatedProperties();   // 🔥 OPRAVA – ovlivňuje IsEmpty
             }
         }
 
@@ -207,6 +213,7 @@ namespace ElektroOffer_app.ViewModels.Items
 
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(CanSelectMaterial));
+                NotifyCalculatedProperties();   // 🔥 OPRAVA – ovlivňuje IsEmpty
             }
         }
 
@@ -229,6 +236,7 @@ namespace ElektroOffer_app.ViewModels.Items
 
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(CanSelectLocation));
+                NotifyCalculatedProperties();   // 🔥 OPRAVA – ovlivňuje IsEmpty
             }
         }
 
@@ -247,7 +255,7 @@ namespace ElektroOffer_app.ViewModels.Items
                 _cascade.UpdateWorkItem(this);
 
                 OnPropertyChanged();
-                OnPropertyChanged(nameof(Total));
+                NotifyCalculatedProperties();   // 🔥 OPRAVA – Total + IsEmpty
             }
         }
 
@@ -268,6 +276,7 @@ namespace ElektroOffer_app.ViewModels.Items
 
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(CanSelectProductName));
+                NotifyCalculatedProperties();   // 🔥 OPRAVA – ovlivňuje IsEmpty
             }
         }
 
@@ -288,6 +297,7 @@ namespace ElektroOffer_app.ViewModels.Items
 
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(CanSelectSupplier));
+                NotifyCalculatedProperties();   // 🔥 OPRAVA – ovlivňuje IsEmpty
             }
         }
 
@@ -309,6 +319,7 @@ namespace ElektroOffer_app.ViewModels.Items
 
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(CanSelectOffer));
+                NotifyCalculatedProperties();   // 🔥 OPRAVA – ovlivňuje IsEmpty
             }
         }
 
@@ -327,7 +338,7 @@ namespace ElektroOffer_app.ViewModels.Items
                 _materialCascade.UpdateSelectedPrice(this);
 
                 OnPropertyChanged();
-                OnPropertyChanged(nameof(Total));
+                NotifyCalculatedProperties();   // 🔥 OPRAVA – Total + IsEmpty
             }
         }
 
@@ -342,7 +353,7 @@ namespace ElektroOffer_app.ViewModels.Items
             {
                 _selectedMaterialPriceValue = value;
                 OnPropertyChanged();
-                OnPropertyChanged(nameof(Total));
+                NotifyCalculatedProperties();   // 🔥 OPRAVA – Total + IsEmpty
             }
         }
 
@@ -357,7 +368,7 @@ namespace ElektroOffer_app.ViewModels.Items
             {
                 _selectedMaterialUnit = value;
                 OnPropertyChanged();
-                OnPropertyChanged(nameof(Total));
+                NotifyCalculatedProperties();   // 🔥 OPRAVA – Total + IsEmpty
             }
         }
 
@@ -375,7 +386,7 @@ namespace ElektroOffer_app.ViewModels.Items
             {
                 _selectedWorkPrice = value;
                 OnPropertyChanged();
-                OnPropertyChanged(nameof(Total));
+                NotifyCalculatedProperties();
             }
         }
 
@@ -390,6 +401,7 @@ namespace ElektroOffer_app.ViewModels.Items
             {
                 _selectedWorkUnitValue = value;
                 OnPropertyChanged();
+                NotifyCalculatedProperties();
             }
         }
 
@@ -404,7 +416,7 @@ namespace ElektroOffer_app.ViewModels.Items
             {
                 _workItem = value;
                 OnPropertyChanged();
-                OnPropertyChanged(nameof(Total));
+                NotifyCalculatedProperties();
             }
         }
 
@@ -415,7 +427,7 @@ namespace ElektroOffer_app.ViewModels.Items
             {
                 _materialItem = value;
                 OnPropertyChanged();
-                OnPropertyChanged(nameof(Total));
+                NotifyCalculatedProperties();
             }
         }
 
@@ -442,7 +454,7 @@ namespace ElektroOffer_app.ViewModels.Items
                 }
 
                 OnPropertyChanged();
-                OnPropertyChanged(nameof(Total));
+                NotifyCalculatedProperties();
             }
         }
 
@@ -455,11 +467,16 @@ namespace ElektroOffer_app.ViewModels.Items
             get => _quantity;
             set
             {
-                if (Math.Abs(_quantity - value) < 0.0001) return;
+                // Clamp záporných hodnot
+                value = Math.Max(0, value);
+
+                if (Math.Abs(_quantity - value) < 0.0001)
+                    return;
+
                 _quantity = value;
 
                 OnPropertyChanged();
-                OnPropertyChanged(nameof(Total));
+                NotifyCalculatedProperties();
             }
         }
 
@@ -490,8 +507,7 @@ namespace ElektroOffer_app.ViewModels.Items
             && string.IsNullOrWhiteSpace(SelectedSpecification)
             && string.IsNullOrWhiteSpace(SelectedMaterial)
             && string.IsNullOrWhiteSpace(SelectedLocation)
-            && Quantity == 0
-            && (!IsDiscountEnabled || DiscountPercent == null);
+            && Quantity == 0;
 
         // =========================================================
         // NOTIFY
@@ -501,6 +517,18 @@ namespace ElektroOffer_app.ViewModels.Items
 
         private void OnPropertyChanged([CallerMemberName] string? name = null)
             => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+
+        // =========================================================
+        // 🔔 Pomocná metoda pro přepočet Total + IsEmpty
+        // =========================================================
+        //
+        // Volá se po každé změně vstupních hodnot, které ovlivňují výpočet.
+        // Opravuje testy 56, 57, 58, 60, 61.
+        //
+        private void NotifyCalculatedProperties()
+        {
+            OnPropertyChanged(nameof(Total));
+            OnPropertyChanged(nameof(IsEmpty));
+        }
     }
 }
-

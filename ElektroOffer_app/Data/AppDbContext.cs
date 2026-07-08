@@ -156,6 +156,28 @@ namespace ElektroOffer_app.Data
             modelBuilder.Entity<MaterialPrice>()
                 .HasIndex(mp => new { mp.SupplierId, mp.SupplierCode })
                 .IsUnique();
+
+            // -------------------------------------------------------------------------
+            // 💡 DODATEČNÁ KONFIGURACE PRO SQLITE
+            // -------------------------------------------------------------------------
+            // PROBLÉM:
+            // - SQLite nemá nativní typ DECIMAL, ukládá hodnoty jako TEXT (např. "10.0")
+            // - EF Core se pak při načítání pokouší převést text na decimal → FormatException
+            //
+            // ŘEŠENÍ:
+            // - Explicitně nastavíme typ sloupce Price na REAL
+            //   → SQLite uloží hodnotu jako číslo (REAL), ne jako text
+            //   → decimal se načte správně
+            //   → testy (např. T_43) přestanou padat
+            //
+            // DŮSLEDEK:
+            // - Aplikace i testy fungují beze změny logiky
+            // - Žádné dopady na importy, výpočty ani datové modely
+            // -------------------------------------------------------------------------
+            modelBuilder.Entity<MaterialPrice>()
+                .Property(mp => mp.Price)
+                .HasColumnType("REAL");
         }
+
     }
 }
