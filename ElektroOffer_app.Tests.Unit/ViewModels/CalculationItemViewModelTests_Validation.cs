@@ -26,15 +26,15 @@ namespace ElektroOffer_app.Tests.Unit.ViewModels
     {
         
         // -----------------------------------------------------------------
-        // 🧪 TEST 01: Quantity – záporné množství se má přepnout na 0
+        // 🧪 TEST 097: Quantity – záporné množství se má přepnout na 0
         // -----------------------------------------------------------------
         // Ověřuje:
         //   • že záporné množství neprojde do výpočtu
         //   • že ViewModel automaticky nastaví Quantity = 0
         // -----------------------------------------------------------------
         [Test]
-        [Order(01)]
-        public void T_01_Validation_Quantity_Should_Clamp_Negative_To_Zero()
+        [Order(097)]
+        public void T_097_Validation_Quantity_Should_Clamp_Negative_To_Zero()
         {
             var vm = new CalculationItemViewModel(_db)
             {
@@ -45,15 +45,15 @@ namespace ElektroOffer_app.Tests.Unit.ViewModels
         }
 
         // -----------------------------------------------------------------
-        // 🧪 TEST 02: DiscountPercent – hodnoty nad 100 % se mají přepnout na 100
+        // 🧪 TEST 098: DiscountPercent – hodnoty nad 100 % se mají přepnout na 100
         // -----------------------------------------------------------------
         // Ověřuje:
         //   • že sleva nemůže být vyšší než 100 %
         //   • že ViewModel automaticky nastaví DiscountPercent = 100
         // -----------------------------------------------------------------
         [Test]
-        [Order(02)]
-        public void T_02_Validation_DiscountPercent_Should_Clamp_Above_100_To_100()
+        [Order(098)]
+        public void T_098_Validation_DiscountPercent_Should_Clamp_Above_100_To_100()
         {
             var vm = new CalculationItemViewModel(_db)
             {
@@ -65,15 +65,15 @@ namespace ElektroOffer_app.Tests.Unit.ViewModels
         }
 
         // -----------------------------------------------------------------
-        // 🧪 TEST 03: DiscountPercent – záporné hodnoty se mají přepnout na 0
+        // 🧪 TEST 099: DiscountPercent – záporné hodnoty se mají přepnout na 0
         // -----------------------------------------------------------------
         // Ověřuje:
         //   • že sleva nemůže být záporná
         //   • že ViewModel automaticky nastaví DiscountPercent = 0
         // -----------------------------------------------------------------
         [Test]
-        [Order(03)]
-        public void T_03_Validation_DiscountPercent_Should_Clamp_Negative_To_Zero()
+        [Order(099)]
+        public void T_099_Validation_DiscountPercent_Should_Clamp_Negative_To_Zero()
         {
             var vm = new CalculationItemViewModel(_db)
             {
@@ -85,15 +85,15 @@ namespace ElektroOffer_app.Tests.Unit.ViewModels
         }
 
         // -----------------------------------------------------------------
-        // 🧪 TEST 04: SelectedMaterialPrice – fallback při neplatné ceně
+        // 🧪 TEST 100: SelectedMaterialPrice – fallback při neplatné ceně
         // -----------------------------------------------------------------
         // Ověřuje:
         //   • že ViewModel zvládne neplatnou nebo smazanou cenu
         //   • že Total se vrátí na 0 a nevyhodí výjimku
         // -----------------------------------------------------------------
         [Test]
-        [Order(04)]
-        public void T_04_Validation_SelectedMaterialPrice_Should_Fallback_When_Invalid()
+        [Order(100)]
+        public void T_100_Validation_SelectedMaterialPrice_Should_Fallback_When_Invalid()
         {
             var vm = new CalculationItemViewModel(_db);
 

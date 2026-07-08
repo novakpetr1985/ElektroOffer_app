@@ -19,7 +19,7 @@ namespace ElektroOffer_app.Tests.Unit.ViewModels
     //   • správné dohledání MaterialPrice z DB po vyplnění celé kaskády
     //
     // Rozsah testů v tomto souboru:
-    //   T_080–T_086
+    //   T_001–T_007
     //
     // Sdílený databázový kontext (_db) a SetUp/TearDown jsou definované
     // v TestBase.cs, ze kterého tato třída dědí.
@@ -29,14 +29,14 @@ namespace ElektroOffer_app.Tests.Unit.ViewModels
     {
 
         // -----------------------------------------------------------------
-        // 🧪 TEST 01: ResetBelowCategory – musí vymazat Names, Suppliers, Offers
+        // 🧪 TEST 001: ResetBelowCategory – musí vymazat Names, Suppliers, Offers
         // -----------------------------------------------------------------
         // Co testujeme:
         //  • že ResetBelowCategory vymaže všechny kroky produktové kaskády
         // -----------------------------------------------------------------
         [Test]
-        [Order(01)]
-        public void T_01_CascadeMaterial_ResetBelowCategory_Should_Clear_Names_Suppliers_Offers()
+        [Order(001)]
+        public void T_001_CascadeMaterial_ResetBelowCategory_Should_Clear_Names_Suppliers_Offers()
         {
             var vm = new CalculationItemViewModel(_db)
             {
@@ -54,11 +54,16 @@ namespace ElektroOffer_app.Tests.Unit.ViewModels
         }
 
         // -----------------------------------------------------------------
-        // 🧪 TEST 02: ResetBelowMaterialName – musí vymazat Suppliers + Offers
+        // 🧪 TEST 002: ResetBelowMaterialName – musí vymazat Suppliers + Offers
+        // -----------------------------------------------------------------
+        // Co testujeme:
+        //  • že změna SelectedProductName vyvolá ResetBelowMaterialName()
+        //  • že se správně vymažou všechny nižší úrovně kaskády (Supplier, Offer)
+        //  • že ViewModel neuchovává neplatné hodnoty po změně materiálu
         // -----------------------------------------------------------------
         [Test]
-        [Order(02)]
-        public void T_02_CascadeMaterial_ResetBelowMaterialName_Should_Clear_Suppliers_And_Offers()
+        [Order(002)]
+        public void T_002_CascadeMaterial_ResetBelowMaterialName_Should_Clear_Suppliers_And_Offers()
         {
             var vm = new CalculationItemViewModel(_db)
             {
@@ -75,11 +80,16 @@ namespace ElektroOffer_app.Tests.Unit.ViewModels
         }
 
         // -----------------------------------------------------------------
-        // 🧪 TEST 03: ResetBelowSupplier – musí vymazat Offers
+        // 🧪 TEST 003: ResetBelowSupplier – musí vymazat Offers
+        // -----------------------------------------------------------------
+        // Co testujeme:
+        //  • že změna SelectedSupplier vyvolá ResetBelowSupplier()
+        //  • že se správně vymaže SelectedOffer (nižší úroveň kaskády)
+        //  • že ViewModel neuchovává neplatnou nabídku po změně dodavatele
         // -----------------------------------------------------------------
         [Test]
-        [Order(03)]
-        public void T_03_CascadeMaterial_ResetBelowSupplier_Should_Clear_Offers()
+        [Order(003)]
+        public void T_003_CascadeMaterial_ResetBelowSupplier_Should_Clear_Offers()
         {
             var vm = new CalculationItemViewModel(_db)
             {
@@ -95,11 +105,16 @@ namespace ElektroOffer_app.Tests.Unit.ViewModels
         }
 
         // -----------------------------------------------------------------
-        // 🧪 TEST 04: SelectedCategory – musí vyvolat PropertyChanged pro CanSelectProductName
+        // 🧪 TEST 004: SelectedCategory – musí vyvolat PropertyChanged pro CanSelectProductName
+        // -----------------------------------------------------------------
+        // Co testujeme:
+        //  • že změna SelectedCategory aktivuje první krok kaskády
+        //  • že ViewModel správně vyvolá PropertyChanged pro CanSelectProductName
+        //  • že UI může reagovat (povolit výběr názvu materiálu)
         // -----------------------------------------------------------------
         [Test]
-        [Order(04)]
-        public void T_04_CascadeMaterial_SelectedCategory_Should_Raise_PropertyChanged_For_CanSelectProductName()
+        [Order(004)]
+        public void T_004_CascadeMaterial_SelectedCategory_Should_Raise_PropertyChanged_For_CanSelectProductName()
         {
             var vm = new CalculationItemViewModel(_db);
 
@@ -117,11 +132,16 @@ namespace ElektroOffer_app.Tests.Unit.ViewModels
         }
 
         // -----------------------------------------------------------------
-        // 🧪 TEST 05: SelectedProductName – musí vyvolat PropertyChanged pro CanSelectSupplier
+        // 🧪 TEST 005: SelectedProductName – musí vyvolat PropertyChanged pro CanSelectSupplier
+        // -----------------------------------------------------------------
+        // Co testujeme:
+        //  • že změna SelectedProductName aktivuje druhý krok kaskády
+        //  • že ViewModel správně vyvolá PropertyChanged pro CanSelectSupplier
+        //  • že UI může reagovat (povolit výběr dodavatele)
         // -----------------------------------------------------------------
         [Test]
-        [Order(05)]
-        public void T_05_CascadeMaterial_SelectedProductName_Should_Raise_PropertyChanged_For_CanSelectSupplier()
+        [Order(005)]
+        public void T_005_CascadeMaterial_SelectedProductName_Should_Raise_PropertyChanged_For_CanSelectSupplier()
         {
             var vm = new CalculationItemViewModel(_db)
             {
@@ -142,11 +162,16 @@ namespace ElektroOffer_app.Tests.Unit.ViewModels
         }
 
         // -----------------------------------------------------------------
-        // 🧪 TEST 06: SelectedSupplier – musí vyvolat PropertyChanged pro CanSelectOffer
+        // 🧪 TEST 006: SelectedSupplier – musí vyvolat PropertyChanged pro CanSelectOffer
+        // -----------------------------------------------------------------
+        // Co testujeme:
+        //  • že změna SelectedSupplier aktivuje třetí krok kaskády
+        //  • že ViewModel správně vyvolá PropertyChanged pro CanSelectOffer
+        //  • že UI může reagovat (povolit výběr nabídky)
         // -----------------------------------------------------------------
         [Test]
-        [Order(06)]
-        public void T_06_CascadeMaterial_SelectedSupplier_Should_Raise_PropertyChanged_For_CanSelectOffer()
+        [Order(006)]
+        public void T_006_CascadeMaterial_SelectedSupplier_Should_Raise_PropertyChanged_For_CanSelectOffer()
         {
             var vm = new CalculationItemViewModel(_db)
             {
@@ -168,7 +193,7 @@ namespace ElektroOffer_app.Tests.Unit.ViewModels
         }
 
         // -----------------------------------------------------------------------------
-        // 🧪 TEST 07: SelectedOffer – musí nastavit SelectedMaterialPrice
+        // 🧪 TEST 007: SelectedOffer – musí nastavit SelectedMaterialPrice
         // -----------------------------------------------------------------------------
         // Min. co test ověřuje:
         //   • že ViewModel správně reaguje na výběr nabídky (SelectedOffer)
@@ -177,8 +202,8 @@ namespace ElektroOffer_app.Tests.Unit.ViewModels
         //   • že SelectedMaterialPrice.Price odpovídá ceně uložené v databázi
         // -----------------------------------------------------------------------------
         [Test]
-        [Order(07)]
-        public void T_07_CascadeMaterial_SelectedOffer_Should_Update_SelectedMaterialPrice()
+        [Order(007)]
+        public void T_007_CascadeMaterial_SelectedOffer_Should_Update_SelectedMaterialPrice()
         {
             // 1) Category
             var category = new Category

@@ -29,7 +29,7 @@ namespace ElektroOffer_app.Tests.Unit.ViewModels
     {
     
         // -----------------------------------------------------------------
-        // 🧪 TEST 01: Výpočet ceny práce (WorkItem)
+        // 🧪 TEST 043: Výpočet ceny práce (WorkItem)
         // -----------------------------------------------------------------
         // Ověřuje:
         //   • že Total správně počítá cenu práce podle vzorce:
@@ -46,8 +46,8 @@ namespace ElektroOffer_app.Tests.Unit.ViewModels
         // OPRAVA: přidán argument (_db) do konstruktoru – bez něj test
         // nejde ani zkompilovat po refaktoringu 1.7.6.
         [Test]
-        [Order(01)]
-        public void T_01_Total_Should_Calculate_WorkItem_Correctly()
+        [Order(043)]
+        public void T_043_Total_Should_Calculate_WorkItem_Correctly()
         {
             var vm = new CalculationItemViewModel(_db)
             {
@@ -66,7 +66,7 @@ namespace ElektroOffer_app.Tests.Unit.ViewModels
         }
 
         // -----------------------------------------------------------------
-        // 🧪 TEST 02: Výpočet ceny materiálu (MaterialItem) pokud WorkItem == null
+        // 🧪 TEST 044: Výpočet ceny materiálu (MaterialItem) pokud WorkItem == null
         // -----------------------------------------------------------------
         // Kontext změn (verze 1.8.0):
         //  • Materiálová cena se již NEbere z Material.Price (legacy pole)
@@ -88,8 +88,8 @@ namespace ElektroOffer_app.Tests.Unit.ViewModels
         //  • expected musí být double, protože vm.Total je double
         // -----------------------------------------------------------------
         [Test]
-        [Order(02)]
-        public void T_02_Total_Should_Calculate_MaterialItem_When_WorkItem_Is_Null()
+        [Order(044)]
+        public void T_044_Total_Should_Calculate_MaterialItem_When_WorkItem_Is_Null()
         {
             var vm = new CalculationItemViewModel(_db)
             {
@@ -113,14 +113,14 @@ namespace ElektroOffer_app.Tests.Unit.ViewModels
         }
 
         // -----------------------------------------------------------------
-        // 🧪 TEST 03: Aktivní sleva se správně aplikuje na Total
+        // 🧪 TEST 045: Aktivní sleva se správně aplikuje na Total
         // -----------------------------------------------------------------
         // Ověřuje:
         //  • že IsDiscountEnabled aktivuje slevu
         //  • že DiscountPercent se správně odečte od Total
         [Test]
-        [Order(03)]
-        public void T_03_Total_Should_Apply_Discount()
+        [Order(045)]
+        public void T_045_Total_Should_Apply_Discount()
         {
             var vm = new CalculationItemViewModel(_db)
             {
@@ -142,13 +142,13 @@ namespace ElektroOffer_app.Tests.Unit.ViewModels
         }
 
         // -----------------------------------------------------------------
-        // 🧪 TEST 04: Sleva se neaplikuje, pokud IsDiscountEnabled == false
+        // 🧪 TEST 046: Sleva se neaplikuje, pokud IsDiscountEnabled == false
         // -----------------------------------------------------------------
         // Ověřuje:
         //  • že vypnutá sleva nemění Total
         [Test]
-        [Order(04)]
-        public void T_04_Total_Should_Not_Apply_Discount_When_Disabled()
+        [Order(046)]
+        public void T_046_Total_Should_Not_Apply_Discount_When_Disabled()
         {
             var vm = new CalculationItemViewModel(_db)
             {
@@ -168,13 +168,13 @@ namespace ElektroOffer_app.Tests.Unit.ViewModels
         }
 
         // -----------------------------------------------------------------
-        // 🧪 TEST 05: Vypnutí slevy resetuje DiscountPercent
+        // 🧪 TEST 047: Vypnutí slevy resetuje DiscountPercent
         // -----------------------------------------------------------------
         // Ověřuje:
         //  • že DiscountPercent se resetuje při IsDiscountEnabled = false
         [Test]
-        [Order(05)]
-        public void T_05_IsDiscountEnabled_False_Should_Reset_DiscountPercent()
+        [Order(047)]
+        public void T_047_IsDiscountEnabled_False_Should_Reset_DiscountPercent()
         {
             var vm = new CalculationItemViewModel(_db)
             {
@@ -189,13 +189,13 @@ namespace ElektroOffer_app.Tests.Unit.ViewModels
         }
 
         // -----------------------------------------------------------------
-        // 🧪 TEST 06: Materiálový a poziční koeficient ovlivňují Total
+        // 🧪 TEST 048: Materiálový a poziční koeficient ovlivňují Total
         // -----------------------------------------------------------------
         // Ověřuje:
         //  • že MaterialCoef a PositionCoef jsou správně aplikovány
         [Test]
-        [Order(06)]
-        public void T_06_Total_Should_Respect_Material_And_Position_Coefs()
+        [Order(048)]
+        public void T_048_Total_Should_Respect_Material_And_Position_Coefs()
         {
             var vm = new CalculationItemViewModel(_db)
             {
@@ -213,13 +213,13 @@ namespace ElektroOffer_app.Tests.Unit.ViewModels
         }
 
         // -----------------------------------------------------------------
-        // 🧪 TEST 07: Quantity = 0 → Total = 0
+        // 🧪 TEST 049: Quantity = 0 → Total = 0
         // -----------------------------------------------------------------
         // Ověřuje:
         //  • že nulové množství vždy vede k nulové ceně
         [Test]
-        [Order(07)]
-        public void T_07_Total_Should_Be_Zero_When_Quantity_Is_Zero()
+        [Order(049)]
+        public void T_049_Total_Should_Be_Zero_When_Quantity_Is_Zero()
         {
             var vm = new CalculationItemViewModel(_db)
             {
@@ -237,13 +237,13 @@ namespace ElektroOffer_app.Tests.Unit.ViewModels
         }
 
         // -----------------------------------------------------------------
-        // 🧪 TEST 08: BasePrice = 0 → Total = 0
+        // 🧪 TEST 050: BasePrice = 0 → Total = 0
         // -----------------------------------------------------------------
         // Ověřuje:
         //  • že nulová základní cena vede k nulovému výsledku
         [Test]
-        [Order(08)]
-        public void T_08_Total_Should_Be_Zero_When_BasePrice_Is_Zero()
+        [Order(050)]
+        public void T_050_Total_Should_Be_Zero_When_BasePrice_Is_Zero()
         {
             var vm = new CalculationItemViewModel(_db)
             {
@@ -261,13 +261,13 @@ namespace ElektroOffer_app.Tests.Unit.ViewModels
         }
 
         // -----------------------------------------------------------------
-        // 🧪 TEST 09: Oba zdroje ceny null → Total = 0
+        // 🧪 TEST 051: Oba zdroje ceny null → Total = 0
         // -----------------------------------------------------------------
         // Ověřuje:
         //  • že Total je 0, pokud není práce ani materiál
         [Test]
-        [Order(09)]
-        public void T_09_Total_Should_Be_Zero_When_WorkItem_And_MaterialItem_Are_Null()
+        [Order(051)]
+        public void T_051_Total_Should_Be_Zero_When_WorkItem_And_MaterialItem_Are_Null()
         {
             var vm = new CalculationItemViewModel(_db)
             {
@@ -280,13 +280,13 @@ namespace ElektroOffer_app.Tests.Unit.ViewModels
         }
 
         // -----------------------------------------------------------------
-        // 🧪 TEST 10: WorkItem má prioritu před MaterialItem
+        // 🧪 TEST 052: WorkItem má prioritu před MaterialItem
         // -----------------------------------------------------------------
         // Ověřuje:
         //  • že pokud existuje WorkItem, materiálová větev se ignoruje
         [Test]
-        [Order(10)]
-        public void T_10_Total_Should_Use_WorkItem_When_Both_WorkItem_And_MaterialItem_Are_Set()
+        [Order(052)]
+        public void T_052_Total_Should_Use_WorkItem_When_Both_WorkItem_And_MaterialItem_Are_Set()
         {
             var vm = new CalculationItemViewModel(_db)
             {
@@ -309,13 +309,13 @@ namespace ElektroOffer_app.Tests.Unit.ViewModels
         }
 
         // -----------------------------------------------------------------
-        // 🧪 TEST 11: Sleva 100 % → Total musí být 0
+        // 🧪 TEST 053: Sleva 100 % → Total musí být 0
         // -----------------------------------------------------------------
         // Ověřuje:
         //  • že maximální sleva vynuluje Total
         [Test]
-        [Order(11)]
-        public void T_11_Total_Should_Be_Zero_When_Discount_Is_100_Percent()
+        [Order(053)]
+        public void T_053_Total_Should_Be_Zero_When_Discount_Is_100_Percent()
         {
             var vm = new CalculationItemViewModel(_db)
             {
@@ -335,13 +335,13 @@ namespace ElektroOffer_app.Tests.Unit.ViewModels
         }
 
         // -----------------------------------------------------------------
-        // 🧪 TEST 12: Sleva nad 100 % nesmí vytvořit záporné hodnoty
+        // 🧪 TEST 054: Sleva nad 100 % nesmí vytvořit záporné hodnoty
         // -----------------------------------------------------------------
         // Ověřuje:
         //  • že Total je minimálně 0
         [Test]
-        [Order(12)]
-        public void T_12_Total_Should_Not_Be_Negative_When_Discount_Above_100()
+        [Order(054)]
+        public void T_054_Total_Should_Not_Be_Negative_When_Discount_Above_100()
         {
             var vm = new CalculationItemViewModel(_db)
             {
@@ -361,7 +361,7 @@ namespace ElektroOffer_app.Tests.Unit.ViewModels
         }
 
         // -----------------------------------------------------------------
-        // 🧪 TEST 13: Sleva se aplikuje pouze na práci (WorkItem)
+        // 🧪 TEST 055: Sleva se aplikuje pouze na práci (WorkItem)
         // -----------------------------------------------------------------
         // Co testujeme:
         //  • že pokud je WorkItem vyplněn, materiálová větev se ignoruje
@@ -370,8 +370,8 @@ namespace ElektroOffer_app.Tests.Unit.ViewModels
         // -----------------------------------------------------------------
 
         [Test]
-        [Order(13)]
-        public void T_13_Total_Should_Apply_Discount_On_WorkItem()
+        [Order(055)]
+        public void T_055_Total_Should_Apply_Discount_On_WorkItem()
         {
             var vm = new CalculationItemViewModel(_db)
             {
@@ -398,7 +398,7 @@ namespace ElektroOffer_app.Tests.Unit.ViewModels
         }
 
         // -----------------------------------------------------------------
-        // 🧪 TEST 14: Sleva se aplikuje na materiál, pokud WorkItem == null
+        // 🧪 TEST 056: Sleva se aplikuje na materiál, pokud WorkItem == null
         // -----------------------------------------------------------------
         // Co testujeme:
         //  • že materiálová větev se použije, pokud WorkItem není vyplněn
@@ -407,8 +407,8 @@ namespace ElektroOffer_app.Tests.Unit.ViewModels
         // -----------------------------------------------------------------
 
         [Test]
-        [Order(14)]
-        public void T_14_Total_Should_Apply_Discount_On_MaterialItem_When_WorkItem_Is_Null()
+        [Order(056)]
+        public void T_056_Total_Should_Apply_Discount_On_MaterialItem_When_WorkItem_Is_Null()
         {
             var vm = new CalculationItemViewModel(_db)
             {
@@ -430,7 +430,7 @@ namespace ElektroOffer_app.Tests.Unit.ViewModels
 
 
         // -----------------------------------------------------------------
-        // 🧪 TEST 15: Změna SelectedMaterialPrice musí vyvolat PropertyChanged("Total")
+        // 🧪 TEST 057: Změna SelectedMaterialPrice musí vyvolat PropertyChanged("Total")
         // -----------------------------------------------------------------
         // Co testujeme:
         //  • že změna materiálové ceny okamžitě přepočítá Total
@@ -438,8 +438,8 @@ namespace ElektroOffer_app.Tests.Unit.ViewModels
         //  • že MVVM notifikace funguje správně (UI se aktualizuje)
         // -----------------------------------------------------------------
         [Test]
-        [Order(15)]
-        public void T_15_SelectedMaterialPrice_Should_Raise_PropertyChanged_For_Total()
+        [Order(057)]
+        public void T_057_SelectedMaterialPrice_Should_Raise_PropertyChanged_For_Total()
         {
             var vm = new CalculationItemViewModel(_db)
             {
@@ -470,7 +470,7 @@ namespace ElektroOffer_app.Tests.Unit.ViewModels
         }
 
         // -----------------------------------------------------------------
-        // 🧪 TEST 16: Extrémní Quantity musí být správně zpracováno
+        // 🧪 TEST 058: Extrémní Quantity musí být správně zpracováno
         // -----------------------------------------------------------------
         // Co testujeme:
         //  • že CalculationItemViewModel zvládne velmi vysoké hodnoty Quantity
@@ -478,8 +478,8 @@ namespace ElektroOffer_app.Tests.Unit.ViewModels
         //  • že Total je stále správně vypočítán
         // -----------------------------------------------------------------
         [Test]
-        [Order(16)]
-        public void T_16_Total_Should_Handle_Extreme_Quantity_Values()
+        [Order(058)]
+        public void T_058_Total_Should_Handle_Extreme_Quantity_Values()
         {
             var vm = new CalculationItemViewModel(_db)
             {
@@ -500,7 +500,7 @@ namespace ElektroOffer_app.Tests.Unit.ViewModels
         }
 
         // -----------------------------------------------------------------
-        // 🧪 TEST 17: SelectedMaterialPrice == null → Total = 0
+        // 🧪 TEST 059: SelectedMaterialPrice == null → Total = 0
         // -----------------------------------------------------------------
         // Co testujeme:
         //  • že materiálová větev je bezpečná, pokud SelectedMaterialPrice není nastaven
@@ -508,8 +508,8 @@ namespace ElektroOffer_app.Tests.Unit.ViewModels
         //  • že WorkItem == null + SelectedMaterialPrice == null → Total = 0
        // -----------------------------------------------------------------
         [Test]
-        [Order(17)]
-        public void T_17_Total_Should_Be_Zero_When_SelectedMaterialPrice_Is_Null()
+        [Order(059)]
+        public void T_059_Total_Should_Be_Zero_When_SelectedMaterialPrice_Is_Null()
         {
             var vm = new CalculationItemViewModel(_db)
             {
@@ -522,7 +522,7 @@ namespace ElektroOffer_app.Tests.Unit.ViewModels
                 "Pokud SelectedMaterialPrice == null, Total musí být 0.");
         }
         // -----------------------------------------------------------------
-        // 🧪 TEST 18: Změna SelectedMaterialPrice přepočítá Total
+        // 🧪 TEST 060: Změna SelectedMaterialPrice přepočítá Total
         // -----------------------------------------------------------------
         // Co testujeme:
         //  • že změna materiálové ceny okamžitě přepočítá Total
@@ -530,8 +530,8 @@ namespace ElektroOffer_app.Tests.Unit.ViewModels
         //  • že UI bude reagovat správně při změně nabídky materiálu
         // -----------------------------------------------------------------
         [Test]
-        [Order(18)]
-        public void T_18_Total_Should_Update_When_SelectedMaterialPrice_Changes()
+        [Order(060)]
+        public void T_060_Total_Should_Update_When_SelectedMaterialPrice_Changes()
         {
             var vm = new CalculationItemViewModel(_db)
             {
@@ -550,7 +550,7 @@ namespace ElektroOffer_app.Tests.Unit.ViewModels
         }
 
         // -----------------------------------------------------------------
-        // 🧪 TEST 19: Extrémní materiálová cena musí být správně zpracována
+        // 🧪 TEST 061: Extrémní materiálová cena musí být správně zpracována
         // -----------------------------------------------------------------
         // Co testujeme:
         //  • že decimal → double konverze je stabilní
@@ -558,8 +558,8 @@ namespace ElektroOffer_app.Tests.Unit.ViewModels
         //  • že Total je přesný i při cenách typu 99999.99
         // -----------------------------------------------------------------
         [Test]
-        [Order(19)]
-        public void T_19_Total_Should_Handle_Extreme_Material_Prices()
+        [Order(061)]
+        public void T_061_Total_Should_Handle_Extreme_Material_Prices()
         {
             var vm = new CalculationItemViewModel(_db)
             {
@@ -578,7 +578,7 @@ namespace ElektroOffer_app.Tests.Unit.ViewModels
         }
 
         // -----------------------------------------------------------------
-        // 🧪 TEST 20: Total musí být správně zaokrouhlen na 3 desetinná místa
+        // 🧪 TEST 062: Total musí být správně zaokrouhlen na 3 desetinná místa
         // -----------------------------------------------------------------
         // Co testujeme:
         //  • že výpočet neobsahuje floating‑point chyby
@@ -586,8 +586,8 @@ namespace ElektroOffer_app.Tests.Unit.ViewModels
         //  • že Total má stabilní přesnost
         // -----------------------------------------------------------------
         [Test]
-        [Order(20)]
-        public void T_20_Total_Should_Round_Correctly_To_Three_Decimals()
+        [Order(062)]
+        public void T_062_Total_Should_Round_Correctly_To_Three_Decimals()
         {
             var vm = new CalculationItemViewModel(_db)
             {
@@ -611,7 +611,7 @@ namespace ElektroOffer_app.Tests.Unit.ViewModels
         }
 
         // -----------------------------------------------------------------
-        // 🧪 TEST 21: Total se musí správně přepočítat po více změnách
+        // 🧪 TEST 063: Total se musí správně přepočítat po více změnách
         // -----------------------------------------------------------------
         // Co testujeme:
         //  • že ViewModel nemá cache starých hodnot
@@ -619,8 +619,8 @@ namespace ElektroOffer_app.Tests.Unit.ViewModels
         //  • že WorkItem má prioritu před materiálem
         // -----------------------------------------------------------------
         [Test]
-        [Order(21)]
-        public void T_21_Total_Should_Recalculate_Correctly_After_Multiple_Changes()
+        [Order(063)]
+        public void T_063_Total_Should_Recalculate_Correctly_After_Multiple_Changes()
         {
             var vm = new CalculationItemViewModel(_db);
 
@@ -656,7 +656,7 @@ namespace ElektroOffer_app.Tests.Unit.ViewModels
 
 
         // -----------------------------------------------------------------
-        // 🧪 TEST 22: WorkItem == null + validní materiál → Total se počítá z materiálu
+        // 🧪 TEST 064: WorkItem == null + validní materiál → Total se počítá z materiálu
         // -----------------------------------------------------------------
         // Co testujeme:
         //  • že materiálová větev funguje samostatně
@@ -664,8 +664,8 @@ namespace ElektroOffer_app.Tests.Unit.ViewModels
         //  • že Total je správně vypočítán z materiálu
         // -----------------------------------------------------------------
         [Test]
-        [Order(22)]
-        public void T_22_Total_Should_Not_Throw_When_WorkItem_Is_Null_And_MaterialItem_Is_Valid()
+        [Order(064)]
+        public void T_064_Total_Should_Not_Throw_When_WorkItem_Is_Null_And_MaterialItem_Is_Valid()
         {
             var vm = new CalculationItemViewModel(_db)
             {
@@ -685,7 +685,7 @@ namespace ElektroOffer_app.Tests.Unit.ViewModels
         }
 
         // -----------------------------------------------------------------
-        // 🧪 TEST 23: Cena materiálu se správně načte z databáze
+        // 🧪 TEST 065: Cena materiálu se správně načte z databáze
         // -----------------------------------------------------------------
         // Co testujeme:
         //  • že SQLite InMemory správně ukládá Material, Supplier a MaterialPrice
@@ -693,8 +693,8 @@ namespace ElektroOffer_app.Tests.Unit.ViewModels
         //  • že Total odpovídá ceně uložené v databázi
         // -----------------------------------------------------------------
         [Test]
-        [Order(23)]
-        public void T_23_Total_Should_Use_Price_From_Database_When_MaterialItem_Is_Loaded()
+        [Order(065)]
+        public void T_065_Total_Should_Use_Price_From_Database_When_MaterialItem_Is_Loaded()
         {
             // 1) Vytvoření Material a Supplier (nutné kvůli FK)
             var material = new Material { Id = 1, Name = "TestMaterial" };
@@ -731,7 +731,7 @@ namespace ElektroOffer_app.Tests.Unit.ViewModels
         }
 
         // -----------------------------------------------------------------
-        // 🧪 TEST 24: Total se přepne z práce na materiál po odstranění WorkItem
+        // 🧪 TEST 066: Total se přepne z práce na materiál po odstranění WorkItem
         // -----------------------------------------------------------------
         // Co testujeme:
         //  • že WorkItem má prioritu
@@ -739,8 +739,8 @@ namespace ElektroOffer_app.Tests.Unit.ViewModels
         //  • že MVVM PropertyChanged funguje správně při změně WorkItem
         // -----------------------------------------------------------------
         [Test]
-        [Order(24)]
-        public void T_24_Total_Should_Switch_From_WorkItem_To_MaterialItem_When_WorkItem_Is_Cleared()
+        [Order(066)]
+        public void T_066_Total_Should_Switch_From_WorkItem_To_MaterialItem_When_WorkItem_Is_Cleared()
         {
             var vm = new CalculationItemViewModel(_db)
             {
@@ -760,15 +760,15 @@ namespace ElektroOffer_app.Tests.Unit.ViewModels
         }
 
         // -----------------------------------------------------------------
-        // 🧪 TEST 25: Sleva se resetuje, pokud DiscountPercent == null
+        // 🧪 TEST 067: Sleva se resetuje, pokud DiscountPercent == null
         // -----------------------------------------------------------------
         // Co testujeme:
         //  • že DiscountPercent == null vypne slevu
         //  • že Total se vrátí na základní hodnotu bez slevy
         // -----------------------------------------------------------------
         [Test]
-        [Order(25)]
-        public void T_25_Discount_Should_Reset_When_DiscountPercent_Is_Set_To_Null()
+        [Order(067)]
+        public void T_067_Discount_Should_Reset_When_DiscountPercent_Is_Set_To_Null()
         {
             var vm = new CalculationItemViewModel(_db)
             {
@@ -789,15 +789,15 @@ namespace ElektroOffer_app.Tests.Unit.ViewModels
         }
 
         // -----------------------------------------------------------------
-        // 🧪 TEST 26: Total zvládne sekvenci WorkItem → Material → WorkItem
+        // 🧪 TEST 068: Total zvládne sekvenci WorkItem → Material → WorkItem
         // -----------------------------------------------------------------
         // Co testujeme:
         //  • že ViewModel správně přepíná mezi větvemi výpočtu
         //  • že žádná změna nezpůsobí chybný cache nebo starou hodnotu
         // -----------------------------------------------------------------
         [Test]
-        [Order(26)]
-        public void T_26_Total_Should_Handle_WorkItem_Then_MaterialItem_Then_WorkItem()
+        [Order(068)]
+        public void T_068_Total_Should_Handle_WorkItem_Then_MaterialItem_Then_WorkItem()
         {
             var vm = new CalculationItemViewModel(_db)
             {
@@ -821,7 +821,7 @@ namespace ElektroOffer_app.Tests.Unit.ViewModels
         }
 
         // -----------------------------------------------------------------
-        // 🧪 TEST 27: Total nesmí vyhazovat výjimky při nevalidních hodnotách
+        // 🧪 TEST 069: Total nesmí vyhazovat výjimky při nevalidních hodnotách
         // -----------------------------------------------------------------
         // Co testujeme:
         //  • že ViewModel je robustní vůči nevalidním vstupům
@@ -830,8 +830,8 @@ namespace ElektroOffer_app.Tests.Unit.ViewModels
         //  • že Total se bezpečně vrátí jako 0 nebo validní hodnota
         // -----------------------------------------------------------------
         [Test]
-        [Order(27)]
-        public void T_27_Total_Should_Not_Throw_On_Invalid_Values()
+        [Order(069)]
+        public void T_069_Total_Should_Not_Throw_On_Invalid_Values()
         {
             var vm = new CalculationItemViewModel(_db)
             {
@@ -854,15 +854,15 @@ namespace ElektroOffer_app.Tests.Unit.ViewModels
         }
 
         // -----------------------------------------------------------------
-        // 🧪 TEST 28: Total se musí přepočítat při změně koeficientů práce
+        // 🧪 TEST 070: Total se musí přepočítat při změně koeficientů práce
         // -----------------------------------------------------------------
         // Co testujeme:
         //  • že změna MaterialCoef nebo PositionCoef okamžitě ovlivní Total
         //  • že ViewModel správně reaguje na změny WorkItem parametrů
         // -----------------------------------------------------------------
         [Test]
-        [Order(28)]
-        public void T_28_Total_Should_Update_When_WorkItem_Coefs_Change()
+        [Order(070)]
+        public void T_070_Total_Should_Update_When_WorkItem_Coefs_Change()
         {
             var vm = new CalculationItemViewModel(_db)
             {
@@ -890,15 +890,15 @@ namespace ElektroOffer_app.Tests.Unit.ViewModels
         }
 
         // -----------------------------------------------------------------
-        // 🧪 TEST 29: Total musí použít novou cenu materiálu po změně dodavatele
+        // 🧪 TEST 071: Total musí použít novou cenu materiálu po změně dodavatele
         // -----------------------------------------------------------------
         // Co testujeme:
         //  • že změna SelectedMaterialPrice přepne výpočet na novou cenu
         //  • že ViewModel správně reaguje na změnu dodavatele
         // -----------------------------------------------------------------
         [Test]
-        [Order(29)]
-        public void T_29_Total_Should_Use_New_MaterialPrice_When_Supplier_Changes()
+        [Order(071)]
+        public void T_071_Total_Should_Use_New_MaterialPrice_When_Supplier_Changes()
         {
             var vm = new CalculationItemViewModel(_db)
             {
@@ -918,15 +918,15 @@ namespace ElektroOffer_app.Tests.Unit.ViewModels
         }
 
         // -----------------------------------------------------------------
-        // 🧪 TEST 30: Total se musí vrátit na 0 po vymazání všech vstupů
+        // 🧪 TEST 072: Total se musí vrátit na 0 po vymazání všech vstupů
         // -----------------------------------------------------------------
         // Co testujeme:
         //  • že ViewModel správně resetuje stav
         //  • že po odstranění práce, materiálu, slevy i množství je Total = 0
         // -----------------------------------------------------------------
         [Test]
-        [Order(30)]
-        public void T_30_Total_Should_Reset_When_All_Inputs_Are_Cleared()
+        [Order(072)]
+        public void T_072_Total_Should_Reset_When_All_Inputs_Are_Cleared()
         {
             var vm = new CalculationItemViewModel(_db)
             {
@@ -956,15 +956,15 @@ namespace ElektroOffer_app.Tests.Unit.ViewModels
         }
 
         // -----------------------------------------------------------------
-        // 🧪 TEST 31: Materiálová cena se ignoruje, pokud je WorkItem nastaven
+        // 🧪 TEST 073: Materiálová cena se ignoruje, pokud je WorkItem nastaven
         // -----------------------------------------------------------------
         // Co testujeme:
         //  • že WorkItem má prioritu před materiálem
         //  • že změna SelectedMaterialPrice neovlivní Total, pokud WorkItem != null
         // -----------------------------------------------------------------
         [Test]
-        [Order(31)]
-        public void T_31_Total_Should_Handle_MaterialPrice_Change_After_WorkItem_Is_Set()
+        [Order(073)]
+        public void T_073_Total_Should_Handle_MaterialPrice_Change_After_WorkItem_Is_Set()
         {
             var vm = new CalculationItemViewModel(_db)
             {
@@ -988,15 +988,15 @@ namespace ElektroOffer_app.Tests.Unit.ViewModels
         }
 
         // -----------------------------------------------------------------
-        // 🧪 TEST 32: Přepnutí slevy musí okamžitě ovlivnit Total
+        // 🧪 TEST 074: Přepnutí slevy musí okamžitě ovlivnit Total
         // -----------------------------------------------------------------
         // Co testujeme:
         //  • že IsDiscountEnabled správně zapíná/vypíná slevu
         //  • že Total se okamžitě přepočítá
         // -----------------------------------------------------------------
         [Test]
-        [Order(32)]
-        public void T_32_Total_Should_Handle_Discount_Toggle_Correctly()
+        [Order(074)]
+        public void T_074_Total_Should_Handle_Discount_Toggle_Correctly()
         {
             var vm = new CalculationItemViewModel(_db)
             {
@@ -1025,7 +1025,7 @@ namespace ElektroOffer_app.Tests.Unit.ViewModels
         }
 
         // -----------------------------------------------------------------
-        // 🧪 TEST 33: Sleva se musí aplikovat na materiál po odstranění WorkItem
+        // 🧪 TEST 075: Sleva se musí aplikovat na materiál po odstranění WorkItem
         // -----------------------------------------------------------------
         // Co testujeme:
         //  • že sleva se správně aplikuje na práci
@@ -1033,8 +1033,8 @@ namespace ElektroOffer_app.Tests.Unit.ViewModels
         //  • že přepnutí větve výpočtu funguje správně
         // -----------------------------------------------------------------
         [Test]
-        [Order(33)]
-        public void T_33_Total_Should_Apply_Discount_On_Material_When_WorkItem_Is_Cleared()
+        [Order(075)]
+        public void T_075_Total_Should_Apply_Discount_On_Material_When_WorkItem_Is_Cleared()
         {
             var vm = new CalculationItemViewModel(_db)
             {
@@ -1059,7 +1059,7 @@ namespace ElektroOffer_app.Tests.Unit.ViewModels
         }
 
         // -----------------------------------------------------------------
-        // 🧪 TEST 34: Materiál → práce → sleva
+        // 🧪 TEST 076: Materiál → práce → sleva
         // -----------------------------------------------------------------
         // Co testujeme:
         //  • že materiál se použije, pokud WorkItem není nastaven
@@ -1067,8 +1067,8 @@ namespace ElektroOffer_app.Tests.Unit.ViewModels
         //  • že sleva se aplikuje až na finální větev výpočtu
         // -----------------------------------------------------------------
         [Test]
-        [Order(34)]
-        public void T_34_Total_Should_Handle_Material_Then_WorkItem_Then_Discount()
+        [Order(076)]
+        public void T_076_Total_Should_Handle_Material_Then_WorkItem_Then_Discount()
         {
             var vm = new CalculationItemViewModel(_db)
             {
@@ -1089,7 +1089,7 @@ namespace ElektroOffer_app.Tests.Unit.ViewModels
         }
 
         // -----------------------------------------------------------------
-        // 🧪 TEST 35: Vybere se nejvyšší cena materiálu z DB
+        // 🧪 TEST 077: Vybere se nejvyšší cena materiálu z DB
         // -----------------------------------------------------------------
         // Co testujeme:
         //  • že DB obsahuje více cen materiálu
@@ -1097,8 +1097,8 @@ namespace ElektroOffer_app.Tests.Unit.ViewModels
         //  • že Total odpovídá správné ceně × Quantity
         // -----------------------------------------------------------------
         [Test]
-        [Order(35)]
-        public void T_35_Total_Should_Use_Highest_MaterialPrice_From_Database()
+        [Order(077)]
+        public void T_077_Total_Should_Use_Highest_MaterialPrice_From_Database()
         {
             var material = new Material { Id = 1, Name = "Test" };
             var supplierA = new Supplier { Id = 1, Name = "A" };
@@ -1124,7 +1124,7 @@ namespace ElektroOffer_app.Tests.Unit.ViewModels
 
 
         // -----------------------------------------------------------------
-        // 🧪 TEST 36: Sleva po změně materiálu
+        // 🧪 TEST 078: Sleva po změně materiálu
         // -----------------------------------------------------------------
         // Co testujeme:
         //  • že sleva se aplikuje na materiál
@@ -1132,8 +1132,8 @@ namespace ElektroOffer_app.Tests.Unit.ViewModels
         //  • že sleva se správně přepočítá po změně ceny
         // -----------------------------------------------------------------
         [Test]
-        [Order(36)]
-        public void T_36_Total_Should_Handle_Discount_After_MaterialPrice_Change()
+        [Order(078)]
+        public void T_078_Total_Should_Handle_Discount_After_MaterialPrice_Change()
         {
             var vm = new CalculationItemViewModel(_db)
             {
@@ -1152,15 +1152,15 @@ namespace ElektroOffer_app.Tests.Unit.ViewModels
         }
 
         // -----------------------------------------------------------------
-        // 🧪 TEST 37: Práce po změně slevy
+        // 🧪 TEST 079: Práce po změně slevy
         // -----------------------------------------------------------------
         // Co testujeme:
         //  • že sleva se aplikuje na práci
         //  • že změna DiscountPercent okamžitě ovlivní Total
         // -----------------------------------------------------------------
         [Test]
-        [Order(37)]
-        public void T_37_Total_Should_Handle_WorkItem_After_Discount_Change()
+        [Order(079)]
+        public void T_079_Total_Should_Handle_WorkItem_After_Discount_Change()
         {
             var vm = new CalculationItemViewModel(_db)
             {
@@ -1184,15 +1184,15 @@ namespace ElektroOffer_app.Tests.Unit.ViewModels
         }
 
         // -----------------------------------------------------------------
-        // 🧪 TEST 38: Extrémní množství (int.MaxValue)
+        // 🧪 TEST 080: Extrémní množství (int.MaxValue)
         // -----------------------------------------------------------------
         // Co testujeme:
         //  • že výpočet zvládne extrémní hodnoty Quantity
         //  • že nedojde k přetečení nebo výjimce
         // -----------------------------------------------------------------
         [Test]
-        [Order(38)]
-        public void T_38_Total_Should_Handle_MaxInt_Quantity()
+        [Order(080)]
+        public void T_080_Total_Should_Handle_MaxInt_Quantity()
         {
             var vm = new CalculationItemViewModel(_db)
             {
@@ -1210,15 +1210,15 @@ namespace ElektroOffer_app.Tests.Unit.ViewModels
         }
 
         // -----------------------------------------------------------------
-        // 🧪 TEST 39: Extrémní cena (double.MaxValue)
+        // 🧪 TEST 081: Extrémní cena (double.MaxValue)
         // -----------------------------------------------------------------
         // Co testujeme:
         //  • že výpočet zvládne extrémní BasePrice
         //  • že Total se rovná double.MaxValue
         // -----------------------------------------------------------------
         [Test]
-        [Order(39)]
-        public void T_39_Total_Should_Handle_MaxDouble_BasePrice()
+        [Order(081)]
+        public void T_081_Total_Should_Handle_MaxDouble_BasePrice()
         {
             var vm = new CalculationItemViewModel(_db)
             {
@@ -1235,15 +1235,15 @@ namespace ElektroOffer_app.Tests.Unit.ViewModels
         }
 
         // -----------------------------------------------------------------
-        // 🧪 TEST 40: Materiál null → materiál validní
+        // 🧪 TEST 082: Materiál null → materiál validní
         // -----------------------------------------------------------------
         // Co testujeme:
         //  • že Total je 0, pokud SelectedMaterialPrice == null
         //  • že po nastavení materiálu se Total správně přepočítá
         // -----------------------------------------------------------------
         [Test]
-        [Order(40)]
-        public void T_40_Total_Should_Handle_MaterialPrice_Null_Then_NotNull()
+        [Order(082)]
+        public void T_082_Total_Should_Handle_MaterialPrice_Null_Then_NotNull()
         {
             var vm = new CalculationItemViewModel(_db)
             {
@@ -1260,15 +1260,15 @@ namespace ElektroOffer_app.Tests.Unit.ViewModels
         }
 
         // -----------------------------------------------------------------
-        // 🧪 TEST 41: Práce null → práce validní
+        // 🧪 TEST 083: Práce null → práce validní
         // -----------------------------------------------------------------
         // Co testujeme:
         //  • že Total je 0, pokud WorkItem == null
         //  • že po nastavení práce se Total správně přepočítá
         // -----------------------------------------------------------------
         [Test]
-        [Order(41)]
-        public void T_41_Total_Should_Handle_WorkItem_Null_Then_NotNull()
+        [Order(083)]
+        public void T_083_Total_Should_Handle_WorkItem_Null_Then_NotNull()
         {
             var vm = new CalculationItemViewModel(_db)
             {
@@ -1290,15 +1290,15 @@ namespace ElektroOffer_app.Tests.Unit.ViewModels
         }
 
         // -----------------------------------------------------------------
-        // 🧪 TEST 42: Sleva null → sleva validní
+        // 🧪 TEST 084: Sleva null → sleva validní
         // -----------------------------------------------------------------
         // Co testujeme:
         //  • že DiscountPercent == null znamená „bez slevy“
         //  • že po nastavení slevy se Total správně přepočítá
         // -----------------------------------------------------------------
         [Test]
-        [Order(42)]
-        public void T_42_Total_Should_Handle_Discount_Null_Then_NotNull()
+        [Order(084)]
+        public void T_084_Total_Should_Handle_Discount_Null_Then_NotNull()
         {
             var vm = new CalculationItemViewModel(_db)
             {
@@ -1322,15 +1322,15 @@ namespace ElektroOffer_app.Tests.Unit.ViewModels
         }
 
         // -----------------------------------------------------------------
-        // 🧪 TEST 43: Sleva validní → sleva null
+        // 🧪 TEST 085: Sleva validní → sleva null
         // -----------------------------------------------------------------
         // Co testujeme:
         //  • že sleva se správně aplikuje
         //  • že DiscountPercent == null resetuje slevu
         // -----------------------------------------------------------------
         [Test]
-        [Order(43)]
-        public void T_43_Total_Should_Handle_Discount_NotNull_Then_Null()
+        [Order(085)]
+        public void T_085_Total_Should_Handle_Discount_NotNull_Then_Null()
         {
             var vm = new CalculationItemViewModel(_db)
             {
@@ -1354,15 +1354,15 @@ namespace ElektroOffer_app.Tests.Unit.ViewModels
         }
 
         // -----------------------------------------------------------------
-        // 🧪 TEST 44: Materiál + sleva + změna ceny
+        // 🧪 TEST 086: Materiál + sleva + změna ceny
         // -----------------------------------------------------------------
         // Co testujeme:
         //  • že sleva se aplikuje na materiál
         //  • že změna ceny materiálu okamžitě ovlivní Total
         // -----------------------------------------------------------------
                 [Test]
-        [Order(44)]
-        public void T_44_Total_Should_Handle_MaterialPrice_Change_With_Discount()
+        [Order(086)]
+        public void T_086_Total_Should_Handle_MaterialPrice_Change_With_Discount()
         {
             var vm = new CalculationItemViewModel(_db)
             {
@@ -1381,15 +1381,15 @@ namespace ElektroOffer_app.Tests.Unit.ViewModels
         }
 
         // -----------------------------------------------------------------
-        // 🧪 TEST 45: Práce + sleva + změna ceny
+        // 🧪 TEST 087: Práce + sleva + změna ceny
         // -----------------------------------------------------------------
         // Co testujeme:
         //  • že sleva se aplikuje na práci
         //  • že změna BasePrice okamžitě ovlivní Total
         // -----------------------------------------------------------------
         [Test]
-        [Order(45)]
-        public void T_45_Total_Should_Handle_WorkItem_Change_With_Discount()
+        [Order(087)]
+        public void T_087_Total_Should_Handle_WorkItem_Change_With_Discount()
         {
             var vm = new CalculationItemViewModel(_db)
             {
@@ -1413,15 +1413,15 @@ namespace ElektroOffer_app.Tests.Unit.ViewModels
         }
 
         // -----------------------------------------------------------------
-        // 🧪 TEST 46: Změna všech vstupů najednou
+        // 🧪 TEST 088: Změna všech vstupů najednou
         // -----------------------------------------------------------------
         // Co testujeme:
         //  • že ViewModel správně reaguje na změnu všech vstupů
         //  • že Total se správně přepočítá i při kombinaci změn
         // -----------------------------------------------------------------
         [Test]
-        [Order(46)]
-        public void T_46_Total_Should_Handle_All_Inputs_Changing_At_Once()
+        [Order(088)]
+        public void T_088_Total_Should_Handle_All_Inputs_Changing_At_Once()
         {
             var vm = new CalculationItemViewModel(_db)
             {
@@ -1452,15 +1452,15 @@ namespace ElektroOffer_app.Tests.Unit.ViewModels
         }
 
         // -----------------------------------------------------------------
-        // 🧪 TEST 47: Total – WorkItem má přednost i při slevě a materiálu
+        // 🧪 TEST 089: Total – WorkItem má přednost i při slevě a materiálu
         // -----------------------------------------------------------------
         // Co testujeme:
         //  • že WorkItem má vyšší prioritu než MaterialPrice
         //  • že sleva se správně aplikuje na WorkItem
         // -----------------------------------------------------------------
         [Test]
-        [Order(47)]
-        public void T_47_Total_Should_Handle_WorkItem_With_MaterialPrice_And_Discount()
+        [Order(089)]
+        public void T_089_Total_Should_Handle_WorkItem_With_MaterialPrice_And_Discount()
         {
             var vm = new CalculationItemViewModel(_db)
             {
@@ -1480,15 +1480,15 @@ namespace ElektroOffer_app.Tests.Unit.ViewModels
         }
 
         // -----------------------------------------------------------------
-        // 🧪 TEST 48: Total – materiál + sleva + změna množství
+        // 🧪 TEST 090: Total – materiál + sleva + změna množství
         // -----------------------------------------------------------------
         // Co testujeme:
         //  • že sleva se správně aplikuje na materiál
         //  • že změna Quantity přepočítá Total
         // -----------------------------------------------------------------
         [Test]
-        [Order(48)]
-        public void T_48_Total_Should_Handle_MaterialPrice_With_Discount_And_Quantity_Change()
+        [Order(090)]
+        public void T_090_Total_Should_Handle_MaterialPrice_With_Discount_And_Quantity_Change()
         {
             var vm = new CalculationItemViewModel(_db)
             {
@@ -1503,7 +1503,7 @@ namespace ElektroOffer_app.Tests.Unit.ViewModels
         }
 
         // -----------------------------------------------------------------
-        // 🧪 TEST 49: Total – nesmí spadnout při smazané ceně v DB
+        // 🧪 TEST 091: Total – nesmí spadnout při smazané ceně v DB
         // -----------------------------------------------------------------
         // Co testujeme:
         //  • že ViewModel zvládne situaci, kdy je SelectedMaterialPrice = null
@@ -1511,8 +1511,8 @@ namespace ElektroOffer_app.Tests.Unit.ViewModels
         //  • že výpočet nevyhodí žádnou výjimku
         // -----------------------------------------------------------------
         [Test]
-        [Order(49)]
-        public void T_49_Total_Should_Not_Throw_When_MaterialPrice_Is_Deleted_From_DB()
+        [Order(091)]
+        public void T_091_Total_Should_Not_Throw_When_MaterialPrice_Is_Deleted_From_DB()
         {
             var vm = new CalculationItemViewModel(_db)
             {
@@ -1525,15 +1525,15 @@ namespace ElektroOffer_app.Tests.Unit.ViewModels
         }
 
         // -----------------------------------------------------------------
-        // 🧪 TEST 50: Total – musí se přepočítat po změně ceny v DB
+        // 🧪 TEST 092: Total – musí se přepočítat po změně ceny v DB
         // -----------------------------------------------------------------
         // Co testujeme:
         //  • že změna ceny v MaterialPrice se okamžitě projeví ve výpočtu
         //  • že Total reaguje na změnu hodnoty Price
         // -----------------------------------------------------------------
         [Test]
-        [Order(50)]
-        public void T_50_Total_Should_Update_When_MaterialPrice_Is_Updated_In_DB()
+        [Order(092)]
+        public void T_092_Total_Should_Update_When_MaterialPrice_Is_Updated_In_DB()
         {
             var price = new MaterialPrice { Price = 10 };
             var vm = new CalculationItemViewModel(_db)
@@ -1550,15 +1550,15 @@ namespace ElektroOffer_app.Tests.Unit.ViewModels
         }
 
         // -----------------------------------------------------------------
-        // 🧪 TEST 51: Total – WorkItem má přednost před MaterialPrice
+        // 🧪 TEST 093: Total – WorkItem má přednost před MaterialPrice
         // -----------------------------------------------------------------
         // Co testujeme:
         //  • že pokud je WorkItem vyplněný, MaterialPrice se ignoruje
         //  • že Total se počítá pouze z WorkItem
         // -----------------------------------------------------------------
         [Test]
-        [Order(51)]
-        public void T_51_Total_Should_Use_WorkItem_When_MaterialPrice_Is_Set()
+        [Order(093)]
+        public void T_093_Total_Should_Use_WorkItem_When_MaterialPrice_Is_Set()
         {
             var vm = new CalculationItemViewModel(_db)
             {
@@ -1576,15 +1576,15 @@ namespace ElektroOffer_app.Tests.Unit.ViewModels
         }
 
         // -----------------------------------------------------------------
-        // 🧪 TEST 52: Total – po vymazání WorkItem se má použít MaterialPrice
+        // 🧪 TEST 094: Total – po vymazání WorkItem se má použít MaterialPrice
         // -----------------------------------------------------------------
         // Co testujeme:
         //  • že ViewModel správně přepne výpočet z WorkItem na MaterialPrice
         //  • že Total se přepočítá podle materiálu
         // -----------------------------------------------------------------
         [Test]
-        [Order(52)]
-        public void T_52_Total_Should_Use_MaterialPrice_When_WorkItem_Is_Cleared()
+        [Order(094)]
+        public void T_094_Total_Should_Use_MaterialPrice_When_WorkItem_Is_Cleared()
         {
             var vm = new CalculationItemViewModel(_db)
             {
@@ -1606,15 +1606,15 @@ namespace ElektroOffer_app.Tests.Unit.ViewModels
         }
 
         // -----------------------------------------------------------------
-        // 🧪 TEST 53: Total – ošetření floating-point edge case hodnot
+        // 🧪 TEST 095: Total – ošetření floating-point edge case hodnot
         // -----------------------------------------------------------------
         // Co testujeme:
         //  • že SQLite REAL nepokazí výpočet (např. 0.1 + 0.2)
         //  • že Total se správně zaokrouhlí na 3 desetinná místa
         // -----------------------------------------------------------------
         [Test]
-        [Order(53)]
-        public void T_53_Total_Should_Handle_FloatingPoint_EdgeCases()
+        [Order(095)]
+        public void T_095_Total_Should_Handle_FloatingPoint_EdgeCases()
         {
             var vm = new CalculationItemViewModel(_db)
             {
@@ -1626,15 +1626,15 @@ namespace ElektroOffer_app.Tests.Unit.ViewModels
         }
 
         // -----------------------------------------------------------------
-        // 🧪 TEST 54: Total – velmi malé ceny musí být správně zpracovány
+        // 🧪 TEST 096: Total – velmi malé ceny musí být správně zpracovány
         // -----------------------------------------------------------------
         // Co testujeme:
         //  • že REAL zvládne extrémně malé hodnoty
         //  • že Total se správně zaokrouhlí
         // -----------------------------------------------------------------
         [Test]
-        [Order(54)]
-        public void T_54_Total_Should_Handle_Very_Small_Prices()
+        [Order(096)]
+        public void T_096_Total_Should_Handle_Very_Small_Prices()
         {
             var vm = new CalculationItemViewModel(_db)
             {

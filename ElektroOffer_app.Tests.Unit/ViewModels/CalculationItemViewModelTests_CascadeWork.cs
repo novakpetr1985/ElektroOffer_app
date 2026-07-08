@@ -18,7 +18,7 @@ namespace ElektroOffer_app.Tests.Unit.ViewModels
     //   • správné dohledání WorkItem z DB po vyplnění celé kaskády
     //
     // Rozsah testů v tomto souboru:
-    //   T_073–T_079
+    //   T_008–T_014
     //
     // Sdílený databázový kontext (_db) a SetUp/TearDown jsou definované
     // v TestBase.cs, ze kterého tato třída dědí.
@@ -28,15 +28,15 @@ namespace ElektroOffer_app.Tests.Unit.ViewModels
     {
     
         // -----------------------------------------------------------------
-        // 🧪 TEST 01: ResetBelowTask – musí vymazat Specification, Material, Location
+        // 🧪 TEST 008: ResetBelowTask – musí vymazat Specification, Material, Location
         // -----------------------------------------------------------------
         // Co testujeme:
         //  • že ResetBelowTask vymaže všechny hodnoty pod SelectedTask
         //  • že kaskáda se chová konzistentně
         // -----------------------------------------------------------------
         [Test]
-        [Order(01)]
-        public void T_01_CascadeWork_ResetBelowTask_Should_Clear_All_Selections()
+        [Order(008)]
+        public void T_008_CascadeWork_ResetBelowTask_Should_Clear_All_Selections()
         {
             var vm = new CalculationItemViewModel(_db)
             {
@@ -54,14 +54,14 @@ namespace ElektroOffer_app.Tests.Unit.ViewModels
         }
 
         // -----------------------------------------------------------------
-        // 🧪 TEST 02: ResetBelowSpecification – musí vymazat Material + Location
+        // 🧪 TEST 009: ResetBelowSpecification – musí vymazat Material + Location
         // -----------------------------------------------------------------
         // Co testujeme:
         //  • že ResetBelowSpecification vymaže materiál a lokaci
         // -----------------------------------------------------------------
         [Test]
-        [Order(02)]
-        public void T_02_CascadeWork_ResetBelowSpecification_Should_Clear_Material_And_Location()
+        [Order(009)]
+        public void T_009_CascadeWork_ResetBelowSpecification_Should_Clear_Material_And_Location()
         {
             var vm = new CalculationItemViewModel(_db)
             {
@@ -78,14 +78,14 @@ namespace ElektroOffer_app.Tests.Unit.ViewModels
         }
 
         // -----------------------------------------------------------------
-        // 🧪 TEST 03: ResetBelowMaterial – musí vymazat Location
+        // 🧪 TEST 010: ResetBelowMaterial – musí vymazat Location
         // -----------------------------------------------------------------
         // Co testujeme:
         //  • že ResetBelowMaterial vymaže pouze SelectedLocation
         // -----------------------------------------------------------------
         [Test]
-        [Order(03)]
-        public void T_03_CascadeWork_ResetBelowMaterial_Should_Clear_Location()
+        [Order(010)]
+        public void T_010_CascadeWork_ResetBelowMaterial_Should_Clear_Location()
         {
             var vm = new CalculationItemViewModel(_db)
             {
@@ -101,11 +101,17 @@ namespace ElektroOffer_app.Tests.Unit.ViewModels
         }
 
         // -----------------------------------------------------------------
-        // 🧪 TEST 04: SelectedTask – musí vyvolat PropertyChanged pro CanSelectSpecification
+        // 🧪 TEST 011: SelectedTask – musí vyvolat PropertyChanged pro CanSelectSpecification
+        // -----------------------------------------------------------------
+        // Co testujeme:
+        //  • že změna SelectedTask aktivuje první krok WORK kaskády
+        //  • že ViewModel správně vyvolá PropertyChanged pro CanSelectSpecification
+        //  • že UI může reagovat (povolit výběr Specification)
+        //  • že logika kaskády správně navazuje na výběr Task
         // -----------------------------------------------------------------
         [Test]
-        [Order(04)]
-        public void T_04_CascadeWork_SelectedTask_Should_Raise_PropertyChanged_For_CanSelectSpecification()
+        [Order(011)]
+        public void T_011_CascadeWork_SelectedTask_Should_Raise_PropertyChanged_For_CanSelectSpecification()
         {
             var vm = new CalculationItemViewModel(_db);
 
@@ -123,11 +129,17 @@ namespace ElektroOffer_app.Tests.Unit.ViewModels
         }
 
         // -----------------------------------------------------------------
-        // 🧪 TEST 05: SelectedSpecification – musí vyvolat PropertyChanged pro CanSelectMaterial
+        // 🧪 TEST 012: SelectedSpecification – musí vyvolat PropertyChanged pro CanSelectMaterial
+        // -----------------------------------------------------------------
+        // Co testujeme:
+        //  • že změna SelectedSpecification aktivuje druhý krok WORK kaskády
+        //  • že ViewModel správně vyvolá PropertyChanged pro CanSelectMaterial
+        //  • že UI může reagovat (povolit výběr Material)
+        //  • že logika kaskády správně navazuje na výběr Specification
         // -----------------------------------------------------------------
         [Test]
-        [Order(05)]
-        public void T_05_CascadeWork_SelectedSpecification_Should_Raise_PropertyChanged_For_CanSelectMaterial()
+        [Order(012)]
+        public void T_012_CascadeWork_SelectedSpecification_Should_Raise_PropertyChanged_For_CanSelectMaterial()
         {
             var vm = new CalculationItemViewModel(_db)
             {
@@ -148,11 +160,17 @@ namespace ElektroOffer_app.Tests.Unit.ViewModels
         }
 
         // -----------------------------------------------------------------
-        // 🧪 TEST 06: SelectedMaterial – musí vyvolat PropertyChanged pro CanSelectLocation
+        // 🧪 TEST 013: SelectedMaterial – musí vyvolat PropertyChanged pro CanSelectLocation
+        // -----------------------------------------------------------------
+        // Co testujeme:
+        //  • že změna SelectedMaterial aktivuje třetí krok WORK kaskády
+        //  • že ViewModel správně vyvolá PropertyChanged pro CanSelectLocation
+        //  • že UI může reagovat (povolit výběr Location)
+        //  • že logika kaskády správně navazuje na výběr Material
         // -----------------------------------------------------------------
         [Test]
-        [Order(06)]
-        public void T_06_CascadeWork_SelectedMaterial_Should_Raise_PropertyChanged_For_CanSelectLocation()
+        [Order(013)]
+        public void T_013_CascadeWork_SelectedMaterial_Should_Raise_PropertyChanged_For_CanSelectLocation()
         {
             var vm = new CalculationItemViewModel(_db)
             {
@@ -174,7 +192,7 @@ namespace ElektroOffer_app.Tests.Unit.ViewModels
         }
 
         // -----------------------------------------------------------------
-        // 🧪 TEST 07: SelectedLocation – musí aktualizovat WorkItem
+        // 🧪 TEST 014: SelectedLocation – musí aktualizovat WorkItem
         // -----------------------------------------------------------------
         // Co testujeme:
         //  • že změna lokace vyvolá _cascade.UpdateWorkItem()
@@ -188,8 +206,8 @@ namespace ElektroOffer_app.Tests.Unit.ViewModels
         //    nejdřív uloží do testovací DB.
         // -----------------------------------------------------------------
         [Test]
-        [Order(07)]
-        public void T_07_CascadeWork_SelectedLocation_Should_Update_WorkItem()
+        [Order(014)]
+        public void T_014_CascadeWork_SelectedLocation_Should_Update_WorkItem()
         {
             // 1) Seed odpovídajícího PriceItems záznamu
             _db.PriceItems.Add(new PriceItems

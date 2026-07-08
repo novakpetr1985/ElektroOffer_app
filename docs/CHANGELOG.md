@@ -7,13 +7,6 @@ Formát vychází z [Keep a Changelog](https://keepachangelog.com/cs/1.0.0/).
 
 ## [1.8.0.3] - Unit Test Architecture Stabilization
 
-### Změněno
-- kompletní refaktoring architektury UNIT testů
-  - odstraněny partial testovací třídy
-  - každá oblast testů má vlastní třídu (Total, Validation, CascadeWork, CascadeMaterial, PropertyChanged, IsEmpty)
-  - všechny testy nyní dědí z nové základní třídy TestBase
-  - sjednocený styl komentářů a struktury testů
-
 ### Přidáno
 
 - Nová základní třída TestBase
@@ -24,6 +17,17 @@ Formát vychází z [Keep a Changelog](https://keepachangelog.com/cs/1.0.0/).
   - odstraněny chyby způsobené kontaminací dat mezi testy
   - odstraněny zamčené SQLite handle
   - zajištěno reálné chování EF Core (Include, vztahy, lookupy, kaskády)
+  - přidán dokument `UNIT-ViewModels.md` do složky `docs/` s kompletní tabulkou UNIT testů pro ViewModels
+
+### Změněno
+- kompletní refaktoring architektury UNIT testů
+  - odstraněny partial testovací třídy
+  - každá oblast testů má vlastní třídu (Total, Validation, CascadeWork, CascadeMaterial, PropertyChanged, IsEmpty)
+  - všechny testy nyní dědí z nové základní třídy TestBase
+  - sjednocený styl komentářů a struktury testů
+- sjednoceno číslování UNIT testů pro ViewModels (T_001–T_100)
+- opraveny názvy testů a doplněny detailní komentáře k jednotlivým testům
+- aktualizována struktura testovacích souborů pro konzistentní pořadí a logické řazení
 
 ### Opraveno
 
