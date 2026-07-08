@@ -374,24 +374,24 @@ Každá změna prochází přes Pull Request, CI kontrolu a pravidla z GitHub Ru
 | Větev   	        | Účel                                               |
 | ----------------- | -------------------------------------------------- |
 | `hotfix/*`  	    | Větev pro hotfixy                                  |
-| `feature/*`	    | Pracovní větve pro konkrétní úkoly. Bez PR.        |
+| `feature/*`	      | Pracovní větve pro konkrétní úkoly. Bez PR.        |
 | `feature/<verze>` | Hlavní větev dané verze. PR z pracovních větví.    |
 | `release/<verze>` | Release větev dané verze. Pro dev, test a main     |
 | `dev`	            | Vývojová větev. PR z feature.                      |
-| `test`	        | Staging větev. PR z dev.                           |
-| `main`	        | Produkční větev. PR z test.                        |
+| `test`	          | Staging větev. PR z dev.                           |
+| `main`	          | Produkční větev. PR z test.                        |
 | `tag`	            | Spouští release pipeline (publish + detailní log). |
 
 
 ### 🧮 Verzování aplikace
 
 
-| Číslo   |	Příklad   |	Popis                                          |
-| ------- | --------- | ---------------------------------------------- |
-| `MAJOR` |	`1.x.x.`  |	Největší změny, zásadní úpravy, nové generace. |
-| `MINOR` |	`x.7.x.`  |	Větší balík změn, nové funkce.                 |
-| `PATCH` |	`x.x.5.`  |	Menší změny, běžný vývoj verze.                |
-| `FIX`   |	`x.x.x.1` |	Fixy, drobné opravy, interní buildy.           |
+| Číslo    |	Příklad   |	Popis                                          |
+| -------- | ---------- | ---------------------------------------------- |
+| `MAJOR`  |	`1.x.x.`  |	Největší změny, zásadní úpravy, nové generace. |
+| `MINOR`  |	`x.7.x.`  |	Větší balík změn, nové funkce.                 |
+| `PATCH`  |	`x.x.5.`  |	Menší změny, běžný vývoj verze.                |
+| `HOTFIX` |	`x.x.x.1` |	Fixy, drobné opravy, interní buildy.           |
 
 
 ### Projekt využívá Continuous Integration (CI) přes GitHub Actions.

@@ -31,9 +31,29 @@ namespace ElektroOffer_app.Models
     //
     // To je zásadní pro stabilní Load/Save a pro budoucí rozšiřování projektu.
     //
+    // 🔴 ZMĚNA – Id vs. Position:
+    // ----------------------------------------------------------------
+    // Id a Position mají nyní odlišný účel:
+    //
+    //   • Id        → jednoznačný, SEKVENČNÍ identifikátor záznamu
+    //                  (M-1, M-2, M-3... podle pořadí mezi vyplněnými řádky).
+    //                  Používá se výhradně pro párování se CalculationItemData.
+    //                  Nemění se podle pozice řádku v UI.
+    //
+    //   • Position  → skutečná POZICE řádku v UI (1-based), nezávislá na Id.
+    //                  Používá se výhradně pro znovuvytvoření správného
+    //                  rozložení řádků při načítání projektu (ApplyProjectData).
+    //
+    // Dříve se pozice řádku odvozovala parsováním čísla z Id (např. "M-5" → 5),
+    // což fungovalo jen do doby, než Id přestalo odpovídat pozici (např. pokud
+    // je vyplněný jen 1. a 5. řádek, druhý vyplněný záznam by měl Id "M-2",
+    // ale pozici 5). Oddělením obou hodnot je Id stabilní a smysluplné
+    // („druhý vyplněný záznam“) a Position spolehlivě řídí rozložení v UI.
+    //
     // Co se ukládá:
     // --------------
-    // ✔ Id                     → jednoznačný identifikátor řádku
+    // ✔ Id                     → jednoznačný, sekvenční identifikátor záznamu
+    // ✔ Position                → skutečná pozice řádku v UI (1-based)
     // ✔ SelectedCategory        → hlavní kategorie materiálu (např. Chrániče)
     // ✔ SelectedProductName     → název produktu (např. FH202 AC-40/0,03)
     // ✔ SelectedSupplier        → dodavatel (např. ELKOV)
@@ -53,15 +73,40 @@ namespace ElektroOffer_app.Models
     public class MaterialItemData
     {
         // =====================================================================
-        // 🆔 Id – jednoznačný identifikátor řádku MATERIÁLU
+        // 🆔 Id – jednoznačný, sekvenční identifikátor řádku MATERIÁLU
         // =====================================================================
         //
         // ID je typu string, protože používáme krátké lidsky čitelné ID:
         //   • M-1, M-2, M-3...
         //
-        // Stejné ID se ukládá i do CalculationItemData.
+        // Přiděluje se sekvenčně podle pořadí mezi VYPLNĚNÝMI řádky
+        // (prázdné řádky se přeskakují), nezávisle na tom, na jaké pozici
+        // v UI daný řádek fyzicky stojí.
+        //
+        // Stejné ID se ukládá i do CalculationItemData a slouží
+        // výhradně k jejich spárování.
         //
         public string Id { get; set; } = string.Empty;
+
+        // =====================================================================
+        // 📍 Position – skutečná pozice řádku v UI (1-based)
+        // =====================================================================
+        //
+        // 🔴 NOVÉ POLE
+        //
+        // Na rozdíl od Id se Position přiděluje podle SKUTEČNÉHO indexu
+        // řádku v kolekci (MaterialItems) v okamžiku uložení, a to ještě
+        // před odfiltrováním prázdných řádků.
+        //
+        // Např.: pokud uživatel vyplní jen 1. a 5. řádek, uloží se:
+        //   • 1. řádek → Id = "M-1", Position = 1
+        //   • 5. řádek → Id = "M-2", Position = 5
+        //
+        // Při načítání projektu (ApplyProjectData) se řádek vkládá na
+        // index = Position - 1, takže se obnoví přesně původní rozložení
+        // řádků včetně mezer mezi vyplněnými řádky.
+        //
+        public int Position { get; set; }
 
         // =====================================================================
         // 🏷 Kategorie materiálu

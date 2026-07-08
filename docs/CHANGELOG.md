@@ -5,6 +5,26 @@ Formát vychází z [Keep a Changelog](https://keepachangelog.com/cs/1.0.0/).
 
 ---
 
+## [1.8.0.2] - Oprava pozicování řádků při Save/Load
+
+### Přidáno
+- Nové pole `Position` v `WorkItemData` a `MaterialItemData` – nese skutečnou pozici řádku v UI (1-based), nezávisle na `Id`
+
+### Opraveno
+- Vyplněné řádky, mezi kterými byly prázdné mezery (např. vyplněný 1. a 5. řádek), se po uložení a znovunačtení projektu chybně „srovnaly pod sebe“ (5. řádek se posunul na 2. pozici)
+  - příčina: pozice řádku se odvozovala parsováním čísla z `Id` (např. „W-5“ → 5), zatímco `Id` se ve skutečnosti generovalo sekvenčně jen pro vyplněné řádky
+- Duplicitní definice `BuildProjectData()` v `MainViewModel.cs` (CS0121/CS0111) vzniklá při vkládání opravené verze metody
+
+### Změněno
+- `BuildProjectData()` – `Position` se nyní zaznamenává podle skutečného indexu řádku v kolekci (`WorkCalcItems`/`MaterialItems`) ještě před odfiltrováním prázdných řádků; `Id` zůstává čistě sekvenční identifikátor (W-1, W-2… / M-1, M-2…) pro párování s `CalculationItemData`
+- `ApplyProjectData()` – počet vytvářených prázdných řádků se nyní počítá dynamicky, zvlášť pro PRÁCI a MATERIÁL, jako maximum z minimálního počtu řádků (5) a nejvyšší hodnoty `Position` nalezené v uložených datech dané sekce
+- `ApplyProjectData()` – vyplněné řádky se vkládají na index podle `Position` (`Position - 1`) místo dřívějšího parsování čísla z `Id`
+
+### Poznámky k migraci dat
+- Starší `.eof` soubory bez pole `Position` nejsou touto opravou zpětně kompatibilní (`Position` se deserializuje jako `0`, což by vedlo k chybnému indexu) – pokud je to relevantní, řešit v samostatném patchi
+
+---
+
 ## [1.8.0.1] - UI vylepšení PRÁCE a MATERIÁL
 
 ### Přidáno

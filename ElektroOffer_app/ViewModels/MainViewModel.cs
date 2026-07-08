@@ -546,6 +546,26 @@ namespace ElektroOffer_app.ViewModels
         // ❗ Prázdné řádky se neukládají (item.IsEmpty)
         // ❗ Každý řádek má vlastní ID → jednoznačné párování PRÁCE/MATERIÁL ↔ SPOLEČNÉ
         // ❗ ID je krátké a čitelné: PRÁCE = W-1, W-2… / MATERIÁL = M-1, M-2…
+        //
+        // 🔴 ZMĚNA (Id vs. Position):
+        // ----------------------------------------------------------------
+        // Id a Position mají nyní odlišný účel:
+        //
+        //   • Id        → sekvenční identifikátor záznamu (W-1, W-2, W-3...),
+        //                  generovaný čítačem POUZE pro vyplněné řádky.
+        //                  Slouží výhradně k párování se CalculationItemData.
+        //
+        //   • Position  → skutečná pozice řádku v UI (1-based), zjištěná
+        //                  z indexu v kolekci JEŠTĚ PŘED odfiltrováním
+        //                  prázdných řádků.
+        //
+        // Např. pokud je vyplněný jen 1. a 5. řádek:
+        //   • 1. řádek → Id = "W-1", Position = 1
+        //   • 5. řádek → Id = "W-2", Position = 5
+        //
+        // Díky tomu Id zůstává hezky sekvenční a čitelné („druhý vyplněný
+        // záznam“), zatímco Position spolehlivě nese informaci o tom, kam
+        // se má řádek vrátit v UI při načítání projektu.
         // =========================================================
 
         private ProjectData BuildProjectData()
@@ -556,6 +576,10 @@ namespace ElektroOffer_app.ViewModels
             //
             // PRÁCE → W-1, W-2, W-3...
             // MATERIÁL → M-1, M-2, M-3...
+            //
+            // Čítače se zvyšují POUZE u vyplněných řádků – Id je tedy
+            // vždy hezky sekvenční, bez děr, bez ohledu na to, na jaké
+            // pozici v UI daný řádek fyzicky stojí.
             //
             int workCounter = 1;
             int materialCounter = 1;
@@ -572,34 +596,46 @@ namespace ElektroOffer_app.ViewModels
             // - SelectedWorkPrice (volitelné)
             // - SelectedWorkUnit  (volitelné)
             //
-            // Každý řádek dostane vlastní ID (W-1, W-2…), které se použije i ve společné sekci.
-            // Prázdné řádky se odfiltrují pomocí item.IsEmpty.
+            // Každý řádek dostane sekvenční ID (W-1, W-2…), které se použije
+            // i ve společné sekci, a zároveň Position – svoji SKUTEČNOU
+            // pozici v kolekci WorkCalcItems (index + 1), zjištěnou ještě
+            // před odfiltrováním prázdných řádků.
+            //
+            // Postup:
+            //   1) Select((x, i) => ...) – ke každému řádku přiřadíme jeho
+            //      skutečné číslo pozice (Position = index + 1), a to ještě
+            //      před odfiltrováním prázdných řádků.
+            //   2) Where(!IsEmpty) – teprve teď odfiltrujeme prázdné řádky.
+            //      Position vyplněných řádků tím zůstane zachovaná přesně
+            //      tak, jak řádek stojí v UI.
             //
             var workItemsWithCommon = WorkCalcItems
-                .Where(x => !x.IsEmpty)
+                .Select((x, i) => new { Item = x, Position = i + 1 }) // 🔴 pozice řádku PŘED filtrováním
+                .Where(x => !x.Item.IsEmpty)
                 .Select(x =>
                 {
-                    var id = $"W-{workCounter++}"; // krátké, čitelné ID
+                    var id = $"W-{workCounter++}"; // krátké, čitelné, sekvenční ID
 
                     return new
                     {
                         Work = new WorkItemData
                         {
                             Id = id,
-                            SelectedTask = x.SelectedTask,
-                            SelectedSpecification = x.SelectedSpecification,
-                            SelectedMaterial = x.SelectedMaterial,
-                            SelectedLocation = x.SelectedLocation,
-                            SelectedWorkPrice = x.SelectedWorkPrice,
-                            SelectedWorkUnit = x.SelectedWorkUnit
+                            Position = x.Position, // 🔴 NOVÉ: skutečná pozice řádku v UI
+                            SelectedTask = x.Item.SelectedTask,
+                            SelectedSpecification = x.Item.SelectedSpecification,
+                            SelectedMaterial = x.Item.SelectedMaterial,
+                            SelectedLocation = x.Item.SelectedLocation,
+                            SelectedWorkPrice = x.Item.SelectedWorkPrice,
+                            SelectedWorkUnit = x.Item.SelectedWorkUnit
                         },
                         Common = new CalculationItemData
                         {
                             Id = id,
-                            Quantity = x.Quantity,
-                            DiscountPercent = x.DiscountPercent,
-                            IsDiscountEnabled = x.IsDiscountEnabled,
-                            Total = x.Total
+                            Quantity = x.Item.Quantity,
+                            DiscountPercent = x.Item.DiscountPercent,
+                            IsDiscountEnabled = x.Item.IsDiscountEnabled,
+                            Total = x.Item.Total
                         }
                     };
                 })
@@ -620,34 +656,37 @@ namespace ElektroOffer_app.ViewModels
             // - SelectedMaterialPrice (volitelné)
             // - SelectedMaterialUnit  (volitelné)
             //
-            // Každý řádek dostane vlastní ID (M-1, M-2…), které se použije i ve společné sekci.
-            // Prázdné řádky se odfiltrují pomocí item.IsEmpty.
+            // Stejný princip jako u PRÁCE výše: Id je sekvenční (M-1, M-2…),
+            // Position nese skutečnou pozici řádku v kolekci MaterialItems
+            // (index + 1), zjištěnou ještě před odfiltrováním prázdných řádků.
             //
             var materialItemsWithCommon = MaterialItems
-                .Where(x => !x.IsEmpty)
+                .Select((x, i) => new { Item = x, Position = i + 1 }) // 🔴 pozice řádku PŘED filtrováním
+                .Where(x => !x.Item.IsEmpty)
                 .Select(x =>
                 {
-                    var id = $"M-{materialCounter++}"; // krátké, čitelné ID
+                    var id = $"M-{materialCounter++}"; // krátké, čitelné, sekvenční ID
 
                     return new
                     {
                         Material = new MaterialItemData
                         {
                             Id = id,
-                            SelectedCategory = x.SelectedCategory,
-                            SelectedProductName = x.SelectedProductName,
-                            SelectedSupplier = x.SelectedSupplier,
-                            SelectedOffer = x.SelectedOffer,
-                            SelectedMaterialPrice = x.SelectedMaterialPriceValue,
-                            SelectedMaterialUnit = x.SelectedMaterialUnit
+                            Position = x.Position, // 🔴 NOVÉ: skutečná pozice řádku v UI
+                            SelectedCategory = x.Item.SelectedCategory,
+                            SelectedProductName = x.Item.SelectedProductName,
+                            SelectedSupplier = x.Item.SelectedSupplier,
+                            SelectedOffer = x.Item.SelectedOffer,
+                            SelectedMaterialPrice = x.Item.SelectedMaterialPriceValue,
+                            SelectedMaterialUnit = x.Item.SelectedMaterialUnit
                         },
                         Common = new CalculationItemData
                         {
                             Id = id,
-                            Quantity = x.Quantity,
-                            DiscountPercent = x.DiscountPercent,
-                            IsDiscountEnabled = x.IsDiscountEnabled,
-                            Total = x.Total
+                            Quantity = x.Item.Quantity,
+                            DiscountPercent = x.Item.DiscountPercent,
+                            IsDiscountEnabled = x.Item.IsDiscountEnabled,
+                            Total = x.Item.Total
                         }
                     };
                 })
@@ -668,6 +707,8 @@ namespace ElektroOffer_app.ViewModels
             //
             // Každý řádek má ID shodné s WorkItemData nebo MaterialItemData.
             // Díky tomu lze jednoznačně spárovat položky při načítání.
+            // Position se v CalculationItemData neukládá – ta je čistě
+            // záležitostí WorkItemData / MaterialItemData a UI rozložení.
             //
             var commonItems =
                 workItemsWithCommon.Select(x => x.Common)
@@ -702,15 +743,37 @@ namespace ElektroOffer_app.ViewModels
         //   • CommonItems      → Quantity, sleva, Total
         //
         // ❗ Prázdné řádky se NEukládají do JSONu.
-        // ❗ Pozice řádků se obnovují podle ID (W-1 → řádek 1, W-5 → řádek 5).
+        // ❗ Pozice řádků se obnovují podle pole Position (ne podle Id).
         //
         // Logika:
         // -------
-        // 1) Vytvoří se pevný počet prázdných řádků (např. 5).
-        // 2) Načtou se uložené položky podle ID → vloží se na správné pozice.
-        // 3) Společné hodnoty (CommonItems) se načítají podle stejného ID.
-        // 4) UI tak přesně obnoví původní strukturu řádků.
+        // 1) Vytvoří se dostatečný počet prázdných řádků – zvlášť pro PRÁCI
+        //    a zvlášť pro MATERIÁL, podle nejvyšší hodnoty Position, která
+        //    se v uložených datech reálně vyskytuje.
+        // 2) Načtou se uložené položky → vloží se na index = Position - 1.
+        // 3) Společné hodnoty (CommonItems) se dohledávají podle Id
+        //    (Id ↔ Id, stejně jako doteď – Position s tímto párováním
+        //    nemá nic společného).
+        // 4) UI tak přesně obnoví původní strukturu řádků, včetně mezer
+        //    mezi vyplněnými řádky (např. vyplněný 1. a 5. řádek zůstanou
+        //    na svých pozicích, řádky 2–4 zůstanou prázdné).
         //
+        // 🔴 ZMĚNA (Position místo parsování Id):
+        // ----------------------------------------------------------------
+        // Dříve se pozice řádku odvozovala parsováním čísla z Id
+        // (např. "W-5" → 5). To fungovalo jen do doby, než Id přestalo
+        // odpovídat pozici v UI (Id je nyní čistě sekvenční – W-1, W-2...).
+        //
+        // Nově se pozice čte přímo z nového pole Position, které se
+        // ukládá zvlášť a nezávisle na Id (viz WorkItemData / MaterialItemData
+        // a komentář v BuildProjectData()).
+        //
+        // Zároveň se počet vytvářených prázdných řádků počítá dynamicky –
+        // zvlášť pro PRÁCI a MATERIÁL – jako maximum z:
+        //   - minimálního počtu řádků (minRowCount = 5), aby nový/prázdný
+        //     projekt měl rozumně široké UI hned po otevření,
+        //   - nejvyšší hodnoty Position, která se reálně vyskytuje
+        //     v uložených datech dané sekce.
         // ============================================================================
         private void ApplyProjectData(ProjectData data, string path)
         {
@@ -724,39 +787,63 @@ namespace ElektroOffer_app.ViewModels
             var commonItems = data.CommonItems;
 
             // =====================================================================
-            // 🔧 1) Vytvoření pevného počtu prázdných řádků
+            // 🔧 1) Vytvoření dostatečného počtu prázdných řádků
             // =====================================================================
             //
             // Prázdné řádky se NEukládají do JSONu, ale UI je potřebuje.
-            // Proto se zde vytvoří základní struktura (např. 5 řádků).
+            // Proto se zde vytvoří základní struktura řádků (prázdné
+            // CalculationItemViewModel instance), do kterých se pak
+            // v krocích 2) a 3) vloží uložená data na správné indexy
+            // (podle Position, ne podle Id).
             //
-            const int defaultRowCount = 5;
+            // Počet řádků se počítá zvlášť pro PRÁCI a MATERIÁL jako
+            // maximum z minRowCount a nejvyšší hodnoty Position nalezené
+            // mezi uloženými položkami dané sekce.
+            //
+            const int minRowCount = 5;
 
-            for (int i = 0; i < defaultRowCount; i++)
+            // Nejvyšší Position mezi uloženými PRÁCE položkami (0, pokud žádné nejsou)
+            int maxWorkRow = workItems.Count > 0
+                ? workItems.Max(w => w.Position)
+                : 0;
+
+            // Nejvyšší Position mezi uloženými MATERIÁL položkami (0, pokud žádné nejsou)
+            int maxMaterialRow = materialItems.Count > 0
+                ? materialItems.Max(m => m.Position)
+                : 0;
+
+            // Výsledný počet řádků = větší z (minimum, nejvyšší uložená Position)
+            int workRowCount = Math.Max(minRowCount, maxWorkRow);
+            int materialRowCount = Math.Max(minRowCount, maxMaterialRow);
+
+            for (int i = 0; i < workRowCount; i++)
             {
                 var emptyWork = new CalculationItemViewModel(_db);
                 emptyWork.PropertyChanged += Item_PropertyChanged;
                 WorkCalcItems.Add(emptyWork);
+            }
 
+            for (int i = 0; i < materialRowCount; i++)
+            {
                 var emptyMaterial = new CalculationItemViewModel(_db);
                 emptyMaterial.PropertyChanged += Item_PropertyChanged;
                 MaterialItems.Add(emptyMaterial);
             }
 
             // =====================================================================
-            // 🔧 PRÁCE – načtení WorkItemData + společných hodnot podle ID
+            // 🔧 2) PRÁCE – načtení WorkItemData + společných hodnot podle ID
             // =====================================================================
             //
-            // ID má formát W-1, W-2, W-5...
-            // → číslo za pomlčkou určuje pozici řádku.
+            // Position určuje, na který index v UI se řádek vloží
+            // (index = Position - 1, protože kolekce je 0-based).
             //
-            // Prázdné řádky se NEukládají do JSONu,
-            // proto se zde načítají jen vyplněné řádky a vkládají se na správné pozice.
+            // Id se nadále používá výhradně pro dohledání odpovídající
+            // společné položky v CommonItems.
             //
             foreach (var savedWork in workItems)
             {
-                // W-5 → 5 → index 4
-                int index = int.Parse(savedWork.Id.Split('-')[1]) - 1;
+                // Position 5 → index 4
+                int index = savedWork.Position - 1;
 
                 var item = WorkCalcItems[index];
 
@@ -782,15 +869,12 @@ namespace ElektroOffer_app.ViewModels
             // 📦 3) MATERIÁL – načtení MaterialItemData + společných hodnot podle ID
             // =====================================================================
             //
-            // ID má formát M-1, M-2, M-5...
-            // → číslo za pomlčkou určuje pozici řádku.
-            //
-            // Prázdné řádky se NEukládají do JSONu,
-            // proto se zde načítají jen vyplněné řádky a vkládají se na správné pozice.
+            // Stejný princip jako u PRÁCE výše: Position určuje index v UI,
+            // Id slouží k dohledání odpovídající společné položky.
             //
             foreach (var savedMaterial in materialItems)
             {
-                int index = int.Parse(savedMaterial.Id.Split('-')[1]) - 1;
+                int index = savedMaterial.Position - 1;
 
                 var item = MaterialItems[index];
 
