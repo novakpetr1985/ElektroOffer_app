@@ -8,35 +8,22 @@ namespace ElektroOffer_app.Tests.Unit.ViewModels
     // =====================================================================
     // 🔔 UNIT TESTS – CalculationItemViewModel – PROPERTYCHANGED NOTIFIKACE
     // =====================================================================
-    // Tato část třídy (partial) ověřuje, že změna vstupní vlastnosti (Quantity,
-    // WorkItem, MaterialItem, DiscountPercent, SelectedMaterialPrice, Task,
-    // Material, Location...) vyvolá správné PropertyChanged notifikace pro
-    // odvozené vlastnosti Total a IsEmpty – a to přesně JEDNOU, ne vícekrát
-    // (viz NotifyCalculatedProperties() ve ViewModelu).
+    // Tento soubor obsahuje testy ověřující, že změna vstupní vlastnosti
+    // (Quantity, WorkItem, MaterialItem, DiscountPercent, SelectedMaterialPrice,
+    // Task, Material, Location...) vyvolá správné PropertyChanged notifikace
+    // pro odvozené vlastnosti Total a IsEmpty – a to přesně JEDNOU.
     //
     // Rozsah testů v tomto souboru:
     //   T_013–T_017  – základní PropertyChanged pro Total
     //   T_060–T_061  – PropertyChanged pro IsEmpty
-    //   T_093–T_100  – PropertyChanged "Only_Once" – ověření, že se událost
-    //                  nevyvolá vícekrát než jednou při jedné změně
+    //   T_093–T_100  – PropertyChanged "Only_Once"
     //
-    // Setup/TearDown a sdílená pole _db/_connection jsou definované
-    // v CalculationItemViewModelTests_Base.cs (partial class).
+    // Sdílený databázový kontext (_db) a SetUp/TearDown jsou definované
+    // v TestBase.cs, ze kterého tato třída dědí.
     // =====================================================================
-    public partial class CalculationItemViewModelTests
+    [TestFixture]
+    public class CalculationItemViewModelTests_PropertyChanged : TestBase
     {
-
-        // -----------------------------------------------------------------
-        // 🔧 TEARDOWN – spustí se PO každém testu
-        // -----------------------------------------------------------------
-        // Uvolní databázový kontext a zavře připojení. Důležité pro čistotu
-        // testů – bez tohoto by mohly zůstávat otevřené SQLite handly.
-        [TearDown]
-        public void TearDown()
-        {
-            _db.Dispose();
-            _connection.Dispose();
-        }
     
         // -----------------------------------------------------------------
         // 🧪 TEST 01: Záporná sleva se ignoruje

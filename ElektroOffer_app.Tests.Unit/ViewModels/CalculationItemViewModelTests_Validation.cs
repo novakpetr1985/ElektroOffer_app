@@ -8,27 +8,29 @@ namespace ElektroOffer_app.Tests.Unit.ViewModels
     // =====================================================================
     // ✅ UNIT TESTS – CalculationItemViewModel – VALIDACE VSTUPŮ
     // =====================================================================
-    // Tato část třídy (partial) ověřuje ochranná pravidla (clamping) na
-    // vstupních vlastnostech:
+    // Tento soubor obsahuje testy ověřující ochranná pravidla (clamping)
+    // na vstupních vlastnostech CalculationItemViewModel:
+    //
     //   • Quantity nikdy nesmí být záporné (clamp na 0)
     //   • DiscountPercent musí zůstat v rozsahu 0–100 (clamp)
     //   • SelectedMaterialPrice má bezpečný fallback při nevalidní hodnotě
     //
     // Rozsah testů v tomto souboru:
-    //   T_056–T_059
+    //   T_01–T_04
     //
-    // Setup/TearDown a sdílená pole _db/_connection jsou definované
-    // v CalculationItemViewModelTests_Base.cs (partial class).
+    // Sdílený databázový kontext (_db) a SetUp/TearDown jsou definované
+    // v TestBase.cs, ze kterého tato třída dědí.
     // =====================================================================
-    public partial class CalculationItemViewModelTests
+    [TestFixture]
+    public class CalculationItemViewModelTests_Validation : TestBase
     {
-
+        
         // -----------------------------------------------------------------
         // 🧪 TEST 01: Quantity – záporné množství se má přepnout na 0
         // -----------------------------------------------------------------
-        // Co testujeme:
-        //  • že záporné množství neprojde do výpočtu
-        //  • že ViewModel automaticky nastaví Quantity = 0
+        // Ověřuje:
+        //   • že záporné množství neprojde do výpočtu
+        //   • že ViewModel automaticky nastaví Quantity = 0
         // -----------------------------------------------------------------
         [Test]
         [Order(01)]
@@ -45,9 +47,9 @@ namespace ElektroOffer_app.Tests.Unit.ViewModels
         // -----------------------------------------------------------------
         // 🧪 TEST 02: DiscountPercent – hodnoty nad 100 % se mají přepnout na 100
         // -----------------------------------------------------------------
-        // Co testujeme:
-        //  • že sleva nemůže být vyšší než 100 %
-        //  • že ViewModel automaticky nastaví DiscountPercent = 100
+        // Ověřuje:
+        //   • že sleva nemůže být vyšší než 100 %
+        //   • že ViewModel automaticky nastaví DiscountPercent = 100
         // -----------------------------------------------------------------
         [Test]
         [Order(02)]
@@ -65,9 +67,9 @@ namespace ElektroOffer_app.Tests.Unit.ViewModels
         // -----------------------------------------------------------------
         // 🧪 TEST 03: DiscountPercent – záporné hodnoty se mají přepnout na 0
         // -----------------------------------------------------------------
-        // Co testujeme:
-        //  • že sleva nemůže být záporná
-        //  • že ViewModel automaticky nastaví DiscountPercent = 0
+        // Ověřuje:
+        //   • že sleva nemůže být záporná
+        //   • že ViewModel automaticky nastaví DiscountPercent = 0
         // -----------------------------------------------------------------
         [Test]
         [Order(03)]
@@ -85,9 +87,9 @@ namespace ElektroOffer_app.Tests.Unit.ViewModels
         // -----------------------------------------------------------------
         // 🧪 TEST 04: SelectedMaterialPrice – fallback při neplatné ceně
         // -----------------------------------------------------------------
-        // Co testujeme:
-        //  • že ViewModel zvládne neplatnou nebo smazanou cenu
-        //  • že Total se vrátí na 0 a nevyhodí výjimku
+        // Ověřuje:
+        //   • že ViewModel zvládne neplatnou nebo smazanou cenu
+        //   • že Total se vrátí na 0 a nevyhodí výjimku
         // -----------------------------------------------------------------
         [Test]
         [Order(04)]

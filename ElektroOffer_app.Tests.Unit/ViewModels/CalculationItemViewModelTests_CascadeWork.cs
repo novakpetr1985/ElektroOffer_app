@@ -8,23 +8,23 @@ namespace ElektroOffer_app.Tests.Unit.ViewModels
     // =====================================================================
     // 🔧 UNIT TESTS – CalculationItemViewModel – KASKÁDA PRÁCE
     // =====================================================================
-    // Tato část třídy (partial) ověřuje kaskádu výběru pro PRÁCI:
+    // Tento soubor obsahuje testy ověřující kaskádu výběru pro PRÁCI:
+    //
     //   Task → Specification → Material → Location → WorkItem
     //
     // Zaměřuje se na:
-    //   • ResetBelowX metody (CalculationCascadeService) – že se při změně
-    //     vyšší úrovně vyčistí všechny nižší úrovně
-    //   • PropertyChanged pro CanSelectX vlastnosti (např. CanSelectSpecification)
-    //   • že se po vyplnění celé kaskády včetně Location správně dohledá
-    //     odpovídající PriceItems záznam z DB (WorkItem)
+    //   • ResetBelowX metody (CalculationCascadeService)
+    //   • PropertyChanged pro CanSelectX vlastnosti
+    //   • správné dohledání WorkItem z DB po vyplnění celé kaskády
     //
     // Rozsah testů v tomto souboru:
     //   T_073–T_079
     //
-    // Setup/TearDown a sdílená pole _db/_connection jsou definované
-    // v CalculationItemViewModelTests_Base.cs (partial class).
+    // Sdílený databázový kontext (_db) a SetUp/TearDown jsou definované
+    // v TestBase.cs, ze kterého tato třída dědí.
     // =====================================================================
-    public partial class CalculationItemViewModelTests
+    [TestFixture]
+    public class CalculationItemViewModelTests_CascadeWork : TestBase
     {
     
         // -----------------------------------------------------------------

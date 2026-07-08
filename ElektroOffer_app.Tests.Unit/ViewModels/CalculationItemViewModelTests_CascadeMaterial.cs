@@ -9,23 +9,23 @@ namespace ElektroOffer_app.Tests.Unit.ViewModels
     // =====================================================================
     // 🧱 UNIT TESTS – CalculationItemViewModel – KASKÁDA MATERIÁLU
     // =====================================================================
-    // Tato část třídy (partial) ověřuje produktovou kaskádu pro MATERIÁL:
+    // Tento soubor obsahuje testy ověřující produktovou kaskádu pro MATERIÁL:
+    //
     //   Category → ProductName → Supplier → Offer → SelectedMaterialPrice
     //
     // Zaměřuje se na:
-    //   • ResetBelowX metody (MaterialCascadeService) – že se při změně
-    //     vyšší úrovně vyčistí všechny nižší úrovně (Names/Suppliers/Offers)
-    //   • PropertyChanged pro CanSelectX vlastnosti (např. CanSelectProductName)
-    //   • že se po vyplnění celé kaskády včetně Offer správně dohledá
-    //     odpovídající MaterialPrice záznam z DB (UpdateSelectedPrice)
+    //   • ResetBelowX metody (MaterialCascadeService)
+    //   • PropertyChanged pro CanSelectX vlastnosti
+    //   • správné dohledání MaterialPrice z DB po vyplnění celé kaskády
     //
     // Rozsah testů v tomto souboru:
     //   T_080–T_086
     //
-    // Setup/TearDown a sdílená pole _db/_connection jsou definované
-    // v CalculationItemViewModelTests_Base.cs (partial class).
+    // Sdílený databázový kontext (_db) a SetUp/TearDown jsou definované
+    // v TestBase.cs, ze kterého tato třída dědí.
     // =====================================================================
-    public partial class CalculationItemViewModelTests
+    [TestFixture]
+    public class CalculationItemViewModelTests_CascadeMaterial : TestBase
     {
 
         // -----------------------------------------------------------------
@@ -170,38 +170,17 @@ namespace ElektroOffer_app.Tests.Unit.ViewModels
         // -----------------------------------------------------------------------------
         // 🧪 TEST 07: SelectedOffer – musí nastavit SelectedMaterialPrice
         // -----------------------------------------------------------------------------
-        // Co tento test ověřuje:
+        // Min. co test ověřuje:
         //   • že ViewModel správně reaguje na výběr nabídky (SelectedOffer)
-        //   • že po nastavení SelectedOffer se vybere odpovídající MaterialPrice z databáze
+        //   • že po nastavení SelectedOffer se vybere odpovídající MaterialPrice z DB
         //   • že SelectedMaterialPrice není null
-        //   • že SelectedMaterialPrice obsahuje správnou cenu
-        //
-        // Jak test funguje:
-        //   • vytvoří Category, Supplier a Material a uloží je do databáze
-        //   • vytvoří MaterialPrice odkazující na Material (MaterialId) a Supplier (SupplierId)
-        //   • projede CELOU produktovou kaskádu ve ViewModelu:
-        //       SelectedCategory → SelectedProductName → SelectedSupplier → SelectedOffer
-        //   • ověří, že SelectedMaterialPrice je správně načtený z databáze
-        //
-        // 🔥 OPRAVA:
-        //   • UpdateSelectedPrice() hledá MaterialPrice podle SelectedProductName +
-        //     SelectedSupplier + SelectedOffer (NE podle SelectedMaterial – to je
-        //     vlastnost z kaskády PRÁCE/PriceItems, jiná kaskáda).
-        //   • Test dřív nastavoval jen SelectedMaterial, takže SelectedProductName
-        //     a SelectedSupplier zůstaly null a UpdateSelectedPrice() rovnou vracel null.
-        //   • Teď se nastavuje celá produktová kaskáda a Material má i CategoryId,
-        //     aby ho LoadMaterialNames/LoadSuppliers vůbec našly.
-        //
-        // Důležité:
-        //   • Test vyžaduje, aby testovací databáze měla vytvořené tabulky
-        //     (Categories, Materials, Suppliers, MaterialPrices). To zajistí
-        //     EnsureCreated() v testovací fixture.
+        //   • že SelectedMaterialPrice.Price odpovídá ceně uložené v databázi
         // -----------------------------------------------------------------------------
         [Test]
         [Order(07)]
         public void T_07_CascadeMaterial_SelectedOffer_Should_Update_SelectedMaterialPrice()
         {
-            // 1) Uložíme Category
+            // 1) Category
             var category = new Category
             {
                 Name = "TestCategory"
@@ -209,54 +188,57 @@ namespace ElektroOffer_app.Tests.Unit.ViewModels
             _db.Categories.Add(category);
             _db.SaveChanges();
 
-            // 2) Uložíme Supplier
+            // 2) Supplier
             var supplier = new Supplier
             {
                 Name = "TestSupplier"
             };
             _db.Suppliers.Add(supplier);
-            _db.SaveChanges(); // 🔥 nutné kvůli FK
+            _db.SaveChanges();
 
-            // 3) Uložíme Material s vazbou na Category
+            // 3) Material (musí mít CategoryId, jinak ho kaskáda nenajde)
             var material = new Material
             {
                 Name = "TestMaterial",
-                CategoryId = category.Id   // 🔥 OPRAVA – aby LoadMaterialNames našel materiál v kategorii
+                CategoryId = category.Id
             };
             _db.Materials.Add(material);
-            _db.SaveChanges(); // 🔥 nutné kvůli FK
+            _db.SaveChanges();
 
-            // 4) Uložíme MaterialPrice s MaterialId i SupplierId
+            // 4) MaterialPrice (musí mít MaterialId + SupplierId)
             var materialPrice = new MaterialPrice
             {
-                MaterialId = material.Id,   // 🔥 validní FK
-                SupplierId = supplier.Id,   // 🔥 validní FK
+                MaterialId = material.Id,
+                SupplierId = supplier.Id,
                 Price = 100,
                 Unit = "ks",
-                SupplierName = "TestSupplier"
+                SupplierName = supplier.Name
             };
             _db.MaterialPrices.Add(materialPrice);
             _db.SaveChanges();
 
-            // 5) Načteme MaterialPrice včetně Material a Supplier
+            // 5) Načtení MaterialPrice včetně vazeb
             var mp = _db.MaterialPrices
                 .Include(x => x.Material)
                 .Include(x => x.Supplier)
                 .First();
 
-            // 6) ViewModel – projedeme CELOU produktovou kaskádu
+            // 6) ViewModel – projdeme celou produktovou kaskádu
             var vm = new CalculationItemViewModel(_db)
             {
-                SelectedCategory = category.Name,       // 🔥 OPRAVA – 1. krok kaskády
-                SelectedProductName = mp.Material.Name,  // 🔥 OPRAVA – 2. krok kaskády
-                SelectedSupplier = mp.Supplier.Name      // 🔥 OPRAVA – 3. krok kaskády
+                SelectedCategory = category.Name,
+                SelectedProductName = mp.Material.Name,
+                SelectedSupplier = mp.Supplier.Name
             };
 
-            vm.SelectedOffer = mp.SupplierName;          // 4. krok – tady se má natáhnout cena
+            vm.SelectedOffer = mp.SupplierName; // zde se má natáhnout cena
 
             // 7) Ověření
-            Assert.That(vm.SelectedMaterialPrice, Is.Not.Null);
-            Assert.That(vm.SelectedMaterialPrice.Price, Is.EqualTo(100));
+            Assert.That(vm.SelectedMaterialPrice, Is.Not.Null,
+                "SelectedMaterialPrice musí být nastaveno po vyplnění celé kaskády.");
+
+            Assert.That(vm.SelectedMaterialPrice!.Price, Is.EqualTo(100),
+                "SelectedMaterialPrice.Price musí odpovídat ceně uložené v DB.");
         }
     }
 }

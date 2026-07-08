@@ -5,6 +5,43 @@ Formát vychází z [Keep a Changelog](https://keepachangelog.com/cs/1.0.0/).
 
 ---
 
+## [1.8.0.3] - Unit Test Architecture Stabilization
+
+### Změněno
+- kompletní refaktoring architektury UNIT testů
+  - odstraněny partial testovací třídy
+  - každá oblast testů má vlastní třídu (Total, Validation, CascadeWork, CascadeMaterial, PropertyChanged, IsEmpty)
+  - všechny testy nyní dědí z nové základní třídy TestBase
+  - sjednocený styl komentářů a struktury testů
+
+### Přidáno
+
+- Nová základní třída TestBase
+  - obsahuje sdílený _db kontext
+  - SetUp() nyní provádí EnsureDeleted + EnsureCreated
+  - každý test běží v naprosto čisté databázi
+  - odstraněny chyby typu UNIQUE constraint failed
+  - odstraněny chyby způsobené kontaminací dat mezi testy
+  - odstraněny zamčené SQLite handle
+  - zajištěno reálné chování EF Core (Include, vztahy, lookupy, kaskády)
+
+### Opraveno
+
+- Chyby v testech
+- T_23_Total_Should_Use_Price_From_Database_When_MaterialItem_Is_Loaded
+- T_35_Total_Should_Use_Highest_MaterialPrice_From_Database
+- T_07_CascadeMaterial_SelectedOffer_Should_Update_SelectedMaterialPrice
+- příčina
+- testy sdílely zbytky dat v SQLite → nyní odstraněno díky resetu DB před každým testem
+- ppraveno nesprávné načítání cen materiálu (23.22 místo 100) způsobené kontaminovanou DB
+
+### Odstraněno
+- starý soubor CalculationItemViewModelTests_Base.cs
+- všechny partial class definice testů
+- zbytky systémového bordelu z chatu, které se zobrazovaly v komentářích
+
+---
+
 ## [1.8.0.2] - Oprava pozicování řádků při Save/Load
 
 ### Přidáno

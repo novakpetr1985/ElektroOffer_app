@@ -57,6 +57,7 @@
     <!-- Odkaz na hlavní aplikační projekt.
          Důležité: relativní cesta musí být správná a soubor ElektroOffer_app.csproj
          musí být v repozitáři. -->
+    <ProjectReference Include="..\ElektroOffer_app.Tests.Integration\ElektroOffer_app.Tests.Integration.csproj" />
     <ProjectReference Include="..\ElektroOffer_app\ElektroOffer_app.csproj" />
     <FrameworkReference Include="Microsoft.WindowsDesktop.App.WPF" />
   </ItemGroup>

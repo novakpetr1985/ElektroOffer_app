@@ -8,7 +8,8 @@ namespace ElektroOffer_app.Tests.Unit.ViewModels
     // =====================================================================
     // 🧮 UNIT TESTS – CalculationItemViewModel – VÝPOČET TOTAL
     // =====================================================================
-    // Tato část třídy (partial) obsahuje testy výpočtu vlastnosti Total:
+    // Tento soubor obsahuje testy ověřující výpočet vlastnosti Total:
+    //
     //   • základní výpočet z WorkItem / MaterialItem
     //   • aplikace slevy (IsDiscountEnabled + DiscountPercent)
     //   • koeficienty materiálu a pozice
@@ -16,14 +17,15 @@ namespace ElektroOffer_app.Tests.Unit.ViewModels
     //     zaokrouhlování, chování při mazání/aktualizaci ceny v DB)
     //
     // Rozsah testů v tomto souboru:
-    //   T_001–T_012  – základní výpočet Total
-    //   T_018–T_055  – pokročilé scénáře výpočtu Total
-    //   T_062–T_072  – kombinace vstupů a floating-point edge cases
+    //   T_01–T_12   – základní výpočet Total
+    //   T_18–T_55   – pokročilé scénáře výpočtu Total
+    //   T_62–T_72   – kombinace vstupů a floating‑point edge cases
     //
-    // Setup/TearDown a sdílená pole _db/_connection jsou definované
-    // v CalculationItemViewModelTests_Base.cs (partial class).
+    // Sdílený databázový kontext (_db) a SetUp/TearDown jsou definované
+    // v TestBase.cs, ze kterého tato třída dědí.
     // =====================================================================
-    public partial class CalculationItemViewModelTests
+    [TestFixture]
+    public class CalculationItemViewModelTests_Total : TestBase
     {
     
         // -----------------------------------------------------------------

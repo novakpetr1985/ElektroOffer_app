@@ -314,12 +314,28 @@ Projekt obsahuje dvě úrovně testů:
 - rychlé testování výpočtů a repository vrstvy
 
 📌 zaměření:
+- nová základní třídě TestBase
 - kalkulace cen a slev (`PriceCalculationTests`, `DiscountCalculationTests`)
 - repository logika + edge-case scénáře (`MaterialRepositoryTests`, `PriceItemsRepositoryTests`, `RepositoryEdgeCaseTests`)
-- ViewModel logika (`CalculationItemViewModelTests`, `CalculationItemViewModel_AdvancedTests`)
+- ViewModel logika (`CalculationItemViewModelTests_Base.cs`, `CalculationItemViewModelTests_CascadeMaterial.cs`, `CalculationItemViewModelTests_CascadeWork.cs`, `CalculationItemViewModelTests_IsEmpty.cs`, `CalculationItemViewModelTests_PropertyChanged.cs`, `CalculationItemViewModelTests_Total.cs`, `CalculationItemViewModelTests_Validation.cs`)
 - MVVM command logika (`RelayCommandTests`)
 - kontrola verze aplikace (`VersionTests`)
 - reálná implementace file systému (`RealFileSystemServiceTests`)
+
+#### 🧱 Stabilní testovací databáze (SQLite)
+
+- unit testy používají reálný SQLite provider, aby chování odpovídalo skutečné aplikaci.
+- každý test běží v izolovaném prostředí díky
+  - nové základní třídě TestBase
+  - automatickému resetu databáze před každým testem ()`EnsureDeleted()` + `EnsureCreated()`)
+  - jednotné struktuře testů rozdělené podle oblastí (`Total`, `Validation`, `CascadeWork`, `CascadeMaterial`, `PropertyChanged`, `IsEmpty`)
+- tím je zajištěno
+  - stabilní a deterministické chování testů
+  - žádné kontaminované záznamy mezi testy
+  - žádné chyby typu UNIQUE constraint failed
+  - správné chování EF Core (Include, relace, lookupy, kaskády)
+  - žádné zamčené SQLite handle
+- testy tak přesně simulují reálné chování aplikace.
 
 ### 🧪 Integrační testy
 

@@ -8,49 +8,28 @@ namespace ElektroOffer_app.Tests.Unit.ViewModels
     // =====================================================================
     // 🧩 UNIT TESTS – CalculationItemViewModel – IsEmpty
     // =====================================================================
-    // Tato část třídy (partial) ověřuje vlastnost IsEmpty, která slouží
+    // Tento soubor obsahuje testy ověřující vlastnost IsEmpty, která slouží
     // ProjectService k odfiltrování prázdných řádků před serializací.
+    //
     // Testuje všechny kombinace vstupů, které mají/nemají vliv na to,
     // zda je řádek považován za "prázdný":
     //   • Task, Specification, Material, Location
     //   • Quantity
     //   • IsDiscountEnabled
     //
-    // ⚠️ POZNÁMKA k číslům T_087–T_092:
-    // -----------------------------------------------------------------------
-    // Podle dřívější dokumentace měly tyto testy pokrývat kaskádu materiálu
-    // (Should_Load_ProductNames, Should_Load_Suppliers, Should_Load_Offers,
-    // Should_Set_Unit/Price/Supplier), ale ve skutečném kódu jsou to testy
-    // IsEmpty (IsEmpty_Should_Be_True_When_All_Fields_Are_Default atd.).
-    // Zde jsou zařazené podle SKUTEČNÉHO obsahu v kódu, ne podle staršího
-    // plánu/tabulky. Pokud testy kaskády Load_ProductNames/Suppliers/Offers
-    // chceš mít, doporučuju je doplnit jako NOVÁ čísla T_101+, ne přepisovat
-    // existující T_087–T_092.
-    //
     // Rozsah testů v tomto souboru:
-    //   T_029–T_031  – základní IsEmpty scénáře
-    //   T_048        – kombinace hodnot
-    //   T_066–T_068  – IsEmpty false při Quantity/Location/Task
-    //   T_087–T_092  – IsEmpty false při Discount/Material/Location (dle reálného kódu)
+    //   T_01–T_03   – základní IsEmpty scénáře
+    //   T_04        – kombinace hodnot
+    //   T_05–T_07   – IsEmpty false při Quantity/Location/Task
+    //   T_08–T_12   – IsEmpty false při Discount/Material/Location
     //
-    // Setup/TearDown a sdílená pole _db/_connection jsou definované
-    // v CalculationItemViewModelTests_Base.cs (partial class).
+    // Sdílený databázový kontext (_db) a SetUp/TearDown jsou definované
+    // v TestBase.cs, ze kterého tato třída dědí.
     // =====================================================================
-    public partial class CalculationItemViewModelTests
+    [TestFixture]
+    public class CalculationItemViewModelTests_IsEmpty : TestBase
     {
-
-        // -----------------------------------------------------------------
-        // 🔧 TEARDOWN – spustí se PO každém testu
-        // -----------------------------------------------------------------
-        // Uvolní databázový kontext a zavře připojení. Důležité pro čistotu
-        // testů – bez tohoto by mohly zůstávat otevřené SQLite handly.
-        [TearDown]
-        public void TearDown()
-        {
-            _db.Dispose();
-            _connection.Dispose();
-        }
-    
+        
         // -----------------------------------------------------------------
         // 🧪 TEST 01: IsEmpty vrací TRUE pro zcela prázdný řádek
         // -----------------------------------------------------------------
