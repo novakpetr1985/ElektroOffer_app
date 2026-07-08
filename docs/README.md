@@ -140,7 +140,8 @@ Tato změna zajišťuje stabilní běh aplikace a eliminuje chyby typu.
 │
 ├── 📁 docs
 │   ├── 📄 CHANGELOG.md
-│   └── 📄 README.md
+│   ├── 📄 README.md
+│   └── 📄 TESTS-UNIT-ViewModels.md
 │
 ├── 📁 scripts
 │   ├── 📄 AllMainFile.py
@@ -157,7 +158,6 @@ Tato změna zajišťuje stabilní běh aplikace a eliminuje chyby typu.
 │   │
 │   └── 📁 scripts-output
 │       └── 📄 AllMainFile.txt
-
 
 🖥️ Aplikace
 │
@@ -242,6 +242,9 @@ Tato změna zajišťuje stabilní běh aplikace a eliminuje chyby typu.
 🧪 Testing
 │
 ├── 📁 ElektroOffer_app.Tests.Unit
+│   ├── 📁 CommandTests
+│   │   └── 📄 RelayCommandTests.cs
+│   │
 │   ├── 📁 LogicTests
 │   │   ├── 📄 DiscountCalculationTests.cs
 │   │   ├── 📄 PriceCalculationTests.cs
@@ -253,21 +256,21 @@ Tato změna zajišťuje stabilní běh aplikace a eliminuje chyby typu.
 │   │   ├── 📄 PriceItemsRepositoryTests.cs
 │   │   └── 📄 RepositoryEdgeCaseTests.cs
 │   │
-│   ├── 📁 CommandTests
-│   │   └── 📄 RelayCommandTests.cs
-│   │
 │   ├── 📁 Services
 │   │   ├── 📄 CatalogServiceTests.cs
 │   │   ├── 📄 ProjectServiceTests.cs
 │   │   └── 📄 RealFileSystemServiceTests.cs
 │   │
-│   ├── 📁 ViewModelTests
-│   │   └── 📄 CalculationItemViewModelTests.cs
-│   │
 │   ├── 📁 ViewModels
-│   │   └── 📄 CalculationItemViewModel_AdvancedTests.cs
+│   │   ├── 📄 CalculationItemViewModelTests_Total.cs
+│   │   ├── 📄CalculationItemViewModelTests_Validation.cs
+│   │   ├── 📄 CalculationItemViewModelTests_PropertyChanged.cs
+│   │   ├── 📄 CalculationItemViewModelTests_IsEmpty.cs
+│   │   ├── 📄 CalculationItemViewModelTests_CascadeWork.cs
+│   │   └── 📄 CalculationItemViewModelTests_CascadeMaterial.cs
 │   │
-│   └── 📄 ElektroOffer_app.Tests.Unit.csproj
+│   ├── 📄 ElektroOffer_app.Tests.Unit.csproj
+│   └── 📄 TestBase.cs
 │
 └── 📁 ElektroOffer_app.Tests.Integration
     ├── 📁 Database
