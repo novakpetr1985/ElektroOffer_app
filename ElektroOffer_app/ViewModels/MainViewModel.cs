@@ -139,6 +139,19 @@ namespace ElektroOffer_app.ViewModels
         public ICommand ResetWorkItemCommand { get; }
         public ICommand ResetMaterialItemCommand { get; }
 
+        // =====================================================================
+        // 🚫 _isLoading – blokace přepočtů a reakcí během načítání projektu
+        // =====================================================================
+        //
+        // Během ApplyProjectData se nastaví na TRUE,
+        // aby Item_PropertyChanged nereagoval na změny,
+        // kaskády se nespouštěly,
+        // a kolekce se nepřeskupovala.
+        //
+        // Po načtení se nastaví zpět na FALSE.
+        //
+        private bool _isLoading = false;
+
         // =========================================================
         // CONSTRUCTOR
         // =========================================================
@@ -307,6 +320,11 @@ namespace ElektroOffer_app.ViewModels
 
         private void Item_PropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
+            // 🔒 Během načítání projektu se nesmí nic přepočítávat ani spouštět
+            if (_isLoading)
+                return;
+
+            // 🔧 Reagujeme jen na změny, které ovlivňují cenu
             if (e.PropertyName == nameof(CalculationItemViewModel.Total) ||
                 e.PropertyName == nameof(CalculationItemViewModel.Quantity) ||
                 e.PropertyName == nameof(CalculationItemViewModel.WorkItem) ||
@@ -490,34 +508,25 @@ namespace ElektroOffer_app.ViewModels
 
         private void ClearAllItems()
         {
+            // 🔒 vypnout reakce na změny
+            _isLoading = true;
+
             foreach (var item in WorkCalcItems)
                 item.PropertyChanged -= Item_PropertyChanged;
 
             foreach (var item in MaterialItems)
                 item.PropertyChanged -= Item_PropertyChanged;
 
+            // ❗ Kolekce se musí opravdu vymazat
             WorkCalcItems.Clear();
             MaterialItems.Clear();
+
+            // Rozpočet se může mazat – nemá pozice
             BudgetItems.Clear();
+
+            _isLoading = false;
         }
 
-        // =========================================================
-        // BUILD PROJECT DATA – vytvoření kompletního ProjectData objektu
-        // =========================================================
-        //
-        // Tento blok vytváří tři oddělené datové sekce:
-        //
-        //   1) WorkItems            → pouze pracovní hodnoty (WorkItemData)
-        //   2) MaterialItems        → pouze materiálové hodnoty (MaterialItemData)
-        //   3) CommonItems          → společné hodnoty (CalculationItemData)
-        //
-        // Díky tomu:
-        // - JSON je čistý a přehledný
-        // - PRÁCE a MATERIÁL se nemíchají
-        // - společné hodnoty jsou opravdu společné
-        // - Load/Save je stabilní
-        // - UI je přehledné
-        //
         // =========================================================
         // BUILD PROJECT DATA – vytvoření kompletního ProjectData objektu
         // =========================================================
@@ -534,8 +543,141 @@ namespace ElektroOffer_app.ViewModels
         // - JSON je čistý a přehledný
         // - Load/Save je stabilní
         //
+        // ❗ Prázdné řádky se neukládají (item.IsEmpty)
+        // ❗ Každý řádek má vlastní ID → jednoznačné párování PRÁCE/MATERIÁL ↔ SPOLEČNÉ
+        // ❗ ID je krátké a čitelné: PRÁCE = W-1, W-2… / MATERIÁL = M-1, M-2…
+        // =========================================================
+
         private ProjectData BuildProjectData()
         {
+            // ---------------------------------------------------------
+            // Interní čítače pro generování krátkých ID
+            // ---------------------------------------------------------
+            //
+            // PRÁCE → W-1, W-2, W-3...
+            // MATERIÁL → M-1, M-2, M-3...
+            //
+            int workCounter = 1;
+            int materialCounter = 1;
+
+            // ---------------------------------------------------------
+            // 🔧 PRÁCE → WorkItemData
+            // ---------------------------------------------------------
+            //
+            // Ukládají se pouze pracovní hodnoty:
+            // - SelectedTask
+            // - SelectedSpecification
+            // - SelectedMaterial
+            // - SelectedLocation
+            // - SelectedWorkPrice (volitelné)
+            // - SelectedWorkUnit  (volitelné)
+            //
+            // Každý řádek dostane vlastní ID (W-1, W-2…), které se použije i ve společné sekci.
+            // Prázdné řádky se odfiltrují pomocí item.IsEmpty.
+            //
+            var workItemsWithCommon = WorkCalcItems
+                .Where(x => !x.IsEmpty)
+                .Select(x =>
+                {
+                    var id = $"W-{workCounter++}"; // krátké, čitelné ID
+
+                    return new
+                    {
+                        Work = new WorkItemData
+                        {
+                            Id = id,
+                            SelectedTask = x.SelectedTask,
+                            SelectedSpecification = x.SelectedSpecification,
+                            SelectedMaterial = x.SelectedMaterial,
+                            SelectedLocation = x.SelectedLocation,
+                            SelectedWorkPrice = x.SelectedWorkPrice,
+                            SelectedWorkUnit = x.SelectedWorkUnit
+                        },
+                        Common = new CalculationItemData
+                        {
+                            Id = id,
+                            Quantity = x.Quantity,
+                            DiscountPercent = x.DiscountPercent,
+                            IsDiscountEnabled = x.IsDiscountEnabled,
+                            Total = x.Total
+                        }
+                    };
+                })
+                .ToList();
+
+            var workItems = workItemsWithCommon.Select(x => x.Work).ToList();
+
+
+            // ---------------------------------------------------------
+            // 📦 MATERIÁL → MaterialItemData
+            // ---------------------------------------------------------
+            //
+            // Ukládají se pouze materiálové hodnoty:
+            // - SelectedCategory
+            // - SelectedProductName
+            // - SelectedSupplier
+            // - SelectedOffer
+            // - SelectedMaterialPrice (volitelné)
+            // - SelectedMaterialUnit  (volitelné)
+            //
+            // Každý řádek dostane vlastní ID (M-1, M-2…), které se použije i ve společné sekci.
+            // Prázdné řádky se odfiltrují pomocí item.IsEmpty.
+            //
+            var materialItemsWithCommon = MaterialItems
+                .Where(x => !x.IsEmpty)
+                .Select(x =>
+                {
+                    var id = $"M-{materialCounter++}"; // krátké, čitelné ID
+
+                    return new
+                    {
+                        Material = new MaterialItemData
+                        {
+                            Id = id,
+                            SelectedCategory = x.SelectedCategory,
+                            SelectedProductName = x.SelectedProductName,
+                            SelectedSupplier = x.SelectedSupplier,
+                            SelectedOffer = x.SelectedOffer,
+                            SelectedMaterialPrice = x.SelectedMaterialPriceValue,
+                            SelectedMaterialUnit = x.SelectedMaterialUnit
+                        },
+                        Common = new CalculationItemData
+                        {
+                            Id = id,
+                            Quantity = x.Quantity,
+                            DiscountPercent = x.DiscountPercent,
+                            IsDiscountEnabled = x.IsDiscountEnabled,
+                            Total = x.Total
+                        }
+                    };
+                })
+                .ToList();
+
+            var materialItems = materialItemsWithCommon.Select(x => x.Material).ToList();
+
+
+            // ---------------------------------------------------------
+            // 🧮 SPOLEČNÉ → CalculationItemData
+            // ---------------------------------------------------------
+            //
+            // Společné hodnoty jsou stejné pro PRÁCI i MATERIÁL:
+            // - Quantity
+            // - DiscountPercent
+            // - IsDiscountEnabled
+            // - Total
+            //
+            // Každý řádek má ID shodné s WorkItemData nebo MaterialItemData.
+            // Díky tomu lze jednoznačně spárovat položky při načítání.
+            //
+            var commonItems =
+                workItemsWithCommon.Select(x => x.Common)
+                .Concat(materialItemsWithCommon.Select(x => x.Common))
+                .ToList();
+
+
+            // ---------------------------------------------------------
+            // Sestavení ProjectData
+            // ---------------------------------------------------------
             return new ProjectData
             {
                 ProjectName = _currentFilePath != null
@@ -544,86 +686,9 @@ namespace ElektroOffer_app.ViewModels
 
                 SavedAt = DateTime.Now,
 
-                // =====================================================================
-                // 🔧 PRÁCE → WorkItemData
-                // =====================================================================
-                //
-                // Ukládají se pouze pracovní hodnoty:
-                // - SelectedTask
-                // - SelectedSpecification
-                // - SelectedMaterial
-                // - SelectedLocation
-                // - SelectedWorkPrice (volitelné)
-                // - SelectedWorkUnit  (volitelné)
-                //
-                WorkItems = WorkCalcItems.Select(x => new WorkItemData
-                {
-                    SelectedTask = x.SelectedTask,
-                    SelectedSpecification = x.SelectedSpecification,
-                    SelectedMaterial = x.SelectedMaterial,
-                    SelectedLocation = x.SelectedLocation,
-
-                    // Cena práce (volitelné)
-                    SelectedWorkPrice = x.SelectedWorkPrice,
-                    SelectedWorkUnit = x.SelectedWorkUnit
-
-                }).ToList(),
-
-                // =====================================================================
-                // 📦 MATERIÁL → MaterialItemData
-                // =====================================================================
-                //
-                // Ukládají se pouze materiálové hodnoty:
-                // - SelectedCategory
-                // - SelectedProductName
-                // - SelectedSupplier
-                // - SelectedOffer
-                // - SelectedMaterialPrice (volitelné)
-                // - SelectedMaterialUnit  (volitelné)
-                //
-                MaterialItems = MaterialItems.Select(x => new MaterialItemData
-                {
-                    SelectedCategory = x.SelectedCategory,
-                    SelectedProductName = x.SelectedProductName,
-                    SelectedSupplier = x.SelectedSupplier,
-                    SelectedOffer = x.SelectedOffer,
-
-                    // Cena materiálu (volitelné)
-                    SelectedMaterialPrice = x.SelectedMaterialPriceValue,
-                    SelectedMaterialUnit = x.SelectedMaterialUnit
-
-                }).ToList(),
-
-                // =====================================================================
-                // 🧮 SPOLEČNÉ → CalculationItemData
-                // =====================================================================
-                //
-                // Společné hodnoty jsou stejné pro PRÁCI i MATERIÁL:
-                // - Quantity
-                // - DiscountPercent
-                // - IsDiscountEnabled
-                // - Total
-                //
-                // Ukládají se odděleně, aby se nemíchaly s pracovními/materiálovými daty.
-                //
-                CommonItems = WorkCalcItems
-                    .Select(x => new CalculationItemData
-                    {
-                        Quantity = x.Quantity,
-                        DiscountPercent = x.DiscountPercent,
-                        IsDiscountEnabled = x.IsDiscountEnabled,
-                        Total = x.Total
-                    })
-                    .Concat(
-                        MaterialItems.Select(x => new CalculationItemData
-                        {
-                            Quantity = x.Quantity,
-                            DiscountPercent = x.DiscountPercent,
-                            IsDiscountEnabled = x.IsDiscountEnabled,
-                            Total = x.Total
-                        })
-                    )
-                    .ToList()
+                WorkItems = workItems,
+                MaterialItems = materialItems,
+                CommonItems = commonItems
             };
         }
 
@@ -636,11 +701,22 @@ namespace ElektroOffer_app.ViewModels
         //   • MaterialItems    → pouze materiálové hodnoty
         //   • CommonItems      → Quantity, sleva, Total
         //
-        // Proto se PRÁCE a MATERIÁL načítají odděleně,
-        // ale společné hodnoty se načítají z CommonItems podle indexu.
+        // ❗ Prázdné řádky se NEukládají do JSONu.
+        // ❗ Pozice řádků se obnovují podle ID (W-1 → řádek 1, W-5 → řádek 5).
         //
+        // Logika:
+        // -------
+        // 1) Vytvoří se pevný počet prázdných řádků (např. 5).
+        // 2) Načtou se uložené položky podle ID → vloží se na správné pozice.
+        // 3) Společné hodnoty (CommonItems) se načítají podle stejného ID.
+        // 4) UI tak přesně obnoví původní strukturu řádků.
+        //
+        // ============================================================================
         private void ApplyProjectData(ProjectData data, string path)
         {
+            // 🔒 vypnout reakce na změny během načítání
+            _isLoading = true;
+
             ClearAllItems();
 
             var workItems = data.WorkItems;
@@ -648,17 +724,44 @@ namespace ElektroOffer_app.ViewModels
             var commonItems = data.CommonItems;
 
             // =====================================================================
-            // 🔧 PRÁCE – načtení WorkItemData + společných hodnot
+            // 🔧 1) Vytvoření pevného počtu prázdných řádků
             // =====================================================================
-            for (int i = 0; i < workItems.Count; i++)
-            {
-                var savedWork = workItems[i];
-                var savedCommon = commonItems[i]; // stejné indexy
+            //
+            // Prázdné řádky se NEukládají do JSONu, ale UI je potřebuje.
+            // Proto se zde vytvoří základní struktura (např. 5 řádků).
+            //
+            const int defaultRowCount = 5;
 
-                var item = new CalculationItemViewModel(_db);
-                item.PropertyChanged += Item_PropertyChanged;
+            for (int i = 0; i < defaultRowCount; i++)
+            {
+                var emptyWork = new CalculationItemViewModel(_db);
+                emptyWork.PropertyChanged += Item_PropertyChanged;
+                WorkCalcItems.Add(emptyWork);
+
+                var emptyMaterial = new CalculationItemViewModel(_db);
+                emptyMaterial.PropertyChanged += Item_PropertyChanged;
+                MaterialItems.Add(emptyMaterial);
+            }
+
+            // =====================================================================
+            // 🔧 PRÁCE – načtení WorkItemData + společných hodnot podle ID
+            // =====================================================================
+            //
+            // ID má formát W-1, W-2, W-5...
+            // → číslo za pomlčkou určuje pozici řádku.
+            //
+            // Prázdné řádky se NEukládají do JSONu,
+            // proto se zde načítají jen vyplněné řádky a vkládají se na správné pozice.
+            //
+            foreach (var savedWork in workItems)
+            {
+                // W-5 → 5 → index 4
+                int index = int.Parse(savedWork.Id.Split('-')[1]) - 1;
+
+                var item = WorkCalcItems[index];
 
                 // ---------------------- PRÁCE ----------------------
+                item.Id = savedWork.Id;
                 item.SelectedTask = savedWork.SelectedTask;
                 item.SelectedSpecification = savedWork.SelectedSpecification;
                 item.SelectedMaterial = savedWork.SelectedMaterial;
@@ -668,27 +771,31 @@ namespace ElektroOffer_app.ViewModels
                 item.SelectedWorkUnit = savedWork.SelectedWorkUnit;
 
                 // ---------------------- SPOLEČNÉ ----------------------
+                var savedCommon = commonItems.First(c => c.Id == savedWork.Id);
+
                 item.Quantity = savedCommon.Quantity;
                 item.DiscountPercent = savedCommon.DiscountPercent;
                 item.IsDiscountEnabled = savedCommon.IsDiscountEnabled;
-
-                // Total se neukládá přímo – vypočítá se automaticky
-                WorkCalcItems.Add(item);
             }
 
             // =====================================================================
-            // 📦 MATERIÁL – načtení MaterialItemData + společných hodnot
+            // 📦 3) MATERIÁL – načtení MaterialItemData + společných hodnot podle ID
             // =====================================================================
-            for (int i = 0; i < materialItems.Count; i++)
+            //
+            // ID má formát M-1, M-2, M-5...
+            // → číslo za pomlčkou určuje pozici řádku.
+            //
+            // Prázdné řádky se NEukládají do JSONu,
+            // proto se zde načítají jen vyplněné řádky a vkládají se na správné pozice.
+            //
+            foreach (var savedMaterial in materialItems)
             {
-                var savedMaterial = materialItems[i];
-                var savedCommon = commonItems[workItems.Count + i];
-                // společné hodnoty materiálu začínají až za pracovními
+                int index = int.Parse(savedMaterial.Id.Split('-')[1]) - 1;
 
-                var item = new CalculationItemViewModel(_db);
-                item.PropertyChanged += Item_PropertyChanged;
+                var item = MaterialItems[index];
 
                 // ---------------------- MATERIÁL ----------------------
+                item.Id = savedMaterial.Id;
                 item.SelectedCategory = savedMaterial.SelectedCategory;
                 item.SelectedProductName = savedMaterial.SelectedProductName;
                 item.SelectedSupplier = savedMaterial.SelectedSupplier;
@@ -698,13 +805,17 @@ namespace ElektroOffer_app.ViewModels
                 item.SelectedMaterialUnit = savedMaterial.SelectedMaterialUnit;
 
                 // ---------------------- SPOLEČNÉ ----------------------
+                var savedCommon = commonItems.First(c => c.Id == savedMaterial.Id);
+
                 item.Quantity = savedCommon.Quantity;
                 item.DiscountPercent = savedCommon.DiscountPercent;
                 item.IsDiscountEnabled = savedCommon.IsDiscountEnabled;
-
-                MaterialItems.Add(item);
             }
 
+            // =====================================================================
+            // 🔄 4) Přepočet všech hodnot po načtení
+            // =====================================================================
+            _isLoading = false;
             Recalculate();
         }
 

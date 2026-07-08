@@ -1,4 +1,6 @@
-﻿﻿namespace ElektroOffer_app.Models
+﻿﻿using System;
+
+namespace ElektroOffer_app.Models
 {
     // =========================================================================
     // 📦 MaterialItemData – datový model pro jeden řádek MATERIÁLU v projektu
@@ -18,8 +20,20 @@
     // - MaterialItemData obsahuje pouze materiálové hodnoty.
     // - Díky tomu je JSON čistý, přehledný a nemíchají se nesouvisející položky.
     //
+    // Proč je zde ID:
+    // ---------------
+    // Každý řádek MATERIÁLU má vlastní identifikátor (Guid Id).
+    // Stejné ID se ukládá i do odpovídající položky CalculationItemData.
+    //
+    // Díky tomu lze jednoznačně spárovat:
+    //
+    //      MaterialItemData.Id == CalculationItemData.Id
+    //
+    // To je zásadní pro stabilní Load/Save a pro budoucí rozšiřování projektu.
+    //
     // Co se ukládá:
     // --------------
+    // ✔ Id                     → jednoznačný identifikátor řádku
     // ✔ SelectedCategory        → hlavní kategorie materiálu (např. Chrániče)
     // ✔ SelectedProductName     → název produktu (např. FH202 AC-40/0,03)
     // ✔ SelectedSupplier        → dodavatel (např. ELKOV)
@@ -38,6 +52,17 @@
     // =========================================================================
     public class MaterialItemData
     {
+        // =====================================================================
+        // 🆔 Id – jednoznačný identifikátor řádku MATERIÁLU
+        // =====================================================================
+        //
+        // ID je typu string, protože používáme krátké lidsky čitelné ID:
+        //   • M-1, M-2, M-3...
+        //
+        // Stejné ID se ukládá i do CalculationItemData.
+        //
+        public string Id { get; set; } = string.Empty;
+
         // =====================================================================
         // 🏷 Kategorie materiálu
         // =====================================================================

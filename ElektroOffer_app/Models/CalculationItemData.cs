@@ -11,8 +11,8 @@ namespace ElektroOffer_app.Models
     // Tento objekt slouží jako *univerzální transportní model* pro ukládání
     // a načítání společných hodnot obou typů položek:
     //
-    //   • PRÁCE   → práce, specifikace, materiál, lokace (řeší ViewModel)
-    //   • MATERIÁL → kategorie, název, dodavatel, nabídka (řeší ViewModel)
+    //   • PRÁCE     → práce, specifikace, materiál, lokace (řeší ViewModel)
+    //   • MATERIÁL  → kategorie, název, dodavatel, nabídka (řeší ViewModel)
     //
     // CalculationItemData obsahuje pouze ty vlastnosti, které jsou
     // společné pro oba typy položek a které se ukládají do JSONu.
@@ -24,12 +24,29 @@ namespace ElektroOffer_app.Models
     // - ViewModel řeší logiku PRÁCE i MATERIÁLU, ale JSON má být čistý.
     // - CalculationItemData je díky tomu jednoduchý, stabilní a přehledný.
     //
+    // Proč je zde ID:
+    // ----------------
+    // - Každý řádek PRÁCE nebo MATERIÁLU má svůj vlastní ID.
+    // - Společná položka (CalculationItemData) má stejné ID jako odpovídající
+    //   WorkItemData nebo MaterialItemData.
+    //
+    //   • PRÁCE     → W-1, W-2, W-3...
+    //   • MATERIÁL  → M-1, M-2, M-3...
+    //
+    // - Díky tomu lze jednoznačně spárovat:
+    //
+    //       WorkItems[i].Id == CommonItems[j].Id
+    //       MaterialItems[i].Id == CommonItems[j].Id
+    //
+    // - JSON je díky tomu jednoznačný, stabilní a bezpečný pro Load/Save.
+    //
     // Co se ukládá:
     // --------------
-    // ✔ Quantity           → množství položky
-    // ✔ DiscountPercent    → procentuální sleva
-    // ✔ IsDiscountEnabled  → zda je sleva aktivní
-    // ✔ Total              → výsledná cena po slevě
+    // ✔ Id                → jednoznačný identifikátor řádku (W-1 / M-1)
+    // ✔ Quantity          → množství položky
+    // ✔ DiscountPercent   → procentuální sleva
+    // ✔ IsDiscountEnabled → zda je sleva aktivní
+    // ✔ Total             → výsledná cena po slevě
     //
     // Co se NEukládá:
     // ----------------
@@ -37,12 +54,28 @@ namespace ElektroOffer_app.Models
     // ✘ SelectedCategory, SelectedProductName, SelectedSupplier, SelectedOffer
     // ✘ SelectedMaterialPrice, SelectedMaterialUnit
     //
-    // Tyto hodnoty se ukládají přímo v ProjectService (BuildProjectData),
-    // protože patří pouze jednomu typu položky (buď PRÁCE, nebo MATERIÁL).
+    // Tyto hodnoty se ukládají v WorkItemData / MaterialItemData,
+    // protože patří pouze jednomu typu položky.
     //
     // =========================================================================
     public class CalculationItemData
     {
+        // =====================================================================
+        // 🆔 Id – jednoznačný identifikátor řádku
+        // =====================================================================
+        //
+        // ID je typu string, protože používáme krátké lidsky čitelné ID:
+        //   • W-1, W-2, W-3...  (položky PRÁCE)
+        //   • M-1, M-2, M-3...  (položky MATERIÁLU)
+        //
+        // CalculationItemData.Id je vždy stejné jako WorkItemData.Id
+        // nebo MaterialItemData.Id.
+        //
+        // Díky tomu lze při načítání projektu přesně určit,
+        // která společná položka patří ke které pracovní nebo materiálové položce.
+        //
+        public string Id { get; set; } = string.Empty;
+
         // =====================================================================
         // 📏 Quantity – množství položky
         // =====================================================================

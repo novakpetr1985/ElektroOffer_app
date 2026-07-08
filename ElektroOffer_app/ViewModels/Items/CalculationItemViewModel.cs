@@ -37,6 +37,31 @@ namespace ElektroOffer_app.ViewModels.Items
         private Material? _materialItem;
         private double _quantity;
 
+        // =====================================================================
+        // 🆔 Id – propojení PRÁCE/MATERIÁL ↔ SPOLEČNÉ
+        // =====================================================================
+        //
+        // ID je typu string, protože používáme krátké lidsky čitelné ID:
+        //   • W-1, W-2, W-3...  (položky PRÁCE)
+        //   • M-1, M-2, M-3...  (položky MATERIÁLU)
+        //
+        // CalculationItemViewModel.Id se nastavuje při ukládání projektu
+        // v metodě BuildProjectData(), kde se generují ID:
+        //
+        //   • PRÁCE → W-1, W-2, W-3...
+        //   • MATERIÁL → M-1, M-2, M-3...
+        //
+        // Stejné ID se ukládá do:
+        //   • WorkItemData.Id
+        //   • MaterialItemData.Id
+        //   • CalculationItemData.Id
+        //
+        // Díky tomu lze při načítání projektu jednoznačně spárovat:
+        //   • pracovní položku ↔ společné hodnoty
+        //   • materiálovou položku ↔ společné hodnoty
+        //
+        public string Id { get; set; } = string.Empty;
+
         // PRÁCE – kaskáda úkon → specifikace → materiál → lokace
         private string? _selectedTask;
         private string? _selectedSpecification;
@@ -444,6 +469,30 @@ namespace ElektroOffer_app.ViewModels.Items
 
         public double Total => _price.CalculateTotal(this);
 
+        // ============================================================================
+        // 🧩 IsEmpty – pomocná vlastnost pro filtrování prázdných řádků při ukládání
+        // ----------------------------------------------------------------------------
+        // Účel:
+        //   • Umožňuje ProjectService odfiltrovat prázdné řádky před serializací.
+        //   • Díky tomu se do JSONu neukládají placeholder řádky, které UI automaticky
+        //     vytváří (např. poslední prázdný řádek).
+        //
+        // Definice „prázdného řádku“:
+        //   • Není vybrán Task, Specification, Material ani Location.
+        //   • Množství je null nebo 0.
+        //   • Sleva není aktivní nebo nemá hodnotu.
+        //
+        // Poznámka:
+        //   • Pokud později přidáš další pole (např. poznámku), stačí je doplnit sem.
+        // ============================================================================
+        public bool IsEmpty =>
+            string.IsNullOrWhiteSpace(SelectedTask)
+            && string.IsNullOrWhiteSpace(SelectedSpecification)
+            && string.IsNullOrWhiteSpace(SelectedMaterial)
+            && string.IsNullOrWhiteSpace(SelectedLocation)
+            && Quantity == 0
+            && (!IsDiscountEnabled || DiscountPercent == null);
+
         // =========================================================
         // NOTIFY
         // =========================================================
@@ -454,3 +503,4 @@ namespace ElektroOffer_app.ViewModels.Items
             => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
     }
 }
+

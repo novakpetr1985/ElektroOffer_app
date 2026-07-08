@@ -33,6 +33,14 @@ Formát vychází z [Keep a Changelog](https://keepachangelog.com/cs/1.0.0/).
 - Testovací sada 10 materiálů (kabely, chráničky, spínače, zásuvky, rozvaděče,  jističe, chrániče) s cenami od dvou dodavatelů (ELKOV, EMAS)
 - uložené hodnoty pro práci `SelectedWorkPrice`, `SelectedWorkUnit`
 - uložené hodnoty pro materiál `SelectedMaterialPriceValue`, `SelectedMaterialUnit`
+- krátké lidsky čitelné identifikátory položek (W-1, W-2… pro práci, M-1, M-2… pro materiál)
+- oddělené číselné řady pro PRÁCI a MATERIÁL.
+- ID se ukládá do všech tří sekcí (`WorkItems`, `MaterialItems`, `CommonItems`)
+- ID slouží jako jednoznačný klíč pro párování položek při načítání projektu
+- podpora ukládání ID do JSONu (součást `ProjectData`)
+- podpora načítání ID z JSONu `ApplyProjectData`
+  - korektní spárování PRÁCE ↔ SPOLEČNÉ,
+  - korektní spárování MATERIÁL ↔ SPOLEČNÉ
 
 ### Změněno
 - `Material` rozšířen o vazbu na `Category` (partial třída, `Materials.cs`)
@@ -59,6 +67,16 @@ Formát vychází z [Keep a Changelog](https://keepachangelog.com/cs/1.0.0/).
   - používá `SelectedMaterialPrice.Price`
 - výpočet MaterialDiscountTotal
   - sleva se zobrazuje jako kladná hodnota.
+- buildProjectData() nyní generuje krátké ID místo GUID
+  - PRÁCE: W-<číslo>
+  - MATERIÁL: M-<číslo>
+- `CalculationItemData.Id`, `WorkItemData.Id`, `MaterialItemData.Id` změněny na typ string
+- odstraněny původní Guid Id.
+- JSON je díky tomu čitelnější a stabilnější
+- Parsování JSONu `ApplyProjectData` upraveno pro práci s ID typu string
+  - odstraněny konverze GUID → string
+  - odstraněny kolize mezi typy
+  - načítání je nyní plně deterministické
 
 ### Poznámky k migraci dat
 - Staré pole `Material.Price` ponecháno pro zpětnou kompatibilitu, plánováno k odstranění v pozdějším úklidovém patchi až po úplném přechodu na `MaterialPrice`
