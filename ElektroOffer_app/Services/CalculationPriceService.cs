@@ -36,10 +36,25 @@ namespace ElektroOffer_app.Services
                      * vm.Quantity;
             }
 
-            // Výpočet materiálu
-            if (vm.MaterialItem != null)
+            // ---------------------------------------------------------
+            // Výpočet PRODUKTOVÉHO materiálu (NOVĚ)
+            //
+            // ZMĚNA: Dřív se tu četlo "vm.MaterialItem.Price" - to je
+            // ale STARÉ pole s jedinou univerzální cenou, které je u
+            // nově importovaných materiálů vždy 0 (reálná cena teď
+            // žije v MaterialPrice, konkrétní pro každého dodavatele).
+            //
+            // Teď se čte "vm.SelectedMaterialPrice.Price" - to je cena
+            // z KONKRÉTNĚ VYBRANÉ nabídky (Nazev + Dodavatel + Materiál),
+            // nastavená MaterialCascadeService.UpdateSelectedPrice().
+            //
+            // "(double)" přetypování je nutné, protože
+            // MaterialPrice.Price je typu "decimal" (kvůli přesnosti
+            // peněz), zatímco tahle metoda a Quantity pracují s "double".
+            // ---------------------------------------------------------
+            if (vm.SelectedMaterialPrice != null)
             {
-                return vm.MaterialItem.Price * vm.Quantity;
+                return (double)vm.SelectedMaterialPrice.Price * vm.Quantity;
             }
 
             // Nic není vybráno
