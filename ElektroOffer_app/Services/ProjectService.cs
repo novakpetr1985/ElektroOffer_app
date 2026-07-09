@@ -11,14 +11,20 @@ namespace ElektroOffer_app.Services
     // 🏗️ ProjectService – centrální služba pro práci s projektovými soubory (.eof)
     // ============================================================================
     //
-    // ✔ Ukládání projektu (Save / SaveAs)
-    // ✔ Načítání projektu (Load)
-    // ✔ Kontrola neuložených změn (ConfirmNewProject)
-    // ✔ Export / import ceníku (.eofcat)
+    // Tato služba je jediným místem, které pracuje se soubory projektu:
     //
-    // ❗ Třída NEZNÁ UI logiku ani ViewModel
-    // ❗ Používá pouze datové modely (ProjectData, CatalogExportData)
-    // ❗ MessageBox je zde dočasně – později se nahradí IMessageBoxService
+    //   ✔ Ukládání projektu (Save / SaveAs)
+    //   ✔ Načítání projektu (Load)
+    //   ✔ Kontrola neuložených změn (ConfirmNewProject)
+    //   ✔ Export / import ceníku (.eofcat)
+    //
+    // Architektura:
+    //   • UI pracuje s MainViewModel → ten sestaví ProjectData
+    //   • ProjectService pracuje výhradně s ProjectData (datový model)
+    //   • ProjectData je čistý JSON-friendly model bez logiky
+    //
+    // Poznámka:
+    //   • MessageBoxService je dočasné řešení – později bude nahrazeno UI službou
     //
     // ============================================================================
 
@@ -60,22 +66,29 @@ namespace ElektroOffer_app.Services
         // ============================================================================
         // 💾 SAVE (Ctrl+S)
         // ============================================================================
+        //
+        // Ukládá projekt na existující cestu.
+        // Pokud projekt ještě nemá cestu → volá SaveAs().
+        //
+        // ============================================================================
         public string? Save(ProjectData data, string? currentPath)
         {
-            // Pokud projekt ještě nemá cestu → SaveAs
             if (string.IsNullOrEmpty(currentPath))
                 return SaveAs(data);
 
-            // Jinak ukládáme na existující cestu
             return SaveToPath(data, currentPath);
         }
 
         // ============================================================================
         // 💾 SAVE AS (Ctrl+Shift+S)
         // ============================================================================
+        //
+        // Otevře dialog pro výběr cesty a uloží projekt na novou cestu.
+        //
+        // ============================================================================
         public string? SaveAs(ProjectData data)
         {
-            EnsureDialogService(); // 🛡️ Ochrana: služba musí být nastavena
+            EnsureDialogService();
 
             var path = _dialogs!.ShowSaveFileDialog(
                 "Projekt ElektroOffer (*.eof)|*.eof",
@@ -92,6 +105,11 @@ namespace ElektroOffer_app.Services
         // ============================================================================
         // 📂 LOAD (Ctrl+O)
         // ============================================================================
+        //
+        // Načte projekt ze souboru .eof.
+        // Vrací dvojici (ProjectData, path).
+        //
+        // ============================================================================
         public (ProjectData? data, string? path) Load()
         {
             EnsureDialogService();
@@ -107,7 +125,7 @@ namespace ElektroOffer_app.Services
 
             try
             {
-                var json = _fs!.ReadAllText(path);   // 🧩 DI – testy nečtou disk
+                var json = _fs!.ReadAllText(path);
                 var data = JsonSerializer.Deserialize<ProjectData>(json, _jsonOptions);
 
                 if (data == null)
@@ -129,6 +147,16 @@ namespace ElektroOffer_app.Services
 
         // ============================================================================
         // ⚠️ Kontrola neuložených změn
+        // ============================================================================
+        //
+        // Používá se při:
+        //   • vytvoření nového projektu
+        //   • otevření jiného projektu
+        //
+        // Vrací:
+        //   ✔ true  → pokračovat
+        //   ✔ false → zrušit akci
+        //
         // ============================================================================
         public bool ConfirmNewProject(ProjectData data, string? currentPath, bool hasUnsavedChanges)
         {
@@ -153,6 +181,10 @@ namespace ElektroOffer_app.Services
 
         // ============================================================================
         // 📤 Export ceníku (.eofcat)
+        // ============================================================================
+        //
+        // Exportuje ceník do samostatného souboru.
+        //
         // ============================================================================
         public bool ExportCatalog(CatalogExportData data)
         {
@@ -195,6 +227,10 @@ namespace ElektroOffer_app.Services
         // ============================================================================
         // 📥 Import ceníku (.eofcat)
         // ============================================================================
+        //
+        // Načte ceník ze souboru .eofcat.
+        //
+        // ============================================================================
         public CatalogExportData? ImportCatalog()
         {
             EnsureDialogService();
@@ -222,7 +258,11 @@ namespace ElektroOffer_app.Services
         }
 
         // ============================================================================
-        // 🧩 Interní metoda – ukládání JSON na cestu
+        // 💾 Interní metoda – ukládání JSON na cestu
+        // ============================================================================
+        //
+        // Používá se v Save() a SaveAs().
+        //
         // ============================================================================
         private string? SaveToPath(ProjectData data, string path)
         {

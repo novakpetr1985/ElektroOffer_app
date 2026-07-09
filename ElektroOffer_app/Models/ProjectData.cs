@@ -1,24 +1,34 @@
 ﻿﻿namespace ElektroOffer_app.Models
 {
-    /// <summary>
-    /// Reprezentuje celý uložený projekt (kalkulaci) jako jeden celek.
-    ///
-    /// Tato třída se:
-    /// - serializuje do JSON při uložení (Save)
-    /// - deserializuje z JSON při načtení (Load)
-    ///
-    /// Obsahuje:
-    /// - metadata projektu (název, datum vytvoření/uložení)
-    /// - seznam řádků práce (WorkItems)
-    /// - seznam řádků materiálu (MaterialItems)
-    /// </summary>
+    // =========================================================================
+    // 📦 ProjectData – kompletní uložený projekt (kalkulace)
+    // =========================================================================
+    //
+    // Účel:
+    // -------
+    // Reprezentuje celý projekt uložený do JSON (Save / Load).
+    // Obsahuje metadata projektu a tři oddělené datové sekce:
+    //
+    //   • WorkItems        → pracovní položky (WorkItemData)
+    //   • MaterialItems    → materiálové položky (MaterialItemData)
+    //   • CommonItems      → společné hodnoty (CalculationItemData)
+    //
+    // Proč existuje:
+    // ---------------
+    // - Umožňuje uložit celý stav kalkulace do jednoho JSON souboru.
+    // - Od verze 1.7.x používá nový, čistý a stabilní datový model.
+    // - PRÁCE a MATERIÁL jsou oddělené → nemíchají se nesouvisející hodnoty.
+    // - Společné hodnoty jsou ukládány zvlášť → JSON je přehledný.
+    //
+    // =========================================================================
     public class ProjectData
     {
-        // ---------------------- METADATA PROJEKTU ----------------------
+        // =====================================================================
+        // 🏷 METADATA PROJEKTU
+        // =====================================================================
 
         /// <summary>
         /// Název projektu / zakázky.
-        /// Zobrazuje se v titulku okna.
         /// </summary>
         public string ProjectName { get; set; } = "Nový projekt";
 
@@ -28,25 +38,58 @@
         public DateTime CreatedAt { get; set; } = DateTime.Now;
 
         /// <summary>
-        /// Datum posledního uložení.
+        /// Datum posledního uložení projektu.
         /// Aktualizuje se při Save.
         /// </summary>
         public DateTime SavedAt { get; set; } = DateTime.Now;
 
-        // ---------------------- SEKCE: PRÁCE ----------------------
-
-        /// <summary>
-        /// Seznam všech řádků sekce PRÁCE.
-        /// Každý řádek obsahuje vybraný úkon, upřesnění, materiál, umístění a množství.
-        /// </summary>
+        // =====================================================================
+        // 🔧 PRÁCE – seznam řádků sekce PRÁCE
+        // =====================================================================
+        //
+        // Obsahuje pouze pracovní hodnoty:
+        // - SelectedTask
+        // - SelectedSpecification
+        // - SelectedMaterial
+        // - SelectedLocation
+        // - SelectedWorkPrice (volitelné)
+        // - SelectedWorkUnit  (volitelné)
+        //
+        // Společné hodnoty (Quantity, sleva, Total) NEJSOU zde → jsou v CommonItems.
+        //
+        // =========================================================================
         public List<WorkItemData> WorkItems { get; set; } = new();
 
-        // ---------------------- SEKCE: MATERIÁL ----------------------
-
-        /// <summary>
-        /// Seznam všech řádků sekce MATERIÁL.
-        /// Každý řádek obsahuje název materiálu a množství.
-        /// </summary>
+        // =====================================================================
+        // 📦 MATERIÁL – seznam řádků sekce MATERIÁL
+        // =====================================================================
+        //
+        // Obsahuje pouze materiálové hodnoty:
+        // - SelectedCategory
+        // - SelectedProductName
+        // - SelectedSupplier
+        // - SelectedOffer
+        // - SelectedMaterialPrice (volitelné)
+        // - SelectedMaterialUnit  (volitelné)
+        //
+        // Společné hodnoty (Quantity, sleva, Total) NEJSOU zde → jsou v CommonItems.
+        //
+        // =========================================================================
         public List<MaterialItemData> MaterialItems { get; set; } = new();
+
+        // =====================================================================
+        // 🧮 SPOLEČNÉ – společné hodnoty PRÁCE i MATERIÁLU
+        // =====================================================================
+        //
+        // Obsahuje pouze hodnoty, které jsou společné pro oba typy položek:
+        // - Quantity
+        // - DiscountPercent
+        // - IsDiscountEnabled
+        // - Total
+        //
+        // Každý řádek v CommonItems odpovídá jednomu řádku v WorkItems nebo MaterialItems.
+        //
+        // =========================================================================
+        public List<CalculationItemData> CommonItems { get; set; } = new();
     }
 }
