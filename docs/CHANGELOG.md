@@ -5,6 +5,167 @@ Formát vychází z [Keep a Changelog](https://keepachangelog.com/cs/1.0.0/).
 
 ---
 
+## [1.8.0.4] - 2026-07-10
+### Opraveno
+- Materiálové řádky (`CalculationItemViewModel.IsEmpty`) se nyní správně ukládají do JSON i při
+  částečně vyplněné produktové kaskádě (Kategorie → Název → Dodavatel → Nabídka → Cena), stejně
+  jako řádky Práce. Dříve kontrolovala `IsEmpty` pouze pracovní pole (Task/Specification/Material/
+  Location) a Quantity, takže se materiálový řádek uložil až po vyplnění množství bez ohledu na to,
+  kolik z kaskády už bylo vybráno.
+
+---
+
+## [1.8.0.3] - Unit Test Architecture Stabilization
+
+### Přidáno
+
+- Nová základní třída TestBase
+  - obsahuje sdílený _db kontext
+  - SetUp() nyní provádí EnsureDeleted + EnsureCreated
+  - každý test běží v naprosto čisté databázi
+  - odstraněny chyby typu UNIQUE constraint failed
+  - odstraněny chyby způsobené kontaminací dat mezi testy
+  - odstraněny zamčené SQLite handle
+  - zajištěno reálné chování EF Core (Include, vztahy, lookupy, kaskády)
+  - přidán dokument `UNIT-ViewModels.md` do složky `docs/` s kompletní tabulkou UNIT testů pro ViewModels
+
+### Změněno
+- kompletní refaktoring architektury UNIT testů
+  - odstraněny partial testovací třídy
+  - každá oblast testů má vlastní třídu (Total, Validation, CascadeWork, CascadeMaterial, PropertyChanged, IsEmpty)
+  - všechny testy nyní dědí z nové základní třídy TestBase
+  - sjednocený styl komentářů a struktury testů
+- sjednoceno číslování UNIT testů pro ViewModels (T_001–T_100)
+- opraveny názvy testů a doplněny detailní komentáře k jednotlivým testům
+- aktualizována struktura testovacích souborů pro konzistentní pořadí a logické řazení
+
+### Opraveno
+
+- Chyby v testech
+- T_23_Total_Should_Use_Price_From_Database_When_MaterialItem_Is_Loaded
+- T_35_Total_Should_Use_Highest_MaterialPrice_From_Database
+- T_07_CascadeMaterial_SelectedOffer_Should_Update_SelectedMaterialPrice
+- příčina
+- testy sdílely zbytky dat v SQLite → nyní odstraněno díky resetu DB před každým testem
+- ppraveno nesprávné načítání cen materiálu (23.22 místo 100) způsobené kontaminovanou DB
+
+### Odstraněno
+- starý soubor CalculationItemViewModelTests_Base.cs
+- všechny partial class definice testů
+- zbytky systémového bordelu z chatu, které se zobrazovaly v komentářích
+
+---
+
+## [1.8.0.2] - Oprava pozicování řádků při Save/Load
+
+### Přidáno
+- Nové pole `Position` v `WorkItemData` a `MaterialItemData` – nese skutečnou pozici řádku v UI (1-based), nezávisle na `Id`
+
+### Opraveno
+- Vyplněné řádky, mezi kterými byly prázdné mezery (např. vyplněný 1. a 5. řádek), se po uložení a znovunačtení projektu chybně „srovnaly pod sebe“ (5. řádek se posunul na 2. pozici)
+  - příčina: pozice řádku se odvozovala parsováním čísla z `Id` (např. „W-5“ → 5), zatímco `Id` se ve skutečnosti generovalo sekvenčně jen pro vyplněné řádky
+- Duplicitní definice `BuildProjectData()` v `MainViewModel.cs` (CS0121/CS0111) vzniklá při vkládání opravené verze metody
+
+### Změněno
+- `BuildProjectData()` – `Position` se nyní zaznamenává podle skutečného indexu řádku v kolekci (`WorkCalcItems`/`MaterialItems`) ještě před odfiltrováním prázdných řádků; `Id` zůstává čistě sekvenční identifikátor (W-1, W-2… / M-1, M-2…) pro párování s `CalculationItemData`
+- `ApplyProjectData()` – počet vytvářených prázdných řádků se nyní počítá dynamicky, zvlášť pro PRÁCI a MATERIÁL, jako maximum z minimálního počtu řádků (5) a nejvyšší hodnoty `Position` nalezené v uložených datech dané sekce
+- `ApplyProjectData()` – vyplněné řádky se vkládají na index podle `Position` (`Position - 1`) místo dřívějšího parsování čísla z `Id`
+
+### Poznámky k migraci dat
+- Starší `.eof` soubory bez pole `Position` nejsou touto opravou zpětně kompatibilní (`Position` se deserializuje jako `0`, což by vedlo k chybnému indexu) – pokud je to relevantní, řešit v samostatném patchi
+
+---
+
+## [1.8.0.1] - UI vylepšení PRÁCE a MATERIÁL
+
+### Přidáno
+- Ikona WORK v sekci PRÁCE (zobrazení před nadpisem)
+
+### Opraveno
+- tlačítka u MATERIÁLU (přidání/mazání řádků)
+- zarovnání a layout prvků v sekci PRÁCE a MATERIÁL
+
+### Změněno
+- odstraněny pokusy o Geometry ikonky (nekompatibilní s WPF)
+- ikony nyní vloženy přímo jako Image (stabilní řešení)
+
+---
+
+## [1.8.0] - Více dodavatelů materiálu - DB + UI
+
+### Přidáno
+- Podpora více dodavatelů u materiálu – nové entity `Category`, `Supplier`, `MaterialPrice`
+- Kaskádový výběr materiálu v kalkulaci: Kategorie → Název → Dodavatel → Materiál
+  (obdobně jako existující kaskáda Task → Specification → Material → Location u práce)
+- `MaterialCascadeService` – řízení kaskády výběru materiálu a dotažení ceny
+(- `MaterialImportService`, `ImportCsvReader`, `Import` (`Services/DataImport/`)
+  - import ceníku materiálu z CSV exportu Excel listu Import_Master, s upsert logikou podle dvojice (SupplierId, SupplierCode) pro bezpečné opakované importy)
+- Unikátní databázový index na `MaterialPrices (SupplierId, SupplierCode)`
+- Testovací sada 10 materiálů (kabely, chráničky, spínače, zásuvky, rozvaděče,  jističe, chrániče) s cenami od dvou dodavatelů (ELKOV, EMAS)
+- uložené hodnoty pro práci `SelectedWorkPrice`, `SelectedWorkUnit`
+- uložené hodnoty pro materiál `SelectedMaterialPriceValue`, `SelectedMaterialUnit`
+- krátké lidsky čitelné identifikátory položek (W-1, W-2… pro práci, M-1, M-2… pro materiál)
+- oddělené číselné řady pro PRÁCI a MATERIÁL.
+- ID se ukládá do všech tří sekcí (`WorkItems`, `MaterialItems`, `CommonItems`)
+- ID slouží jako jednoznačný klíč pro párování položek při načítání projektu
+- podpora ukládání ID do JSONu (součást `ProjectData`)
+- podpora načítání ID z JSONu `ApplyProjectData`
+  - korektní spárování PRÁCE ↔ SPOLEČNÉ,
+  - korektní spárování MATERIÁL ↔ SPOLEČNÉ
+
+### Změněno
+- `Material` rozšířen o vazbu na `Category` (partial třída, `Materials.cs`)
+- `CalculationItemViewModel` doplněn o novou kaskádu produktového materiálu (`SelectedCategory`, `SelectedProductName`, `SelectedSupplier`, `SelectedOffer`, `SelectedMaterialPrice`) vedle stávající kaskády práce
+- `CalculationPriceService.CalculateBaseTotal` – výpočet ceny materiálu nyní čte `SelectedMaterialPrice.Price` (cena od konkrétního vybraného dodavatele) místo dřívějšího jednotného `Material.Price`
+- `MainWindow.xaml` – tabulka materiálu rozšířena o sloupce Kategorie, Dodavatel a Materiál (název položky od dodavatele)
+- Opraveno chování tlačítka „SMAZAT“ / „RESET“
+  - Reset nyní správně maže:
+    - Kategorie `SelectedCategory`
+    - Název `SelectedProductName`
+    - Dodavatele `SelectedSupplier`
+    - Nabídku `SelectedOffer`
+    - Cenu `SelectedMaterialPrice`
+  - Starý model `MaterialItem`
+        - Množství, slevu, cenu řádku
+- Oddělení datového modelu do tří sekcí:
+  - `WorkItems` – pracovní hodnoty
+  - `MaterialItems` – produktový materiál
+  - `CommonItems` – společné hodnoty (množství, sleva, total)
+- upraveno formátování slevy — vizuálně „–“, interně kladná hodnota
+- výpočet ceny před slevou (`GrandTotalBeforeDiscount`)  
+  - nyní z původních cen položek
+- výpočet slevy u materiálu
+  - používá `SelectedMaterialPrice.Price`
+- výpočet MaterialDiscountTotal
+  - sleva se zobrazuje jako kladná hodnota.
+- buildProjectData() nyní generuje krátké ID místo GUID
+  - PRÁCE: W-<číslo>
+  - MATERIÁL: M-<číslo>
+- `CalculationItemData.Id`, `WorkItemData.Id`, `MaterialItemData.Id` změněny na typ string
+- odstraněny původní Guid Id.
+- JSON je díky tomu čitelnější a stabilnější
+- Parsování JSONu `ApplyProjectData` upraveno pro práci s ID typu string
+  - odstraněny konverze GUID → string
+  - odstraněny kolize mezi typy
+  - načítání je nyní plně deterministické
+
+### Poznámky k migraci dat
+- Staré pole `Material.Price` ponecháno pro zpětnou kompatibilitu, plánováno k odstranění v pozdějším úklidovém patchi až po úplném přechodu na `MaterialPrice`
+- Databázové tabulky (`Categories`, `Suppliers`, `MaterialPrices`, rozšíření `Materials` o `CategoryId`) vytvořeny ručně přes SQL (testovací data, bez EF Core migrace)
+
+### Stabilizováno
+- `ApplyProjectData()` korektně načítá tři oddělené datové sekce
+- `BuildProjectData()` generuje čistý, přehledný JSON bez míchání dat
+- výpočet Total je plně delegován do `CalculationPriceService`
+
+### Na obzoru
+- Reálné vyzkoušení importu ceníku materiálu z CSV přes `MaterialImportService` (zatím jen ručně vložená testovací data přes SQL)
+- Zobrazení kódu a ceny konkrétní nabídky (`SupplierCode`, `Price`) v detailním rozpočtu
+  - aktuálně se v kalkulaci zobrazuje jen název položky od dodavatele
+- Odstranění staršího pole `Material.Price` po úplném přechodu na `MaterialPrice`
+
+---
+
 ## [1.7.7] – Stabilizace MVVM refaktoringu
 
 ### Opraveno
