@@ -495,18 +495,55 @@ namespace ElektroOffer_app.ViewModels.Items
         //     vytváří (např. poslední prázdný řádek).
         //
         // Definice „prázdného řádku“:
-        //   • Není vybrán Task, Specification, Material ani Location.
-        //   • Množství je null nebo 0.
-        //   • Sleva není aktivní nebo nemá hodnotu.
+        //   • Tento view model je SDÍLENÝ pro řádky PRÁCE i MATERIÁLU – podle toho,
+        //     do které kolekce (WorkCalcItems / MaterialItems) řádek patří, je
+        //     vyplněná vždy jen jedna ze dvou níže uvedených skupin polí.
+        //     Proto musí IsEmpty kontrolovat OBĚ skupiny současně:
+        //
+        //   • PRÁCE (kaskáda Task → Specification → Material → Location):
+        //       - Není vybrán SelectedTask, SelectedSpecification,
+        //         SelectedMaterial ani SelectedLocation.
+        //
+        //   • MATERIÁL (kaskáda Category → Název → Dodavatel → Nabídka → Cena):
+        //       - Není vybrán SelectedCategory, SelectedProductName,
+        //         SelectedSupplier ani SelectedOffer.
+        //       - SelectedMaterialPrice je null (finální vybraná cena z kaskády).
+        //
+        //   • SPOLEČNÉ:
+        //       - Quantity je 0.
+        //
+        //   • Řádek je považován za prázdný, jen pokud jsou prázdná/nevyplněná
+        //     VŠECHNA pole z obou skupin zároveň i Quantity. Díky tomu se řádek
+        //     Materiálu uloží už při vyplnění byť jen prvního kroku kaskády
+        //     (např. SelectedCategory), stejně jako se dosud chovala Práce.
+        //
+        // 🔴 OPRAVA (bug: neukládání částečně vyplněné materiálové kaskády):
+        //   • Původní verze kontrolovala pouze pracovní pole (Task/Specification/
+        //     Material/Location) a Quantity. U materiálového řádku byla tato pole
+        //     vždy prázdná (patří Práci), takže IsEmpty fakticky visela jen na
+        //     Quantity == 0 – řádek se uložil až po vyplnění množství, bez ohledu
+        //     na to, kolik z materiálové kaskády už bylo vybráno.
+        //   • Doplněním kontroly materiálových polí (SelectedCategory,
+        //     SelectedProductName, SelectedSupplier, SelectedOffer,
+        //     SelectedMaterialPrice) se chování sjednotilo s Prací.
         //
         // Poznámka:
-        //   • Pokud později přidáš další pole (např. poznámku), stačí je doplnit sem.
+        //   • Pokud později přidáš další pole (např. poznámku k řádku, slevu jako
+        //     samostatnou podmínku apod.), stačí je doplnit do příslušné skupiny.
+        //   • Sleva (IsDiscountEnabled / DiscountPercent) se do IsEmpty záměrně
+        //     nezapočítává – sama o sobě slevu bez vybrané položky nedává smysl
+        //     ukládat jako neprázdný řádek.
         // ============================================================================
         public bool IsEmpty =>
             string.IsNullOrWhiteSpace(SelectedTask)
             && string.IsNullOrWhiteSpace(SelectedSpecification)
             && string.IsNullOrWhiteSpace(SelectedMaterial)
             && string.IsNullOrWhiteSpace(SelectedLocation)
+            && string.IsNullOrWhiteSpace(SelectedCategory)
+            && string.IsNullOrWhiteSpace(SelectedProductName)
+            && string.IsNullOrWhiteSpace(SelectedSupplier)
+            && string.IsNullOrWhiteSpace(SelectedOffer)
+            && SelectedMaterialPrice == null
             && Quantity == 0;
 
         // =========================================================

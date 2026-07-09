@@ -5,6 +5,16 @@ Formát vychází z [Keep a Changelog](https://keepachangelog.com/cs/1.0.0/).
 
 ---
 
+## [1.8.0.4] - 2026-07-10
+### Opraveno
+- Materiálové řádky (`CalculationItemViewModel.IsEmpty`) se nyní správně ukládají do JSON i při
+  částečně vyplněné produktové kaskádě (Kategorie → Název → Dodavatel → Nabídka → Cena), stejně
+  jako řádky Práce. Dříve kontrolovala `IsEmpty` pouze pracovní pole (Task/Specification/Material/
+  Location) a Quantity, takže se materiálový řádek uložil až po vyplnění množství bez ohledu na to,
+  kolik z kaskády už bylo vybráno.
+
+---
+
 ## [1.8.0.3] - Unit Test Architecture Stabilization
 
 ### Přidáno
