@@ -1,14 +1,15 @@
+using ElektroOffer_app.Commands;
+using ElektroOffer_app.Data;
+using ElektroOffer_app.Models;
+using ElektroOffer_app.Services;
+using ElektroOffer_app.ViewModels.Items;
+using ElektroOffer_app.Views;
 using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
-using ElektroOffer_app.Commands;
-using ElektroOffer_app.Data;
-using ElektroOffer_app.Models;
-using ElektroOffer_app.Services;
-using ElektroOffer_app.ViewModels.Items;
 
 namespace ElektroOffer_app.ViewModels
 {
@@ -35,6 +36,10 @@ namespace ElektroOffer_app.ViewModels
         private readonly IPrintService _printService;
         private readonly IApplicationService _applicationService;
         private readonly IWindowService _windowService;
+        
+        // 🔴 NOVÉ – služba pro načítání/ukládání údajů dodavatele
+        // Dodavatel se ukládá do JSON v %AppData%, ne do DB.
+        private readonly SupplierSettingsService _supplierSettingsService = new();
 
         // =========================================================
         // COLLECTIONS
@@ -139,6 +144,13 @@ namespace ElektroOffer_app.ViewModels
         public ICommand ResetWorkItemCommand { get; }
         public ICommand ResetMaterialItemCommand { get; }
 
+        // 🔴 NOVÉ – příkaz pro generování PDF faktury
+        // Tento příkaz se naváže na tlačítko v UI (MainWindow.xaml)
+        public ICommand GenerateInvoicePdfCommand { get; }
+        
+        // 🔴 NOVÉ – otevření okna faktury (vyplnění údajů + generování PDF)
+        public ICommand OpenInvoiceWindowCommand { get; }
+        
         // =====================================================================
         // 🚫 _isLoading – blokace přepočtů a reakcí během načítání projektu
         // =====================================================================
@@ -207,6 +219,41 @@ namespace ElektroOffer_app.ViewModels
             DeleteMaterialItemCommand = new RelayCommand(DeleteMaterialItem);
             ResetWorkItemCommand = new RelayCommand(ResetWorkItem);
             ResetMaterialItemCommand = new RelayCommand(ResetMaterialItem);
+
+            // 🔴 NOVÉ – inicializace příkazu pro generování PDF
+            // RelayCommand volá metodu GenerateInvoicePdf()
+            GenerateInvoicePdfCommand = new RelayCommand(_ => GenerateInvoicePdf());
+
+            // 🔴 NOVÉ – otevření okna faktury
+            OpenInvoiceWindowCommand = new RelayCommand(_ => OpenInvoiceWindow());
+        }
+
+        // =========================================================
+        // METHODS
+        // =========================================================
+
+        private void OpenInvoiceWindow()
+        {
+            // 1) Sestavení řádků faktury z kalkulace
+            var template = new InvoiceTemplateService();
+            var lines = template.BuildInvoiceLines(WorkCalcItems, MaterialItems);
+
+            // 2) Vytvoření dat faktury
+            var invoiceData = new InvoiceItemData
+            {
+                Lines = lines,
+                Supplier = new SupplierSettings()   // uživatel vyplní ručně v okně
+            };
+
+            // 3) Otevření okna faktury
+            var vm = new InvoiceWindowViewModel(WorkCalcItems, MaterialItems);
+            var window = new InvoiceWindow
+            {
+                DataContext = vm,
+                Owner = System.Windows.Application.Current.MainWindow
+            };
+
+            window.ShowDialog();
         }
 
         // =========================================================
@@ -312,6 +359,52 @@ namespace ElektroOffer_app.ViewModels
 
                 Recalculate();
             }
+        }
+
+        // =========================================================
+        // 🔴 GENEROVÁNÍ PDF FAKTURY Z AKTUÁLNÍ KALKULACE
+        // =========================================================
+        //
+        // Postup:
+        //  1) Z aktuálních WorkCalcItems a MaterialItems se sestaví řádky faktury
+        //     pomocí InvoiceTemplateService.BuildInvoiceLines.
+        //  2) Naplní se InvoiceItemData (číslo faktury, odběratel, data).
+        //     Zatím je to jednoduché – údaje můžeš později napojit na ProjectData.
+        //  3) Načtou se trvalé údaje dodavatele přes SupplierSettingsService.Load().
+        //  4) Vytvoří se PDF přes InvoiceTemplateService.GeneratePdf().
+        //  5) Do StatusText se zapíše informace o vygenerovaném souboru.
+        //
+        private void GenerateInvoicePdf()
+        {
+            // 1) Sestavení řádků faktury z kalkulace
+            var template = new InvoiceTemplateService();
+            var lines = template.BuildInvoiceLines(WorkCalcItems, MaterialItems);
+
+            // 2) Naplnění základních fakturačních údajů
+            //    Tady můžeš později napojit ProjectData (např. jméno zákazníka).
+            var invoiceData = new InvoiceItemData
+            {
+                InvoiceNumber = "2026-001",              // TODO: automatické číslování
+                IssueDate = DateTime.Now,
+                DueDate = DateTime.Now.AddDays(14),
+                CustomerName = "Zákazník",              // TODO: napojit na projekt
+                CustomerAddress = "Adresa",             // TODO: napojit na projekt
+                Lines = lines
+            };
+
+            // 3) Načtení dodavatele z JSON přes SupplierSettingsService
+            var supplier = _supplierSettingsService.Load();
+
+            // 4) Cesta k PDF – pro začátek na plochu
+            var outputPath = System.IO.Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.Desktop),
+                $"Faktura_{invoiceData.InvoiceNumber}.pdf");
+
+            // 5) Generování PDF přes InvoiceTemplateService
+            template.GeneratePdf(invoiceData, supplier, outputPath);
+
+            // 6) Stavová hláška do status baru
+            StatusText = $"PDF vygenerováno: {outputPath}";
         }
 
         // =========================================================

@@ -26,6 +26,7 @@
 
 		<!-- SQLite -->
 		<PackageReference Include="Microsoft.Data.Sqlite" Version="10.0.9" />
+		<PackageReference Include="QuestPDF" Version="2026.7.0" />
 		<!-- Override zranitelné verze 2.1.11 – fix bezpečnostní chyby GHSA-2m69-gcr7-jv3q -->
 		<PackageReference Include="SQLitePCLRaw.lib.e_sqlite3" Version="3.50.3" />
 		<!-- Explicitní pin tranzitivních SQLitePCLRaw balíčků – oprava zranitelnosti GHSA-2m69-gcr7-jv3q -->

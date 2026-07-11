@@ -70,6 +70,8 @@
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
 
+    <PackageReference Include="QuestPDF" Version="2026.7.0" />
+
     <!-- ZMĚNĚNO: z 2.1.11 na 3.50.3 – oprava bezpečnostní zranitelnosti GHSA-2m69-gcr7-jv3q -->
     <PackageReference Include="SQLitePCLRaw.lib.e_sqlite3" Version="3.50.3" />
 

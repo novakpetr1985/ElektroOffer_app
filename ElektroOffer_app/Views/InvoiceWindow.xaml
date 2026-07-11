@@ -1,0 +1,92 @@
+<Window x:Class="ElektroOffer_app.Views.InvoiceWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Faktura"
+        Height="650"
+        Width="600"
+        WindowStartupLocation="CenterOwner">
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="20">
+
+            <!-- ========================================================= -->
+            <!-- DODAVATEL -->
+            <!-- ========================================================= -->
+            <TextBlock Text="Dodavatel" FontSize="16" FontWeight="Bold" Margin="0,0,0,10"/>
+
+            <TextBlock Text="Název firmy"/>
+            <TextBox Text="{Binding SupplierInfo.CompanyName}" />
+
+            <TextBlock Text="Adresa" Margin="0,10,0,0"/>
+            <TextBox Text="{Binding SupplierInfo.Address}" />
+
+            <TextBlock Text="IČO" Margin="0,10,0,0"/>
+            <TextBox Text="{Binding SupplierInfo.Ico}" />
+
+            <TextBlock Text="DIČ" Margin="0,10,0,0"/>
+            <TextBox Text="{Binding SupplierInfo.Dic}" />
+
+            <TextBlock Text="Bankovní účet" Margin="0,10,0,0"/>
+            <TextBox Text="{Binding SupplierInfo.BankAccount}" />
+
+            <TextBlock Text="E-mail" Margin="0,10,0,0"/>
+            <TextBox Text="{Binding SupplierInfo.Email}" />
+
+            <TextBlock Text="Telefon" Margin="0,10,0,0"/>
+            <TextBox Text="{Binding SupplierInfo.Phone}" />
+
+            <CheckBox Content="Plátce DPH"
+                      Margin="0,10,0,0"
+                      IsChecked="{Binding SupplierInfo.IsVatPayer}" />
+
+            <Separator Margin="0,20,0,20"/>
+
+            <!-- ========================================================= -->
+            <!-- ODBĚRATEL -->
+            <!-- ========================================================= -->
+            <TextBlock Text="Odběratel" FontSize="16" FontWeight="Bold" Margin="0,0,0,10"/>
+
+            <TextBlock Text="Název"/>
+            <TextBox Text="{Binding CustomerName}" />
+
+            <TextBlock Text="Adresa" Margin="0,10,0,0"/>
+            <TextBox Text="{Binding CustomerAddress}" />
+
+            <TextBlock Text="IČO" Margin="0,10,0,0"/>
+            <TextBox Text="{Binding CustomerIco}" />
+
+            <TextBlock Text="DIČ" Margin="0,10,0,0"/>
+            <TextBox Text="{Binding CustomerDic}" />
+
+            <Separator Margin="0,20,0,20"/>
+
+            <!-- ========================================================= -->
+            <!-- FAKTURAČNÍ ÚDAJE -->
+            <!-- ========================================================= -->
+            <TextBlock Text="Fakturační údaje" FontSize="16" FontWeight="Bold" Margin="0,0,0,10"/>
+
+            <TextBlock Text="Číslo faktury"/>
+            <TextBox Text="{Binding InvoiceNumber}" />
+
+            <TextBlock Text="Datum vystavení" Margin="0,10,0,0"/>
+            <DatePicker SelectedDate="{Binding IssueDate}" />
+
+            <TextBlock Text="Datum splatnosti" Margin="0,10,0,0"/>
+            <DatePicker SelectedDate="{Binding DueDate}" />
+
+            <TextBlock Text="Poznámka" Margin="0,10,0,0"/>
+            <TextBox Text="{Binding Note}" AcceptsReturn="True" Height="60"/>
+
+            <Separator Margin="0,20,0,20"/>
+
+            <!-- ========================================================= -->
+            <!-- TLAČÍTKO PDF -->
+            <!-- ========================================================= -->
+            <Button Content="Vygenerovat PDF"
+                    Padding="10"
+                    HorizontalAlignment="Right"
+                    Command="{Binding GeneratePdfCommand}" />
+
+        </StackPanel>
+    </ScrollViewer>
+</Window>

@@ -35,6 +35,13 @@
                 <MenuItem Header="_Tisk"
                           InputGestureText="Ctrl+P"
                           Command="{Binding PrintCommand}" />
+                
+                <!-- 🔴 NOVÉ – generování PDF faktury z aktuální kalkulace -->
+                <MenuItem Header="_Faktura"
+                          Command="{Binding OpenInvoiceWindowCommand}" />
+
+
+                <Separator/>
 
                 <MenuItem Header="_Konec"
                           InputGestureText="Alt+F4"
@@ -78,6 +85,12 @@
                 <Button Content="🖨️ Tisk"
                         ToolTip="Tisk"
                         Command="{Binding PrintCommand}"
+                        Margin="2"/>
+                
+                <!-- 🔴 NOVÉ – rychlé tlačítko pro PDF fakturu -->
+                <Button Content="🧾 Faktura"
+                        ToolTip="Otevřít okno faktury"
+                        Command="{Binding OpenInvoiceWindowCommand}"
                         Margin="2"/>
 
             </ToolBar>
