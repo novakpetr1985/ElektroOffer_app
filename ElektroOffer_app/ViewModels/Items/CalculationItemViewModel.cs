@@ -193,10 +193,20 @@ namespace ElektroOffer_app.ViewModels.Items
         public bool CanSelectBaseMaterial => SelectedWorkTask != null;
         public bool CanSelectPosition => SelectedWorkTask != null;
 
+        // =========================================================
+        // MATERIÁL – ENABLE FLAGS (UI)
+        // =========================================================
+        // Tyto vlastnosti odemykají ComboBoxy v materiálové sekci.
+        // Pokud chybí, ComboBoxy jsou trvale vypnuté.
+        // =========================================================
 
-        // ********************************************************************************************
+        public bool CanSelectProductName => !string.IsNullOrWhiteSpace(SelectedCategory);
+        public bool CanSelectSupplier => !string.IsNullOrWhiteSpace(SelectedProductName);
+        public bool CanSelectOffer => !string.IsNullOrWhiteSpace(SelectedSupplier);
+
+        // =========================================================
         // 🔵 MATERIÁL – VSTUPNÍ KROKY PRODUKTOVÉ KASKÁDY
-        // ********************************************************************************************
+        // =========================================================
         //
         // POZOR: Tento blok MUSÍ být umístěn přesně zde:
         //
@@ -215,11 +225,18 @@ namespace ElektroOffer_app.ViewModels.Items
         //   • UI ComboBoxy (IsEnabled + ItemsSource)
         //
         // Pokud tyto properties chybí → vzniká CS0103.
-        // ********************************************************************************************
-
+        // =========================================================
 
         // =========================================================
         // CATEGORY – první krok materiálové kaskády
+        // =========================================================
+        // 👉 Uživatel vybírá kategorii (např. "Kabely", "Jističe")
+        // 👉 Po změně se:
+        //    • načtou dostupné názvy materiálu
+        //    • shodí všechny nižší kroky (ProductName, Supplier, Offer, Price)
+        //    • přepočítá Total
+        //    • 🔵 MUSÍ se vyvolat notify pro CanSelectProductName, CanSelectSupplier, CanSelectOffer
+        //      jinak se ComboBoxy v UI NEODEMKNOU
         // =========================================================
         public string? SelectedCategory
         {
@@ -229,23 +246,34 @@ namespace ElektroOffer_app.ViewModels.Items
                 if (_selectedCategory == value) return;
                 _selectedCategory = value;
 
-                // Načtení názvů materiálu podle kategorie
+                // Reset nižších úrovní (včetně ceny)
+                _materialCascade.ResetBelowCategory(this);
+
+                // Načtení názvů materiálu podle vybrané kategorie
                 _materialCascade.LoadMaterialNames(this);
 
-                // Reset nižších kroků
-                SelectedProductName = null;
-                SelectedSupplier = null;
-                SelectedOffer = null;
-                SelectedMaterialPrice = null;
-
                 OnPropertyChanged();
+
+                // 🔵 DOPLNĚNO — odemknutí dalších kroků kaskády
+                OnPropertyChanged(nameof(CanSelectProductName));
+                OnPropertyChanged(nameof(CanSelectSupplier));
+                OnPropertyChanged(nameof(CanSelectOffer));
+
                 NotifyCalculatedProperties();
                 UpdateTotal();
             }
         }
 
+
         // =========================================================
         // PRODUCT NAME – druhý krok materiálové kaskády
+        // =========================================================
+        // 👉 Uživatel vybírá konkrétní produkt (např. "CYKY 3×2,5")
+        // 👉 Po změně se:
+        //    • načtou dostupní dodavatelé
+        //    • shodí Supplier + Offer + Price
+        //    • 🔵 MUSÍ se vyvolat notify pro CanSelectSupplier, CanSelectOffer
+        //      jinak se ComboBoxy v UI NEODEMKNOU
         // =========================================================
         public string? SelectedProductName
         {
@@ -255,22 +283,30 @@ namespace ElektroOffer_app.ViewModels.Items
                 if (_selectedProductName == value) return;
                 _selectedProductName = value;
 
-                // Načtení dodavatelů
+                _materialCascade.ResetBelowMaterialName(this);
                 _materialCascade.LoadSuppliers(this);
 
-                // Reset nižších kroků
-                SelectedSupplier = null;
-                SelectedOffer = null;
-                SelectedMaterialPrice = null;
-
                 OnPropertyChanged();
+
+                // 🔵 DOPLNĚNO — odemknutí dodavatele + nabídky
+                OnPropertyChanged(nameof(CanSelectSupplier));
+                OnPropertyChanged(nameof(CanSelectOffer));
+
                 NotifyCalculatedProperties();
                 UpdateTotal();
             }
         }
 
+
         // =========================================================
         // SUPPLIER – třetí krok materiálové kaskády
+        // =========================================================
+        // 👉 Uživatel vybírá dodavatele (např. "DEK", "Elkov")
+        // 👉 Po změně se:
+        //    • načtou dostupné nabídky (SupplierName)
+        //    • shodí Offer + Price
+        //    • 🔵 MUSÍ se vyvolat notify pro CanSelectOffer
+        //      jinak se poslední ComboBox NEODEMKNĚ
         // =========================================================
         public string? SelectedSupplier
         {
@@ -280,21 +316,29 @@ namespace ElektroOffer_app.ViewModels.Items
                 if (_selectedSupplier == value) return;
                 _selectedSupplier = value;
 
-                // Načtení nabídek
+                _materialCascade.ResetBelowSupplier(this);
                 _materialCascade.LoadOffers(this);
 
-                // Reset nižších kroků
-                SelectedOffer = null;
-                SelectedMaterialPrice = null;
-
                 OnPropertyChanged();
+
+                // 🔵 DOPLNĚNO — odemknutí nabídky
+                OnPropertyChanged(nameof(CanSelectOffer));
+
                 NotifyCalculatedProperties();
                 UpdateTotal();
             }
         }
 
+
         // =========================================================
         // OFFER – čtvrtý krok materiálové kaskády
+        // =========================================================
+        // 👉 Uživatel vybírá konkrétní nabídku dodavatele
+        //    (např. "CYKY 3×2,5 – balení 100 m")
+        // 👉 Po změně se:
+        //    • načte MaterialPrice (kód, cena, jednotka)
+        //    • přepočítá Total
+        //    • 🔵 Zde se notify nepřidává — není potřeba odemykat další krok
         // =========================================================
         public string? SelectedOffer
         {
@@ -304,20 +348,15 @@ namespace ElektroOffer_app.ViewModels.Items
                 if (_selectedOffer == value) return;
                 _selectedOffer = value;
 
-                // Načtení ceny materiálu (bez LoadMaterialPrice – tato metoda NEEXISTUJE)
-                // MaterialCascadeService nastaví SelectedMaterialPrice automaticky,
-                // pokud je implementováno v LoadOffers nebo jiném kroku.
-                // Pokud ne, cena se načte při výběru SelectedMaterialPrice.
-
-                // Reset ceny – aby se po změně nabídky načetla nová cena
-                SelectedMaterialPrice = null;
+                // Finální krok – načtení ceny podle kombinace:
+                // Category + ProductName + Supplier + Offer
+                _materialCascade.UpdateSelectedPrice(this);
 
                 OnPropertyChanged();
                 NotifyCalculatedProperties();
                 UpdateTotal();
             }
         }
-
 
         // =========================================================
         // 🔴 SELECTED WORK SPECIFICATION – druhý krok kaskády PRÁCE
