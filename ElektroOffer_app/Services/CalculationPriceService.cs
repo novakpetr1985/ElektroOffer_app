@@ -3,15 +3,28 @@ using ElektroOffer_app.ViewModels.Items;
 
 namespace ElektroOffer_app.Services
 {
-    /// <summary>
-    /// Služba pro výpočet celkové ceny řádku kalkulace.
-    /// Obsahuje veškerou logiku, která byla dříve v CalculationItemViewModel.Total.
-    /// </summary>
+    // ============================================================================
+    // 🧮 CalculationPriceService – výpočet celkové ceny řádku kalkulace
+    // ----------------------------------------------------------------------------
+    // Účel:
+    //   • Centralizuje výpočet ceny řádku (Práce i Materiál).
+    //   • Nahrazuje původní logiku v CalculationItemViewModel.Total.
+    //   • Zajišťuje jednotné chování při aplikaci slevy.
+    //
+    // Podporované kaskády:
+    //   • PRÁCE – WorkTask → WorkSpecification → BaseMaterial → Position
+    //   • MATERIÁL – Category → ProductName → Supplier → Offer → Price
+    //
+    // Poznámka:
+    //   • Výpočet práce používá BasePrice × MaterialCoef × PositionCoef.
+    //   • Výpočet materiálu používá SelectedMaterialPrice.Price.
+    //   • Sleva se aplikuje až po výpočtu základní ceny.
+    // ============================================================================
     public class CalculationPriceService
     {
-        /// <summary>
-        /// Vrátí celkovou cenu řádku (práce nebo materiál) včetně slevy.
-        /// </summary>
+        // ----------------------------------------------------------------------
+        // TOTAL – vrací celkovou cenu řádku včetně slevy
+        // ----------------------------------------------------------------------
         public double CalculateTotal(CalculationItemViewModel vm)
         {
             double baseTotal = CalculateBaseTotal(vm);
@@ -25,44 +38,92 @@ namespace ElektroOffer_app.Services
         // =========================================================
         // ZÁKLADNÍ CENA (BEZ SLEVY)
         // =========================================================
+        //
+        // Účel:
+        //   • Vrací základní cenu řádku kalkulace (bez slevy).
+        //   • Podporuje dvě zcela odlišné kaskády:
+        //       1) PRÁCE – nová normalizovaná kaskáda WorkTask → BaseMaterial → Position
+        //       2) MATERIÁL – produktová kaskáda Category → ProductName → Supplier → Offer → Price
+        //
+        // Logika:
+        //   • Pokud je vyplněná kaskáda Práce (WorkTask + BaseMaterial + Position),
+        //     počítá se cena práce.
+        //   • Pokud je vyplněná kaskáda Materiálu (SelectedMaterialPrice),
+        //     počítá se cena materiálu.
+        //   • Pokud není vyplněno nic, vrací 0.
+        //
+        // Poznámka:
+        //   • Quantity je typu double, BasePrice/Price jsou decimal → nutné přetypování.
+        //   • WorkSpecification neovlivňuje cenu — určuje pouze jednotku (Unit).
+        // =========================================================
         private double CalculateBaseTotal(CalculationItemViewModel vm)
         {
-            // Výpočet práce
-            if (vm.WorkItem != null)
+            // ---------------------------------------------------------
+            // 🔴 PRÁCE – nová kaskáda WorkTask → BaseMaterial → Position
+            //
+            // Podmínky:
+            //   • Musí být vybrán WorkTask (obsahuje BasePrice)
+            //   • Musí být vybrán BaseMaterial (obsahuje MaterialCoef)
+            //   • Musí být vybrána Position (obsahuje PositionCoef)
+            //
+            // Výpočet:
+            //   Jednotková cena práce =
+            //       BasePrice × MaterialCoef × PositionCoef
+            //
+            //   Celková cena práce =
+            //       Jednotková cena × Quantity
+            //
+            // Poznámka:
+            //   • WorkSpecification neovlivňuje cenu — určuje pouze jednotku (Unit).
+            // ---------------------------------------------------------
+            if (vm.SelectedWorkTask != null &&
+                vm.SelectedBaseMaterial != null &&
+                vm.SelectedPosition != null)
             {
-                return vm.WorkItem.BasePrice
-                     * vm.WorkItem.MaterialCoef
-                     * vm.WorkItem.PositionCoef
-                     * vm.Quantity;
+                double unitPrice =
+                    (double)vm.SelectedWorkTask.BasePrice *
+                    vm.SelectedBaseMaterial.MaterialCoef *
+                    vm.SelectedPosition.PositionCoef;
+
+                return unitPrice * vm.Quantity;
             }
 
             // ---------------------------------------------------------
-            // Výpočet PRODUKTOVÉHO materiálu (NOVĚ)
+            // 🔵 MATERIÁL – produktová kaskáda (beze změny)
             //
-            // ZMĚNA: Dřív se tu četlo "vm.MaterialItem.Price" - to je
-            // ale STARÉ pole s jedinou univerzální cenou, které je u
-            // nově importovaných materiálů vždy 0 (reálná cena teď
-            // žije v MaterialPrice, konkrétní pro každého dodavatele).
+            // Podmínky:
+            //   • Musí být vybrána konkrétní nabídka (SelectedMaterialPrice)
+            //     – obsahuje cenu konkrétního dodavatele.
             //
-            // Teď se čte "vm.SelectedMaterialPrice.Price" - to je cena
-            // z KONKRÉTNĚ VYBRANÉ nabídky (Nazev + Dodavatel + Materiál),
-            // nastavená MaterialCascadeService.UpdateSelectedPrice().
+            // Výpočet:
+            //   Celková cena materiálu =
+            //       SelectedMaterialPrice.Price × Quantity
             //
-            // "(double)" přetypování je nutné, protože
-            // MaterialPrice.Price je typu "decimal" (kvůli přesnosti
-            // peněz), zatímco tahle metoda a Quantity pracují s "double".
+            // Poznámka:
+            //   • Price je decimal → nutné přetypování na double.
             // ---------------------------------------------------------
             if (vm.SelectedMaterialPrice != null)
             {
                 return (double)vm.SelectedMaterialPrice.Price * vm.Quantity;
             }
 
-            // Nic není vybráno
+            // ---------------------------------------------------------
+            // 🔘 NIC NENÍ VYBRÁNO
+            // ---------------------------------------------------------
             return 0;
         }
 
         // =========================================================
         // APLIKACE SLEVY
+        // =========================================================
+        //
+        // Účel:
+        //   • Aplikuje procentuální slevu na základní cenu.
+        //
+        // Logika:
+        //   • Pokud sleva není zapnutá nebo není vyplněná, vrací se původní cena.
+        //   • Sleva >= 100 % → cena nesmí být záporná → vrací 0.
+        //   • Sleva < 0 → ignoruje se.
         // =========================================================
         private double ApplyDiscount(CalculationItemViewModel vm, double baseTotal)
         {

@@ -71,34 +71,41 @@ namespace ElektroOffer_app.Services
         // 🔧 BuildWorkLine – jedna položka Práce → InvoiceLineData
         // ------------------------------------------------------------------
         // Description:
-        //   • Skládá kaskádu Task → Specification → Material → Location
+        //   • Skládá novou kaskádu WorkTask → WorkSpecification → BaseMaterial → Position
         //     do jednoho čitelného textu.
+        //   • Každý segment je objekt (ne string), proto se používá .Name.
         //   • Prázdné segmenty (null/whitespace) se automaticky vynechají.
         //
         // LineType:
-        //   • Můžeš doplnit např. "Práce", pokud chceš typ řádku odlišit
-        //     i u pracovních položek (zatím není nastaven).
+        //   • Nastaveno na "Práce" pro odlišení v PDF / UI.
         // ------------------------------------------------------------------
         private InvoiceLineData BuildWorkLine(CalculationItemViewModel item)
         {
+            // 1) Sestavení popisu řádku z nových objektů
             var descriptionParts = new List<string?>
-            {
-                item.SelectedTask,
-                item.SelectedSpecification,
-                item.SelectedMaterial,
-                item.SelectedLocation
-            }
-            .Where(part => !string.IsNullOrWhiteSpace(part));
+    {
+        item.SelectedWorkTask?.Name,          // Název úkonu (např. "Montáž zásuvky")
+        item.SelectedWorkSpecification?.Name, // Upřesnění (např. "1x zásuvka")
+        item.SelectedBaseMaterial?.Name,      // Podklad (např. "Sádrokarton")
+        item.SelectedPosition?.Name           // Poloha (např. "Strop")
+    }
+            .Where(x => !string.IsNullOrWhiteSpace(x));
 
+            // 2) Vytvoření řádku faktury
             return new InvoiceLineData
             {
-                // Např. "Montáž zásuvky – 1x zásuvka – Obývací pokoj"
+                LineType = "Práce",
+
+                // Např. "Montáž zásuvky – 1x zásuvka – Sádrokarton – Strop"
                 Description = string.Join(" – ", descriptionParts),
+
                 Quantity = item.Quantity,
-                Unit = item.SelectedWorkUnit ?? string.Empty,
-                UnitPrice = item.SelectedWorkPrice ?? 0m
-                // LineType můžeš doplnit později, pokud budeš chtít:
-                // LineType = "Práce"
+
+                // Jednotka pochází ze Specification (např. "ks", "m", "hod")
+                Unit = item.SelectedWorkSpecification?.Unit ?? string.Empty,
+
+                // Jednotková cena = BasePrice × MaterialCoef × PositionCoef
+                UnitPrice = item.CalculatedWorkPrice ?? 0m
             };
         }
 
@@ -113,6 +120,11 @@ namespace ElektroOffer_app.Services
         // LineType:
         //   • Nastaveno na "Materiál" – umožňuje v UI/PDF odlišit materiálové
         //     řádky od pracovních.
+        //
+        // Unit / UnitPrice:
+        //   • Dříve: SelectedMaterialUnit / SelectedMaterialPriceValue.
+        //   • Nově: MaterialUnit / MaterialPrice (moderní properties ViewModelu).
+        //   • Hodnoty jsou přenášeny z SelectedMaterialPrice (MaterialPrice?).
         //
         // DiscountPercent:
         //   • Pokud je v kalkulaci zapnutá sleva (IsDiscountEnabled),
@@ -130,8 +142,14 @@ namespace ElektroOffer_app.Services
                 LineType = "Materiál",
                 Description = description,
                 Quantity = item.Quantity,
-                Unit = item.SelectedMaterialUnit ?? string.Empty,
-                UnitPrice = item.SelectedMaterialPriceValue ?? 0m,
+
+                // 🔵 NOVÉ – jednotka materiálu (nahrazuje SelectedMaterialUnit)
+                Unit = item.MaterialUnit ?? string.Empty,
+
+                // 🔵 NOVÉ – cena materiálu (nahrazuje SelectedMaterialPriceValue)
+                UnitPrice = item.MaterialPrice ?? 0m,
+
+                // Sleva – společná logika
                 DiscountPercent = item.IsDiscountEnabled ? item.DiscountPercent : null
             };
         }

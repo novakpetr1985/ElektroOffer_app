@@ -214,10 +214,10 @@
                                     <Grid>
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="35"/>  <!-- ➖ SMAZÁNÍ ŘÁDKU -->
-                                            <ColumnDefinition Width="150"/> <!-- ÚKON -->
-                                            <ColumnDefinition Width="150"/> <!-- UPŘESNĚNÍ -->
-                                            <ColumnDefinition Width="150"/> <!-- MATERIÁL -->
-                                            <ColumnDefinition Width="120"/> <!-- UMÍSTĚNÍ -->
+                                            <ColumnDefinition Width="150"/> <!-- ÚKON (WorkTask) -->
+                                            <ColumnDefinition Width="150"/> <!-- UPŘESNĚNÍ (WorkSpecification) -->
+                                            <ColumnDefinition Width="150"/> <!-- PODKLAD (BaseMaterial) -->
+                                            <ColumnDefinition Width="120"/> <!-- POLOHA (Position) -->
                                             <ColumnDefinition Width="60"/>  <!-- MNOŽSTVÍ -->
                                             <ColumnDefinition Width="40"/>  <!-- 🔥 MJ -->
                                             <ColumnDefinition Width="80"/>  <!-- 💰 CENA PRÁCE -->
@@ -236,43 +236,47 @@
                                                 CommandParameter="{Binding}"
                                                 ToolTip="Smazat řádek"/>
 
-                                        <!-- ÚKON -->
+                                        <!-- ÚKON (WorkTask) -->
                                         <ComboBox Grid.Column="1"
-                                                ItemsSource="{Binding DataContext.Tasks, RelativeSource={RelativeSource AncestorType=Window}}"
-                                                SelectedItem="{Binding SelectedTask, Mode=TwoWay}"/>
+                                                ItemsSource="{Binding AvailableWorkTasks}"
+                                                SelectedItem="{Binding SelectedWorkTask, Mode=TwoWay}"
+                                                DisplayMemberPath="Name"/>
 
-                                        <!-- UPŘESNĚNÍ -->
+                                        <!-- UPŘESNĚNÍ (WorkSpecification) -->
                                         <ComboBox Grid.Column="2"
-                                                IsEnabled="{Binding CanSelectSpecification}"
-                                                ItemsSource="{Binding AvailableSpecifications}"
-                                                SelectedItem="{Binding SelectedSpecification, Mode=TwoWay}"/>
+                                                IsEnabled="{Binding CanSelectWorkSpecification}"
+                                                ItemsSource="{Binding AvailableWorkSpecifications}"
+                                                SelectedItem="{Binding SelectedWorkSpecification, Mode=TwoWay}"
+                                                DisplayMemberPath="Name"/>
 
-                                        <!-- MATERIÁL -->
+                                        <!-- PODKLAD (BaseMaterial) -->
                                         <ComboBox Grid.Column="3"
-                                                IsEnabled="{Binding CanSelectMaterial}"
-                                                ItemsSource="{Binding AvailableMaterials}"
-                                                SelectedItem="{Binding SelectedMaterial, Mode=TwoWay}"/>
+                                                IsEnabled="{Binding CanSelectBaseMaterial}"
+                                                ItemsSource="{Binding AvailableBaseMaterials}"
+                                                SelectedItem="{Binding SelectedBaseMaterial, Mode=TwoWay}"
+                                                DisplayMemberPath="Name"/>
 
-                                        <!-- UMÍSTĚNÍ -->
+                                        <!-- POLOHA (Position) -->
                                         <ComboBox Grid.Column="4"
-                                                IsEnabled="{Binding CanSelectLocation}"
-                                                ItemsSource="{Binding AvailableLocations}"
-                                                SelectedItem="{Binding SelectedLocation, Mode=TwoWay}"/>
+                                                IsEnabled="{Binding CanSelectPosition}"
+                                                ItemsSource="{Binding AvailablePositions}"
+                                                SelectedItem="{Binding SelectedPosition, Mode=TwoWay}"
+                                                DisplayMemberPath="Name"/>
 
                                         <!-- MNOŽSTVÍ -->
                                         <TextBox Grid.Column="5"
                                                 TextAlignment="Right"
                                                 Text="{Binding Quantity, UpdateSourceTrigger=PropertyChanged}"/>
 
-                                        <!-- 🔥 MJ -->
+                                        <!-- 🔥 MJ (Unit ze Specification) -->
                                         <TextBlock Grid.Column="6"
                                                 VerticalAlignment="Center"
                                                 HorizontalAlignment="Center"
                                                 TextAlignment="Center"
                                                 Foreground="Gray"
-                                                Text="{Binding WorkUnit}"/>
+                                                Text="{Binding SelectedWorkSpecification.Unit}"/>
 
-                                        <!-- 💰 CENA PRÁCE -->
+                                        <!-- 💰 CENA PRÁCE (CalculatedWorkPrice × Quantity) -->
                                         <TextBlock Grid.Column="7"
                                                 FontWeight="Bold"
                                                 Foreground="DarkBlue"
