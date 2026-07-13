@@ -5,6 +5,65 @@ Formát vychází z [Keep a Changelog](https://keepachangelog.com/cs/1.0.0/).
 
 ---
 
+## [1.8.1.1] - Fakturace: okno, údaje, generování PDF
+
+### Přidáno
+- Nové fakturační okno (InvoiceWindow)
+  - možnost vyplnit kompletní údaje dodavatele:
+    - název firmy, adresa, IČO, DIČ
+    - bankovní účet, e‑mail, telefon
+    - příznak plátce DPH
+  - možnost vyplnit údaje odběratele:
+    - název, adresa, IČO, DIČ
+- fakturační metadata:
+  - číslo faktury
+  - datum vystavení
+  - datum splatnosti
+  - poznámka
+- zobrazení řádků faktury generovaných z kalkulace (práce + materiál)
+- zobrazení celkové ceny faktury
+- tlačítko „Vygenerovat PDF“ napojené na QuestPDF
+- `InvoiceWindowViewModel`
+  - kompletní ViewModel pro fakturační okno
+  - implementace všech fakturačních polí (dodavatel, odběratel, metadata)
+  - implementace příkazu GeneratePdfCommand
+  - napojení na `InvoiceTemplateService` a `InvoiceDocument`
+- OpenInvoiceWindowCommand (`MainViewModel`)
+  - nový příkaz pro otevření fakturačního okna
+  - předává řádky kalkulace (WorkCalcItems, MaterialItems) do fakturačního okna
+- QuestPDF licence
+  - přidána inicializace v App.xaml.cs:
+    - `QuestPDF.Settings.License = LicenseType.Community`;
+
+### Změněno
+- `MainWindow.xaml`
+  - původní příkaz `GenerateInvoicePdfCommand` nahrazen příkazem `OpenInvoiceWindowCommand`
+  - tlačítko i menu položka nyní otevírají fakturační okno místo přímého generování PDF
+
+- `MainViewModel.cs`
+  - doplněna metoda `OpenInvoiceWindow()` pro otevření fakturačního okna
+  - doplněna inicializace příkazu `OpenInvoiceWindowCommand`
+- Integrace fakturace
+  - řádky faktury se nyní generují z WorkCalcItems a MaterialItems
+  - fakturační údaje jsou předávány do InvoiceDocument před generováním PDF
+
+### Opraveno
+- opraveno chybné volání PDF generování bez fakturačních údajů
+- opraveno nenavázání příkazu v MainWindow.xaml → příkaz se nyní správně spouští
+- opraveny chyby kompilace po instalaci QuestPDF (CS0006, chybějící metadata)
+- opraveny chybějící parametry v konstruktoru InvoiceWindowViewModel
+- opraveno chování, kdy se PDF negenerovalo kvůli chybějící licenci QuestPDF
+
+### Odstraněno
+- odstraněny neplatné referenční buildy po instalaci PDF balíčků (bin/, obj/, .vs/)
+- odstraněny staré nevyužité části kódu související s původním generováním PDF
+
+---
+
+## [1.8.1]
+
+---
+
 ## [1.8.0.4] - 2026-07-10
 ### Opraveno
 - Materiálové řádky (`CalculationItemViewModel.IsEmpty`) se nyní správně ukládají do JSON i při
