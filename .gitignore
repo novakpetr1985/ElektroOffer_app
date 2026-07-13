@@ -18,6 +18,17 @@ TestResults/
 .idea/
 .vscode/
 
-# SQLite temporary files
+# SQLite database files
+*.db
+*.db-journal
 *.db-shm
 *.db-wal
+*.sqlite
+*.sqlite3
+
+# SQLite Browser project file
+*.sqbpro
+
+# Publish output
+publish/
+ElektroOffer_app/publish/
