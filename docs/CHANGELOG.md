@@ -114,6 +114,12 @@ Formát vychází z [Keep a Changelog](https://keepachangelog.com/cs/1.0.0/).
 
 ## [1.8.1]
 
+### Změněno
+- Změna názvu Material u Práce na Podklad (BaseMaterial)
+
+### Odstraněno
+- Odstranění Price sloupce z DB u Material
+
 ---
 
 ## [1.8.1.2] - Refaktorace MainViewModel + Export + Null‑Safety + Fix konstruktoru
