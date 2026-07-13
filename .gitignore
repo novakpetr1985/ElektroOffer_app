@@ -32,3 +32,5 @@ TestResults/
 # Publish output
 publish/
 ElektroOffer_app/publish/
+ElektroOffer_app/elektrooffer.db
+ElektroOffer_app/elektrooffer.sqbpro
