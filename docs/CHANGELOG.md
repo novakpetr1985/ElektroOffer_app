@@ -5,6 +5,58 @@ Formát vychází z [Keep a Changelog](https://keepachangelog.com/cs/1.0.0/).
 
 ---
 
+## [1.8.1.2] - Refaktorace MainViewModel + Export + Null‑Safety + Fix konstruktoru
+
+### Opraveno
+- CS1061 – odstranění starých vlastností
+  - `SelectedTask` → nahrazeno SelectedWorkTask
+  - `SelectedSpecification` → nahrazeno SelectedWorkSpecification
+  - `SelectedMaterial` → nahrazeno SelectedBaseMaterial
+  - `SelectedLocation` → nahrazeno SelectedPosition
+  - `MaterialItem` → nahrazeno SelectedMaterialPrice
+  - `WorkItem` → nahrazeno WorkPrice (decimal)
+- CS1729 – neplatný počet argumentů v konstruktoru MainViewModel
+  - odstraněn neexistující cascadeService
+  - sjednoceno volání konstruktoru na přesný počet parametrů
+  - opraveno volání v MainWindow.xaml.cs
+- CS0103 – neexistující identifikátor cascadeService
+  - odstraněn z volání MainViewModel
+  - odstraněn z MainWindow.xaml.cs
+- CS7036 – chybějící argument „price“
+  - doplněn správný argument priceService
+  - volání konstruktoru nyní odpovídá signatuře
+- CS8601 / CS8602 – null‑safety
+  - doplněny ?? "" u všech stringů načítaných z uložených dat
+  - doplněny ?? 0m u decimal hodnot
+  - doplněny ?. a ! tam, kde je to typově bezpečné
+  - přidána lokální proměnná priceObj v exportu materiálu
+  - odstraněny všechny null‑reference warnings
+- Duplicitní blok PRÁCE v ExportAsText()
+  - odstraněn starý blok
+  - ponechán pouze nový, typově bezpečný blok
+  - export nyní používá správné vlastnosti
+
+### Změněno
+- Kompletní refaktorace ExportAsText()
+  - přepsán celý blok PRÁCE i MATERIÁL
+  - sjednocena logika výpočtu
+  - přidány moderní komentáře
+  - odstraněny staré názvy vlastností
+  - export je nyní 100% kompatibilní s architekturou 1.7.5
+- Refaktorace načítání materiálu (ApplyProjectData)
+  - doplněna typově bezpečná kaskáda
+  - doplněny null‑safe operátory
+  - přidána korektní konstrukce MaterialPrice modelu
+
+### Vyčištěno
+- odstraněny všechny staré názvy properties
+- odstraněny všechny zbytky staré architektury
+- sjednoceny komentáře v MainViewModel
+- odstraněny duplicitní bloky
+- sjednocena logika výpočtu Total / Discount / Price
+
+---
+
 ## [1.8.1.1] - Fakturace: okno, údaje, generování PDF
 
 ### Přidáno
