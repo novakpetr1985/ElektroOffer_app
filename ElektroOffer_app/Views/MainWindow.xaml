@@ -142,7 +142,7 @@
                             <ColumnDefinition Width="35"/>  <!-- ➖ SMAZÁNÍ ŘÁDKU -->
                             <ColumnDefinition Width="150"/> <!-- ÚKON -->
                             <ColumnDefinition Width="150"/> <!-- UPŘESNĚNÍ -->
-                            <ColumnDefinition Width="150"/> <!-- MATERIÁL -->
+                            <ColumnDefinition Width="150"/> <!-- MATERIÁL --> <!-- PODKLAD (BaseMaterial) -->
                             <ColumnDefinition Width="120"/> <!-- UMÍSTĚNÍ -->
                             <ColumnDefinition Width="60"/>  <!-- MNOŽSTVÍ -->
                             <ColumnDefinition Width="40"/>  <!-- 🔥 MJ -->
@@ -162,9 +162,10 @@
                                    FontWeight="Bold"/>
 
                         <!-- MATERIÁL -->
+                        <!-- PODKLAD (BaseMaterial) -->
                         <TextBlock Grid.Column="3"
-                                   Text="Materiál"
-                                   FontWeight="Bold"/>
+                                Text="Podklad"
+                                FontWeight="Bold"/>
 
                         <!-- UMÍSTĚNÍ -->
                         <TextBlock Grid.Column="4"
