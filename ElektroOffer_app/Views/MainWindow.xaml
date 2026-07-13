@@ -129,7 +129,7 @@
                             <ColumnDefinition Width="35"/>  <!-- ➖ SMAZÁNÍ ŘÁDKU -->
                             <ColumnDefinition Width="150"/> <!-- ÚKON -->
                             <ColumnDefinition Width="150"/> <!-- UPŘESNĚNÍ -->
-                            <ColumnDefinition Width="150"/> <!-- MATERIÁL -->
+                            <ColumnDefinition Width="150"/> <!-- PODKLAD -->
                             <ColumnDefinition Width="120"/> <!-- UMÍSTĚNÍ -->
                             <ColumnDefinition Width="60"/>  <!-- MNOŽSTVÍ -->
                             <ColumnDefinition Width="40"/>  <!-- 🔥 MJ -->
@@ -148,9 +148,9 @@
                                    Text="Upřesnění"
                                    FontWeight="Bold"/>
 
-                        <!-- MATERIÁL -->
+                        <!-- PODKLAD -->
                         <TextBlock Grid.Column="3"
-                                   Text="Materiál"
+                                   Text="Podklad"
                                    FontWeight="Bold"/>
 
                         <!-- UMÍSTĚNÍ -->
@@ -203,7 +203,7 @@
                                             <ColumnDefinition Width="35"/>  <!-- ➖ SMAZÁNÍ ŘÁDKU -->
                                             <ColumnDefinition Width="150"/> <!-- ÚKON -->
                                             <ColumnDefinition Width="150"/> <!-- UPŘESNĚNÍ -->
-                                            <ColumnDefinition Width="150"/> <!-- MATERIÁL -->
+                                            <ColumnDefinition Width="150"/> <!-- PODKLAD -->
                                             <ColumnDefinition Width="120"/> <!-- UMÍSTĚNÍ -->
                                             <ColumnDefinition Width="60"/>  <!-- MNOŽSTVÍ -->
                                             <ColumnDefinition Width="40"/>  <!-- 🔥 MJ -->
@@ -234,7 +234,7 @@
                                                 ItemsSource="{Binding AvailableSpecifications}"
                                                 SelectedItem="{Binding SelectedSpecification, Mode=TwoWay}"/>
 
-                                        <!-- MATERIÁL -->
+                                        <!-- PODKLAD -->
                                         <ComboBox Grid.Column="3"
                                                 IsEnabled="{Binding CanSelectMaterial}"
                                                 ItemsSource="{Binding AvailableMaterials}"
