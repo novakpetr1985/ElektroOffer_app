@@ -64,6 +64,127 @@ Formát vychází z [Keep a Changelog](https://keepachangelog.com/cs/1.0.0/).
 
 ---
 
+## [1.8.1.2] - Refaktorace MainViewModel + Export + Null‑Safety + Fix konstruktoru
+
+### Opraveno
+- CS1061 – odstranění starých vlastností
+  - `SelectedTask` → nahrazeno SelectedWorkTask
+  - `SelectedSpecification` → nahrazeno SelectedWorkSpecification
+  - `SelectedMaterial` → nahrazeno SelectedBaseMaterial
+  - `SelectedLocation` → nahrazeno SelectedPosition
+  - `MaterialItem` → nahrazeno SelectedMaterialPrice
+  - `WorkItem` → nahrazeno WorkPrice (decimal)
+- CS1729 – neplatný počet argumentů v konstruktoru MainViewModel
+  - odstraněn neexistující cascadeService
+  - sjednoceno volání konstruktoru na přesný počet parametrů
+  - opraveno volání v MainWindow.xaml.cs
+- CS0103 – neexistující identifikátor cascadeService
+  - odstraněn z volání MainViewModel
+  - odstraněn z MainWindow.xaml.cs
+- CS7036 – chybějící argument „price“
+  - doplněn správný argument priceService
+  - volání konstruktoru nyní odpovídá signatuře
+- CS8601 / CS8602 – null‑safety
+  - doplněny ?? "" u všech stringů načítaných z uložených dat
+  - doplněny ?? 0m u decimal hodnot
+  - doplněny ?. a ! tam, kde je to typově bezpečné
+  - přidána lokální proměnná priceObj v exportu materiálu
+  - odstraněny všechny null‑reference warnings
+- Duplicitní blok PRÁCE v ExportAsText()
+  - odstraněn starý blok
+  - ponechán pouze nový, typově bezpečný blok
+  - export nyní používá správné vlastnosti
+
+### Změněno
+- Kompletní refaktorace ExportAsText()
+  - přepsán celý blok PRÁCE i MATERIÁL
+  - sjednocena logika výpočtu
+  - přidány moderní komentáře
+  - odstraněny staré názvy vlastností
+  - export je nyní 100% kompatibilní s architekturou 1.7.5
+- Refaktorace načítání materiálu (ApplyProjectData)
+  - doplněna typově bezpečná kaskáda
+  - doplněny null‑safe operátory
+  - přidána korektní konstrukce MaterialPrice modelu
+
+### Vyčištěno
+- odstraněny všechny staré názvy properties
+- odstraněny všechny zbytky staré architektury
+- sjednoceny komentáře v MainViewModel
+- odstraněny duplicitní bloky
+- sjednocena logika výpočtu Total / Discount / Price
+
+---
+
+## [1.8.1.1] - Fakturace: okno, údaje, generování PDF
+
+### Přidáno
+- Nové fakturační okno (InvoiceWindow)
+  - možnost vyplnit kompletní údaje dodavatele:
+    - název firmy, adresa, IČO, DIČ
+    - bankovní účet, e‑mail, telefon
+    - příznak plátce DPH
+  - možnost vyplnit údaje odběratele:
+    - název, adresa, IČO, DIČ
+- fakturační metadata:
+  - číslo faktury
+  - datum vystavení
+  - datum splatnosti
+  - poznámka
+- zobrazení řádků faktury generovaných z kalkulace (práce + materiál)
+- zobrazení celkové ceny faktury
+- tlačítko „Vygenerovat PDF“ napojené na QuestPDF
+- `InvoiceWindowViewModel`
+  - kompletní ViewModel pro fakturační okno
+  - implementace všech fakturačních polí (dodavatel, odběratel, metadata)
+  - implementace příkazu GeneratePdfCommand
+  - napojení na `InvoiceTemplateService` a `InvoiceDocument`
+- OpenInvoiceWindowCommand (`MainViewModel`)
+  - nový příkaz pro otevření fakturačního okna
+  - předává řádky kalkulace (WorkCalcItems, MaterialItems) do fakturačního okna
+- QuestPDF licence
+  - přidána inicializace v App.xaml.cs:
+    - `QuestPDF.Settings.License = LicenseType.Community`;
+
+### Změněno
+- `MainWindow.xaml`
+  - původní příkaz `GenerateInvoicePdfCommand` nahrazen příkazem `OpenInvoiceWindowCommand`
+  - tlačítko i menu položka nyní otevírají fakturační okno místo přímého generování PDF
+
+- `MainViewModel.cs`
+  - doplněna metoda `OpenInvoiceWindow()` pro otevření fakturačního okna
+  - doplněna inicializace příkazu `OpenInvoiceWindowCommand`
+- Integrace fakturace
+  - řádky faktury se nyní generují z WorkCalcItems a MaterialItems
+  - fakturační údaje jsou předávány do InvoiceDocument před generováním PDF
+
+### Opraveno
+- opraveno chybné volání PDF generování bez fakturačních údajů
+- opraveno nenavázání příkazu v MainWindow.xaml → příkaz se nyní správně spouští
+- opraveny chyby kompilace po instalaci QuestPDF (CS0006, chybějící metadata)
+- opraveny chybějící parametry v konstruktoru InvoiceWindowViewModel
+- opraveno chování, kdy se PDF negenerovalo kvůli chybějící licenci QuestPDF
+
+### Odstraněno
+- odstraněny neplatné referenční buildy po instalaci PDF balíčků (bin/, obj/, .vs/)
+- odstraněny staré nevyužité části kódu související s původním generováním PDF
+
+---
+
+## [1.8.1]
+
+---
+
+## [1.8.0.4] - 2026-07-10
+### Opraveno
+- Materiálové řádky (`CalculationItemViewModel.IsEmpty`) se nyní správně ukládají do JSON i při
+  částečně vyplněné produktové kaskádě (Kategorie → Název → Dodavatel → Nabídka → Cena), stejně
+  jako řádky Práce. Dříve kontrolovala `IsEmpty` pouze pracovní pole (Task/Specification/Material/
+  Location) a Quantity, takže se materiálový řádek uložil až po vyplnění množství bez ohledu na to,
+  kolik z kaskády už bylo vybráno.
+
+---
+
 ## [1.8.0.4] - 2026-07-10
 ### Opraveno
 - Materiálové řádky (`CalculationItemViewModel.IsEmpty`) se nyní správně ukládají do JSON i při

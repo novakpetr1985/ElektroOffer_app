@@ -10,120 +10,115 @@ namespace ElektroOffer_app.ViewModels.Items
 {
     public class CalculationItemViewModel : INotifyPropertyChanged
     {
+        // =====================================================================
+        // DEPENDENCY SERVICES
+        // ---------------------------------------------------------------------
+        // CalculationItemViewModel používá tři moderní služby:
+        //
+        // • MaterialCascadeService
+        //      – produktová kaskáda materiálu (Category → Name → Supplier → Offer)
+        //
+        // • WorkCascadeService
+        //      – typově bezpečná kaskáda práce (WorkTask → WorkSpecification → BaseMaterial → Position)
+        //
+        // • CalculationPriceService
+        //      – výpočet ceny práce i materiálu (včetně slevy)
+        //
+        // Poznámka:
+        // ---------
+        // Stará textová kaskáda práce (Task → Specification → Material → Location)
+        // byla kompletně odstraněna. CalculationCascadeService se již nepoužívá.
+        // =====================================================================
+
         private readonly AppDbContext _db;
-        private readonly CalculationCascadeService _cascade;
-        private readonly MaterialCascadeService _materialCascade; // kaskáda produktového materiálu
-        private readonly CalculationPriceService _price;
+        private readonly MaterialCascadeService _materialCascade;      // produktová kaskáda materiálu
+        private readonly CalculationPriceService _price;               // výpočet ceny práce + materiálu
+
+        // 🔴 NOVÉ – typově bezpečná kaskáda Práce (WorkTask → WorkSpecification → BaseMaterial → Position)
+        private readonly WorkCascadeService _workCascade;
 
         public CalculationItemViewModel(AppDbContext db)
         {
             _db = db ?? throw new ArgumentNullException(nameof(db));
-            _cascade = new CalculationCascadeService(db);
             _materialCascade = new MaterialCascadeService(db);
             _price = new CalculationPriceService();
 
-            // Kategorie je první krok kaskády produktového materiálu
+            // 🔴 NOVÉ – moderní kaskáda práce
+            _workCascade = new WorkCascadeService(db);
+
+            // =====================================================================
+            // MATERIÁL – načtení prvního kroku produktové kaskády
+            // =====================================================================
             _materialCascade.LoadCategories(this);
+
+            // =====================================================================
+            // PRÁCE – načtení nezávislých seznamů nové kaskády
+            // ---------------------------------------------------------------------
+            // • WorkTask je první krok (úkon)
+            // • BaseMaterial a Position jsou nezávislé seznamy → načítají se ihned
+            // =====================================================================
+            _workCascade.LoadTasks(this);
+            _workCascade.LoadBaseMaterials(this);
+            _workCascade.LoadPositions(this);
         }
 
         public static CalculationItemViewModel CreateDefault()
             => new CalculationItemViewModel(new AppDbContext());
 
+
         // =========================================================
         // FIELDS
         // =========================================================
 
-        private PriceItems? _workItem;
-        private Material? _materialItem;
-        private double _quantity;
+        private double _quantity;            // množství (společné pro práci i materiál)
+
+        // sleva (společné)
+        private bool _isDiscountEnabled = false;
+        private double? _discountPercent = null;
 
         // =====================================================================
         // 🆔 Id – propojení PRÁCE/MATERIÁL ↔ SPOLEČNÉ
+        // ---------------------------------------------------------------------
+        // • Každý řádek má lidsky čitelné ID:
+        //       PRÁCE    → W-1, W-2, W-3...
+        //       MATERIÁL → M-1, M-2, M-3...
+        //
+        // • ID se generuje při ukládání projektu v BuildProjectData().
+        // • Stejné ID se ukládá do:
+        //       WorkItemData.Id
+        //       MaterialItemData.Id
+        //       CalculationItemData.Id
+        //
+        // • Díky tomu lze při načítání projektu jednoznačně spárovat:
+        //       pracovní položku ↔ společné hodnoty
+        //       materiálovou položku ↔ společné hodnoty
         // =====================================================================
-        //
-        // ID je typu string, protože používáme krátké lidsky čitelné ID:
-        //   • W-1, W-2, W-3...  (položky PRÁCE)
-        //   • M-1, M-2, M-3...  (položky MATERIÁLU)
-        //
-        // CalculationItemViewModel.Id se nastavuje při ukládání projektu
-        // v metodě BuildProjectData(), kde se generují ID:
-        //
-        //   • PRÁCE → W-1, W-2, W-3...
-        //   • MATERIÁL → M-1, M-2, M-3...
-        //
-        // Stejné ID se ukládá do:
-        //   • WorkItemData.Id
-        //   • MaterialItemData.Id
-        //   • CalculationItemData.Id
-        //
-        // Díky tomu lze při načítání projektu jednoznačně spárovat:
-        //   • pracovní položku ↔ společné hodnoty
-        //   • materiálovou položku ↔ společné hodnoty
-        //
         public string Id { get; set; } = string.Empty;
 
-        // PRÁCE – kaskáda úkon → specifikace → materiál → lokace
-        private string? _selectedTask;
-        private string? _selectedSpecification;
-        private string? _selectedMaterial;
-        private string? _selectedLocation;
-
-        // MJ práce (např. m, ks, hod)
-        private string? _workUnit;
-
-        // sleva (společné)
-        private bool _isDiscountEnabled;
-        private double? _discountPercent;
-
-        // MATERIÁL – produktová kaskáda
-        private string? _selectedCategory;
-        private string? _selectedProductName;
-        private string? _selectedSupplier;
-        private string? _selectedOffer;
-        private MaterialPrice? _selectedMaterialPrice;
-
-        // Uložené hodnoty pro ProjectData – MATERIÁL
-        private decimal? _selectedMaterialPriceValue;
-        private string? _selectedMaterialUnit;
-
-        // Uložené hodnoty pro ProjectData – PRÁCE
-        private decimal? _selectedWorkPrice;
-        private string? _selectedWorkUnitValue;
-
         // =========================================================
-        // PUBLIC COLLECTIONS (UI)
+        // 💸 SLEVA – společná pro PRÁCI i MATERIÁL
         // =========================================================
-
-        public ObservableCollection<string> AvailableSpecifications { get; } = new();
-        public ObservableCollection<string> AvailableMaterials { get; } = new();
-        public ObservableCollection<string> AvailableLocations { get; } = new();
-
-        // Produktová kaskáda materiálu
-        public ObservableCollection<string> AvailableCategories { get; } = new();
-        public ObservableCollection<string> AvailableMaterialNames { get; } = new();
-        public ObservableCollection<string> AvailableSuppliers { get; } = new();
-        public ObservableCollection<string> AvailableOffers { get; } = new();
-
-        // =========================================================
-        // DISCOUNT (společné)
-        // =========================================================
+        //
+        // • IsDiscountEnabled – zapíná/vypíná slevu.
+        // • DiscountPercent   – hodnota slevy v procentech.
+        // • CalculationPriceService i InvoiceTemplateService tyto
+        //   properties vyžadují.
+        // • Backing fields jsou definované výše.
+        //
 
         public bool IsDiscountEnabled
         {
             get => _isDiscountEnabled;
             set
             {
-                if (_isDiscountEnabled == value) return;
+                if (_isDiscountEnabled == value)
+                    return;
+
                 _isDiscountEnabled = value;
 
-                if (!value)
-                {
-                    _discountPercent = null;
-                    OnPropertyChanged(nameof(DiscountPercent));
-                }
-
                 OnPropertyChanged();
-                NotifyCalculatedProperties();   // 🔥 OPRAVA – přepočet Total + IsEmpty
+                NotifyCalculatedProperties();
+                UpdateTotal();
             }
         }
 
@@ -132,137 +127,117 @@ namespace ElektroOffer_app.ViewModels.Items
             get => _discountPercent;
             set
             {
-                if (value.HasValue)
-                    value = Math.Clamp(value.Value, 0d, 100d);   // 🔥 OPRAVA – clamp
-
-                if (_discountPercent == value) return;
+                if (_discountPercent == value)
+                    return;
 
                 _discountPercent = value;
 
                 OnPropertyChanged();
-                NotifyCalculatedProperties();   // 🔥 OPRAVA – přepočet Total + IsEmpty
+                NotifyCalculatedProperties();
+                UpdateTotal();
             }
         }
 
+        // =====================================================================
+        // MATERIÁL – produktová kaskáda (Category → Name → Supplier → Offer → Price)
+        // ---------------------------------------------------------------------
+        // Backing fields pro vstupní kroky materiálové kaskády.
+        // Tyto hodnoty se nastavují přes veřejné properties níže.
+        // =====================================================================
+        private string? _selectedCategory;
+        private string? _selectedProductName;
+        private string? _selectedSupplier;
+        private string? _selectedOffer;
+        private MaterialPrice? _selectedMaterialPrice;
+
+        // =====================================================================
+        // 🔴 NOVÉ – normalizovaná kaskáda Práce
+        // ---------------------------------------------------------------------
+        // Backing fields pro typově bezpečnou kaskádu práce.
+        // =====================================================================
+        private WorkTask? _selectedWorkTask;
+        private WorkSpecification? _selectedWorkSpecification;
+        private BaseMaterial? _selectedBaseMaterial;
+        private Position? _selectedPosition;
+        private decimal? _calculatedWorkPrice;
+
         // =========================================================
-        // UNIT – pracovní MJ (z ceníku práce)
+        // PUBLIC COLLECTIONS (UI)
+        // =========================================================
+        //
+        // Tyto kolekce jsou naplňovány MaterialCascadeService a WorkCascadeService.
+        // UI je používá jako ItemsSource pro ComboBoxy.
         // =========================================================
 
-        public string? WorkUnit
-        {
-            get => _workUnit;
-            set
-            {
-                if (_workUnit == value) return;
-                _workUnit = value;
-                OnPropertyChanged();
-                NotifyCalculatedProperties();   // 🔥 OPRAVA – ovlivňuje IsEmpty
-            }
-        }
+        // Produktová kaskáda materiálu
+        public ObservableCollection<string> AvailableCategories { get; } = new();
+        public ObservableCollection<string> AvailableMaterialNames { get; } = new();
+        public ObservableCollection<string> AvailableSuppliers { get; } = new();
+        public ObservableCollection<string> AvailableOffers { get; } = new();
+
+        // 🔴 NOVÉ – normalizovaná kaskáda Práce
+        public ObservableCollection<WorkTask> AvailableWorkTasks { get; } = new();
+        public ObservableCollection<WorkSpecification> AvailableWorkSpecifications { get; } = new();
+        public ObservableCollection<BaseMaterial> AvailableBaseMaterials { get; } = new();
+        public ObservableCollection<Position> AvailablePositions { get; } = new();
 
         // =========================================================
-        // CASCADE ENABLE FLAGS
+        // CASCADE ENABLE FLAGS (UI)
+        // =========================================================
+        //
+        // UI povoluje ComboBoxy podle toho, zda je vybrán WorkTask.
+        // BaseMaterial a Position jsou nezávislé → povolují se ihned po výběru WorkTask.
         // =========================================================
 
-        // PRÁCE
-        public bool CanSelectSpecification => !string.IsNullOrWhiteSpace(SelectedTask);
-        public bool CanSelectMaterial => !string.IsNullOrWhiteSpace(SelectedSpecification);
-        public bool CanSelectLocation => !string.IsNullOrWhiteSpace(SelectedMaterial);
+        public bool CanSelectWorkSpecification => SelectedWorkTask != null;
+        public bool CanSelectBaseMaterial => SelectedWorkTask != null;
+        public bool CanSelectPosition => SelectedWorkTask != null;
 
-        // MATERIÁL – produktová kaskáda
+        // =========================================================
+        // MATERIÁL – ENABLE FLAGS (UI)
+        // =========================================================
+        // Tyto vlastnosti odemykají ComboBoxy v materiálové sekci.
+        // Pokud chybí, ComboBoxy jsou trvale vypnuté.
+        // =========================================================
+
         public bool CanSelectProductName => !string.IsNullOrWhiteSpace(SelectedCategory);
         public bool CanSelectSupplier => !string.IsNullOrWhiteSpace(SelectedProductName);
         public bool CanSelectOffer => !string.IsNullOrWhiteSpace(SelectedSupplier);
 
         // =========================================================
-        // TASK (úkon)
+        // 🔵 MATERIÁL – VSTUPNÍ KROKY PRODUKTOVÉ KASKÁDY
+        // =========================================================
+        //
+        // POZOR: Tento blok MUSÍ být umístěn přesně zde:
+        //
+        //   ✔ POD WorkUnit (poslední vlastnost práce)
+        //   ✔ NAD SelectedMaterialPrice (výstup materiálové kaskády)
+        //
+        // Důvod:
+        //   • SelectedCategory, SelectedProductName, SelectedSupplier, SelectedOffer jsou VSTUPY.
+        //   • SelectedMaterialPrice je VÝSTUP.
+        //   • Vstupy musí být definované dříve než výstup.
+        //
+        // Používají je:
+        //   • MaterialCascadeService (načítání seznamů)
+        //   • ProjectService (serializace)
+        //   • IsEmpty (detekce prázdných řádků)
+        //   • UI ComboBoxy (IsEnabled + ItemsSource)
+        //
+        // Pokud tyto properties chybí → vzniká CS0103.
         // =========================================================
 
-        public string? SelectedTask
-        {
-            get => _selectedTask;
-            set
-            {
-                if (_selectedTask == value) return;
-                _selectedTask = value;
-
-                _cascade.ResetBelowTask(this);
-                _cascade.LoadSpecifications(this);
-
-                OnPropertyChanged();
-                OnPropertyChanged(nameof(CanSelectSpecification));
-                NotifyCalculatedProperties();   // 🔥 OPRAVA – ovlivňuje IsEmpty
-            }
-        }
-
         // =========================================================
-        // SPECIFICATION (upřesnění úkonu)
+        // CATEGORY – první krok materiálové kaskády
         // =========================================================
-
-        public string? SelectedSpecification
-        {
-            get => _selectedSpecification;
-            set
-            {
-                if (_selectedSpecification == value) return;
-                _selectedSpecification = value;
-
-                _cascade.ResetBelowSpecification(this);
-                _cascade.LoadWorkUnit(this);
-                _cascade.LoadMaterials(this);
-
-                OnPropertyChanged();
-                OnPropertyChanged(nameof(CanSelectMaterial));
-                NotifyCalculatedProperties();   // 🔥 OPRAVA – ovlivňuje IsEmpty
-            }
-        }
-
+        // 👉 Uživatel vybírá kategorii (např. "Kabely", "Jističe")
+        // 👉 Po změně se:
+        //    • načtou dostupné názvy materiálu
+        //    • shodí všechny nižší kroky (ProductName, Supplier, Offer, Price)
+        //    • přepočítá Total
+        //    • 🔵 MUSÍ se vyvolat notify pro CanSelectProductName, CanSelectSupplier, CanSelectOffer
+        //      jinak se ComboBoxy v UI NEODEMKNOU
         // =========================================================
-        // MATERIAL (typ materiálu v rámci ceníku PRÁCE)
-        // =========================================================
-
-        public string? SelectedMaterial
-        {
-            get => _selectedMaterial;
-            set
-            {
-                if (_selectedMaterial == value) return;
-                _selectedMaterial = value;
-
-                _cascade.ResetBelowMaterial(this);
-                _cascade.LoadLocations(this);
-
-                SelectedLocation = null;
-
-                OnPropertyChanged();
-                OnPropertyChanged(nameof(CanSelectLocation));
-                NotifyCalculatedProperties();   // 🔥 OPRAVA – ovlivňuje IsEmpty
-            }
-        }
-
-        // =========================================================
-        // LOCATION (umístění práce)
-        // =========================================================
-
-        public string? SelectedLocation
-        {
-            get => _selectedLocation;
-            set
-            {
-                if (_selectedLocation == value) return;
-                _selectedLocation = value;
-
-                _cascade.UpdateWorkItem(this);
-
-                OnPropertyChanged();
-                NotifyCalculatedProperties();   // 🔥 OPRAVA – Total + IsEmpty
-            }
-        }
-
-        // =========================================================
-        // SELECTED CATEGORY (první krok produktové kaskády materiálu)
-        // =========================================================
-
         public string? SelectedCategory
         {
             get => _selectedCategory;
@@ -271,19 +246,35 @@ namespace ElektroOffer_app.ViewModels.Items
                 if (_selectedCategory == value) return;
                 _selectedCategory = value;
 
+                // Reset nižších úrovní (včetně ceny)
                 _materialCascade.ResetBelowCategory(this);
+
+                // Načtení názvů materiálu podle vybrané kategorie
                 _materialCascade.LoadMaterialNames(this);
 
                 OnPropertyChanged();
+
+                // 🔵 DOPLNĚNO — odemknutí dalších kroků kaskády
                 OnPropertyChanged(nameof(CanSelectProductName));
-                NotifyCalculatedProperties();   // 🔥 OPRAVA – ovlivňuje IsEmpty
+                OnPropertyChanged(nameof(CanSelectSupplier));
+                OnPropertyChanged(nameof(CanSelectOffer));
+
+                NotifyCalculatedProperties();
+                UpdateTotal();
             }
         }
 
-        // =========================================================
-        // SELECTED PRODUCT NAME (konkrétní produkt)
-        // =========================================================
 
+        // =========================================================
+        // PRODUCT NAME – druhý krok materiálové kaskády
+        // =========================================================
+        // 👉 Uživatel vybírá konkrétní produkt (např. "CYKY 3×2,5")
+        // 👉 Po změně se:
+        //    • načtou dostupní dodavatelé
+        //    • shodí Supplier + Offer + Price
+        //    • 🔵 MUSÍ se vyvolat notify pro CanSelectSupplier, CanSelectOffer
+        //      jinak se ComboBoxy v UI NEODEMKNOU
+        // =========================================================
         public string? SelectedProductName
         {
             get => _selectedProductName;
@@ -296,15 +287,27 @@ namespace ElektroOffer_app.ViewModels.Items
                 _materialCascade.LoadSuppliers(this);
 
                 OnPropertyChanged();
+
+                // 🔵 DOPLNĚNO — odemknutí dodavatele + nabídky
                 OnPropertyChanged(nameof(CanSelectSupplier));
-                NotifyCalculatedProperties();   // 🔥 OPRAVA – ovlivňuje IsEmpty
+                OnPropertyChanged(nameof(CanSelectOffer));
+
+                NotifyCalculatedProperties();
+                UpdateTotal();
             }
         }
 
-        // =========================================================
-        // SELECTED SUPPLIER (dodavatel)
-        // =========================================================
 
+        // =========================================================
+        // SUPPLIER – třetí krok materiálové kaskády
+        // =========================================================
+        // 👉 Uživatel vybírá dodavatele (např. "DEK", "Elkov")
+        // 👉 Po změně se:
+        //    • načtou dostupné nabídky (SupplierName)
+        //    • shodí Offer + Price
+        //    • 🔵 MUSÍ se vyvolat notify pro CanSelectOffer
+        //      jinak se poslední ComboBox NEODEMKNĚ
+        // =========================================================
         public string? SelectedSupplier
         {
             get => _selectedSupplier;
@@ -315,18 +318,28 @@ namespace ElektroOffer_app.ViewModels.Items
 
                 _materialCascade.ResetBelowSupplier(this);
                 _materialCascade.LoadOffers(this);
-                _materialCascade.UpdateSelectedPrice(this);
 
                 OnPropertyChanged();
+
+                // 🔵 DOPLNĚNO — odemknutí nabídky
                 OnPropertyChanged(nameof(CanSelectOffer));
-                NotifyCalculatedProperties();   // 🔥 OPRAVA – ovlivňuje IsEmpty
+
+                NotifyCalculatedProperties();
+                UpdateTotal();
             }
         }
 
-        // =========================================================
-        // SELECTED OFFER (konkrétní nabídka dodavatele)
-        // =========================================================
 
+        // =========================================================
+        // OFFER – čtvrtý krok materiálové kaskády
+        // =========================================================
+        // 👉 Uživatel vybírá konkrétní nabídku dodavatele
+        //    (např. "CYKY 3×2,5 – balení 100 m")
+        // 👉 Po změně se:
+        //    • načte MaterialPrice (kód, cena, jednotka)
+        //    • přepočítá Total
+        //    • 🔵 Zde se notify nepřidává — není potřeba odemykat další krok
+        // =========================================================
         public string? SelectedOffer
         {
             get => _selectedOffer;
@@ -335,106 +348,110 @@ namespace ElektroOffer_app.ViewModels.Items
                 if (_selectedOffer == value) return;
                 _selectedOffer = value;
 
+                // Finální krok – načtení ceny podle kombinace:
+                // Category + ProductName + Supplier + Offer
                 _materialCascade.UpdateSelectedPrice(this);
 
                 OnPropertyChanged();
-                NotifyCalculatedProperties();   // 🔥 OPRAVA – Total + IsEmpty
+                NotifyCalculatedProperties();
+                UpdateTotal();
             }
         }
 
         // =========================================================
-        // 📦 SELECTED MATERIAL PRICE VALUE (uložená cena z ProjectData)
+        // 🔴 SELECTED WORK SPECIFICATION – druhý krok kaskády PRÁCE
         // =========================================================
-
-        public decimal? SelectedMaterialPriceValue
+        public WorkSpecification? SelectedWorkSpecification
         {
-            get => _selectedMaterialPriceValue;
+            get => _selectedWorkSpecification;
             set
             {
-                _selectedMaterialPriceValue = value;
+                if (_selectedWorkSpecification == value) return;
+                _selectedWorkSpecification = value;
+
+                // Reset nižších kroků kaskády
+                SelectedBaseMaterial = null;
+                SelectedPosition = null;
+
                 OnPropertyChanged();
-                NotifyCalculatedProperties();   // 🔥 OPRAVA – Total + IsEmpty
+                NotifyCalculatedProperties();
+                UpdateTotal();
             }
         }
 
-        // =========================================================
-        // 📏 SELECTED MATERIAL UNIT (uložená jednotka z ProjectData)
-        // =========================================================
 
-        public string? SelectedMaterialUnit
+        // =========================================================
+        // 🔴 SELECTED BASE MATERIAL – třetí krok kaskády PRÁCE
+        // =========================================================
+        public BaseMaterial? SelectedBaseMaterial
         {
-            get => _selectedMaterialUnit;
+            get => _selectedBaseMaterial;
             set
             {
-                _selectedMaterialUnit = value;
+                if (_selectedBaseMaterial == value) return;
+                _selectedBaseMaterial = value;
+
                 OnPropertyChanged();
-                NotifyCalculatedProperties();   // 🔥 OPRAVA – Total + IsEmpty
+                NotifyCalculatedProperties();
+                UpdateTotal();
             }
         }
 
+
         // =========================================================
-        // 💰 SELECTED WORK PRICE (uložená cena práce z ProjectData)
+        // 🔴 SELECTED POSITION – čtvrtý krok kaskády PRÁCE
         // =========================================================
-        //
-        // Cena práce v době uložení projektu.
-        // Pokud je null → po načtení se může dopočítat z ceníku.
-        //
-        public decimal? SelectedWorkPrice
+        public Position? SelectedPosition
         {
-            get => _selectedWorkPrice;
+            get => _selectedPosition;
             set
             {
-                _selectedWorkPrice = value;
+                if (_selectedPosition == value) return;
+                _selectedPosition = value;
+
+                OnPropertyChanged();
+                NotifyCalculatedProperties();
+                UpdateTotal();
+            }
+        }
+
+
+        // =========================================================
+        // 💰 WORK PRICE – uložená cena práce (z ProjectData)
+        // =========================================================
+        private decimal? _workPrice;
+        public decimal? WorkPrice
+        {
+            get => _workPrice;
+            set
+            {
+                _workPrice = value;
+                OnPropertyChanged();
+                NotifyCalculatedProperties();
+                UpdateTotal();
+            }
+        }
+
+
+        // =========================================================
+        // 📏 WORK UNIT – jednotka práce (z ProjectData)
+        // =========================================================
+        private string? _workUnit;
+        public string? WorkUnit
+        {
+            get => _workUnit;
+            set
+            {
+                _workUnit = value;
                 OnPropertyChanged();
                 NotifyCalculatedProperties();
             }
         }
 
-        // =========================================================
-        // 📏 SELECTED WORK UNIT (uložená jednotka práce z ProjectData)
-        // =========================================================
-
-        public string? SelectedWorkUnit
-        {
-            get => _selectedWorkUnitValue;
-            set
-            {
-                _selectedWorkUnitValue = value;
-                OnPropertyChanged();
-                NotifyCalculatedProperties();
-            }
-        }
 
         // =========================================================
-        // WORK ITEM / MATERIAL ITEM (EF entity)
+        // 🔵 SELECTED MATERIAL PRICE – výsledek materiálové kaskády
         // =========================================================
-
-        public PriceItems? WorkItem
-        {
-            get => _workItem;
-            set
-            {
-                _workItem = value;
-                OnPropertyChanged();
-                NotifyCalculatedProperties();
-            }
-        }
-
-        public Material? MaterialItem
-        {
-            get => _materialItem;
-            set
-            {
-                _materialItem = value;
-                OnPropertyChanged();
-                NotifyCalculatedProperties();
-            }
-        }
-
-        // =========================================================
-        // SELECTED MATERIAL PRICE (výsledek nové materiálové kaskády)
-        // =========================================================
-
         public MaterialPrice? SelectedMaterialPrice
         {
             get => _selectedMaterialPrice;
@@ -443,23 +460,156 @@ namespace ElektroOffer_app.ViewModels.Items
                 if (_selectedMaterialPrice == value) return;
                 _selectedMaterialPrice = value;
 
-                // Přemostění pro starý výpočet Total
-                MaterialItem = value?.Material;
+                // Přenos hodnot do ViewModelu
+                MaterialPrice = value?.Price;
+                MaterialUnit = value?.Unit;
 
-                // Přenos hodnot do JSON
-                if (value != null)
-                {
-                    SelectedMaterialPriceValue = value.Price;
-                    SelectedMaterialUnit = value.Unit;
-                }
+                OnPropertyChanged();
+                NotifyCalculatedProperties();
+                UpdateTotal();
+            }
+        }
 
+
+
+        // =========================================================
+        // 💰 MATERIAL PRICE – uložená cena materiálu
+        // =========================================================
+        //
+        // Účel:
+        //   • Uchovává cenu materiálu (decimal?).
+        //   • Hodnota se ukládá do CalculationItemData.MaterialPrice.
+        //   • Pokud je null → cena se dopočítá z materiálové kaskády.
+        //
+        // Poznámka:
+        //   • Staré SelectedMaterialPriceValue bylo odstraněno.
+        //   • Nově se používá MaterialPrice (decimal?).
+        // =========================================================
+
+        private decimal? _materialPrice;
+        public decimal? MaterialPrice
+        {
+            get => _materialPrice;
+            set
+            {
+                _materialPrice = value;
+                OnPropertyChanged();
+                NotifyCalculatedProperties();
+                UpdateTotal();
+            }
+        }
+
+        // =========================================================
+        // 📏 MATERIAL UNIT – uložená jednotka materiálu
+        // =========================================================
+        //
+        // Účel:
+        //   • Uchovává jednotku materiálu (ks, m, bm…).
+        //   • Hodnota se ukládá do CalculationItemData.MaterialUnit.
+        //
+        // Poznámka:
+        //   • Staré SelectedMaterialUnit bylo odstraněno.
+        //   • Nově se používá MaterialUnit (string?).
+        // =========================================================
+
+        private string? _materialUnit;
+        public string? MaterialUnit
+        {
+            get => _materialUnit;
+            set
+            {
+                _materialUnit = value;
                 OnPropertyChanged();
                 NotifyCalculatedProperties();
             }
         }
 
         // =========================================================
-        // QUANTITY (společné)
+        // 🔴 SELECTED WORK TASK – první krok normalizované kaskády PRÁCE
+        // =========================================================
+        //
+        // Účel:
+        //   • Nastaví hlavní úkon (WorkTask).
+        //   • Po výběru WorkTask se dynamicky načtou:
+        //         – dostupné WorkSpecification
+        //         – dostupné BaseMaterial
+        //         – dostupné Position
+        //   • Resetují se nižší kroky kaskády.
+        //   • Spustí se přepočet ceny práce.
+        //
+        // Poznámka:
+        //   • Starý SelectedTask (string) byl odstraněn.
+        //   • Nově se používá typově bezpečný objekt WorkTask.
+        // =========================================================
+
+        public WorkTask? SelectedWorkTask
+        {
+            get => _selectedWorkTask;
+            set
+            {
+                if (_selectedWorkTask == value) return;
+                _selectedWorkTask = value;
+
+                // Načtení dostupných hodnot podle WorkTask
+                _workCascade.LoadSpecifications(this);
+                _workCascade.LoadBaseMaterials(this);
+                _workCascade.LoadPositions(this);
+
+                // Reset nižších kroků
+                SelectedWorkSpecification = null;
+                SelectedBaseMaterial = null;
+                SelectedPosition = null;
+
+                // UI – povolení dalších kroků
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(CanSelectWorkSpecification));
+                OnPropertyChanged(nameof(CanSelectBaseMaterial));
+                OnPropertyChanged(nameof(CanSelectPosition));
+
+                NotifyCalculatedProperties();
+                UpdateTotal();
+            }
+        }
+
+        // =========================================================
+        // 🔴 CALCULATED WORK PRICE – BasePrice × MaterialCoef × PositionCoef
+        // =========================================================
+        //
+        // Účel:
+        //   • Uchovává vypočtenou cenu práce.
+        //   • Hodnota se nastavuje výhradně CalculationPriceService.
+        //   • Setter je veřejný kvůli přístupu z WorkCascadeService.
+        //
+        // Poznámka:
+        //   • Staré SelectedWorkPrice bylo odstraněno.
+        // =========================================================
+
+        public decimal? CalculatedWorkPrice
+        {
+            get => _calculatedWorkPrice;
+            set
+            {
+                if (_calculatedWorkPrice == value) return;
+                _calculatedWorkPrice = value;
+
+                OnPropertyChanged();
+                NotifyCalculatedProperties();
+            }
+        }
+
+
+        // =========================================================
+        // QUANTITY – množství položky
+        // =========================================================
+        //
+        // Účel:
+        //   • Uchovává množství položky (double).
+        //   • Ovlivňuje výpočet Total.
+        //   • Hodnota se ukládá do CalculationItemData.Quantity.
+        //
+        // Poznámka:
+        //   • Hodnota je clampována na >= 0.
+        //   • Každá změna vyvolá přepočet Total.
         // =========================================================
 
         public double Quantity
@@ -467,8 +617,7 @@ namespace ElektroOffer_app.ViewModels.Items
             get => _quantity;
             set
             {
-                // Clamp záporných hodnot
-                value = Math.Max(0, value);
+                value = Math.Max(0, value); // clamp
 
                 if (Math.Abs(_quantity - value) < 0.0001)
                     return;
@@ -477,14 +626,26 @@ namespace ElektroOffer_app.ViewModels.Items
 
                 OnPropertyChanged();
                 NotifyCalculatedProperties();
+                UpdateTotal();
             }
         }
 
+
         // =========================================================
-        // TOTAL (delegováno do služby)
+        // TOTAL – celková cena řádku (delegováno do služby)
+        // =========================================================
+        //
+        // Účel:
+        //   • Vrací celkovou cenu řádku.
+        //   • Výpočet je delegován do CalculationPriceService.
+        //   • ViewModel pouze notifikací oznamuje změny.
+        //
+        // Poznámka:
+        //   • Total se přepočítá při změně kaskády nebo Quantity.
         // =========================================================
 
         public double Total => _price.CalculateTotal(this);
+
 
         // ============================================================================
         // 🧩 IsEmpty – pomocná vlastnost pro filtrování prázdných řádků při ukládání
@@ -495,77 +656,83 @@ namespace ElektroOffer_app.ViewModels.Items
         //     vytváří (např. poslední prázdný řádek).
         //
         // Definice „prázdného řádku“:
-        //   • Tento view model je SDÍLENÝ pro řádky PRÁCE i MATERIÁLU – podle toho,
-        //     do které kolekce (WorkCalcItems / MaterialItems) řádek patří, je
-        //     vyplněná vždy jen jedna ze dvou níže uvedených skupin polí.
-        //     Proto musí IsEmpty kontrolovat OBĚ skupiny současně:
         //
-        //   • PRÁCE (kaskáda Task → Specification → Material → Location):
-        //       - Není vybrán SelectedTask, SelectedSpecification,
-        //         SelectedMaterial ani SelectedLocation.
+        //   • PRÁCE (nová kaskáda WorkTask → WorkSpecification → BaseMaterial → Position):
+        //       - Řádek Práce je prázdný, pokud:
+        //           SelectedWorkTask == null
+        //           AND SelectedWorkSpecification == null
+        //           AND Quantity == 0
+        //
+        //       - BaseMaterial a Position se do prázdnosti NEZAPOČÍTÁVAJÍ.
+        //         (Jejich seznam je vždy plný, uživatel je může doplnit kdykoli.)
         //
         //   • MATERIÁL (kaskáda Category → Název → Dodavatel → Nabídka → Cena):
-        //       - Není vybrán SelectedCategory, SelectedProductName,
-        //         SelectedSupplier ani SelectedOffer.
-        //       - SelectedMaterialPrice je null (finální vybraná cena z kaskády).
+        //       - Řádek Materiálu je prázdný, pokud:
+        //           SelectedCategory == null/empty
+        //           AND SelectedProductName == null/empty
+        //           AND SelectedSupplier == null/empty
+        //           AND SelectedOffer == null/empty
+        //           AND SelectedMaterialPrice == null
+        //           AND Quantity == 0
         //
         //   • SPOLEČNÉ:
-        //       - Quantity je 0.
-        //
-        //   • Řádek je považován za prázdný, jen pokud jsou prázdná/nevyplněná
-        //     VŠECHNA pole z obou skupin zároveň i Quantity. Díky tomu se řádek
-        //     Materiálu uloží už při vyplnění byť jen prvního kroku kaskády
-        //     (např. SelectedCategory), stejně jako se dosud chovala Práce.
-        //
-        // 🔴 OPRAVA (bug: neukládání částečně vyplněné materiálové kaskády):
-        //   • Původní verze kontrolovala pouze pracovní pole (Task/Specification/
-        //     Material/Location) a Quantity. U materiálového řádku byla tato pole
-        //     vždy prázdná (patří Práci), takže IsEmpty fakticky visela jen na
-        //     Quantity == 0 – řádek se uložil až po vyplnění množství, bez ohledu
-        //     na to, kolik z materiálové kaskády už bylo vybráno.
-        //   • Doplněním kontroly materiálových polí (SelectedCategory,
-        //     SelectedProductName, SelectedSupplier, SelectedOffer,
-        //     SelectedMaterialPrice) se chování sjednotilo s Prací.
+        //       - Řádek je prázdný pouze tehdy, pokud jsou prázdná VŠECHNA pole
+        //         z obou skupin zároveň.
         //
         // Poznámka:
-        //   • Pokud později přidáš další pole (např. poznámku k řádku, slevu jako
-        //     samostatnou podmínku apod.), stačí je doplnit do příslušné skupiny.
-        //   • Sleva (IsDiscountEnabled / DiscountPercent) se do IsEmpty záměrně
-        //     nezapočítává – sama o sobě slevu bez vybrané položky nedává smysl
-        //     ukládat jako neprázdný řádek.
+        //   • Sleva (IsDiscountEnabled / DiscountPercent) se do IsEmpty nezapočítává.
         // ============================================================================
+
         public bool IsEmpty =>
-            string.IsNullOrWhiteSpace(SelectedTask)
-            && string.IsNullOrWhiteSpace(SelectedSpecification)
-            && string.IsNullOrWhiteSpace(SelectedMaterial)
-            && string.IsNullOrWhiteSpace(SelectedLocation)
+            // 🔴 PRÁCE – nová kaskáda
+            SelectedWorkTask == null
+            && SelectedWorkSpecification == null
+            && Quantity == 0
+
+            // 🔴 MATERIÁL – původní kaskáda
             && string.IsNullOrWhiteSpace(SelectedCategory)
             && string.IsNullOrWhiteSpace(SelectedProductName)
             && string.IsNullOrWhiteSpace(SelectedSupplier)
             && string.IsNullOrWhiteSpace(SelectedOffer)
-            && SelectedMaterialPrice == null
-            && Quantity == 0;
+            && SelectedMaterialPrice == null;
+
 
         // =========================================================
-        // NOTIFY
+        // 🔄 UpdateTotal – přepočet celkové ceny řádku
+        // ---------------------------------------------------------
+        // Účel:
+        //   • Vyvolá přepočet TOTAL po změně kaskády nebo množství.
+        //   • TOTAL se počítá v CalculationPriceService → stačí notifikace.
+        // =========================================================
+
+        public void UpdateTotal()
+        {
+            OnPropertyChanged(nameof(Total));
+        }
+
+
+        // =========================================================
+        // 🔔 NotifyCalculatedProperties – přepočet Total + IsEmpty
+        // ---------------------------------------------------------
+        // Účel:
+        //   • Vyvolá notifikaci všech derived properties.
+        //   • Volá se po každé změně vstupních hodnot.
+        // =========================================================
+
+        public void NotifyCalculatedProperties()
+        {
+            OnPropertyChanged(nameof(Total));
+            OnPropertyChanged(nameof(IsEmpty));
+        }
+
+
+        // =========================================================
+        // NOTIFY – INotifyPropertyChanged
         // =========================================================
 
         public event PropertyChangedEventHandler? PropertyChanged;
 
         private void OnPropertyChanged([CallerMemberName] string? name = null)
             => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
-
-        // =========================================================
-        // 🔔 Pomocná metoda pro přepočet Total + IsEmpty
-        // =========================================================
-        //
-        // Volá se po každé změně vstupních hodnot, které ovlivňují výpočet.
-        // Opravuje testy 56, 57, 58, 60, 61.
-        //
-        private void NotifyCalculatedProperties()
-        {
-            OnPropertyChanged(nameof(Total));
-            OnPropertyChanged(nameof(IsEmpty));
-        }
     }
 }

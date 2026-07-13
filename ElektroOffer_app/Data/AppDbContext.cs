@@ -33,6 +33,13 @@ namespace ElektroOffer_app.Data
     //   pravidla databázového schématu, jež nejdou vyjádřit pouze
     //   vlastnostmi na entitních třídách (konkrétně unikátní index
     //   proti duplicitním cenám od stejného dodavatele)
+    //
+    // 🔴 ZMĚNA (kaskáda Práce – normalizace podle vzoru Materiálu):
+    // - Přibyly tabulky WorkTasks, WorkSpecifications, BaseMaterials,
+    //   Positions a vazební TaskSpecifications – viz popis u DbSet
+    //   vlastností níže.
+    // - Stará tabulka PriceItems ZŮSTÁVÁ (viz komentář u DbSet PriceItems
+    //   níže) – prozatím se řeší, zda a jak se z ní data migrují.
     // =========================================================================
     public class AppDbContext : DbContext
     {
@@ -63,6 +70,12 @@ namespace ElektroOffer_app.Data
         /// <summary>
         /// Tabulka ceníku práce (PriceItems).
         /// Každý záznam reprezentuje jednu položku ceníku.
+        ///
+        /// 🔴 ZMĚNA / STATUS: Zatím ZACHOVÁNO souběžně s novou normalizovanou
+        /// kaskádou (WorkTasks/WorkSpecifications/BaseMaterials/Positions/
+        /// TaskSpecifications) – řešíme, zda se má obsah migrovat a tato
+        /// tabulka následně zrušit, nebo zda má sloužit jinému účelu.
+        /// Než se rozhodne, NEPOUŽÍVAT pro novou kaskádu Práce v UI.
         /// </summary>
         public DbSet<PriceItems> PriceItems => Set<PriceItems>();
 
@@ -110,6 +123,52 @@ namespace ElektroOffer_app.Data
         public DbSet<MaterialPrice> MaterialPrices => Set<MaterialPrice>();
 
         // =========================================================================
+        // 🔴 NOVÉ DB SETS – normalizovaná kaskáda PRÁCE (analogie k Materiálu)
+        // =========================================================================
+
+        /// <summary>
+        /// Úkony práce (dřív string "Task" v PriceItems, např. "Drážkování",
+        /// "Osazení"). Nese základní cenu (BasePrice), která se dále násobí
+        /// koeficienty BaseMaterial a Position.
+        /// Prvotní úroveň kaskády Práce – nabízí se vždy celý seznam.
+        /// </summary>
+        public DbSet<WorkTask> WorkTasks => Set<WorkTask>();
+
+        /// <summary>
+        /// Upřesnění úkonu (dřív string "Specification" v PriceItems,
+        /// např. "El. krabice", "Spára"). Druhá úroveň kaskády – filtruje
+        /// se podle vybraného WorkTask přes vazební TaskSpecifications.
+        /// </summary>
+        public DbSet<WorkSpecification> WorkSpecifications => Set<WorkSpecification>();
+
+        /// <summary>
+        /// Podkladový materiál (Beton, Cihla, Sádrokarton...), ovlivňuje
+        /// cenu práce koeficientem MaterialCoef. POZOR: nesouvisí
+        /// s produktovým materiálem (Models/Material.cs) – jde o odlišný,
+        /// nezávislý koncept se stejnojmenným slovem "materiál".
+        /// Nabízí se vždy celý seznam, nezávisle na Task/Specification.
+        /// </summary>
+        public DbSet<BaseMaterial> BaseMaterials => Set<BaseMaterial>();
+
+        /// <summary>
+        /// Poloha provádění práce (Nízká, Strop, Stěna, Štafle), ovlivňuje
+        /// cenu práce koeficientem PositionCoef.
+        /// Nabízí se vždy celý seznam, nezávisle na Task/Specification.
+        /// </summary>
+        public DbSet<Position> Positions => Set<Position>();
+
+        /// <summary>
+        /// Vazební (M:N) tabulka mezi WorkTask a WorkSpecification – určuje,
+        /// které kombinace jsou PLATNÉ (obdoba role MaterialPrice mezi
+        /// Material a Supplier, ale bez vlastních cenových dat – cena
+        /// práce se počítá vzorcem, nikoli lookupem).
+        ///
+        /// Viz unikátní index v OnModelCreating() níže – zabraňuje
+        /// duplicitní platné kombinaci.
+        /// </summary>
+        public DbSet<TaskSpecification> TaskSpecifications => Set<TaskSpecification>();
+
+        // =========================================================================
         // KONFIGURACE DB
         // =========================================================================
 
@@ -136,7 +195,7 @@ namespace ElektroOffer_app.Data
         // - EF Core zde umožňuje doladit schéma databáze způsobem,
         //   který nejde (nebo by byl nepřehledný) zapsat přímo jako
         //   datovou anotaci na vlastnosti entitní třídy (např. [Required]).
-        // - Aktuálně obsahuje jediné, ale DŮLEŽITÉ pravidlo:
+        // - Aktuálně obsahuje pravidlo:
         //
         // UNIKÁTNÍ INDEX na MaterialPrice (SupplierId + SupplierCode):
         // - Zabraňuje, aby od JEDNOHO DODAVATELE vznikly DVA záznamy
@@ -148,6 +207,10 @@ namespace ElektroOffer_app.Data
         //   umožňovala duplicity, mohl by se při opakovaném importu
         //   stejný kód uložit vícekrát a vznikl by nekonzistentní stav
         //   (dvě různé "aktuální" ceny pro stejnou položku).
+        //
+        // 🔴 ZMĚNA – UNIKÁTNÍ INDEX na TaskSpecification (TaskId + SpecificationId):
+        // - Stejný princip jako u MaterialPrice výše, ale pro platné
+        //   kombinace Úkon+Upřesnění u kaskády Práce.
         // =========================================================================
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -176,6 +239,19 @@ namespace ElektroOffer_app.Data
             // -------------------------------------------------------------------------
             modelBuilder.Entity<MaterialPrice>()
                 .Property(mp => mp.Price)
+                .HasColumnType("REAL");
+
+            // -------------------------------------------------------------------------
+            // 🔴 NOVÉ – TaskSpecification (vazební tabulka kaskády Práce)
+            // -------------------------------------------------------------------------
+            modelBuilder.Entity<TaskSpecification>()
+                .HasIndex(ts => new { ts.TaskId, ts.SpecificationId })
+                .IsUnique();
+
+            // 🔴 NOVÉ – WorkTask.BasePrice je decimal → stejný SQLite problém
+            // jako u MaterialPrice.Price výše, řešíme stejným způsobem.
+            modelBuilder.Entity<WorkTask>()
+                .Property(t => t.BasePrice)
                 .HasColumnType("REAL");
         }
 

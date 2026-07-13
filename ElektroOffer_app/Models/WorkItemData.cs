@@ -1,4 +1,4 @@
-﻿﻿using System;
+﻿using System;
 
 namespace ElektroOffer_app.Models
 {
@@ -8,20 +8,27 @@ namespace ElektroOffer_app.Models
     //
     // Účel:
     // -------
-    // Tento objekt reprezentuje jednu položku v sekci PRÁCE uloženého projektu
-    // (ProjectData). Obsahuje pouze vlastnosti specifické pro pracovní položky.
+    // Tento objekt reprezentuje jednu pracovní položku uloženého projektu
+    // (ProjectData). Obsahuje pouze hodnoty nutné pro znovuvytvoření struktury
+    // řádků v UI – nikoliv samotná pracovní data.
     //
     // Proč existuje:
     // ---------------
-    // - PRÁCE a MATERIÁL mají odlišné datové struktury.
-    // - CalculationItemData obsahuje pouze společné hodnoty (Quantity, sleva, Total).
-    // - WorkItemData obsahuje pouze pracovní hodnoty.
-    // - Díky tomu je JSON čistý, přehledný a nemíchají se nesouvisející položky.
+    // - CalculationItemData ukládá společné hodnoty (Quantity, sleva, Total).
+    // - WorkItemData ukládá pouze metadata řádku PRÁCE:
+    //       • Id        – stabilní identifikátor záznamu
+    //       • Position  – skutečná pozice řádku v UI
+    //
+    // - Pracovní obsah (WorkTask, WorkSpecification, BaseMaterial, Position,
+    //   WorkPrice, WorkUnit) se ukládá do CalculationItemData.
+    //
+    // - Díky tomu je JSON přehledný, nemíchají se pracovní a společné hodnoty
+    //   a načítání projektu je stabilní.
     //
     // Proč je zde ID:
     // ---------------
-    // Každý řádek PRÁCE má vlastní identifikátor (Guid Id).
-    // Stejné ID se ukládá i do odpovídající položky CalculationItemData.
+    // Každý řádek PRÁCE má vlastní identifikátor (např. "W-1", "W-2", ...).
+    // Stejné ID se ukládá i do CalculationItemData.
     //
     // Díky tomu lze jednoznačně spárovat:
     //
@@ -29,134 +36,40 @@ namespace ElektroOffer_app.Models
     //
     // To je zásadní pro stabilní Load/Save a pro budoucí rozšiřování projektu.
     //
-    // 🔴 ZMĚNA – Id vs. Position:
+    // 🔴 Id vs. Position – rozdílné role
     // ----------------------------------------------------------------
-    // Id a Position mají nyní odlišný účel:
+    // • Id
+    //     – sekvenční identifikátor mezi VYPLNĚNÝMI řádky
+    //     – nemění se podle pozice v UI
+    //     – slouží výhradně pro párování s CalculationItemData
     //
-    //   • Id        → jednoznačný, SEKVENČNÍ identifikátor záznamu
-    //                  (W-1, W-2, W-3... podle pořadí mezi vyplněnými řádky).
-    //                  Používá se výhradně pro párování se CalculationItemData.
-    //                  Nemění se podle pozice řádku v UI.
-    //
-    //   • Position  → skutečná POZICE řádku v UI (1-based), nezávislá na Id.
-    //                  Používá se výhradně pro znovuvytvoření správného
-    //                  rozložení řádků při načítání projektu (ApplyProjectData).
-    //
-    // Dříve se pozice řádku odvozovala parsováním čísla z Id (např. "W-5" → 5),
-    // což fungovalo jen do doby, než Id přestalo odpovídat pozici (např. pokud
-    // je vyplněný jen 1. a 5. řádek, druhý vyplněný záznam by měl Id "W-2",
-    // ale pozici 5). Oddělením obou hodnot je Id stabilní a smysluplné
-    // („druhý vyplněný záznam“) a Position spolehlivě řídí rozložení v UI.
+    // • Position
+    //     – skutečná pozice řádku v UI (1-based)
+    //     – používá se při načítání projektu (ApplyProjectData)
+    //     – umožňuje obnovit přesné rozložení řádků včetně mezer
     //
     // Co se ukládá:
     // --------------
-    // ✔ Id                     → jednoznačný, sekvenční identifikátor záznamu
-    // ✔ Position                → skutečná pozice řádku v UI (1-based)
-    // ✔ SelectedTask           → název práce
-    // ✔ SelectedSpecification  → upřesnění práce
-    // ✔ SelectedMaterial       → použitý materiál
-    // ✔ SelectedLocation       → místo provedení
-    // ✔ SelectedWorkPrice      → cena práce v době uložení projektu (volitelné)
-    // ✔ SelectedWorkUnit       → měrná jednotka práce (volitelné)
+    // ✔ Id        → stabilní identifikátor řádku
+    // ✔ Position  → pozice řádku v UI
     //
     // Poznámka:
     // ----------
-    // Ukládají se textové hodnoty, nikoli ID z databáze.
-    // Projekt je díky tomu nezávislý na konkrétních ID v ceníku.
+    // Pracovní obsah (WorkTask, WorkSpecification, BaseMaterial, Position,
+    // WorkPrice, WorkUnit) se ukládá do CalculationItemData.
+    // WorkItemData obsahuje pouze metadata řádku.
     //
     // =========================================================================
     public class WorkItemData
     {
         // =====================================================================
-        // 🆔 Id – jednoznačný, sekvenční identifikátor řádku PRÁCE
+        // 🆔 Id – stabilní identifikátor řádku PRÁCE
         // =====================================================================
-        //
-        // ID je typu string, protože používáme krátké lidsky čitelné ID:
-        //   • W-1, W-2, W-3...
-        //
-        // Přiděluje se sekvenčně podle pořadí mezi VYPLNĚNÝMI řádky
-        // (prázdné řádky se přeskakují), nezávisle na tom, na jaké pozici
-        // v UI daný řádek fyzicky stojí.
-        //
-        // Stejné ID se ukládá i do CalculationItemData a slouží
-        // výhradně k jejich spárování.
-        //
         public string Id { get; set; } = string.Empty;
 
         // =====================================================================
         // 📍 Position – skutečná pozice řádku v UI (1-based)
         // =====================================================================
-        //
-        // 🔴 NOVÉ POLE
-        //
-        // Na rozdíl od Id se Position přiděluje podle SKUTEČNÉHO indexu
-        // řádku v kolekci (WorkCalcItems) v okamžiku uložení, a to ještě
-        // před odfiltrováním prázdných řádků.
-        //
-        // Např.: pokud uživatel vyplní jen 1. a 5. řádek, uloží se:
-        //   • 1. řádek → Id = "W-1", Position = 1
-        //   • 5. řádek → Id = "W-2", Position = 5
-        //
-        // Při načítání projektu (ApplyProjectData) se řádek vkládá na
-        // index = Position - 1, takže se obnoví přesně původní rozložení
-        // řádků včetně mezer mezi vyplněnými řádky.
-        //
         public int Position { get; set; }
-
-        // =====================================================================
-        // 🛠 SelectedTask – název práce
-        // =====================================================================
-        //
-        // Hlavní typ úkonu, který se provádí.
-        // Např.: "Montáž zásuvky", "Výměna jističe", "Tahání kabelu".
-        //
-        public string? SelectedTask { get; set; }
-
-        // =====================================================================
-        // 📄 SelectedSpecification – upřesnění práce
-        // =====================================================================
-        //
-        // Detailní specifikace úkonu.
-        // Např.: "s krabicí KP68", "bez krabice", "v liště".
-        //
-        public string? SelectedSpecification { get; set; }
-
-        // =====================================================================
-        // 📦 SelectedMaterial – použitý materiál
-        // =====================================================================
-        //
-        // Materiál použitý u práce.
-        // Např.: "CYKY 3×2,5", "CYKY 5×6", "Lišta 40×20".
-        //
-        public string? SelectedMaterial { get; set; }
-
-        // =====================================================================
-        // 📍 SelectedLocation – místo provedení práce
-        // =====================================================================
-        //
-        // Lokace, kde se práce provádí.
-        // Např.: "Obývák", "Kuchyň", "Chodba".
-        //
-        public string? SelectedLocation { get; set; }
-
-        // =====================================================================
-        // 💰 SelectedWorkPrice – cena práce (volitelné)
-        // =====================================================================
-        //
-        // Cena práce v době uložení projektu.
-        // Pokud je null → cena se po načtení dopočítá z databáze.
-        //
-        // Používá se decimal, protože jde o peníze → přesný typ.
-        //
-        public decimal? SelectedWorkPrice { get; set; }
-
-        // =====================================================================
-        // 📏 SelectedWorkUnit – měrná jednotka práce (volitelné)
-        // =====================================================================
-        //
-        // Jednotka práce (např. "m", "ks", "hod").
-        // Pokud je null → jednotka se po načtení dohledá z databáze.
-        //
-        public string? SelectedWorkUnit { get; set; }
     }
 }

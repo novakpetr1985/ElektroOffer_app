@@ -98,9 +98,9 @@ namespace ElektroOffer_app.Tests.Integration.Stubs
             }
         }
 
-        public bool CanSelectSpecification => !string.IsNullOrWhiteSpace(SelectedTask);
-        public bool CanSelectMaterial => !string.IsNullOrWhiteSpace(SelectedSpecification);
-        public bool CanSelectLocation => !string.IsNullOrWhiteSpace(SelectedMaterial);
+        public bool CanSelectWorkSpecification => !string.IsNullOrWhiteSpace(SelectedTask);
+        public bool CanSelectBaseMaterial => !string.IsNullOrWhiteSpace(SelectedSpecification);
+        public bool CanSelectPosition => !string.IsNullOrWhiteSpace(SelectedMaterial);
 
         public string? SelectedTask
         {
@@ -114,7 +114,7 @@ namespace ElektroOffer_app.Tests.Integration.Stubs
                 LoadSpecifications();
 
                 OnPropertyChanged();
-                OnPropertyChanged(nameof(CanSelectSpecification));
+                OnPropertyChanged(nameof(CanSelectWorkSpecification));
             }
         }
 
@@ -131,7 +131,7 @@ namespace ElektroOffer_app.Tests.Integration.Stubs
                 LoadMaterials();
 
                 OnPropertyChanged();
-                OnPropertyChanged(nameof(CanSelectMaterial));
+                OnPropertyChanged(nameof(CanSelectBaseMaterial));
             }
         }
 
@@ -147,7 +147,7 @@ namespace ElektroOffer_app.Tests.Integration.Stubs
                 LoadLocations();
 
                 OnPropertyChanged();
-                OnPropertyChanged(nameof(CanSelectLocation));
+                OnPropertyChanged(nameof(CanSelectPosition));
             }
         }
 
@@ -316,8 +316,8 @@ namespace ElektroOffer_app.Tests.Integration.Stubs
             OnPropertyChanged(nameof(SelectedSpecification));
             OnPropertyChanged(nameof(SelectedMaterial));
             OnPropertyChanged(nameof(SelectedLocation));
-            OnPropertyChanged(nameof(CanSelectMaterial));
-            OnPropertyChanged(nameof(CanSelectLocation));
+            OnPropertyChanged(nameof(CanSelectBaseMaterial));
+            OnPropertyChanged(nameof(CanSelectPosition));
         }
 
         private void ResetBelowSpecification()
@@ -332,7 +332,7 @@ namespace ElektroOffer_app.Tests.Integration.Stubs
 
             OnPropertyChanged(nameof(SelectedMaterial));
             OnPropertyChanged(nameof(SelectedLocation));
-            OnPropertyChanged(nameof(CanSelectLocation));
+            OnPropertyChanged(nameof(CanSelectPosition));
         }
 
         private void ResetBelowMaterial()
