@@ -209,7 +209,7 @@ namespace ElektroOffer_app.Services
                 _fs!.WriteAllText(path, json);
 
                 _msg!.Show(
-                    $"Export dokončen.\n\nPráce: {data.PriceItems.Count}\nMateriál: {data.Materials.Count}",
+                    $"Export dokončen.\n\nPráce: {data.WorkItems.Count}\nMateriál: {data.Materials.Count}",
                     "Hotovo",
                     MessageBoxButton.OK,
                     MessageBoxImage.Information);

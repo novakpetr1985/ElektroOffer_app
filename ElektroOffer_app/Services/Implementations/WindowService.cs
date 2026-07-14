@@ -5,6 +5,8 @@
 // -------------------------------------------------------------
 
 using ElektroOffer_app.Services;
+using ElektroOffer_app.Invoice.Models;
+using ElektroOffer_app.Invoice.Views;
 using ElektroOffer_app.Views;   // ⚠ Namespace, kde máš AboutWindow
 
 namespace ElektroOffer_app.Services.Implementations
@@ -15,6 +17,25 @@ namespace ElektroOffer_app.Services.Implementations
         {
             var about = new AboutWindow();
             about.ShowDialog();
+        }
+
+        public InvoiceDraft? ShowInvoice(IEnumerable<Models.BudgetItem> budgetItems, InvoiceDraft? savedDraft)
+        {
+            var sourceItems = budgetItems.Select(item => new InvoiceSourceItem
+            {
+                Type = item.Type,
+                Description = item.Description,
+                Unit = item.Unit,
+                Quantity = item.Quantity,
+                Price = item.Price,
+                DiscountPercent = item.DiscountPercent,
+                DiscountAmount = item.DiscountAmount
+            }).ToList();
+
+            var invoice = new InvoiceWindow(sourceItems, savedDraft);
+            return invoice.ShowDialog() == true
+                ? invoice.SavedDraft
+                : null;
         }
     }
 }

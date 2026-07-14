@@ -36,6 +36,9 @@
                           InputGestureText="Ctrl+P"
                           Command="{Binding PrintCommand}" />
 
+                <MenuItem Header="_Fakturace"
+                          Command="{Binding InvoiceCommand}" />
+
                 <MenuItem Header="_Konec"
                           InputGestureText="Alt+F4"
                           Command="{Binding ExitCommand}" />
@@ -78,6 +81,11 @@
                 <Button Content="🖨️ Tisk"
                         ToolTip="Tisk"
                         Command="{Binding PrintCommand}"
+                        Margin="2"/>
+
+                <Button Content="Fakturace"
+                        ToolTip="Vytvořit fakturu z detailního rozpočtu"
+                        Command="{Binding InvoiceCommand}"
                         Margin="2"/>
 
             </ToolBar>
@@ -225,26 +233,32 @@
 
                                         <!-- ÚKON -->
                                         <ComboBox Grid.Column="1"
-                                                ItemsSource="{Binding DataContext.Tasks, RelativeSource={RelativeSource AncestorType=Window}}"
-                                                SelectedItem="{Binding SelectedTask, Mode=TwoWay}"/>
+                                                ItemsSource="{Binding DataContext.WorkTasks, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                DisplayMemberPath="Name"
+                                                SelectedValuePath="Name"
+                                                SelectedValue="{Binding SelectedWorkTask, Mode=TwoWay}"/>
 
                                         <!-- UPŘESNĚNÍ -->
                                         <ComboBox Grid.Column="2"
-                                                IsEnabled="{Binding CanSelectSpecification}"
-                                                ItemsSource="{Binding AvailableSpecifications}"
-                                                SelectedItem="{Binding SelectedSpecification, Mode=TwoWay}"/>
+                                                IsEnabled="{Binding CanSelectWorkSpecification}"
+                                                ItemsSource="{Binding AvailableWorkSpecifications}"
+                                                SelectedItem="{Binding SelectedWorkSpecification, Mode=TwoWay}"/>
 
                                         <!-- PODKLAD -->
                                         <ComboBox Grid.Column="3"
-                                                IsEnabled="{Binding CanSelectMaterial}"
-                                                ItemsSource="{Binding AvailableMaterials}"
-                                                SelectedItem="{Binding SelectedMaterial, Mode=TwoWay}"/>
+                                                IsEnabled="{Binding CanSelectBaseMaterial}"
+                                                ItemsSource="{Binding DataContext.BaseMaterialsList, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                DisplayMemberPath="Name"
+                                                SelectedValuePath="Name"
+                                                SelectedValue="{Binding SelectedBaseMaterial, Mode=TwoWay}"/>
 
                                         <!-- UMÍSTĚNÍ -->
                                         <ComboBox Grid.Column="4"
-                                                IsEnabled="{Binding CanSelectLocation}"
-                                                ItemsSource="{Binding AvailableLocations}"
-                                                SelectedItem="{Binding SelectedLocation, Mode=TwoWay}"/>
+                                                IsEnabled="{Binding CanSelectWorkPosition}"
+                                                ItemsSource="{Binding DataContext.WorkPositionsList, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                DisplayMemberPath="Name"
+                                                SelectedValuePath="Name"
+                                                SelectedValue="{Binding SelectedWorkPosition, Mode=TwoWay}"/>
 
                                         <!-- MNOŽSTVÍ -->
                                         <TextBox Grid.Column="5"
