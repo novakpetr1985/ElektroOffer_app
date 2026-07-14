@@ -29,11 +29,6 @@ namespace ElektroOffer_app.ViewModels
         private readonly ProjectService _projectService;
         private readonly CatalogService _catalogService;
 
-        // 🔴 ZMĚNA (1.9.0): CalculationCascadeService (nad starou PriceItems)
-        // odstraněna. Kaskádu PRÁCE teď řeší WorkCascadeService, ale ta se
-        // instancuje přímo uvnitř CalculationItemViewModel (per řádek) –
-        // MainViewModel žádnou vlastní instanci kaskádové služby nepotřebuje,
-        // jen CatalogService pro naplnění sdílených seznamů níže.
         private readonly CalculationPriceService _price;
         private readonly AppDbContext _db;
 
@@ -145,6 +140,7 @@ namespace ElektroOffer_app.ViewModels
         public ICommand SaveAsCommand { get; }
         public ICommand PrintCommand { get; }
         public ICommand InvoiceCommand { get; }
+        public ICommand SettingsCommand { get; }
         public ICommand ExitCommand { get; }
         public ICommand AboutCommand { get; }
 
@@ -205,6 +201,7 @@ namespace ElektroOffer_app.ViewModels
             SaveAsCommand = new RelayCommand(_ => SaveAs());
             PrintCommand = new RelayCommand(_ => Print());
             InvoiceCommand = new RelayCommand(_ => ShowInvoice());
+            SettingsCommand = new RelayCommand(_ => ShowSettings());
             ExitCommand = new RelayCommand(_ => Exit());
             AboutCommand = new RelayCommand(_ => ShowAbout());
 
@@ -289,9 +286,7 @@ namespace ElektroOffer_app.ViewModels
         // RESET ITEMS
         // =========================================================
 
-        // 🔴 ZMĚNA (1.9.0): staré SelectedTask/Specification/Material/Location
-        // nahrazeny novou kaskádou SelectedWorkTask/WorkSpecification/
-        // BaseMaterial/WorkPosition.
+        // Vyčistí pracovní řádek včetně všech kroků kaskády PRÁCE.
         public void ResetWorkItem(object? obj)
         {
             if (obj is CalculationItemViewModel item)
@@ -841,12 +836,16 @@ namespace ElektroOffer_app.ViewModels
             }
         }
 
+        public void ShowSettings()
+        {
+            _windowService.ShowSettings();
+        }
+
         // =========================================================
         // EXPORT TEXT
         // =========================================================
 
-        // 🔴 ZMĚNA (1.9.0): blok PRÁCE počítá basePrice ze 3 entit místo
-        // starého item.WorkItem, a vypisuje SelectedWorkTask místo SelectedTask.
+        // Textový export používá stejnou skladbu ceny jako detailní rozpočet.
         public string ExportAsText()
         {
             var sb = new System.Text.StringBuilder();

@@ -1,6 +1,5 @@
 ﻿﻿using ElektroOffer_app.Models;
 using ElektroOffer_app.Services.Abstractions;   // 🧩 Rozhraní pro DI (mockovatelné v testech)
-using Microsoft.Win32;                          // 📁 OpenFileDialog / SaveFileDialog
 using System.IO;                                // 📄 File.ReadAllText / WriteAllText
 using System.Text.Json;                         // 🔧 JSON serializace
 using System.Windows;                           // ⚠️ MessageBox (později nahradíme službou)
@@ -22,9 +21,6 @@ namespace ElektroOffer_app.Services
     //   • UI pracuje s MainViewModel → ten sestaví ProjectData
     //   • ProjectService pracuje výhradně s ProjectData (datový model)
     //   • ProjectData je čistý JSON-friendly model bez logiky
-    //
-    // Poznámka:
-    //   • MessageBoxService je dočasné řešení – později bude nahrazeno UI službou
     //
     // ============================================================================
 

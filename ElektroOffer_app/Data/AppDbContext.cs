@@ -17,9 +17,7 @@ namespace ElektroOffer_app.Data
     //      2) Unit testy (SQLite InMemory přes DbContextOptions)
     //
     // 🔴 ZMĚNA (1.9.0 — New Work Cascade):
-    // - Odstraněn DbSet<PriceItems> (stará kaskáda PRÁCE, celá tabulka
-    //   PriceItems zanikla, nenahrazuje se ničím zpětně kompatibilním)
-    // - Přidány nové DbSety pro PRÁCI: WorkTask, WorkSpecification,
+    // - DbSety pro PRÁCI: WorkTask, WorkSpecification,
     //   BaseMaterial, WorkPosition, TaskSpecification
     // - Entitní třídy mají jiný název než DB tabulky (WorkTask → "Tasks"
     //   atd.), aby nekolidovaly s .NET typy (Task) nebo s vlastnostmi

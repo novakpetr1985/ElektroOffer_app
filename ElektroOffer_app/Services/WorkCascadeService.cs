@@ -9,11 +9,7 @@ namespace ElektroOffer_app.Services
     // 🔧 WorkCascadeService – řízení kaskády PRÁCE (1.9.0 – New Work Cascade)
     // =========================================================================
     //
-    // ÚČEL:
-    // Nahrazuje starou CalculationCascadeService (ta pracovala nad tabulkou
-    // PriceItems, která v 1.9.0 zanikla úplně).
-    //
-    // NOVÁ KASKÁDA:
+    // Řídí řádkovou část kaskády PRÁCE:
     //   • WorkTask → WorkSpecification   (omezení přes TaskSpecifications)
     //   • WorkSpecification → BaseMaterial (UI povolení až po předchozím výběru)
     //   • BaseMaterial → WorkPosition      (UI povolení až po předchozím výběru)
@@ -23,14 +19,7 @@ namespace ElektroOffer_app.Services
     // tedy nemá LoadX metodu. Jediný seznam vázaný na konkrétní řádek je
     // AvailableWorkSpecifications, protože závisí na SelectedWorkTask.
     //
-    // VÝPOČET CENY:
-    // Výsledná cena se NEČTE z jedné spojovací tabulky (jako dřív PriceItems),
-    // ale počítá se za běhu v CalculationPriceService:
-    //
-    //   Total = WorkTask.BasePrice × BaseMaterial.BaseMaterialCoef
-    //         × WorkPosition.PositionCoef × Quantity
-    //
-    // Proto tahle služba u každé vybrané textové hodnoty (SelectedWorkTask,
+    // U každé vybrané textové hodnoty (SelectedWorkTask,
     // SelectedBaseMaterial, SelectedWorkPosition) zároveň dohledává a ukládá
     // odpovídající EF entitu (SelectedWorkTaskEntity, SelectedBaseMaterialEntity,
     // SelectedWorkPositionEntity) – z nich CalculationPriceService čte

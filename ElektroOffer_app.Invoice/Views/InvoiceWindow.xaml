@@ -34,7 +34,7 @@
 
         <StatusBar DockPanel.Dock="Bottom">
             <StatusBarItem>
-                <TextBlock Text="{Binding StatusText}" Foreground="Gray"/>
+                <TextBlock Text="{Binding StatusText}" Foreground="{DynamicResource AppMutedTextBrush}"/>
             </StatusBarItem>
         </StatusBar>
 

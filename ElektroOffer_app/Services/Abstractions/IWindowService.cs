@@ -12,6 +12,7 @@ namespace ElektroOffer_app.Services
     public interface IWindowService
     {
         void ShowAbout();
+        void ShowSettings();
         InvoiceDraft? ShowInvoice(IEnumerable<BudgetItem> budgetItems, InvoiceDraft? savedDraft);
     }
 }

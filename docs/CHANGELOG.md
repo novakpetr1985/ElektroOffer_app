@@ -19,6 +19,10 @@ Formát vychází z [Keep a Changelog](https://keepachangelog.com/cs/1.0.0/).
 - Fakturační data lze uložit také přímo do hlavního projektu `*.eof`; při dalším otevření projektu se znovu předají do fakturačního okna.
 - Přidán export faktury do jednoduchého PDF souboru.
 - Přidána ochrana proti zavření fakturačního okna s neuloženými změnami.
+- Přidáno okno `Nastavení` v menu `Možnosti` s první stránkou `Vzhled`.
+- Přidána volba motivu `Dle systému`, `Světlý režim`, `Tmavý režim` přes `AppThemeService`.
+- Přidány unit testy pro Fakturoid JSON, PDF export, validaci IČO a klonování fakturačního návrhu.
+- Přidány integrační testy pro samostatné uložení/načtení fakturace a serializaci faktury do `ProjectData`.
 
 ### Změněno
 - Výpočet ceny práce už nečte jednu spojenou položku `PriceItems`; cena se skládá z `WorkTask.BasePrice × BaseMaterial.BaseMaterialCoef × WorkPosition.PositionCoef × Quantity`.
@@ -31,6 +35,8 @@ Formát vychází z [Keep a Changelog](https://keepachangelog.com/cs/1.0.0/).
 - Databázové a katalogové testy ověřují nové tabulky práce (`Tasks`, `Specifications`, `BaseMaterials`, `Positions`, `TaskSpecifications`).
 - `ProjectData` nově ukládá počet řádků v sekcích PRÁCE a MATERIÁL (`WorkRowCount`, `MaterialRowCount`), aby se zachoval i stav přidaných nebo odebraných prázdných řádků.
 - Doporučený směr importu materiálů je CSV import přes UI s validací a mapováním sloupců, ne ruční SQL zásahy do databáze.
+- Globální WPF styly a barvy jsou nově zapojené přes `App.xaml` a používají dynamické resources pro světlý/tmavý režim.
+- Komentáře v upravovaných třídách byly srovnány na aktuální stav 1.9.0 a z kódu byly odstraněny zavádějící migrační poznámky.
 
 ### Odstraněno
 - `CalculationCascadeService` a model `PriceItems` jako stará spojená kaskáda PRÁCE.
@@ -41,6 +47,7 @@ Formát vychází z [Keep a Changelog](https://keepachangelog.com/cs/1.0.0/).
 - Neplatné bindingy v XAML na staré `Tasks`, `SelectedTask`, `AvailableSpecifications`, `SelectedMaterial`, `SelectedLocation`.
 - Nefunkční uložení/načtení pracovních polí po přejmenování modelu `WorkItemData`.
 - Uložení projektu po přidání nebo odebrání prázdného řádku nyní zachová počet řádků i tehdy, když řádek neobsahuje žádná kalkulační data.
+- Opraveno nullable warning v integračním testu `RealMessageBoxServiceTests`.
 
 ### Ověřeno
 - `dotnet build ElektroOffer_app.slnx`

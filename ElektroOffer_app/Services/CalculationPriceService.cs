@@ -28,19 +28,8 @@ namespace ElektroOffer_app.Services
         private double CalculateBaseTotal(CalculationItemViewModel vm)
         {
             // ---------------------------------------------------------
-            // 🔴 ZMĚNA (1.9.0 — New Work Cascade):
-            //
-            // Dřív se cena práce četla z jedné entity vm.WorkItem
-            // (PriceItems – spojený řádek se všemi koeficienty).
-            //
-            // PriceItems i celá spojovací tabulka (PriceCatalog /
-            // WorkPriceCatalog) v 1.9.0 zanikly. Nová kaskáda skládá
-            // cenu za běhu ze 3 NEZÁVISLÝCH entit:
-            //
-            //   WorkTask.BasePrice × BaseMaterial.BaseMaterialCoef
-            //   × WorkPosition.PositionCoef × Quantity
-            //
-            // Všechny 3 musí být vybrané, jinak cenu práce nelze spočítat.
+            // Cena práce se skládá ze základní ceny úkonu a dvou koeficientů.
+            // Všechny 3 pracovní entity musí být vybrané, jinak řádek nemá cenu.
             // ---------------------------------------------------------
             if (vm.SelectedWorkTaskEntity != null &&
                 vm.SelectedBaseMaterialEntity != null &&

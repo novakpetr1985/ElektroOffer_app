@@ -12,10 +12,8 @@ namespace ElektroOffer_app.ViewModels.Items
     {
         private readonly AppDbContext _db;
 
-        // 🔴 ZMĚNA (1.9.0): CalculationCascadeService (nad starou PriceItems)
-        // nahrazena WorkCascadeService (nová kaskáda PRÁCE bez spojovací tabulky).
         private readonly WorkCascadeService _workCascade;
-        private readonly MaterialCascadeService _materialCascade; // kaskáda produktového materiálu – beze změny
+        private readonly MaterialCascadeService _materialCascade;
         private readonly CalculationPriceService _price;
 
         public CalculationItemViewModel(AppDbContext db)
@@ -64,23 +62,8 @@ namespace ElektroOffer_app.ViewModels.Items
         //
         public string Id { get; set; } = string.Empty;
 
-        // =====================================================================
-        // 🔴 ZMĚNA (1.9.0 — New Work Cascade)
-        // =====================================================================
-        //
-        // PRÁCE – stará kaskáda byla: Task → Specification → Material → Location
-        // (4 řetězce, spárované na jeden řádek PriceItems).
-        //
-        // NOVÁ kaskáda:
-        //   • WorkTask → WorkSpecification   (jediné omezení výběru)
-        //   • BaseMaterial                    (vždy celý seznam, nezávislý)
-        //   • WorkPosition                    (vždy celý seznam, nezávislý)
-        //
-        // Vybrané NÁZVY (stringy pro ComboBoxy) jsou doprovázené vybranými
-        // EF ENTITAMI (SelectedWorkTaskEntity / SelectedBaseMaterialEntity /
-        // SelectedWorkPositionEntity), protože cena se teď skládá ze 3
-        // nezávislých koeficientů, ne z jedné spojené DB řádky.
-        //
+        // PRÁCE: UI drží vybrané názvy pro ComboBoxy a zároveň EF entity
+        // potřebné pro výpočet ceny.
         private string? _selectedWorkTask;
         private string? _selectedWorkSpecification;
         private string? _selectedBaseMaterial;
@@ -116,12 +99,8 @@ namespace ElektroOffer_app.ViewModels.Items
         // PUBLIC COLLECTIONS (UI)
         // =========================================================
 
-        // 🔴 ZMĚNA (1.9.0): AvailableSpecifications/Materials/Locations nahrazeny
-        // jedinou AvailableWorkSpecifications – to je jediný seznam v nové
-        // kaskádě PRÁCE, který je vázaný na konkrétní řádek (závisí na
-        // SelectedWorkTask). BaseMaterial a WorkPosition se nabízí vždy celé
-        // a jejich seznam je sdílený na úrovni MainViewModel (Tasks/BaseMaterials/
-        // WorkPositions), ne duplikovaný v každém řádku.
+        // Jediný řádkový seznam v kaskádě PRÁCE; závisí na vybraném úkonu.
+        // Podklady a umístění jsou sdílené seznamy v MainViewModelu.
         public ObservableCollection<string> AvailableWorkSpecifications { get; } = new();
 
         // Produktová kaskáda materiálu (beze změny)
@@ -458,13 +437,8 @@ namespace ElektroOffer_app.ViewModels.Items
         }
 
         // =========================================================
-        // MATERIAL ITEM (EF entita, beze změny)
+        // MATERIAL ITEM (EF entita materiálu)
         // =========================================================
-        //
-        // 🔴 ZMĚNA (1.9.0): PriceItems? WorkItem odstraněno (nahrazeno
-        // trojicí SelectedWorkTaskEntity / SelectedBaseMaterialEntity /
-        // SelectedWorkPositionEntity výše).
-        //
         public Material? MaterialItem
         {
             get => _materialItem;

@@ -1,22 +1,16 @@
-﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
-    <!-- ===================================================== -->
-    <!-- 🎨 BARVY APLIKACE                                     -->
-    <!-- ===================================================== -->
-    <!-- 👉 Základní paleta barev pro celou aplikaci           -->
-    <!-- 👉 Používá se ve Styles.xaml                          -->
-    <!-- ===================================================== -->
-
-    <!-- Primární barva (např. tlačítka, zvýraznění) -->
-    <Color x:Key="PrimaryColor">#FF007ACC</Color>
-
-    <!-- Sekundární barva (např. pozadí panelů) -->
-    <Color x:Key="SecondaryColor">#FF2D2D30</Color>
-
-    <!-- Barva textu -->
-    <Color x:Key="TextColor">#FFFFFFFF</Color>
-
-    <!-- Barva pozadí okna -->
-    <Color x:Key="WindowBackgroundColor">#FF1E1E1E</Color>
+    <SolidColorBrush x:Key="AppBackgroundBrush" Color="#F4F6F8"/>
+    <SolidColorBrush x:Key="AppSurfaceBrush" Color="#FFFFFF"/>
+    <SolidColorBrush x:Key="AppSurfaceAltBrush" Color="#EEF2F6"/>
+    <SolidColorBrush x:Key="AppBorderBrush" Color="#D6DDE6"/>
+    <SolidColorBrush x:Key="AppTextBrush" Color="#1F2937"/>
+    <SolidColorBrush x:Key="AppMutedTextBrush" Color="#667085"/>
+    <SolidColorBrush x:Key="AppInputBrush" Color="#FFFFFF"/>
+    <SolidColorBrush x:Key="AppAccentBrush" Color="#2563EB"/>
+    <SolidColorBrush x:Key="AppAccentHoverBrush" Color="#1D4ED8"/>
+    <SolidColorBrush x:Key="AppDangerBrush" Color="#DC2626"/>
+    <SolidColorBrush x:Key="AppSuccessBrush" Color="#15803D"/>
+    <SolidColorBrush x:Key="AppWarningBrush" Color="#B91C1C"/>
 </ResourceDictionary>

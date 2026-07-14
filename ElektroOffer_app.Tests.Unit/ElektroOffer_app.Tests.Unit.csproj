@@ -59,6 +59,7 @@
          musí být v repozitáři. -->
     <ProjectReference Include="..\ElektroOffer_app.Tests.Integration\ElektroOffer_app.Tests.Integration.csproj" />
     <ProjectReference Include="..\ElektroOffer_app\ElektroOffer_app.csproj" />
+    <ProjectReference Include="..\ElektroOffer_app.Invoice\ElektroOffer_app.Invoice.csproj" />
     <FrameworkReference Include="Microsoft.WindowsDesktop.App.WPF" />
   </ItemGroup>
 

@@ -13,9 +13,7 @@ namespace ElektroOffer_app.Services
     // - Umožňuje testovat načítání dat bez WPF
     // - Přijímá AppDbContext zvenčí → v testech lze předat testovací DB
     //
-    // 🔴 ZMĚNA (1.9.0 — New Work Cascade):
-    // - Odstraněna veškerá logika nad starou tabulkou PriceItems
-    // - Přidány metody pro novou kaskádu PRÁCE:
+    // Katalog PRÁCE:
     //     GetWorkTasks()          → celý seznam úkonů (Tasks)
     //     GetWorkSpecifications()  → specifikace OMEZENÉ podle vybraného
     //                                WorkTask (přes TaskSpecifications)

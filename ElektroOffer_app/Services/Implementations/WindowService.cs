@@ -19,6 +19,12 @@ namespace ElektroOffer_app.Services.Implementations
             about.ShowDialog();
         }
 
+        public void ShowSettings()
+        {
+            var settings = new SettingsWindow(App.ThemeService);
+            settings.ShowDialog();
+        }
+
         public InvoiceDraft? ShowInvoice(IEnumerable<Models.BudgetItem> budgetItems, InvoiceDraft? savedDraft)
         {
             var sourceItems = budgetItems.Select(item => new InvoiceSourceItem
