@@ -1,0 +1,107 @@
+using System.Data;
+using System.IO;
+using ElektroOffer_app.Data;
+using Microsoft.EntityFrameworkCore;
+
+namespace ElektroOffer_app.Services
+{
+    /// <summary>
+    /// Připraví lokální SQLite databázi při startu aplikace.
+    /// Pro verzi 1.9.0 je zdrojem pravdy SQL skript, ne ručně psaná seed data v C#.
+    /// </summary>
+    public static class DatabaseBootstrapService
+    {
+        private const string SeedScriptName = "elektrooffer_1_9_0.sql";
+
+        public static void EnsureReady(AppDbContext db)
+        {
+            if (HasCatalogData(db))
+                return;
+
+            var scriptPath = ResolveSeedScriptPath();
+            var script = File.ReadAllText(scriptPath);
+            ExecuteScript(db, script);
+        }
+
+        private static bool HasCatalogData(AppDbContext db)
+        {
+            if (!HasUserTables(db))
+                return false;
+
+            return db.Tasks.Any() ||
+                   db.Specifications.Any() ||
+                   db.BaseMaterials.Any() ||
+                   db.Positions.Any() ||
+                   db.Materials.Any() ||
+                   db.Categories.Any() ||
+                   db.Suppliers.Any() ||
+                   db.MaterialPrices.Any();
+        }
+
+        private static bool HasUserTables(AppDbContext db)
+        {
+            var connection = db.Database.GetDbConnection();
+            var closeAfterQuery = connection.State != ConnectionState.Open;
+
+            if (closeAfterQuery)
+                connection.Open();
+
+            try
+            {
+                using var command = connection.CreateCommand();
+                command.CommandText = "SELECT COUNT(*) FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%';";
+                return Convert.ToInt32(command.ExecuteScalar()) > 0;
+            }
+            finally
+            {
+                if (closeAfterQuery)
+                    connection.Close();
+            }
+        }
+
+        private static void ExecuteScript(AppDbContext db, string script)
+        {
+            var connection = db.Database.GetDbConnection();
+            var closeAfterExecute = connection.State != ConnectionState.Open;
+
+            if (closeAfterExecute)
+                connection.Open();
+
+            try
+            {
+                using var command = connection.CreateCommand();
+                command.CommandText = script;
+                command.ExecuteNonQuery();
+            }
+            finally
+            {
+                if (closeAfterExecute)
+                    connection.Close();
+            }
+        }
+
+        private static string ResolveSeedScriptPath()
+        {
+            var candidates = new List<string>
+            {
+                Path.Combine(AppContext.BaseDirectory, "Data", "Seed", SeedScriptName),
+                Path.Combine(Environment.CurrentDirectory, "Data", "Seed", SeedScriptName)
+            };
+
+            var directory = new DirectoryInfo(AppContext.BaseDirectory);
+            for (var i = 0; i < 8 && directory != null; i++, directory = directory.Parent)
+            {
+                candidates.Add(Path.Combine(directory.FullName, "ElektroOffer_app", "Data", "Seed", SeedScriptName));
+                candidates.Add(Path.Combine(directory.FullName, "Data", "Seed", SeedScriptName));
+            }
+
+            var scriptPath = candidates.FirstOrDefault(File.Exists);
+            if (scriptPath != null)
+                return scriptPath;
+
+            throw new FileNotFoundException(
+                $"Seed SQL skript nebyl nalezen. Očekáván soubor {SeedScriptName}.",
+                SeedScriptName);
+        }
+    }
+}

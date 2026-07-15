@@ -36,10 +36,12 @@ Formát vychází z [Keep a Changelog](https://keepachangelog.com/cs/1.0.0/).
 - `ProjectData` nově ukládá počet řádků v sekcích PRÁCE a MATERIÁL (`WorkRowCount`, `MaterialRowCount`), aby se zachoval i stav přidaných nebo odebraných prázdných řádků.
 - Doporučený směr importu materiálů je CSV import přes UI s validací a mapováním sloupců, ne ruční SQL zásahy do databáze.
 - Globální WPF styly a barvy jsou nově zapojené přes `App.xaml` a používají dynamické resources pro světlý/tmavý režim.
-- Vzhled byl srovnán blíže ke standardnímu Windows chování; vlastní šablony tlačítek a přebarvení vstupů byly odstraněny kvůli lepší čitelnosti ComboBoxů, TextBoxů a detailů ovládacích prvků.
+- Vzhled byl srovnán blíže ke standardnímu Windows chování; zůstávají jen ty vlastní styly a šablony, které jsou potřeba pro čitelnost světlého/tmavého režimu.
 - Tmavý režim se nově aplikuje na hlavní okno, fakturaci, nastavení i okno O aplikaci včetně kořenových panelů, menu, toolbarů, vstupů, tabulek a systémových WPF barev.
 - Výběr položek v tmavém režimu má nově vlastní kontrastní barvy pro ComboBox, ListBox a DataGrid, aby byl text vybrané položky čitelný.
 - Opraveno přebíjení barvy textu u vybraných položek v tmavém režimu; text nyní dědí kontrastní barvu výběru i uvnitř ComboBoxů, ListBoxů a DataGrid buněk.
+- Zavřený stav ComboBoxů má vlastní šablonu, aby po výběru položky zůstal text čitelný i v tmavém režimu.
+- Aplikace už nevyžaduje zdrojový soubor `ElektroOffer_app/elektrooffer.db` při buildu; při startu chybějící SQLite databázi založí a naplní testovacími daty ze SQL seedu `Data/Seed/elektrooffer_1_9_0.sql`.
 - GitHub Actions workflow bylo zjednodušeno: běžné CI spouští restore/build/test, detailní diagnostický log se generuje jen při chybě a publish Release běží pouze při tagu.
 - Komentáře v upravovaných třídách a datových modelech byly srovnány na aktuální stav 1.9.0; zavádějící migrační poznámky a zastaralé odkazy na `Guid` identifikátory byly odstraněny.
 
@@ -59,7 +61,9 @@ Formát vychází z [Keep a Changelog](https://keepachangelog.com/cs/1.0.0/).
 - `dotnet build ElektroOffer_app.slnx -p:OutputPath=...\artifacts\verify-build\` kvůli běžící aplikaci zamykající standardní `bin` výstup
 - `dotnet build ElektroOffer_app.slnx -p:OutputPath=...\artifacts\verify-theme\`
 - `dotnet build ElektroOffer_app.slnx -p:OutputPath=...\artifacts\verify-selection\`
+- `dotnet build ElektroOffer_app.slnx --configuration Debug`
 - `dotnet test ElektroOffer_app.slnx --no-build`
+- `dotnet test ElektroOffer_app.slnx --configuration Debug --no-build`
 
 ---
 

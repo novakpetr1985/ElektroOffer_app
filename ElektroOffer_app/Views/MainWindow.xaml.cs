@@ -16,6 +16,7 @@ namespace ElektroOffer_app
             // 1) Jeden sdílený EF Core kontext pro celou aplikaci
             // ---------------------------------------------------------
             var db = new AppDbContext();
+            DatabaseBootstrapService.EnsureReady(db);
 
             // ---------------------------------------------------------
             // 2) Služby (DI bez kontejneru)

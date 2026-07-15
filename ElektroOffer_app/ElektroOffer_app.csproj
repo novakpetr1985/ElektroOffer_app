@@ -84,12 +84,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="elektrooffer.db" />
     <None Remove="Resources\Icons\LOGO.jpg" />
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="elektrooffer.db">
+    <Content Include="Data\Seed\elektrooffer_1_9_0.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
