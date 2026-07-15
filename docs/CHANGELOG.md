@@ -9,6 +9,7 @@ Formát vychází z [Keep a Changelog](https://keepachangelog.com/cs/1.0.0/).
 
 ### Přidáno
 - Nová kaskáda sekce PRÁCE postavená na samostatných entitách `WorkTask`, `WorkSpecification`, `BaseMaterial`, `WorkPosition` a vazební tabulce `TaskSpecification`.
+- Doplněn manuální testovací checklist `docs/MANUAL-TESTS.md` pro celkovou regresi aplikace, DB, fakturaci, vzhled, CI a PR proces.
 - Nová služba `WorkCascadeService`, která nahrazuje původní práci nad `PriceItems`.
 - Nový samostatný WPF modul `ElektroOffer_app.Invoice` pro přípravu faktury z detailního rozpočtu.
 - Nové menu a toolbar akce `Fakturace`, které otevřou fakturační okno z hlavní aplikace.
