@@ -1,10 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore;
 using ElektroOffer_app.Models;
+using Microsoft.Data.Sqlite;
+using Microsoft.EntityFrameworkCore;
+using System.IO;
 
 namespace ElektroOffer_app.Data
 {
     // =========================================================================
-    // 🧠 AppDbContext – EF Core databázový kontext
+    // AppDbContext - EF Core databázový kontext
     // =========================================================================
     //
     // ÚČEL:
@@ -16,12 +18,16 @@ namespace ElektroOffer_app.Data
     //      1) Běžný provoz aplikace (SQLite soubor elektrooffer.db)
     //      2) Unit testy (SQLite InMemory přes DbContextOptions)
     //
+    // Vývojová databáze se při běhu z Visual Studia ukládá do složky projektu,
+    // tedy vedle elektrooffer.sqbpro. Aplikace a SQLite Browser tak otevírají
+    // stejný soubor.
+    //
     // Katalog PRÁCE používá samostatné tabulky:
     // - WorkTask, WorkSpecification,
     //   BaseMaterial, WorkPosition, TaskSpecification
-    // - Entitní třídy mají jiný název než DB tabulky (WorkTask → "Tasks"
+    // - Entitní třídy mají jiný název než DB tabulky (WorkTask -> "Tasks"
     //   atd.), aby nekolidovaly s .NET typy (Task) nebo s vlastnostmi
-    //   jinde v projektu (Position) – mapování řeší ToTable() níže.
+    //   jinde v projektu (Position) - mapování řeší ToTable() níže.
     // - Sekce MATERIÁL (Materials, Categories, Suppliers, MaterialPrices)
     //   beze změny.
     // =========================================================================
@@ -48,7 +54,7 @@ namespace ElektroOffer_app.Data
         }
 
         // =========================================================================
-        // DB SETS – MATERIÁL (beze změny)
+        // DB SETS - MATERIÁL (beze změny)
         // =========================================================================
 
         public DbSet<Material> Materials => Set<Material>();
@@ -57,7 +63,7 @@ namespace ElektroOffer_app.Data
         public DbSet<MaterialPrice> MaterialPrices => Set<MaterialPrice>();
 
         // =========================================================================
-        // DB SETS – PRÁCE (nová kaskáda 1.9.0)
+        // DB SETS - PRÁCE (nová kaskáda 1.9.0)
         // =========================================================================
 
         /// <summary>Úkony (tabulka "Tasks"). Základní cena práce.</summary>
@@ -72,7 +78,7 @@ namespace ElektroOffer_app.Data
         /// <summary>Pozice (tabulka "Positions"). Koeficient polohy.</summary>
         public DbSet<WorkPosition> Positions => Set<WorkPosition>();
 
-        /// <summary>Validní páry Task ↔ Specification (tabulka "TaskSpecifications").</summary>
+        /// <summary>Validní páry Task <-> Specification (tabulka "TaskSpecifications").</summary>
         public DbSet<TaskSpecification> TaskSpecifications => Set<TaskSpecification>();
 
         // =========================================================================
@@ -84,11 +90,45 @@ namespace ElektroOffer_app.Data
             if (optionsBuilder.IsConfigured)
                 return;
 
-            optionsBuilder.UseSqlite("Data Source=elektrooffer.db");
+            var connectionString = new SqliteConnectionStringBuilder
+            {
+                DataSource = ResolveDatabasePath()
+            }.ToString();
+
+            optionsBuilder.UseSqlite(connectionString);
+        }
+
+        private static string ResolveDatabasePath()
+        {
+            var projectDirectory = FindProjectDirectory(AppContext.BaseDirectory)
+                                ?? FindProjectDirectory(Environment.CurrentDirectory);
+
+            if (projectDirectory != null)
+                return Path.Combine(projectDirectory.FullName, "elektrooffer.db");
+
+            return Path.Combine(AppContext.BaseDirectory, "elektrooffer.db");
+        }
+
+        private static DirectoryInfo? FindProjectDirectory(string startPath)
+        {
+            var directory = new DirectoryInfo(startPath);
+
+            while (directory != null)
+            {
+                var hasProjectFile = File.Exists(Path.Combine(directory.FullName, "ElektroOffer_app.csproj"));
+                var hasSqliteBrowserProject = File.Exists(Path.Combine(directory.FullName, "elektrooffer.sqbpro"));
+
+                if (hasProjectFile || hasSqliteBrowserProject)
+                    return directory;
+
+                directory = directory.Parent;
+            }
+
+            return null;
         }
 
         // =========================================================================
-        // 🔧 OnModelCreating – dodatečná pravidla databázového schématu
+        // OnModelCreating - dodatečná pravidla databázového schématu
         // =========================================================================
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -116,7 +156,7 @@ namespace ElektroOffer_app.Data
                 .HasIndex(ts => new { ts.TaskId, ts.SpecificationId })
                 .IsUnique();
 
-            // SQLite nemá nativní DECIMAL → explicitně REAL, stejně jako u MaterialPrice.Price
+            // SQLite nemá nativní DECIMAL -> explicitně REAL, stejně jako u MaterialPrice.Price
             modelBuilder.Entity<WorkTask>().Property(t => t.BasePrice).HasColumnType("REAL");
             modelBuilder.Entity<BaseMaterial>().Property(b => b.BaseMaterialCoef).HasColumnType("REAL");
             modelBuilder.Entity<WorkPosition>().Property(p => p.PositionCoef).HasColumnType("REAL");
