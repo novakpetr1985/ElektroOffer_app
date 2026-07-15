@@ -130,6 +130,9 @@ namespace ElektroOffer_app.Services
             resources[SystemColors.MenuTextBrushKey] = resources["AppTextBrush"];
             resources[SystemColors.HighlightBrushKey] = resources["AppSelectionBrush"];
             resources[SystemColors.HighlightTextBrushKey] = resources["AppSelectionTextBrush"];
+            resources[SystemColors.InactiveSelectionHighlightBrushKey] = resources["AppSelectionBrush"];
+            resources[SystemColors.InactiveSelectionHighlightTextBrushKey] = resources["AppSelectionTextBrush"];
+            resources[SystemColors.HotTrackBrushKey] = resources["AppSelectionBrush"];
             resources[SystemColors.GrayTextBrushKey] = resources["AppMutedTextBrush"];
         }
 

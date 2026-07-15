@@ -8,10 +8,6 @@
         <Setter Property="FontSize" Value="13"/>
     </Style>
 
-    <Style TargetType="TextBlock">
-        <Setter Property="Foreground" Value="{DynamicResource AppTextBrush}"/>
-    </Style>
-
     <Style TargetType="Menu">
         <Setter Property="Background" Value="{DynamicResource AppSurfaceBrush}"/>
         <Setter Property="Foreground" Value="{DynamicResource AppTextBrush}"/>
@@ -67,24 +63,29 @@
     <Style TargetType="ComboBoxItem">
         <Setter Property="Background" Value="{DynamicResource AppInputBrush}"/>
         <Setter Property="Foreground" Value="{DynamicResource AppInputTextBrush}"/>
+        <Setter Property="TextElement.Foreground" Value="{DynamicResource AppInputTextBrush}"/>
         <Style.Triggers>
             <Trigger Property="IsHighlighted" Value="True">
                 <Setter Property="Background" Value="{DynamicResource AppSelectionBrush}"/>
                 <Setter Property="Foreground" Value="{DynamicResource AppSelectionTextBrush}"/>
+                <Setter Property="TextElement.Foreground" Value="{DynamicResource AppSelectionTextBrush}"/>
             </Trigger>
             <Trigger Property="IsSelected" Value="True">
                 <Setter Property="Background" Value="{DynamicResource AppSelectionBrush}"/>
                 <Setter Property="Foreground" Value="{DynamicResource AppSelectionTextBrush}"/>
+                <Setter Property="TextElement.Foreground" Value="{DynamicResource AppSelectionTextBrush}"/>
             </Trigger>
         </Style.Triggers>
     </Style>
 
     <Style TargetType="ListBoxItem">
         <Setter Property="Foreground" Value="{DynamicResource AppTextBrush}"/>
+        <Setter Property="TextElement.Foreground" Value="{DynamicResource AppTextBrush}"/>
         <Style.Triggers>
             <Trigger Property="IsSelected" Value="True">
                 <Setter Property="Background" Value="{DynamicResource AppSelectionBrush}"/>
                 <Setter Property="Foreground" Value="{DynamicResource AppSelectionTextBrush}"/>
+                <Setter Property="TextElement.Foreground" Value="{DynamicResource AppSelectionTextBrush}"/>
             </Trigger>
         </Style.Triggers>
     </Style>
@@ -110,6 +111,7 @@
     <Style TargetType="DataGridRow">
         <Setter Property="Background" Value="{DynamicResource AppSurfaceBrush}"/>
         <Setter Property="Foreground" Value="{DynamicResource AppTextBrush}"/>
+        <Setter Property="TextElement.Foreground" Value="{DynamicResource AppTextBrush}"/>
         <Style.Triggers>
             <Trigger Property="AlternationIndex" Value="1">
                 <Setter Property="Background" Value="{DynamicResource AppSurfaceAltBrush}"/>
@@ -117,6 +119,7 @@
             <Trigger Property="IsSelected" Value="True">
                 <Setter Property="Background" Value="{DynamicResource AppSelectionBrush}"/>
                 <Setter Property="Foreground" Value="{DynamicResource AppSelectionTextBrush}"/>
+                <Setter Property="TextElement.Foreground" Value="{DynamicResource AppSelectionTextBrush}"/>
             </Trigger>
         </Style.Triggers>
     </Style>
@@ -134,6 +137,7 @@
             <Trigger Property="IsSelected" Value="True">
                 <Setter Property="Background" Value="{DynamicResource AppSelectionBrush}"/>
                 <Setter Property="Foreground" Value="{DynamicResource AppSelectionTextBrush}"/>
+                <Setter Property="TextElement.Foreground" Value="{DynamicResource AppSelectionTextBrush}"/>
                 <Setter Property="BorderBrush" Value="{DynamicResource AppSelectionBrush}"/>
             </Trigger>
         </Style.Triggers>

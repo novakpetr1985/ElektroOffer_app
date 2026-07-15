@@ -39,6 +39,7 @@ Formát vychází z [Keep a Changelog](https://keepachangelog.com/cs/1.0.0/).
 - Vzhled byl srovnán blíže ke standardnímu Windows chování; vlastní šablony tlačítek a přebarvení vstupů byly odstraněny kvůli lepší čitelnosti ComboBoxů, TextBoxů a detailů ovládacích prvků.
 - Tmavý režim se nově aplikuje na hlavní okno, fakturaci, nastavení i okno O aplikaci včetně kořenových panelů, menu, toolbarů, vstupů, tabulek a systémových WPF barev.
 - Výběr položek v tmavém režimu má nově vlastní kontrastní barvy pro ComboBox, ListBox a DataGrid, aby byl text vybrané položky čitelný.
+- Opraveno přebíjení barvy textu u vybraných položek v tmavém režimu; text nyní dědí kontrastní barvu výběru i uvnitř ComboBoxů, ListBoxů a DataGrid buněk.
 - GitHub Actions workflow bylo zjednodušeno: běžné CI spouští restore/build/test, detailní diagnostický log se generuje jen při chybě a publish Release běží pouze při tagu.
 - Komentáře v upravovaných třídách a datových modelech byly srovnány na aktuální stav 1.9.0; zavádějící migrační poznámky a zastaralé odkazy na `Guid` identifikátory byly odstraněny.
 
