@@ -46,6 +46,57 @@ jobs:
       - name: Run integration tests
         run: dotnet test ElektroOffer_app.Tests.Integration/ElektroOffer_app.Tests.Integration.csproj --configuration Debug --no-restore --verbosity normal --logger trx --results-directory TestResults/Integration
 
+      - name: Generate short CI summary
+        if: always()
+        shell: pwsh
+        run: |
+          function Write-TrxSummary {
+            param(
+              [string] $Title,
+              [string] $Path
+            )
+
+            $file = Get-ChildItem -Path $Path -Filter *.trx -Recurse -ErrorAction SilentlyContinue |
+              Sort-Object LastWriteTime |
+              Select-Object -Last 1
+
+            if (-not $file) {
+              "| $Title | not run | 0 | 0 | 0 | 0 | 0 |" | Out-File elektrooffer-ci-summary.md -Append -Encoding utf8
+              return
+            }
+
+            [xml] $xml = Get-Content $file.FullName
+            $resultSummary = $xml.SelectSingleNode("//*[local-name()='ResultSummary']")
+            $counters = $xml.SelectSingleNode("//*[local-name()='ResultSummary']/*[local-name()='Counters']")
+            $outcome = $resultSummary.outcome
+
+            "| $Title | $outcome | $($counters.total) | $($counters.executed) | $($counters.passed) | $($counters.failed) | $($counters.notExecuted) |" |
+              Out-File elektrooffer-ci-summary.md -Append -Encoding utf8
+          }
+
+          "# ElektroOffer CI Summary" | Out-File elektrooffer-ci-summary.md -Encoding utf8
+          "" | Out-File elektrooffer-ci-summary.md -Append -Encoding utf8
+          "- Timestamp: $(Get-Date -Format o)" | Out-File elektrooffer-ci-summary.md -Append -Encoding utf8
+          "- Event: $env:GITHUB_EVENT_NAME" | Out-File elektrooffer-ci-summary.md -Append -Encoding utf8
+          "- Ref: $env:GITHUB_REF" | Out-File elektrooffer-ci-summary.md -Append -Encoding utf8
+          "- Branch: $env:GITHUB_REF_NAME" | Out-File elektrooffer-ci-summary.md -Append -Encoding utf8
+          "- Commit: $env:GITHUB_SHA" | Out-File elektrooffer-ci-summary.md -Append -Encoding utf8
+          "- Run: $env:GITHUB_SERVER_URL/$env:GITHUB_REPOSITORY/actions/runs/$env:GITHUB_RUN_ID" | Out-File elektrooffer-ci-summary.md -Append -Encoding utf8
+          "" | Out-File elektrooffer-ci-summary.md -Append -Encoding utf8
+          "| Suite | Outcome | Total | Executed | Passed | Failed | Not executed |" | Out-File elektrooffer-ci-summary.md -Append -Encoding utf8
+          "|---|---:|---:|---:|---:|---:|---:|" | Out-File elektrooffer-ci-summary.md -Append -Encoding utf8
+          Write-TrxSummary -Title "Unit" -Path "TestResults/Unit"
+          Write-TrxSummary -Title "Integration" -Path "TestResults/Integration"
+
+          Get-Content elektrooffer-ci-summary.md | Out-File $env:GITHUB_STEP_SUMMARY -Append -Encoding utf8
+
+      - name: Upload short CI summary
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: elektrooffer-ci-summary
+          path: elektrooffer-ci-summary.md
+
       - name: Upload test results
         if: failure()
         uses: actions/upload-artifact@v4

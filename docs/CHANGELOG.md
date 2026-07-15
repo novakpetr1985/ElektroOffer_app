@@ -49,6 +49,7 @@ Formát vychází z [Keep a Changelog](https://keepachangelog.com/cs/1.0.0/).
 - GitHub Actions workflow bylo zjednodušeno: běžné CI spouští restore/build/test, detailní diagnostický log se generuje jen při chybě a publish Release běží pouze při tagu.
 - Unit a integrační testy jsou v GitHub Actions oddělené do samostatných kroků, aby bylo v logu hned vidět, která sada případně selhala.
 - GitHub Actions joby jsou připravené na ruční schválení přes environment `manual-approval`.
+- GitHub Actions nově ukládají krátký CI souhrn `elektrooffer-ci-summary` při každém běhu včetně úspěšných běhů.
 - Komentáře v upravovaných třídách a datových modelech byly srovnány na aktuální stav 1.9.0; zavádějící migrační poznámky a zastaralé odkazy na `Guid` identifikátory byly odstraněny.
 
 ### Odstraněno

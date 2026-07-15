@@ -165,6 +165,7 @@ Workflow `.github/workflows/elektrooffer-ci-pipeline.yml` je nastavený tak, aby
 - `pull_request` do `dev`, `test`, `main` spouští stejný CI běh pro kontrolu chráněných větví
 - `workflow_dispatch` umožňuje ruční spuštění
 - tag spouští CI a po něm samostatný Release publish
+- krátký CI souhrn `elektrooffer-ci-summary` se ukládá jako artifact po každém běhu a obsahuje počty unit/integračních testů
 - detailní diagnostický log se vytváří jen při chybě, aby se běžné úspěšné běhy zbytečně neduplikovaly
 - všechny joby používají environment `manual-approval`; pro skutečné pozastavení běhu nastav v GitHubu `Settings -> Environments -> manual-approval -> Required reviewers`
 
