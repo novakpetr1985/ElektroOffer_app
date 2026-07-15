@@ -19,6 +19,8 @@ jobs:
   ci:
     name: Build and test
     runs-on: windows-latest
+    environment:
+      name: manual-approval
     env:
       DOTNET_SKIP_FIRST_TIME_EXPERIENCE: "1"
       DOTNET_NOLOGO: "1"
@@ -56,6 +58,8 @@ jobs:
     if: startsWith(github.ref, 'refs/tags/')
     needs: ci
     runs-on: windows-latest
+    environment:
+      name: manual-approval
 
     steps:
       - name: Checkout repository
@@ -85,6 +89,8 @@ jobs:
       - ci
       - release
     runs-on: windows-latest
+    environment:
+      name: manual-approval
 
     steps:
       - name: Checkout repository

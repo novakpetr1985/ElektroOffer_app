@@ -166,6 +166,7 @@ Workflow `.github/workflows/elektrooffer-ci-pipeline.yml` je nastavený tak, aby
 - `workflow_dispatch` umožňuje ruční spuštění
 - tag spouští CI a po něm samostatný Release publish
 - detailní diagnostický log se vytváří jen při chybě, aby se běžné úspěšné běhy zbytečně neduplikovaly
+- všechny joby používají environment `manual-approval`; pro skutečné pozastavení běhu nastav v GitHubu `Settings -> Environments -> manual-approval -> Required reviewers`
 
 ### Import materiálů
 
