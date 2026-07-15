@@ -1,6 +1,7 @@
 using System.Text.Json;
 using ElektroOffer_app.Invoice.Models;
 using ElektroOffer_app.Invoice.Services;
+using ElektroOffer_app.Invoice.ViewModels;
 using NUnit.Framework;
 
 namespace ElektroOffer_app.Tests.Unit.Invoice
@@ -39,6 +40,56 @@ namespace ElektroOffer_app.Tests.Unit.Invoice
             Assert.That(original.Customer.Name, Is.EqualTo("Test Customer s.r.o."));
             Assert.That(original.Lines[0].Name, Is.EqualTo("PRACE: Montaz"));
             Assert.That(clone.Customer.Name, Is.EqualTo("Changed"));
+        }
+
+        [Test]
+        public void Invoice_Should_Preserve_Before_Discount_Discount_And_Final_Prices()
+        {
+            var vm = new InvoiceViewModel(new[]
+            {
+                new InvoiceSourceItem
+                {
+                    Type = "PRACE",
+                    Description = "Montaz",
+                    Unit = "ks",
+                    Quantity = 2,
+                    PriceBeforeDiscount = 960,
+                    Price = 864,
+                    DiscountPercent = 10,
+                    DiscountAmount = 96
+                }
+            });
+
+            var line = vm.Lines.Single();
+            Assert.Multiple(() =>
+            {
+                Assert.That(line.UnitPrice, Is.EqualTo(480m));
+                Assert.That(line.TotalPriceBeforeDiscount, Is.EqualTo(960m));
+                Assert.That(line.DiscountPercent, Is.EqualTo(10d));
+                Assert.That(line.DiscountAmount, Is.EqualTo(96m));
+                Assert.That(line.TotalPrice, Is.EqualTo(864m));
+                Assert.That(vm.Total, Is.EqualTo(864m));
+            });
+        }
+
+        [Test]
+        public void FakturoidExport_Should_Use_Effective_Unit_Price_After_Discount()
+        {
+            var draft = CreateDraft();
+            var line = draft.Lines[0];
+            line.UnitPrice = 480m;
+            line.TotalPriceBeforeDiscount = 960m;
+            line.TotalPrice = 864m;
+            line.Quantity = 2;
+            line.DiscountPercent = 10;
+            line.DiscountAmount = 96m;
+
+            var json = new FakturoidExportService().BuildJson(draft);
+            using var document = JsonDocument.Parse(json);
+
+            Assert.That(
+                document.RootElement.GetProperty("lines")[0].GetProperty("unit_price").GetString(),
+                Is.EqualTo("432"));
         }
 
         [Test]
@@ -97,6 +148,7 @@ namespace ElektroOffer_app.Tests.Unit.Invoice
                 Quantity = 2,
                 UnitName = "hod",
                 UnitPrice = 1500,
+                TotalPriceBeforeDiscount = 3000,
                 TotalPrice = 3000,
                 VatRate = 21
             });

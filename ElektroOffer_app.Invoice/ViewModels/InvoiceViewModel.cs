@@ -255,6 +255,9 @@ namespace ElektroOffer_app.Invoice.ViewModels
             {
                 var quantity = source.Quantity <= 0 ? 1 : source.Quantity;
                 var total = Convert.ToDecimal(source.Price);
+                var totalBeforeDiscount = Convert.ToDecimal(source.PriceBeforeDiscount > 0
+                    ? source.PriceBeforeDiscount
+                    : source.Price);
 
                 draft.Lines.Add(new InvoiceLine
                 {
@@ -264,7 +267,8 @@ namespace ElektroOffer_app.Invoice.ViewModels
                         : $"{source.Type}: {source.Description}",
                     UnitName = source.Unit,
                     Quantity = quantity,
-                    UnitPrice = Math.Round(total / Convert.ToDecimal(quantity), 2),
+                    UnitPrice = Math.Round(totalBeforeDiscount / Convert.ToDecimal(quantity), 2),
+                    TotalPriceBeforeDiscount = totalBeforeDiscount,
                     TotalPrice = total,
                     VatRate = 0,
                     DiscountPercent = source.DiscountPercent,

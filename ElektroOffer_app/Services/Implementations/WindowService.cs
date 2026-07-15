@@ -33,6 +33,7 @@ namespace ElektroOffer_app.Services.Implementations
                 Description = item.Description,
                 Unit = item.Unit,
                 Quantity = item.Quantity,
+                PriceBeforeDiscount = item.PriceBeforeDiscount,
                 Price = item.Price,
                 DiscountPercent = item.DiscountPercent,
                 DiscountAmount = item.DiscountAmount

@@ -24,6 +24,9 @@ namespace ElektroOffer_app.Tests.Integration.Invoice
                 Assert.That(loaded, Is.Not.Null);
                 Assert.That(loaded!.Customer.Name, Is.EqualTo("Zakaznik"));
                 Assert.That(loaded.Lines, Has.Count.EqualTo(1));
+                Assert.That(loaded.Lines[0].TotalPriceBeforeDiscount, Is.EqualTo(3000m));
+                Assert.That(loaded.Lines[0].DiscountPercent, Is.EqualTo(10d));
+                Assert.That(loaded.Lines[0].DiscountAmount, Is.EqualTo(500m));
                 Assert.That(loaded.Lines[0].TotalPrice, Is.EqualTo(2500m));
             }
             finally
@@ -73,6 +76,9 @@ namespace ElektroOffer_app.Tests.Integration.Invoice
                 Quantity = 5,
                 UnitName = "m",
                 UnitPrice = 500,
+                TotalPriceBeforeDiscount = 3000,
+                DiscountPercent = 10,
+                DiscountAmount = 500,
                 TotalPrice = 2500
             });
 

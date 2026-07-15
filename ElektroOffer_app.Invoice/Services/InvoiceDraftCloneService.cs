@@ -47,6 +47,7 @@ namespace ElektroOffer_app.Invoice.Services
                 UnitName = source.UnitName,
                 Quantity = source.Quantity,
                 UnitPrice = source.UnitPrice,
+                TotalPriceBeforeDiscount = source.TotalPriceBeforeDiscount,
                 TotalPrice = source.TotalPrice,
                 VatRate = source.VatRate,
                 DiscountPercent = source.DiscountPercent,

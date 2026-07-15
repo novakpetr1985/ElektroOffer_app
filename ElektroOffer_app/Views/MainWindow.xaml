@@ -190,7 +190,7 @@
 
                         <!-- 💰 CENA PRÁCE -->
                         <TextBlock Grid.Column="7"
-                                   Text="Cena"
+                                   Text="Po slevě"
                                    FontWeight="Bold"
                                    HorizontalAlignment="Right"
                                    TextAlignment="Right"/>
@@ -393,7 +393,7 @@
                                 HorizontalAlignment="Right" TextAlignment="Right"/>
                         <TextBlock Grid.Column="6" Text="MJ" FontWeight="Bold"
                                 HorizontalAlignment="Center" TextAlignment="Center"/>
-                        <TextBlock Grid.Column="7" Text="Cena" FontWeight="Bold"
+                        <TextBlock Grid.Column="7" Text="Po slevě" FontWeight="Bold"
                                 HorizontalAlignment="Right" TextAlignment="Right"/>
                         <TextBlock Grid.Column="9" Text="Sleva %" FontWeight="Bold"
                                 HorizontalAlignment="Center"/>
@@ -596,11 +596,11 @@
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
 
-                                <!-- Cena (se slevou) -->
+                                <!-- Cena před slevou -->
                                 <GridViewColumn Width="120">
                                     <GridViewColumn.HeaderTemplate>
                                         <DataTemplate>
-                                            <TextBlock Text="Cena"
+                                            <TextBlock Text="Před slevou"
                                                        FontWeight="Bold"
                                                        HorizontalAlignment="Right"
                                                        TextAlignment="Right"
@@ -610,7 +610,7 @@
 
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
-                                            <TextBlock Text="{Binding Price, StringFormat={}{0:N0} Kč}"
+                                            <TextBlock Text="{Binding PriceBeforeDiscount, StringFormat={}{0:N0} Kč}"
                                                        HorizontalAlignment="Right"
                                                        TextAlignment="Right"
                                                        Width="100"/>
@@ -662,6 +662,29 @@
                                                        HorizontalAlignment="Right"
                                                        TextAlignment="Right"
                                                        Foreground="{DynamicResource AppWarningBrush}"
+                                                       Width="100"/>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+
+                                <!-- Výsledná cena po slevě -->
+                                <GridViewColumn Width="120">
+                                    <GridViewColumn.HeaderTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="Po slevě"
+                                                       FontWeight="Bold"
+                                                       HorizontalAlignment="Right"
+                                                       TextAlignment="Right"
+                                                       Width="100"/>
+                                        </DataTemplate>
+                                    </GridViewColumn.HeaderTemplate>
+
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding Price, StringFormat={}{0:N0} Kč}"
+                                                       FontWeight="Bold"
+                                                       HorizontalAlignment="Right"
+                                                       TextAlignment="Right"
                                                        Width="100"/>
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>

@@ -39,7 +39,10 @@ namespace ElektroOffer_app.Invoice.Services
                     name = line.Name,
                     quantity = line.Quantity.ToString("0.####", CultureInfo.InvariantCulture),
                     unit_name = line.UnitName,
-                    unit_price = line.UnitPrice.ToString("0.##", CultureInfo.InvariantCulture),
+                    unit_price = (line.Quantity > 0
+                            ? line.TotalPrice / Convert.ToDecimal(line.Quantity)
+                            : line.TotalPrice)
+                        .ToString("0.##", CultureInfo.InvariantCulture),
                     vat_rate = line.VatRate
                 }).ToList()
             };

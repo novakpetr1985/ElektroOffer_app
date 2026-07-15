@@ -189,9 +189,12 @@
                             <DataGridTextColumn Header="Popis" Binding="{Binding Name}" Width="*"/>
                             <DataGridTextColumn Header="Mnozstvi" Binding="{Binding Quantity}" Width="90"/>
                             <DataGridTextColumn Header="MJ" Binding="{Binding UnitName}" Width="70"/>
-                            <DataGridTextColumn Header="Cena / MJ" Binding="{Binding UnitPrice, StringFormat={}{0:N2}}" Width="100"/>
+                            <DataGridTextColumn Header="Cena / MJ před slevou" Binding="{Binding UnitPrice, StringFormat={}{0:N2}}" Width="145"/>
+                            <DataGridTextColumn Header="Před slevou" Binding="{Binding TotalPriceBeforeDiscount, StringFormat={}{0:N2}}" Width="110"/>
+                            <DataGridTextColumn Header="Sleva %" Binding="{Binding DiscountPercent, StringFormat={}{0:N0}}" Width="75"/>
+                            <DataGridTextColumn Header="Sleva Kč" Binding="{Binding DiscountAmount, StringFormat={}{0:N2}}" Width="90"/>
                             <DataGridTextColumn Header="DPH %" Binding="{Binding VatRate}" Width="70"/>
-                            <DataGridTextColumn Header="Celkem" Binding="{Binding TotalPrice, StringFormat={}{0:N2}}" Width="110"/>
+                            <DataGridTextColumn Header="Po slevě" Binding="{Binding TotalPrice, StringFormat={}{0:N2}}" Width="110"/>
                         </DataGrid.Columns>
                     </DataGrid>
                 </GroupBox>

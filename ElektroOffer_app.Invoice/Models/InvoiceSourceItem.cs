@@ -6,6 +6,7 @@ namespace ElektroOffer_app.Invoice.Models
         public string Description { get; set; } = string.Empty;
         public string Unit { get; set; } = string.Empty;
         public double Quantity { get; set; }
+        public double PriceBeforeDiscount { get; set; }
         public double Price { get; set; }
         public double? DiscountPercent { get; set; }
         public double? DiscountAmount { get; set; }

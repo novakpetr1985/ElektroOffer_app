@@ -24,6 +24,8 @@ Formát vychází z [Keep a Changelog](https://keepachangelog.com/cs/1.0.0/).
 - Přidána volba motivu `Dle systému`, `Světlý režim`, `Tmavý režim` přes `AppThemeService`.
 - Přidány unit testy pro Fakturoid JSON, PDF export, validaci IČO a klonování fakturačního návrhu.
 - Přidány integrační testy pro samostatné uložení/načtení fakturace a serializaci faktury do `ProjectData`.
+- Detailní rozpočet nově zobrazuje samostatné sloupce `Před slevou`, `Sleva %`, `Sleva Kč` a `Po slevě`.
+- Doplněny regresní testy scénáře 960 Kč, sleva 10 %, sleva 96 Kč a výsledná cena 864 Kč v rozpočtu i fakturaci.
 
 ### Změněno
 - Výpočet ceny práce už nečte jednu spojenou položku `PriceItems`; cena se skládá z `WorkTask.BasePrice × BaseMaterial.BaseMaterialCoef × WorkPosition.PositionCoef × Quantity`.
@@ -51,6 +53,8 @@ Formát vychází z [Keep a Changelog](https://keepachangelog.com/cs/1.0.0/).
 - GitHub Actions joby jsou připravené na ruční schválení přes environment `manual-approval`.
 - GitHub Actions nově ukládají krátký CI souhrn `elektrooffer-ci-summary` při každém běhu včetně úspěšných běhů.
 - Komentáře v upravovaných třídách a datových modelech byly srovnány na aktuální stav 1.9.0; zavádějící migrační poznámky a zastaralé odkazy na `Guid` identifikátory byly odstraněny.
+- Řádková hlavička ceny v sekcích PRÁCE a MATERIÁL je označená `Po slevě`, aby bylo zřejmé, že po zadání slevy zobrazuje výslednou částku.
+- Fakturační řádky přebírají cenu za jednotku a celkem před slevou, procento a částku slevy i výsledné celkem po slevě; Fakturoid export zachovává výslednou fakturovanou částku.
 
 ### Odstraněno
 - `CalculationCascadeService` a model `PriceItems` jako stará spojená kaskáda PRÁCE.
@@ -62,6 +66,7 @@ Formát vychází z [Keep a Changelog](https://keepachangelog.com/cs/1.0.0/).
 - Nefunkční uložení/načtení pracovních polí po přejmenování modelu `WorkItemData`.
 - Uložení projektu po přidání nebo odebrání prázdného řádku nyní zachová počet řádků i tehdy, když řádek neobsahuje žádná kalkulační data.
 - Opraveno nullable warning v integračním testu `RealMessageBoxServiceTests`.
+- Odstraněna nejednoznačnost sloupce `Cena`, který dříve zobrazoval cenu po slevě vedle údajů o slevě bez explicitního označení.
 
 ### Ověřeno
 - `dotnet build ElektroOffer_app.slnx`

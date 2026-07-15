@@ -10,6 +10,7 @@ namespace ElektroOffer_app.Invoice.Models
         private string _unitName = string.Empty;
         private double _quantity;
         private decimal _unitPrice;
+        private decimal _totalPriceBeforeDiscount;
         private decimal _totalPrice;
         private decimal _vatRate;
         private double? _discountPercent;
@@ -20,6 +21,11 @@ namespace ElektroOffer_app.Invoice.Models
         public string UnitName { get => _unitName; set => SetField(ref _unitName, value); }
         public double Quantity { get => _quantity; set => SetField(ref _quantity, value); }
         public decimal UnitPrice { get => _unitPrice; set => SetField(ref _unitPrice, value); }
+        public decimal TotalPriceBeforeDiscount
+        {
+            get => _totalPriceBeforeDiscount > 0 ? _totalPriceBeforeDiscount : TotalPrice;
+            set => SetField(ref _totalPriceBeforeDiscount, value);
+        }
         public decimal TotalPrice { get => _totalPrice; set => SetField(ref _totalPrice, value); }
         public decimal VatRate { get => _vatRate; set => SetField(ref _vatRate, value); }
         public double? DiscountPercent { get => _discountPercent; set => SetField(ref _discountPercent, value); }

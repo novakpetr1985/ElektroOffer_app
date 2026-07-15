@@ -427,6 +427,7 @@ namespace ElektroOffer_app.ViewModels
                     Description = $"{x.SelectedWorkTask} / {x.SelectedWorkSpecification} / {x.SelectedBaseMaterial} / {x.SelectedWorkPosition}",
                     Unit = x.WorkUnit ?? "",
                     Quantity = x.Quantity,
+                    PriceBeforeDiscount = basePrice,
                     Price = x.Total,
                     DiscountPercent = (x.IsDiscountEnabled && x.DiscountPercent.HasValue) ? x.DiscountPercent : null,
                     DiscountAmount = discountAmount > 0.0001 ? discountAmount : null
@@ -444,6 +445,7 @@ namespace ElektroOffer_app.ViewModels
                     Description = x.SelectedOffer ?? "",
                     Unit = x.SelectedMaterialPrice?.Unit ?? "",
                     Quantity = x.Quantity,
+                    PriceBeforeDiscount = basePrice,
                     Price = x.Total,
                     DiscountPercent = (x.IsDiscountEnabled && x.DiscountPercent.HasValue) ? x.DiscountPercent : null,
                     DiscountAmount = discountAmount > 0.0001 ? discountAmount : null

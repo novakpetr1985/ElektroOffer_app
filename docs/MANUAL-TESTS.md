@@ -71,7 +71,7 @@ Očekávání:
 2. Zadej množství.
 3. Ručně spočítej `BasePrice × BaseMaterialCoef × PositionCoef × Quantity`.
 4. Porovnej výsledek s cenou v řádku.
-5. Zapni slevu a ověř přepočet.
+5. Zapni slevu a ověř, že řádkový sloupec `Po slevě` zobrazí výslednou cenu, ne původní cenu.
 
 ### 2.5 Barvy a čitelnost v tmavém režimu
 1. Přepni aplikaci do tmavého režimu.
@@ -99,6 +99,7 @@ Očekávání:
 2. Ověř výpočet jednotlivých cen.
 3. Ověř, že `Součet materiálu` je zelený a barevně shodný se `Součtem práce`.
 4. Zapni slevu na řádku a ověř přepočet.
+5. Ověř, že řádkový sloupec `Po slevě` a `Součet materiálu` používají výsledné ceny po slevě.
 
 ---
 
@@ -132,14 +133,20 @@ Očekávání:
 ### 5.1 Detailní rozpočet
 1. Vyplň položky PRÁCE i MATERIÁL.
 2. Ověř, že `DETAILNÍ ROZPOČET` obsahuje oba typy položek.
-3. Ověř sloupce `Typ`, `Popis`, `Množství (MJ)`, `Cena`, `Sleva %`, `Sleva Kč`.
-4. V tmavém režimu ověř čitelnost textu, hlaviček, řádků a vybraného řádku.
+3. Ověř sloupce `Typ`, `Popis`, `Množství (MJ)`, `Před slevou`, `Sleva %`, `Sleva Kč`, `Po slevě`.
+4. Vytvoř pracovní položku `Osazení / El. krabice / Beton / Stěna`, nastav množství 5; cena před slevou musí být přesně 960 Kč. Potom nastav slevu 10 %.
+5. Ověř hodnoty: `Před slevou` 960 Kč, `Sleva %` 10 %, `Sleva Kč` 96 Kč a `Po slevě` 864 Kč.
+6. Zopakuj stejnou kontrolu pro materiálovou položku.
+7. Vypni slevu a ověř, že `Před slevou` a `Po slevě` jsou shodné a slevové buňky jsou prázdné.
+8. Ověř slevy 0 %, 100 % a desetinnou hodnotu; výsledná cena nesmí být záporná.
+9. V tmavém režimu ověř čitelnost textu, hlaviček, řádků a vybraného řádku.
 
 ### 5.2 Celková nabídka
 1. Ověř `Cena před slevou`, pokud existuje sleva.
 2. Ověř `Celková sleva`.
 3. Ověř `Celková cena nabídky`.
 4. Ověř, že celková cena je zelená a dobře čitelná ve světlém i tmavém režimu.
+5. Ověř vztah `Cena před slevou − Celková sleva = Celková cena nabídky`.
 
 ---
 
@@ -149,6 +156,8 @@ Očekávání:
 1. Otevři fakturaci z hlavního menu.
 2. Otevři fakturaci z toolbaru.
 3. Ověř, že se položky přebírají z detailního rozpočtu.
+4. U položky 960 Kč se slevou 10 % ověř ve fakturaci: jednotkovou cenu před slevou, `Před slevou` 960 Kč, `Sleva %` 10, `Sleva Kč` 96 Kč a `Po slevě` 864 Kč.
+5. Ověř, že celková částka faktury obsahuje 864 Kč pouze jednou a sleva se znovu neodečte.
 
 ### 6.2 Samostatné spuštění fakturace
 1. Ve Visual Studiu nastav `ElektroOffer_app.Invoice` jako startup projekt.
@@ -173,14 +182,16 @@ Očekávání:
 ### 6.5 Exporty
 1. Exportuj Fakturoid JSON.
 2. Ověř strukturu `client_*`, `lines`, `quantity`, `unit_name`, `unit_price`, `vat_rate`.
-3. Exportuj PDF.
-4. Otevři PDF a ověř hlavičku, položky a součty.
+3. U zlevněné položky ověř, že `unit_price × quantity` odpovídá výsledné ceně po slevě.
+4. Exportuj PDF.
+5. Otevři PDF a ověř hlavičku, položky a výsledné součty po slevě.
 
 ### 6.6 Samostatné uložení faktury
 1. Ulož fakturu jako `*.eofinvoice`.
 2. Zavři fakturační okno.
 3. Načti fakturu znovu.
 4. Ověř shodu dat.
+5. Ověř, že se zachovaly také ceny před slevou, procenta, částky slev a ceny po slevě.
 
 ### 6.7 Uložení faktury do projektu
 1. Vyplň fakturační údaje.

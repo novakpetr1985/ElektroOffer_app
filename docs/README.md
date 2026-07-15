@@ -39,7 +39,7 @@ Lokální SQLite databáze není verzovaná v Gitu (`*.db` je v `.gitignore`). S
   - Podpora více dodavatelů pro každý materiál
   - Nová kaskáda výběru: Kategorie → Název → Dodavatel → Nabídka
   - Ceny a jednotky se načítají z tabulky MaterialPrices
-- 🏷️ Sleva na řádek – volitelná procentuální sleva na každou položku práce i materiálu
+- 🏷️ Sleva na řádek – detailní rozpočet rozlišuje cenu před slevou, slevu v procentech i Kč a výslednou cenu po slevě
 - 💾 Ukládání / načítání projektu (*.eof)
 - 📤 Export / import ceníku (*.eofcat)
 - 📑 Detailní rozpis položek (Budget view)
@@ -110,7 +110,7 @@ Tato změna zajišťuje stabilní běh aplikace a eliminuje chyby typu.
 | `CalculationItemData` | Společné hodnoty (množství, sleva, total)                                         |
 | `ProjectData`       | Kompletní uložený projekt (`.eof`) — obsahuje WorkItems, MaterialItems, CommonItems, počty řádků a volitelný návrh faktury |
 | `CatalogExportData` | Export/import ceníku                                                                |
-| `BudgetItem`        | Sloučený řádek rozpočtu (UI výstup)                                                 |
+| `BudgetItem`        | Sloučený řádek rozpočtu včetně ceny před slevou, slevy a výsledné ceny              |
 
 
 ---
@@ -138,12 +138,13 @@ Tato změna zajišťuje stabilní běh aplikace a eliminuje chyby typu.
 Fakturační modul je oddělený projekt `ElektroOffer_app.Invoice`, který se otevírá z hlavního menu nebo toolbaru hlavní aplikace. Stejný projekt lze spustit i samostatně; v tom případě otevře prázdný návrh faktury bez položek z detailního rozpočtu.
 
 - zdrojem řádků faktury je aktuální detailní rozpočet (`BudgetItems`)
+- řádek faktury přebírá původní jednotkovou cenu, cenu před slevou, slevu v procentech i Kč a výslednou fakturovanou cenu
 - žádné pole dodavatele ani odběratele není povinné
 - tlačítko `Vyhledat` u IČO doplní údaje z veřejného ARES REST API
 - fakturaci lze uložit nezávisle do `*.eofinvoice`
 - fakturaci lze uložit do hlavního projektu, aby se načetla spolu s `*.eof`
 - exporty: Fakturoid JSON a jednoduché PDF
-- testy ověřují Fakturoid JSON, PDF export, validaci IČO, klonování návrhu faktury a uložení/načtení `*.eofinvoice`
+- testy ověřují také přenos ceny před slevou, slevy a výsledné ceny do fakturace a zachování konečné částky ve Fakturoid JSON
 
 ### Nastavení vzhledu
 
