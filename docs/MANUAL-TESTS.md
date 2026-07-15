@@ -1,8 +1,8 @@
-# Manuální testy - ElektroOffer 1.9.0
+# Manuální testy - ElektroOffer 1.9.1
 
 Datum aktualizace: 2026-07-15  
-Testovaná větev: `feature/1.9.0`  
-Testovaná verze: `1.9.0`
+Testovaná větev: `codex/1.9.1-service-cleanup`
+Testovaná verze: `1.9.1`
 
 Tento checklist doplňuje automatické unit a integrační testy. Používej ho hlavně před PR do `dev`, `test` nebo `main`, případně před tagem/release.
 
@@ -229,20 +229,13 @@ Očekávání:
 
 ---
 
-## 8. Tisk A Výstupy
+## 8. Tisk
 
 ### 8.1 Tisk nabídky
 1. Vyplň položky.
 2. Spusť tisk.
 3. Ověř náhled/dialog.
 4. Ověř, že se v tiskovém výstupu zobrazí položky a součty.
-
-### 8.2 Export / import katalogu
-1. Exportuj katalog do `*.eofcat`.
-2. Načti katalog zpět.
-3. Ověř, že materiály a práce zůstávají konzistentní.
-
----
 
 ## 9. GitHub Actions A PR Proces
 
@@ -269,15 +262,6 @@ Poznámka: Unit a integrační testy jsou v CI oddělené, aby bylo hned vidět,
 
 ---
 
-## 10. Regresní Kontrola Starého Modelu
-
-1. Ověř, že aplikace nestartuje se starou chybou konstruktoru `MainViewModel`.
-2. Ověř, že v UI nejsou rozbité bindingy na staré `SelectedTask`, `Specification`, `Material`, `Location`.
-3. Ověř, že kaskáda PRÁCE nepoužívá starý `CalculationCascadeService`.
-4. Ověř, že uložení projektu používá nová pole `SelectedWorkTask`, `SelectedWorkSpecification`, `SelectedBaseMaterial`, `SelectedWorkPosition`.
-
----
-
 ## Výsledky Testování
 
 | Oblast | OK / Chyba | Poznámka |
@@ -291,4 +275,3 @@ Poznámka: Unit a integrační testy jsou v CI oddělené, aby bylo hned vidět,
 | Vzhled | | |
 | Tisk/export | | |
 | GitHub Actions | | |
-| Regrese starého modelu | | |

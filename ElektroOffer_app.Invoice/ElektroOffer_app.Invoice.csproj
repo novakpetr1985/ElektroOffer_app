@@ -5,5 +5,7 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
+    <Version>1.9.1-feature</Version>
+    <FileVersion>1.9.1.0</FileVersion>
   </PropertyGroup>
 </Project>

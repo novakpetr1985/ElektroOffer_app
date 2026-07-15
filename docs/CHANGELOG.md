@@ -5,6 +5,25 @@ Formát vychází z [Keep a Changelog](https://keepachangelog.com/cs/1.0.0/).
 
 ---
 
+## [1.9.1] - 2026-07-15
+
+### Změněno
+- Hlavní a fakturační aplikace používají společnou verzi `1.9.1-feature`.
+- Okno O aplikaci čte verzi ze společného `ApplicationInfoService`.
+- Unit projekt už neodkazuje na integrační testovací projekt.
+
+### Odstraněno
+- Nepoužívaný starý `.eofcat` model a metody importu/exportu, které neměly UI a neodpovídaly současné normalizované databázi.
+- Duplicitní kopie produkčního `ProjectService` v unit testovacím projektu.
+- Nahrazený `VersionService`, nepoužívané `AboutWindowViewModel` a `BaseViewModel`.
+- Zastaralý dokument testů navázaný na odstraněný pracovní model.
+
+### Ověřeno
+- 63 unit testů.
+- 22 integračních testů.
+
+---
+
 ## [1.9.0] - 2026-07-15
 
 ### Přidáno
