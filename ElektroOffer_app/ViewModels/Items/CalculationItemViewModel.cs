@@ -518,8 +518,7 @@ namespace ElektroOffer_app.ViewModels.Items
         //     vyplněná vždy jen jedna ze dvou níže uvedených skupin polí.
         //     Proto musí IsEmpty kontrolovat OBĚ skupiny současně:
         //
-        //   • 🔴 ZMĚNA (1.9.0) PRÁCE (nová kaskáda WorkTask / WorkSpecification /
-        //     BaseMaterial / WorkPosition):
+        //   • PRÁCE (kaskáda WorkTask → WorkSpecification → BaseMaterial → WorkPosition):
         //       - Není vybrán SelectedWorkTask, SelectedWorkSpecification,
         //         SelectedBaseMaterial ani SelectedWorkPosition.
         //

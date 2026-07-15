@@ -2,7 +2,7 @@
 using ElektroOffer_app.Services.Abstractions;   // 🧩 Rozhraní pro DI (mockovatelné v testech)
 using System.IO;                                // 📄 File.ReadAllText / WriteAllText
 using System.Text.Json;                         // 🔧 JSON serializace
-using System.Windows;                           // ⚠️ MessageBox (později nahradíme službou)
+using System.Windows;                           // MessageBox typy používané přes IMessageBoxService
 
 namespace ElektroOffer_app.Services
 {

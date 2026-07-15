@@ -681,7 +681,7 @@
                 <!-- ========================================================= -->
                 <!-- 💰 CELKOVÁ CENA (GRAND TOTAL) -->
                 <!-- ========================================================= -->
-                <!-- 🔴 ZMĚNA: Grid rozšířen o 3 řádky — před slevou / sleva / po slevě -->
+                <!-- Souhrn ceny před slevou, výše slevy a výsledné ceny. -->
                 <Grid Grid.Row="3"
                       Margin="0,10,0,20">
 

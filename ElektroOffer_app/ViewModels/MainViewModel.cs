@@ -42,10 +42,8 @@ namespace ElektroOffer_app.ViewModels
         // COLLECTIONS
         // =========================================================
 
-        // 🔴 ZMĚNA (1.9.0): Tasks (List<string>) nahrazeno WorkTasks (celé
-        // entity WorkTask, kvůli Id i Name). Přibyly sdílené seznamy
-        // BaseMaterialsList a WorkPositionsList – v nové kaskádě se nabízí
-        // vždy celé, nezávisle na řádku, takže žijí tady, ne per-řádek.
+        // Sdílené katalogové seznamy pro sekci PRÁCE.
+        // Specifikace jsou řádkové, protože se filtrují podle vybraného úkonu.
         public ObservableCollection<WorkTask> WorkTasks { get; } = new();
         public ObservableCollection<BaseMaterial> BaseMaterialsList { get; } = new();
         public ObservableCollection<WorkPosition> WorkPositionsList { get; } = new();
@@ -217,10 +215,7 @@ namespace ElektroOffer_app.ViewModels
         // LOAD CATALOG
         // =========================================================
 
-        // 🔴 ZMĚNA (1.9.0): Vedle materiálu se teď plní i 3 sdílené seznamy
-        // PRÁCE (WorkTasks / BaseMaterialsList / WorkPositionsList) přímo
-        // z CatalogService – ta jim odpovídá metodami GetWorkTasks(),
-        // GetBaseMaterials(), GetWorkPositions() (viz krok 4).
+        // Načte katalogy sdílené napříč všemi řádky hlavního okna.
         private void LoadCatalogDataFromDb()
         {
             var materials = _catalogService.LoadMaterials(_db);
@@ -334,9 +329,7 @@ namespace ElektroOffer_app.ViewModels
         // PROPERTY CHANGED
         // =========================================================
 
-        // 🔴 ZMĚNA (1.9.0): nasloucháme nově SelectedWorkTaskEntity/
-        // SelectedBaseMaterialEntity/SelectedWorkPositionEntity místo
-        // starého WorkItem – to jsou entity, jejichž změna teď ovlivňuje Total.
+        // Přepočet spouštíme jen při změnách, které mají vliv na cenu nebo rozpočet.
         private void Item_PropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
             // 🔒 Během načítání projektu se nesmí nic přepočítávat ani spouštět
@@ -360,9 +353,8 @@ namespace ElektroOffer_app.ViewModels
         // =========================================================
         public void Recalculate()
         {
-            // 🔴 ZMĚNA (1.9.0): BaseTotal pro práci teď počítá ze 3 nezávislých
-            // entit (SelectedWorkTaskEntity/SelectedBaseMaterialEntity/
-            // SelectedWorkPositionEntity) místo staré x.WorkItem.
+            // Základ bez slevy: práce se skládá z úkonu, podkladu a umístění;
+            // materiál bere cenu z vybrané nabídky dodavatele.
             static double BaseTotal(CalculationItemViewModel x)
             {
                 if (x.SelectedWorkTaskEntity != null &&
@@ -423,7 +415,7 @@ namespace ElektroOffer_app.ViewModels
             // ============================
             BudgetItems.Clear();
 
-            // 🔴 ZMĚNA (1.9.0): popis řádku PRÁCE teď skládá nové názvy
+            // Popis řádku PRÁCE skládá všechny kroky pracovní kaskády.
             foreach (var x in WorkCalcItems.Where(x => x.Total > 0))
             {
                 double basePrice = BaseTotal(x);
@@ -558,11 +550,6 @@ namespace ElektroOffer_app.ViewModels
         // BUILD PROJECT DATA
         // =========================================================
         //
-        // 🔴 ZMĚNA (1.9.0): WorkItemData teď ukládá nové názvy polí
-        // (SelectedWorkTask/WorkSpecification/BaseMaterial/WorkPosition
-        // místo Task/Specification/Material/Location). Viz krok s
-        // aktualizací WorkItemData.cs (další soubor).
-        //
         private ProjectData BuildProjectData()
         {
             int workCounter = 1;
@@ -664,9 +651,6 @@ namespace ElektroOffer_app.ViewModels
         // 📥 APPLY PROJECT DATA
         // ============================================================================
         //
-        // 🔴 ZMĚNA (1.9.0): načítání PRÁCE teď nastavuje nové property
-        // (SelectedWorkTask/WorkSpecification/BaseMaterial/WorkPosition).
-        //
         private void ApplyProjectData(ProjectData data, string path)
         {
             _isLoading = true;
@@ -714,10 +698,8 @@ namespace ElektroOffer_app.ViewModels
 
                 item.Id = savedWork.Id;
 
-                // 🔴 Nastavením SelectedWorkTask/WorkSpecification/BaseMaterial/
-                // WorkPosition se automaticky spustí WorkCascadeService (LoadWorkSpecifications,
-                // UpdateSelectedWorkTask/BaseMaterial/WorkPosition) a dohledají se
-                // odpovídající EF entity potřebné pro výpočet Total.
+                // Nastavení vybraných textových hodnot zároveň dohledá EF entity,
+                // které jsou potřeba pro výpočet ceny práce.
                 item.SelectedWorkTask = savedWork.SelectedWorkTask;
                 item.SelectedWorkSpecification = savedWork.SelectedWorkSpecification;
                 item.SelectedBaseMaterial = savedWork.SelectedBaseMaterial;
@@ -798,7 +780,6 @@ namespace ElektroOffer_app.ViewModels
             return true;
         }
 
-        // 🔴 ZMĚNA (1.9.0): kontrola prázdného projektu používá nové property PRÁCE.
         private bool IsProjectEmpty()
         {
             bool workEmpty = WorkCalcItems.All(x =>

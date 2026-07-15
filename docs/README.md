@@ -151,6 +151,7 @@ Menu `Možnosti → Nastavení...` otevírá první stránku nastavení aplikace
 - volba se ukládá do uživatelských dat aplikace a použije se při dalším spuštění
 - motiv se aplikuje na hlavní okno, fakturaci, nastavení i okno O aplikaci
 - aplikace nastavuje i standardní WPF systémové barvy, aby v tmavém režimu nezůstávaly světlé vstupy, menu a tabulky
+- vybrané položky v ComboBoxu, ListBoxu a DataGridu používají samostatné kontrastní barvy pro výběr a text výběru
 
 ### GitHub Actions
 

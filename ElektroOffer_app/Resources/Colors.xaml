@@ -12,6 +12,8 @@
     <SolidColorBrush x:Key="AppButtonBrush" Color="#F3F4F6"/>
     <SolidColorBrush x:Key="AppAccentBrush" Color="#2563EB"/>
     <SolidColorBrush x:Key="AppAccentHoverBrush" Color="#1D4ED8"/>
+    <SolidColorBrush x:Key="AppSelectionBrush" Color="#2563EB"/>
+    <SolidColorBrush x:Key="AppSelectionTextBrush" Color="#FFFFFF"/>
     <SolidColorBrush x:Key="AppDangerBrush" Color="#DC2626"/>
     <SolidColorBrush x:Key="AppSuccessBrush" Color="#15803D"/>
     <SolidColorBrush x:Key="AppWarningBrush" Color="#B91C1C"/>

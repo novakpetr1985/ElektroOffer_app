@@ -15,6 +15,8 @@ namespace ElektroOffer_app.Services
 
     public class AppThemeService
     {
+        // Uživatelská volba motivu se ukládá mimo projektový soubor,
+        // aby platila pro celou aplikaci a všechny otevírané projekty.
         private static readonly string SettingsPath = Path.Combine(
             Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
             "ElektroOffer",
@@ -85,6 +87,8 @@ namespace ElektroOffer_app.Services
                 SetBrush(resources, "AppButtonBrush", "#3A3A3D");
                 SetBrush(resources, "AppAccentBrush", "#1E5AA8");
                 SetBrush(resources, "AppAccentHoverBrush", "#164A8A");
+                SetBrush(resources, "AppSelectionBrush", "#2B78D4");
+                SetBrush(resources, "AppSelectionTextBrush", "#FFFFFF");
                 SetBrush(resources, "AppDangerBrush", "#B3261E");
                 SetBrush(resources, "AppSuccessBrush", "#57A64A");
                 SetBrush(resources, "AppWarningBrush", "#F1707A");
@@ -102,6 +106,8 @@ namespace ElektroOffer_app.Services
                 SetBrush(resources, "AppButtonBrush", "#F3F4F6");
                 SetBrush(resources, "AppAccentBrush", "#2563EB");
                 SetBrush(resources, "AppAccentHoverBrush", "#1D4ED8");
+                SetBrush(resources, "AppSelectionBrush", "#2563EB");
+                SetBrush(resources, "AppSelectionTextBrush", "#FFFFFF");
                 SetBrush(resources, "AppDangerBrush", "#DC2626");
                 SetBrush(resources, "AppSuccessBrush", "#15803D");
                 SetBrush(resources, "AppWarningBrush", "#B91C1C");
@@ -112,6 +118,8 @@ namespace ElektroOffer_app.Services
 
         private static void ApplySystemBrushes(ResourceDictionary resources)
         {
+            // Některé standardní WPF šablony čtou přímo SystemColors.
+            // Přemapování drží čitelný výběr, menu a vstupy i v tmavém režimu.
             resources[SystemColors.WindowBrushKey] = resources["AppBackgroundBrush"];
             resources[SystemColors.WindowTextBrushKey] = resources["AppTextBrush"];
             resources[SystemColors.ControlBrushKey] = resources["AppSurfaceBrush"];
@@ -120,8 +128,8 @@ namespace ElektroOffer_app.Services
             resources[SystemColors.ControlDarkBrushKey] = resources["AppBorderBrush"];
             resources[SystemColors.MenuBrushKey] = resources["AppSurfaceBrush"];
             resources[SystemColors.MenuTextBrushKey] = resources["AppTextBrush"];
-            resources[SystemColors.HighlightBrushKey] = resources["AppAccentBrush"];
-            resources[SystemColors.HighlightTextBrushKey] = Brushes.White;
+            resources[SystemColors.HighlightBrushKey] = resources["AppSelectionBrush"];
+            resources[SystemColors.HighlightTextBrushKey] = resources["AppSelectionTextBrush"];
             resources[SystemColors.GrayTextBrushKey] = resources["AppMutedTextBrush"];
         }
 

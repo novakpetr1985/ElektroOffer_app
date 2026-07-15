@@ -38,8 +38,9 @@ Formát vychází z [Keep a Changelog](https://keepachangelog.com/cs/1.0.0/).
 - Globální WPF styly a barvy jsou nově zapojené přes `App.xaml` a používají dynamické resources pro světlý/tmavý režim.
 - Vzhled byl srovnán blíže ke standardnímu Windows chování; vlastní šablony tlačítek a přebarvení vstupů byly odstraněny kvůli lepší čitelnosti ComboBoxů, TextBoxů a detailů ovládacích prvků.
 - Tmavý režim se nově aplikuje na hlavní okno, fakturaci, nastavení i okno O aplikaci včetně kořenových panelů, menu, toolbarů, vstupů, tabulek a systémových WPF barev.
+- Výběr položek v tmavém režimu má nově vlastní kontrastní barvy pro ComboBox, ListBox a DataGrid, aby byl text vybrané položky čitelný.
 - GitHub Actions workflow bylo zjednodušeno: běžné CI spouští restore/build/test, detailní diagnostický log se generuje jen při chybě a publish Release běží pouze při tagu.
-- Komentáře v upravovaných třídách byly srovnány na aktuální stav 1.9.0 a z kódu byly odstraněny zavádějící migrační poznámky.
+- Komentáře v upravovaných třídách a datových modelech byly srovnány na aktuální stav 1.9.0; zavádějící migrační poznámky a zastaralé odkazy na `Guid` identifikátory byly odstraněny.
 
 ### Odstraněno
 - `CalculationCascadeService` a model `PriceItems` jako stará spojená kaskáda PRÁCE.
@@ -56,6 +57,7 @@ Formát vychází z [Keep a Changelog](https://keepachangelog.com/cs/1.0.0/).
 - `dotnet build ElektroOffer_app.slnx`
 - `dotnet build ElektroOffer_app.slnx -p:OutputPath=...\artifacts\verify-build\` kvůli běžící aplikaci zamykající standardní `bin` výstup
 - `dotnet build ElektroOffer_app.slnx -p:OutputPath=...\artifacts\verify-theme\`
+- `dotnet build ElektroOffer_app.slnx -p:OutputPath=...\artifacts\verify-selection\`
 - `dotnet test ElektroOffer_app.slnx --no-build`
 
 ---

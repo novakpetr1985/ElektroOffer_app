@@ -16,8 +16,8 @@ namespace ElektroOffer_app.Data
     //      1) Běžný provoz aplikace (SQLite soubor elektrooffer.db)
     //      2) Unit testy (SQLite InMemory přes DbContextOptions)
     //
-    // 🔴 ZMĚNA (1.9.0 — New Work Cascade):
-    // - DbSety pro PRÁCI: WorkTask, WorkSpecification,
+    // Katalog PRÁCE používá samostatné tabulky:
+    // - WorkTask, WorkSpecification,
     //   BaseMaterial, WorkPosition, TaskSpecification
     // - Entitní třídy mají jiný název než DB tabulky (WorkTask → "Tasks"
     //   atd.), aby nekolidovaly s .NET typy (Task) nebo s vlastnostmi
