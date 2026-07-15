@@ -80,7 +80,9 @@ namespace ElektroOffer_app.Services
                 SetBrush(resources, "AppBorderBrush", "#555555");
                 SetBrush(resources, "AppTextBrush", "#F3F3F3");
                 SetBrush(resources, "AppMutedTextBrush", "#C8C8C8");
-                SetBrush(resources, "AppInputBrush", "#FFFFFF");
+                SetBrush(resources, "AppInputBrush", "#252526");
+                SetBrush(resources, "AppInputTextBrush", "#F3F3F3");
+                SetBrush(resources, "AppButtonBrush", "#3A3A3D");
                 SetBrush(resources, "AppAccentBrush", "#1E5AA8");
                 SetBrush(resources, "AppAccentHoverBrush", "#164A8A");
                 SetBrush(resources, "AppDangerBrush", "#B3261E");
@@ -96,12 +98,31 @@ namespace ElektroOffer_app.Services
                 SetBrush(resources, "AppTextBrush", "#1F2937");
                 SetBrush(resources, "AppMutedTextBrush", "#667085");
                 SetBrush(resources, "AppInputBrush", "#FFFFFF");
+                SetBrush(resources, "AppInputTextBrush", "#1F2937");
+                SetBrush(resources, "AppButtonBrush", "#F3F4F6");
                 SetBrush(resources, "AppAccentBrush", "#2563EB");
                 SetBrush(resources, "AppAccentHoverBrush", "#1D4ED8");
                 SetBrush(resources, "AppDangerBrush", "#DC2626");
                 SetBrush(resources, "AppSuccessBrush", "#15803D");
                 SetBrush(resources, "AppWarningBrush", "#B91C1C");
             }
+
+            ApplySystemBrushes(resources);
+        }
+
+        private static void ApplySystemBrushes(ResourceDictionary resources)
+        {
+            resources[SystemColors.WindowBrushKey] = resources["AppBackgroundBrush"];
+            resources[SystemColors.WindowTextBrushKey] = resources["AppTextBrush"];
+            resources[SystemColors.ControlBrushKey] = resources["AppSurfaceBrush"];
+            resources[SystemColors.ControlTextBrushKey] = resources["AppTextBrush"];
+            resources[SystemColors.ControlLightBrushKey] = resources["AppSurfaceAltBrush"];
+            resources[SystemColors.ControlDarkBrushKey] = resources["AppBorderBrush"];
+            resources[SystemColors.MenuBrushKey] = resources["AppSurfaceBrush"];
+            resources[SystemColors.MenuTextBrushKey] = resources["AppTextBrush"];
+            resources[SystemColors.HighlightBrushKey] = resources["AppAccentBrush"];
+            resources[SystemColors.HighlightTextBrushKey] = Brushes.White;
+            resources[SystemColors.GrayTextBrushKey] = resources["AppMutedTextBrush"];
         }
 
         private static bool IsWindowsDarkMode()

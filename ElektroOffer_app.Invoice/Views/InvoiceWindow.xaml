@@ -6,7 +6,8 @@
         Height="820"
         MinWidth="900"
         MinHeight="650">
-    <DockPanel LastChildFill="True">
+    <DockPanel LastChildFill="True"
+               Background="{DynamicResource AppBackgroundBrush}">
         <ToolBarTray DockPanel.Dock="Top">
             <ToolBar>
                 <Button Content="Ulozit"
@@ -38,8 +39,10 @@
             </StatusBarItem>
         </StatusBar>
 
-        <ScrollViewer VerticalScrollBarVisibility="Auto">
-            <Grid Margin="18">
+        <ScrollViewer VerticalScrollBarVisibility="Auto"
+                      Background="{DynamicResource AppBackgroundBrush}">
+            <Grid Margin="18"
+                  Background="{DynamicResource AppBackgroundBrush}">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>

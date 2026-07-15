@@ -149,7 +149,8 @@ Menu `Možnosti → Nastavení...` otevírá první stránku nastavení aplikace
 - pravá část obsahuje detailní volbu režimu
 - dostupné režimy: `Dle nastavení systému`, `Světlý režim`, `Tmavý režim`
 - volba se ukládá do uživatelských dat aplikace a použije se při dalším spuštění
-- ovládací prvky ponechávají standardní Windows chování kvůli čitelnosti a správnému zobrazení detailů ComboBoxů, TextBoxů a tlačítek
+- motiv se aplikuje na hlavní okno, fakturaci, nastavení i okno O aplikaci
+- aplikace nastavuje i standardní WPF systémové barvy, aby v tmavém režimu nezůstávaly světlé vstupy, menu a tabulky
 
 ### GitHub Actions
 

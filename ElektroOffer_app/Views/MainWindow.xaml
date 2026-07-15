@@ -5,7 +5,8 @@
         Height="1200"
         Width="1000">
 
-    <DockPanel LastChildFill="True">
+    <DockPanel LastChildFill="True"
+               Background="{DynamicResource AppBackgroundBrush}">
 
         <!-- MENU -->
         <Menu DockPanel.Dock="Top">
@@ -106,8 +107,10 @@
         </StatusBar>
 
         <!-- HLAVNÍ OBSAH -->
-        <ScrollViewer VerticalScrollBarVisibility="Auto">
-            <Grid Margin="20">
+        <ScrollViewer VerticalScrollBarVisibility="Auto"
+                      Background="{DynamicResource AppBackgroundBrush}">
+            <Grid Margin="20"
+                  Background="{DynamicResource AppBackgroundBrush}">
 
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
