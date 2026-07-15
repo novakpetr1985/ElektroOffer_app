@@ -59,18 +59,25 @@ Očekávání:
 7. Změň `Podklad`.
 8. Ověř, že se vymaže `Umístění`.
 
-### 2.3 Výpočet ceny práce
+### 2.3 Shoda vybraných a zobrazených názvů
+1. V jednom řádku postupně vyber konkrétní `Úkon`, `Upřesnění`, `Podklad` a `Umístění`.
+2. Po každém výběru ověř, že zavřený ComboBox zobrazuje přesně zvolený název.
+3. Vyplň alespoň dva další řádky jinými kombinacemi.
+4. Přepínej výběry v jednotlivých řádcích a ověř, že se názvy mezi řádky ani sloupci nezamění.
+5. Zkontroluj, že `DETAILNÍ ROZPOČET` skládá popis práce ze stejných čtyř zvolených názvů ve správném pořadí.
+
+### 2.4 Výpočet ceny práce
 1. Vyber známou kombinaci `Úkon -> Upřesnění -> Podklad -> Umístění`.
 2. Zadej množství.
 3. Ručně spočítej `BasePrice × BaseMaterialCoef × PositionCoef × Quantity`.
 4. Porovnej výsledek s cenou v řádku.
 5. Zapni slevu a ověř přepočet.
 
-### 2.4 Barvy a čitelnost v tmavém režimu
+### 2.5 Barvy a čitelnost v tmavém režimu
 1. Přepni aplikaci do tmavého režimu.
 2. Ověř, že neaktivní kaskádová pole jsou jasně rozeznatelná, ale čitelná.
 3. Ověř, že cena práce v řádku má stejný neutrální styl jako cena materiálu.
-4. Ověř, že `Součet práce` je zelený.
+4. Ověř, že `Součet práce` i `Součet materiálu` používají stejnou zelenou barvu písma.
 
 ---
 
@@ -90,7 +97,7 @@ Očekávání:
 ### 3.2 Součty materiálu
 1. Vyplň více materiálových řádků.
 2. Ověř výpočet jednotlivých cen.
-3. Ověř, že `Součet materiálu` je modrý.
+3. Ověř, že `Součet materiálu` je zelený a barevně shodný se `Součtem práce`.
 4. Zapni slevu na řádku a ověř přepočet.
 
 ---
@@ -103,6 +110,8 @@ Očekávání:
 3. Zavři aplikaci.
 4. Znovu otevři aplikaci a načti soubor.
 5. Ověř, že se správně načetly výběry, množství, slevy a součty.
+6. U každého řádku PRÁCE porovnej názvy `Úkon`, `Upřesnění`, `Podklad` a `Umístění` s hodnotami vybranými před uložením.
+7. Ověř, že načtené názvy zůstaly ve správných sloupcích a odpovídají popisu v `DETAILNÍM ROZPOČTU`.
 
 ### 4.2 Prázdné řádky
 1. Přidej několik prázdných řádků do PRÁCE i MATERIÁL.
@@ -141,38 +150,46 @@ Očekávání:
 2. Otevři fakturaci z toolbaru.
 3. Ověř, že se položky přebírají z detailního rozpočtu.
 
-### 6.2 Volitelná pole
+### 6.2 Samostatné spuštění fakturace
+1. Ve Visual Studiu nastav `ElektroOffer_app.Invoice` jako startup projekt.
+2. Spusť aplikaci.
+3. Ověř, že se otevře samostatné okno fakturace bez hlavního ElektroOffer okna.
+4. Ověř, že návrh faktury je prázdný a neobsahuje položky z detailního rozpočtu.
+5. Vyplň libovolná fakturační pole a ověř, že funguje samostatné uložení do `*.eofinvoice`.
+6. Zavři samostatnou fakturaci a ověř upozornění na neuložené změny, pokud data nebyla uložena.
+
+### 6.3 Volitelná pole
 1. Vyplň dodavatele, odběratele, IČO, DIČ, adresy, číslo faktury, variabilní symbol, datumy a poznámku.
 2. Ověř, že žádné pole není povinné.
 3. Ověř, že lze fakturu uložit i s částečně vyplněnými údaji.
 
-### 6.3 ARES
+### 6.4 ARES
 1. Zadej platné IČO dodavatele a klikni `Vyhledat`.
 2. Ověř doplnění údajů.
 3. Zopakuj pro odběratele.
 4. Zadej neplatné IČO.
 5. Ověř, že aplikace nespadne a zobrazí rozumnou informaci.
 
-### 6.4 Exporty
+### 6.5 Exporty
 1. Exportuj Fakturoid JSON.
 2. Ověř strukturu `client_*`, `lines`, `quantity`, `unit_name`, `unit_price`, `vat_rate`.
 3. Exportuj PDF.
 4. Otevři PDF a ověř hlavičku, položky a součty.
 
-### 6.5 Samostatné uložení faktury
+### 6.6 Samostatné uložení faktury
 1. Ulož fakturu jako `*.eofinvoice`.
 2. Zavři fakturační okno.
 3. Načti fakturu znovu.
 4. Ověř shodu dat.
 
-### 6.6 Uložení faktury do projektu
+### 6.7 Uložení faktury do projektu
 1. Vyplň fakturační údaje.
 2. Ulož hlavní projekt.
 3. Zavři aplikaci.
 4. Načti projekt znovu.
 5. Otevři fakturaci a ověř, že se údaje načetly z projektu.
 
-### 6.7 Neuložené změny ve fakturaci
+### 6.8 Neuložené změny ve fakturaci
 1. Proveď změnu ve fakturačním okně.
 2. Zkus okno zavřít.
 3. Ověř upozornění na neuložené změny.
@@ -221,9 +238,10 @@ Očekávání:
 ### 9.1 CI na feature větvi
 1. Pushni změnu do `feature/**`.
 2. Ověř, že se spustí GitHub Actions workflow `ElektroOffer CI Pipeline`.
-3. Ověř, že projde `Restore`, `Build solution` a `Run tests`.
+3. Ověř, že projde `Restore`, `Build solution`, `Run unit tests` a `Run integration tests`.
+4. Ověř, že se uloží artifact `elektrooffer-ci-summary`.
 
-Poznámka: `Run tests` spouští celé řešení, tedy unit i integrační testy.
+Poznámka: Unit a integrační testy jsou v CI oddělené, aby bylo hned vidět, která sada případně selhala.
 
 ### 9.2 PR do dev/test/main
 1. Vytvoř PR do `dev`, `test` nebo `main`.
@@ -235,7 +253,7 @@ Poznámka: `Run tests` spouští celé řešení, tedy unit i integrační testy
 2. Ověř, že běžný push do feature větve release build nespouští.
 
 ### 9.4 Diagnostický log
-1. Běžný krátký log je dostupný vždy v krocích workflow.
+1. Běžný krátký souhrn `elektrooffer-ci-summary` se vytvoří po každém běhu, včetně úspěšného běhu.
 2. Dlouhý diagnostický log se vytvoří pouze při chybě CI nebo release jobu.
 
 ---

@@ -11,7 +11,7 @@ Formát vychází z [Keep a Changelog](https://keepachangelog.com/cs/1.0.0/).
 - Nová kaskáda sekce PRÁCE postavená na samostatných entitách `WorkTask`, `WorkSpecification`, `BaseMaterial`, `WorkPosition` a vazební tabulce `TaskSpecification`.
 - Doplněn manuální testovací checklist `docs/MANUAL-TESTS.md` pro celkovou regresi aplikace, DB, fakturaci, vzhled, CI a PR proces.
 - Nová služba `WorkCascadeService`, která nahrazuje původní práci nad `PriceItems`.
-- Nový samostatný WPF modul `ElektroOffer_app.Invoice` pro přípravu faktury z detailního rozpočtu.
+- Nový samostatně spustitelný WPF modul `ElektroOffer_app.Invoice` pro přípravu faktury z detailního rozpočtu nebo prázdné faktury mimo hlavní aplikaci.
 - Nové menu a toolbar akce `Fakturace`, které otevřou fakturační okno z hlavní aplikace.
 - Fakturační okno obsahuje volitelná pole pro dodavatele, odběratele, číslo faktury, variabilní symbol, splatnost, poznámku a položky převzaté z detailního rozpočtu.
 - Export návrhu faktury do JSON payloadu kompatibilního se strukturou Fakturoid API (`client_*`, `lines`, `quantity`, `unit_name`, `unit_price`, `vat_rate`).

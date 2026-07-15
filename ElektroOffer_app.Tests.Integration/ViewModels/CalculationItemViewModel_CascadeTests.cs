@@ -101,6 +101,26 @@ namespace ElektroOffer_app.Tests.Integration.ViewModels
         }
 
         [Test]
+        public void Work_Cascade_Should_Preserve_Each_Selected_Display_Name()
+        {
+            var vm = new CalculationItemViewModel(_db)
+            {
+                SelectedWorkTask = "Montaz",
+                SelectedWorkSpecification = "Kabel",
+                SelectedBaseMaterial = "Beton",
+                SelectedWorkPosition = "Strop"
+            };
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(vm.SelectedWorkTask, Is.EqualTo("Montaz"));
+                Assert.That(vm.SelectedWorkSpecification, Is.EqualTo("Kabel"));
+                Assert.That(vm.SelectedBaseMaterial, Is.EqualTo("Beton"));
+                Assert.That(vm.SelectedWorkPosition, Is.EqualTo("Strop"));
+            });
+        }
+
+        [Test]
         public void Work_Cascade_Should_Enable_Selections_Sequentially()
         {
             var vm = new CalculationItemViewModel(_db);

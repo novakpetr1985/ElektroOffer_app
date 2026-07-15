@@ -131,11 +131,11 @@ Tato změna zajišťuje stabilní běh aplikace a eliminuje chyby typu.
 | `WindowService`              | UI abstrakce pro otevírání oken (např. `AboutWindow`)                                                                             |
 | `AppThemeService`            | Načtení, uložení a aplikace světlého/tmavého/systémového režimu vzhledu                                                           |
 | `ApplicationInfoService`     | Informace o aplikaci (verze, metadata)                                                                                            |
-| `ElektroOffer_app.Invoice`   | Oddělený fakturační modul otevíraný z hlavní aplikace                                                                             |
+| `ElektroOffer_app.Invoice`   | Oddělený fakturační modul otevíraný z hlavní aplikace i samostatně jako vlastní Windows aplikace                                  |
 
 ### Fakturace
 
-Fakturační modul je oddělený projekt `ElektroOffer_app.Invoice`, který se otevírá z hlavního menu nebo toolbaru hlavní aplikace.
+Fakturační modul je oddělený projekt `ElektroOffer_app.Invoice`, který se otevírá z hlavního menu nebo toolbaru hlavní aplikace. Stejný projekt lze spustit i samostatně; v tom případě otevře prázdný návrh faktury bez položek z detailního rozpočtu.
 
 - zdrojem řádků faktury je aktuální detailní rozpočet (`BudgetItems`)
 - žádné pole dodavatele ani odběratele není povinné

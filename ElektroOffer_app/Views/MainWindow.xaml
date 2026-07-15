@@ -242,9 +242,7 @@
                                         <!-- ÚKON -->
                                         <ComboBox Grid.Column="1"
                                                 ItemsSource="{Binding DataContext.WorkTasks, RelativeSource={RelativeSource AncestorType=Window}}"
-                                                DisplayMemberPath="Name"
-                                                SelectedValuePath="Name"
-                                                SelectedValue="{Binding SelectedWorkTask, Mode=TwoWay}"/>
+                                                SelectedItem="{Binding SelectedWorkTask, Mode=TwoWay}"/>
 
                                         <!-- UPŘESNĚNÍ -->
                                         <ComboBox Grid.Column="2"
@@ -256,17 +254,13 @@
                                         <ComboBox Grid.Column="3"
                                                 IsEnabled="{Binding CanSelectBaseMaterial}"
                                                 ItemsSource="{Binding DataContext.BaseMaterialsList, RelativeSource={RelativeSource AncestorType=Window}}"
-                                                DisplayMemberPath="Name"
-                                                SelectedValuePath="Name"
-                                                SelectedValue="{Binding SelectedBaseMaterial, Mode=TwoWay}"/>
+                                                SelectedItem="{Binding SelectedBaseMaterial, Mode=TwoWay}"/>
 
                                         <!-- UMÍSTĚNÍ -->
                                         <ComboBox Grid.Column="4"
                                                 IsEnabled="{Binding CanSelectWorkPosition}"
                                                 ItemsSource="{Binding DataContext.WorkPositionsList, RelativeSource={RelativeSource AncestorType=Window}}"
-                                                DisplayMemberPath="Name"
-                                                SelectedValuePath="Name"
-                                                SelectedValue="{Binding SelectedWorkPosition, Mode=TwoWay}"/>
+                                                SelectedItem="{Binding SelectedWorkPosition, Mode=TwoWay}"/>
 
                                         <!-- MNOŽSTVÍ -->
                                         <TextBox Grid.Column="5"
@@ -538,13 +532,13 @@
 
                             <TextBlock Text="Součet materiálu"
                                     FontWeight="Bold"
-                                    Foreground="{DynamicResource AppAccentBrush}"/>
+                                    Foreground="{DynamicResource AppSuccessBrush}"/>
 
                             <TextBlock Grid.Column="1"
                                     Text="{Binding MaterialTotal, StringFormat={}{0:N0} Kč}"
                                     FontSize="16"
                                     FontWeight="Bold"
-                                    Foreground="{DynamicResource AppAccentBrush}"
+                                    Foreground="{DynamicResource AppSuccessBrush}"
                                     HorizontalAlignment="Right"
                                     TextAlignment="Right"/>
                         </Grid>

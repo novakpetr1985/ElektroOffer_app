@@ -44,9 +44,9 @@ namespace ElektroOffer_app.ViewModels
 
         // Sdílené katalogové seznamy pro sekci PRÁCE.
         // Specifikace jsou řádkové, protože se filtrují podle vybraného úkonu.
-        public ObservableCollection<WorkTask> WorkTasks { get; } = new();
-        public ObservableCollection<BaseMaterial> BaseMaterialsList { get; } = new();
-        public ObservableCollection<WorkPosition> WorkPositionsList { get; } = new();
+        public ObservableCollection<string> WorkTasks { get; } = new();
+        public ObservableCollection<string> BaseMaterialsList { get; } = new();
+        public ObservableCollection<string> WorkPositionsList { get; } = new();
 
         public ObservableCollection<Material> Materials { get; } = new();
         public ObservableCollection<CalculationItemViewModel> WorkCalcItems { get; } = new();
@@ -224,15 +224,15 @@ namespace ElektroOffer_app.ViewModels
 
             var tasks = _catalogService.GetWorkTasks(_db);
             WorkTasks.Clear();
-            foreach (var t in tasks) WorkTasks.Add(t);
+            foreach (var t in tasks) WorkTasks.Add(t.Name);
 
             var baseMaterials = _catalogService.GetBaseMaterials(_db);
             BaseMaterialsList.Clear();
-            foreach (var b in baseMaterials) BaseMaterialsList.Add(b);
+            foreach (var b in baseMaterials) BaseMaterialsList.Add(b.Name);
 
             var positions = _catalogService.GetWorkPositions(_db);
             WorkPositionsList.Clear();
-            foreach (var p in positions) WorkPositionsList.Add(p);
+            foreach (var p in positions) WorkPositionsList.Add(p.Name);
         }
 
         // =========================================================
