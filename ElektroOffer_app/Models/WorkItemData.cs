@@ -52,10 +52,10 @@ namespace ElektroOffer_app.Models
     // --------------
     // ✔ Id                     → jednoznačný, sekvenční identifikátor záznamu
     // ✔ Position                → skutečná pozice řádku v UI (1-based)
-    // ✔ SelectedTask           → název práce
-    // ✔ SelectedSpecification  → upřesnění práce
-    // ✔ SelectedMaterial       → použitý materiál
-    // ✔ SelectedLocation       → místo provedení
+    // ✔ SelectedWorkTask          → název práce
+    // ✔ SelectedWorkSpecification → upřesnění práce
+    // ✔ SelectedBaseMaterial      → podklad
+    // ✔ SelectedWorkPosition      → místo / poloha provedení
     // ✔ SelectedWorkPrice      → cena práce v době uložení projektu (volitelné)
     // ✔ SelectedWorkUnit       → měrná jednotka práce (volitelné)
     //
@@ -104,40 +104,40 @@ namespace ElektroOffer_app.Models
         public int Position { get; set; }
 
         // =====================================================================
-        // 🛠 SelectedTask – název práce
+        // 🛠 SelectedWorkTask – název práce
         // =====================================================================
         //
         // Hlavní typ úkonu, který se provádí.
         // Např.: "Montáž zásuvky", "Výměna jističe", "Tahání kabelu".
         //
-        public string? SelectedTask { get; set; }
+        public string? SelectedWorkTask { get; set; }
 
         // =====================================================================
-        // 📄 SelectedSpecification – upřesnění práce
+        // 📄 SelectedWorkSpecification – upřesnění práce
         // =====================================================================
         //
         // Detailní specifikace úkonu.
         // Např.: "s krabicí KP68", "bez krabice", "v liště".
         //
-        public string? SelectedSpecification { get; set; }
+        public string? SelectedWorkSpecification { get; set; }
 
         // =====================================================================
-        // 📦 SelectedMaterial – použitý materiál
+        // 📦 SelectedBaseMaterial – podklad
         // =====================================================================
         //
-        // Materiál použitý u práce.
+        // Podklad použitý u práce.
         // Např.: "CYKY 3×2,5", "CYKY 5×6", "Lišta 40×20".
         //
-        public string? SelectedMaterial { get; set; }
+        public string? SelectedBaseMaterial { get; set; }
 
         // =====================================================================
-        // 📍 SelectedLocation – místo provedení práce
+        // 📍 SelectedWorkPosition – místo / poloha provedení práce
         // =====================================================================
         //
-        // Lokace, kde se práce provádí.
+        // Místo nebo poloha, kde se práce provádí.
         // Např.: "Obývák", "Kuchyň", "Chodba".
         //
-        public string? SelectedLocation { get; set; }
+        public string? SelectedWorkPosition { get; set; }
 
         // =====================================================================
         // 💰 SelectedWorkPrice – cena práce (volitelné)

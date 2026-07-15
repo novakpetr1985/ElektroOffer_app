@@ -26,7 +26,6 @@ namespace ElektroOffer_app
 
             var projectService = new ProjectService(fileDialogService, fileSystemService, messageBoxService);
             var catalogService = new CatalogService();
-            var cascadeService = new CalculationCascadeService(db);
             var priceService = new CalculationPriceService();
 
             var messageService = new MessageService();
@@ -40,7 +39,6 @@ namespace ElektroOffer_app
             DataContext = new MainViewModel(
                 projectService,
                 catalogService,
-                cascadeService,
                 priceService,
                 db,
                 messageService,

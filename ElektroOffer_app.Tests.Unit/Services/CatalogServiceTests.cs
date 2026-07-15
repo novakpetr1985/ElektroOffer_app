@@ -1,36 +1,20 @@
-
-using NUnit.Framework;
-using ElektroOffer_app.Services;
+using System.Linq;
 using ElektroOffer_app.Data;
 using ElektroOffer_app.Models;
+using ElektroOffer_app.Services;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Linq;
+using NUnit.Framework;
 
 namespace ElektroOffer_app.Tests.Unit.Services
 {
-    /// =====================================================================
-    /// 🧪 UNIT TESTS — CatalogService
-    /// =====================================================================
-    /// Tyto testy ověřují:
-    ///   • načítání ceníku práce (Tasks)
-    ///   • načítání ceníku materiálu (Materials)
-    ///   • správné chování Distinct() u Tasks
-    ///   • správné chování IsCatalogEmpty()
-    ///   • práci s SQLite InMemory databází
-    ///
-    /// CatalogService je čistá logika bez UI → ideální pro unit testy.
-    /// =====================================================================
+    [TestFixture]
     public class CatalogServiceTests
     {
-        private SqliteConnection? _connection;
-        private AppDbContext? _db;
-        private CatalogService? _service;
+        private SqliteConnection _connection = null!;
+        private AppDbContext _db = null!;
+        private CatalogService _service = null!;
 
-        // ------------------------------------------------------------------
-        // 🧰 SETUP — vytvoření izolované SQLite InMemory DB
-        // ------------------------------------------------------------------
         [SetUp]
         public void Setup()
         {
@@ -43,127 +27,68 @@ namespace ElektroOffer_app.Tests.Unit.Services
 
             _db = new AppDbContext(options);
             _db.Database.EnsureCreated();
-
             _service = new CatalogService();
         }
 
-        // ------------------------------------------------------------------
-        // 🧹 TEARDOWN — uzavření DB
-        // ------------------------------------------------------------------
         [TearDown]
         public void Cleanup()
         {
-            _connection?.Close();
+            _db.Dispose();
+            _connection.Dispose();
         }
 
-        // ------------------------------------------------------------------
-        // 🧪 TEST 1: LoadCatalog načte unikátní Tasks
-        // ------------------------------------------------------------------
         [Test]
-        public void LoadCatalog_Should_Return_Distinct_Tasks()
+        public void GetWorkTasks_Should_Return_Tasks_Ordered_By_Name()
         {
-            // Arrange
-            _db!.PriceItems.AddRange(new[]
-            {
-                new PriceItems { Task = "Montáž" },
-                new PriceItems { Task = "Montáž" }, // duplicita
-                new PriceItems { Task = "Demontáž" }
-            });
+            _db.Tasks.AddRange(
+                new WorkTask { Name = "Revize", BasePrice = 300m },
+                new WorkTask { Name = "Montaz", BasePrice = 100m });
             _db.SaveChanges();
 
-            // Act
-            var (tasks, _) = _service!.LoadCatalog(_db);
+            var tasks = _service.GetWorkTasks(_db);
 
-            // Assert
-            Assert.AreEqual(2, tasks.Count);
-            Assert.Contains("Montáž", tasks);
-            Assert.Contains("Demontáž", tasks);
+            Assert.That(tasks.Select(t => t.Name).ToArray(), Is.EqualTo(new[] { "Montaz", "Revize" }));
         }
 
-        // ------------------------------------------------------------------
-        // 🧪 TEST 2: LoadCatalog načte všechny materiály
-        // ------------------------------------------------------------------
         [Test]
-        public void LoadCatalog_Should_Return_All_Materials()
+        public void GetWorkSpecifications_Should_Return_Only_Valid_Task_Pairs()
         {
-            // Arrange
-            _db!.Materials.AddRange(new[]
-            {
-                new Material { Name = "CYKY", Price = 20 },
-                new Material { Name = "Lanko", Price = 15 }
-            });
+            var task = new WorkTask { Name = "Montaz", BasePrice = 100m };
+            var otherTask = new WorkTask { Name = "Revize", BasePrice = 300m };
+            var specification = new WorkSpecification { Name = "Kabel", Unit = "m" };
+            var otherSpecification = new WorkSpecification { Name = "Zasuvka", Unit = "ks" };
+
+            _db.Tasks.AddRange(task, otherTask);
+            _db.Specifications.AddRange(specification, otherSpecification);
+            _db.SaveChanges();
+            _db.TaskSpecifications.Add(new TaskSpecification { TaskId = task.Id, SpecificationId = specification.Id });
             _db.SaveChanges();
 
-            // Act
-            var (_, materials) = _service!.LoadCatalog(_db);
+            var specifications = _service.GetWorkSpecifications(_db, task.Id);
 
-            // Assert
-            Assert.AreEqual(2, materials.Count);
-            Assert.AreEqual("CYKY", materials[0].Name);
-            Assert.AreEqual("Lanko", materials[1].Name);
+            Assert.That(specifications, Has.Count.EqualTo(1));
+            Assert.That(specifications[0].Name, Is.EqualTo("Kabel"));
         }
 
-        // ------------------------------------------------------------------
-        // 🧪 TEST 3: LoadCatalog vrací prázdné seznamy, pokud DB je prázdná
-        // ------------------------------------------------------------------
         [Test]
-        public void LoadCatalog_Should_Return_Empty_Lists_When_Database_Is_Empty()
+        public void IsCatalogEmpty_Should_Return_False_When_WorkTasks_Exist()
         {
-            // Act
-            var (tasks, materials) = _service!.LoadCatalog(_db!);
-
-            // Assert
-            Assert.IsEmpty(tasks);
-            Assert.IsEmpty(materials);
-        }
-
-        // ------------------------------------------------------------------
-        // 🧪 TEST 4: IsCatalogEmpty vrací true, pokud DB je prázdná
-        // ------------------------------------------------------------------
-        [Test]
-        public void IsCatalogEmpty_Should_Return_True_When_No_Data()
-        {
-            Assert.IsTrue(_service!.IsCatalogEmpty(_db!));
-        }
-
-        // ------------------------------------------------------------------
-        // 🧪 TEST 5: IsCatalogEmpty vrací false, pokud existují PriceItems
-        // ------------------------------------------------------------------
-        [Test]
-        public void IsCatalogEmpty_Should_Return_False_When_PriceItems_Exist()
-        {
-            _db!.PriceItems.Add(new PriceItems { Task = "Montáž" });
+            _db.Tasks.Add(new WorkTask { Name = "Montaz", BasePrice = 100m });
             _db.SaveChanges();
 
-            Assert.IsFalse(_service!.IsCatalogEmpty(_db));
+            Assert.That(_service.IsCatalogEmpty(_db), Is.False);
         }
 
-        // ------------------------------------------------------------------
-        // 🧪 TEST 6: IsCatalogEmpty vrací false, pokud existují Materials
-        // ------------------------------------------------------------------
         [Test]
-        public void IsCatalogEmpty_Should_Return_False_When_Materials_Exist()
+        public void LoadMaterials_Should_Return_Materials()
         {
-            _db!.Materials.Add(new Material { Name = "CYKY", Price = 20 });
-            _db.SaveChanges();
-
-            Assert.IsFalse(_service!.IsCatalogEmpty(_db));
-        }
-
-        // ------------------------------------------------------------------
-        // 🧪 TEST 7: LoadCatalog — kombinace PriceItems + Materials
-        // ------------------------------------------------------------------
-        [Test]
-        public void LoadCatalog_Should_Return_Correct_Data_When_Both_Tables_Have_Data()
-        {
-            _db!.PriceItems.Add(new PriceItems { Task = "Montáž" });
             _db.Materials.Add(new Material { Name = "CYKY", Price = 20 });
             _db.SaveChanges();
 
-            var (tasks, materials) = _service!.LoadCatalog(_db);
+            var materials = _service.LoadMaterials(_db);
 
-            Assert.AreEqual(1, tasks.Count);
-            Assert.AreEqual(1, materials.Count);
+            Assert.That(materials, Has.Count.EqualTo(1));
+            Assert.That(materials[0].Name, Is.EqualTo("CYKY"));
         }
     }
 }

@@ -15,7 +15,7 @@
 | CascadeWork | **T_008** | T_008_CascadeWork_ResetBelowTask_Should_Clear_All_Selections                               | Reset Specification               | ⭐ NOVÝ |
 | CascadeWork | **T_009** | T_009_CascadeWork_ResetBelowSpecification_Should_Clear_Material_And_Location               | Reset Material + Location         | ⭐ NOVÝ |
 | CascadeWork | **T_010** | T_010_CascadeWork_ResetBelowMaterial_Should_Clear_Location                                 | Reset Location                    | ⭐ NOVÝ |
-| CascadeWork | **T_011** | T_011_CascadeWork_SelectedTask_Should_Raise_PropertyChanged_For_CanSelectSpecification     | Task → CanSelectSpecification     | ⭐ NOVÝ |
+| CascadeWork | **T_011** | T_011_CascadeWork_SelectedWorkTask_Should_Raise_PropertyChanged_For_CanSelectWorkSpecification | WorkTask → CanSelectWorkSpecification | ⭐ NOVÝ |
 | CascadeWork | **T_012** | T_012_CascadeWork_SelectedSpecification_Should_Raise_PropertyChanged_For_CanSelectMaterial | Specification → CanSelectMaterial | ⭐ NOVÝ |
 | CascadeWork | **T_013** | T_013_CascadeWork_SelectedMaterial_Should_Raise_PropertyChanged_For_CanSelectLocation      | Material → CanSelectLocation      | ⭐ NOVÝ |
 | CascadeWork | **T_014** | T_014_CascadeWork_SelectedLocation_Should_Update_WorkItem                                  | Location → WorkItem               | ⭐ NOVÝ |
@@ -51,7 +51,7 @@
 | PropertyChanged | **T_034** | T_034_PropertyChanged_DiscountEnabled_Should_Raise_PropertyChanged_For_IsEmpty             | Sleva vyvolá IsEmpty               | ⭐ NOVÝ |
 | PropertyChanged | **T_035** | T_035_PropertyChanged_Quantity_Should_Raise_PropertyChanged_For_Total_Only_Once            | Quantity vyvolá Total jednou       | ⭐ NOVÝ |
 | PropertyChanged | **T_036** | T_036_PropertyChanged_DiscountPercent_Should_Raise_PropertyChanged_For_Total_Only_Once     | Sleva vyvolá Total jednou          | ⭐ NOVÝ |
-| PropertyChanged | **T_037** | T_037_PropertyChanged_SelectedTask_Should_Raise_PropertyChanged_For_IsEmpty                | Task vyvolá IsEmpty                | ⭐ NOVÝ |
+| PropertyChanged | **T_037** | T_037_PropertyChanged_SelectedWorkTask_Should_Raise_PropertyChanged_For_IsEmpty            | WorkTask vyvolá IsEmpty            | ⭐ NOVÝ |
 | PropertyChanged | **T_038** | T_038_PropertyChanged_SelectedMaterial_Should_Raise_PropertyChanged_For_IsEmpty            | Material vyvolá IsEmpty            | ⭐ NOVÝ |
 | PropertyChanged | **T_039** | T_039_PropertyChanged_SelectedLocation_Should_Raise_PropertyChanged_For_Total              | Location vyvolá Total              | ⭐ NOVÝ |
 | PropertyChanged | **T_040** | T_040_PropertyChanged_IsDiscountEnabled_Should_Raise_PropertyChanged_For_Total_And_IsEmpty | Sleva vyvolá Total + IsEmpty       | ⭐ NOVÝ |

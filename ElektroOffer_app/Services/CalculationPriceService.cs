@@ -27,30 +27,30 @@ namespace ElektroOffer_app.Services
         // =========================================================
         private double CalculateBaseTotal(CalculationItemViewModel vm)
         {
-            // Výpočet práce
-            if (vm.WorkItem != null)
+            // ---------------------------------------------------------
+            // Cena práce se skládá ze základní ceny úkonu a dvou koeficientů.
+            // Všechny 3 pracovní entity musí být vybrané, jinak řádek nemá cenu.
+            // ---------------------------------------------------------
+            if (vm.SelectedWorkTaskEntity != null &&
+                vm.SelectedBaseMaterialEntity != null &&
+                vm.SelectedWorkPositionEntity != null)
             {
-                return vm.WorkItem.BasePrice
-                     * vm.WorkItem.MaterialCoef
-                     * vm.WorkItem.PositionCoef
+                return (double)vm.SelectedWorkTaskEntity.BasePrice
+                     * (double)vm.SelectedBaseMaterialEntity.BaseMaterialCoef
+                     * (double)vm.SelectedWorkPositionEntity.PositionCoef
                      * vm.Quantity;
             }
 
             // ---------------------------------------------------------
-            // Výpočet PRODUKTOVÉHO materiálu (NOVĚ)
+            // Výpočet PRODUKTOVÉHO materiálu (beze změny)
             //
-            // ZMĚNA: Dřív se tu četlo "vm.MaterialItem.Price" - to je
-            // ale STARÉ pole s jedinou univerzální cenou, které je u
-            // nově importovaných materiálů vždy 0 (reálná cena teď
-            // žije v MaterialPrice, konkrétní pro každého dodavatele).
+            // Čte se vm.SelectedMaterialPrice.Price – cena z konkrétně
+            // vybrané nabídky (Název + Dodavatel + Materiál), nastavená
+            // MaterialCascadeService.UpdateSelectedPrice().
             //
-            // Teď se čte "vm.SelectedMaterialPrice.Price" - to je cena
-            // z KONKRÉTNĚ VYBRANÉ nabídky (Nazev + Dodavatel + Materiál),
-            // nastavená MaterialCascadeService.UpdateSelectedPrice().
-            //
-            // "(double)" přetypování je nutné, protože
-            // MaterialPrice.Price je typu "decimal" (kvůli přesnosti
-            // peněz), zatímco tahle metoda a Quantity pracují s "double".
+            // "(double)" přetypování je nutné, protože MaterialPrice.Price
+            // je typu "decimal" (kvůli přesnosti peněz), zatímco tahle
+            // metoda a Quantity pracují s "double".
             // ---------------------------------------------------------
             if (vm.SelectedMaterialPrice != null)
             {
@@ -62,7 +62,7 @@ namespace ElektroOffer_app.Services
         }
 
         // =========================================================
-        // APLIKACE SLEVY
+        // APLIKACE SLEVY (beze změny)
         // =========================================================
         private double ApplyDiscount(CalculationItemViewModel vm, double baseTotal)
         {

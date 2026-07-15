@@ -5,6 +5,59 @@ Formát vychází z [Keep a Changelog](https://keepachangelog.com/cs/1.0.0/).
 
 ---
 
+## [1.9.0] - 2026-07-15
+
+### Přidáno
+- Nová kaskáda sekce PRÁCE postavená na samostatných entitách `WorkTask`, `WorkSpecification`, `BaseMaterial`, `WorkPosition` a vazební tabulce `TaskSpecification`.
+- Nová služba `WorkCascadeService`, která nahrazuje původní práci nad `PriceItems`.
+- Nový samostatný WPF modul `ElektroOffer_app.Invoice` pro přípravu faktury z detailního rozpočtu.
+- Nové menu a toolbar akce `Fakturace`, které otevřou fakturační okno z hlavní aplikace.
+- Fakturační okno obsahuje volitelná pole pro dodavatele, odběratele, číslo faktury, variabilní symbol, splatnost, poznámku a položky převzaté z detailního rozpočtu.
+- Export návrhu faktury do JSON payloadu kompatibilního se strukturou Fakturoid API (`client_*`, `lines`, `quantity`, `unit_name`, `unit_price`, `vat_rate`).
+- Fakturace umí vyhledat dodavatele i odběratele přes veřejné ARES REST API podle platného IČO po kliknutí na `Vyhledat`.
+- Fakturace má samostatné uložení/načtení do souboru `*.eofinvoice`.
+- Fakturační data lze uložit také přímo do hlavního projektu `*.eof`; při dalším otevření projektu se znovu předají do fakturačního okna.
+- Přidán export faktury do jednoduchého PDF souboru.
+- Přidána ochrana proti zavření fakturačního okna s neuloženými změnami.
+- Přidáno okno `Nastavení` v menu `Možnosti` s první stránkou `Vzhled`.
+- Přidána volba motivu `Dle systému`, `Světlý režim`, `Tmavý režim` přes `AppThemeService`.
+- Přidány unit testy pro Fakturoid JSON, PDF export, validaci IČO a klonování fakturačního návrhu.
+- Přidány integrační testy pro samostatné uložení/načtení fakturace a serializaci faktury do `ProjectData`.
+
+### Změněno
+- Výpočet ceny práce už nečte jednu spojenou položku `PriceItems`; cena se skládá z `WorkTask.BasePrice × BaseMaterial.BaseMaterialCoef × WorkPosition.PositionCoef × Quantity`.
+- `WorkItemData` ukládá nové názvy polí `SelectedWorkTask`, `SelectedWorkSpecification`, `SelectedBaseMaterial`, `SelectedWorkPosition`.
+- `MainViewModel` už nepřijímá ani neinstancuje zrušený `CalculationCascadeService`.
+- XAML sekce PRÁCE je přepojená na nové bindingy `WorkTasks`, `AvailableWorkSpecifications`, `BaseMaterialsList`, `WorkPositionsList`.
+- Kaskáda PRÁCE nyní v UI postupuje sekvenčně: `Úkon → Upřesnění → Podklad → Umístění`. Nižší ComboBoxy jsou zakázané, dokud není vybraná předchozí položka.
+- Při změně vyšší položky v kaskádě PRÁCE se nižší výběry resetují, aby v řádku nezůstala neplatná kombinace.
+- Unit a integrační testy byly přepsány ze starého modelu `PriceItems` / `WorkItem` na nový pracovní model.
+- Databázové a katalogové testy ověřují nové tabulky práce (`Tasks`, `Specifications`, `BaseMaterials`, `Positions`, `TaskSpecifications`).
+- `ProjectData` nově ukládá počet řádků v sekcích PRÁCE a MATERIÁL (`WorkRowCount`, `MaterialRowCount`), aby se zachoval i stav přidaných nebo odebraných prázdných řádků.
+- Doporučený směr importu materiálů je CSV import přes UI s validací a mapováním sloupců, ne ruční SQL zásahy do databáze.
+- Globální WPF styly a barvy jsou nově zapojené přes `App.xaml` a používají dynamické resources pro světlý/tmavý režim.
+- Vzhled byl srovnán blíže ke standardnímu Windows chování; vlastní šablony tlačítek a přebarvení vstupů byly odstraněny kvůli lepší čitelnosti ComboBoxů, TextBoxů a detailů ovládacích prvků.
+- GitHub Actions workflow bylo zjednodušeno: běžné CI spouští restore/build/test, detailní diagnostický log se generuje jen při chybě a publish Release běží pouze při tagu.
+- Komentáře v upravovaných třídách byly srovnány na aktuální stav 1.9.0 a z kódu byly odstraněny zavádějící migrační poznámky.
+
+### Odstraněno
+- `CalculationCascadeService` a model `PriceItems` jako stará spojená kaskáda PRÁCE.
+- Testovací stub a testy navázané výhradně na zaniklou tabulku `PriceItems`.
+
+### Opraveno
+- Chyba konstruktoru `MainViewModel` po odebrání `CalculationCascadeService`.
+- Neplatné bindingy v XAML na staré `Tasks`, `SelectedTask`, `AvailableSpecifications`, `SelectedMaterial`, `SelectedLocation`.
+- Nefunkční uložení/načtení pracovních polí po přejmenování modelu `WorkItemData`.
+- Uložení projektu po přidání nebo odebrání prázdného řádku nyní zachová počet řádků i tehdy, když řádek neobsahuje žádná kalkulační data.
+- Opraveno nullable warning v integračním testu `RealMessageBoxServiceTests`.
+
+### Ověřeno
+- `dotnet build ElektroOffer_app.slnx`
+- `dotnet build ElektroOffer_app.slnx -p:OutputPath=...\artifacts\verify-build\` kvůli běžící aplikaci zamykající standardní `bin` výstup
+- `dotnet test ElektroOffer_app.slnx --no-build`
+
+---
+
 ## [1.8.0.4] - 2026-07-10
 ### Opraveno
 - Materiálové řádky (`CalculationItemViewModel.IsEmpty`) se nyní správně ukládají do JSON i při
@@ -98,8 +151,7 @@ Formát vychází z [Keep a Changelog](https://keepachangelog.com/cs/1.0.0/).
 - Kaskádový výběr materiálu v kalkulaci: Kategorie → Název → Dodavatel → Materiál
   (obdobně jako existující kaskáda Task → Specification → Material → Location u práce)
 - `MaterialCascadeService` – řízení kaskády výběru materiálu a dotažení ceny
-(- `MaterialImportService`, `ImportCsvReader`, `Import` (`Services/DataImport/`)
-  - import ceníku materiálu z CSV exportu Excel listu Import_Master, s upsert logikou podle dvojice (SupplierId, SupplierCode) pro bezpečné opakované importy)
+- Naplánován import ceníku materiálu z CSV exportu Excel listu Import_Master s upsert logikou podle jednoznačného klíče dodavatele a položky.
 - Unikátní databázový index na `MaterialPrices (SupplierId, SupplierCode)`
 - Testovací sada 10 materiálů (kabely, chráničky, spínače, zásuvky, rozvaděče,  jističe, chrániče) s cenami od dvou dodavatelů (ELKOV, EMAS)
 - uložené hodnoty pro práci `SelectedWorkPrice`, `SelectedWorkUnit`
@@ -159,7 +211,7 @@ Formát vychází z [Keep a Changelog](https://keepachangelog.com/cs/1.0.0/).
 - výpočet Total je plně delegován do `CalculationPriceService`
 
 ### Na obzoru
-- Reálné vyzkoušení importu ceníku materiálu z CSV přes `MaterialImportService` (zatím jen ručně vložená testovací data přes SQL)
+- Doplnění a reálné vyzkoušení UI importu ceníku materiálu z CSV; zatím jsou testovací data vložená ručně přes SQL.
 - Zobrazení kódu a ceny konkrétní nabídky (`SupplierCode`, `Price`) v detailním rozpočtu
   - aktuálně se v kalkulaci zobrazuje jen název položky od dodavatele
 - Odstranění staršího pole `Material.Price` po úplném přechodu na `MaterialPrice`

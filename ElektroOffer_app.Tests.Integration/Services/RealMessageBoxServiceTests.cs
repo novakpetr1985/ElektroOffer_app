@@ -43,8 +43,7 @@ namespace ElektroOffer_app.Tests.Integration.Services
         public void Show_Should_Not_Throw_And_Return_Valid_Result()
         {
             // 🔧 1) Vytvoříme WPF Application, pokud neexistuje
-            if (Application.Current == null)
-                new Application();
+            var app = Application.Current ?? new Application();
 
             // 🔧 2) Vytvoříme vlastní okno
             var window = new Window
@@ -63,7 +62,7 @@ namespace ElektroOffer_app.Tests.Integration.Services
             SetForegroundWindow(hwnd);
 
             // 🔧 5) Nastavíme MainWindow → MessageBox dostane OWNER
-            Application.Current.MainWindow = window;
+            app.MainWindow = window;
 
             var service = new RealMessageBoxService();
 

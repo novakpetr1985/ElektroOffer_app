@@ -9,20 +9,9 @@ namespace ElektroOffer_app.Services
     // 🔗 MaterialCascadeService – kaskádový výběr materiálu, dodavatele a ceny
     // =========================================================================
     //
-    // K čemu slouží:
-    // - Analogie k CalculationCascadeService (Task → Specification → Material
-    //   → Location), ale pro model Material + Supplier + MaterialPrice
-    //
-    // AKTUÁLNÍ POŘADÍ KASKÁDY (dle finálního rozhodnutí):
-    //     Kategorie → Nazev → Dodavatel → Materiál (název od dodavatele)
-    //
-    // ZMĚNA OPROTI PŮVODNÍMU NÁVRHU:
-    // - Kategorie je nyní PRVNÍM krokem výběru (dřív jen zobrazení) -
-    //   uživatel ji aktivně vybírá a tím se hned zúží seznam Nazvů
-    // - Poslední krok ("Nabídka") byl zjednodušen - v ComboBoxu se
-    //   zobrazuje POUZE název položky od dodavatele (SupplierName),
-    //   BEZ kódu a BEZ ceny. Kód i cena zůstávají uložené uvnitř
-    //   MaterialPrice a použijí se až v detailním rozpočtu později.
+    // Kaskáda materiálu: Kategorie → Název → Dodavatel → Nabídka.
+    // Poslední krok zobrazuje název položky od dodavatele; cena a jednotka
+    // se načtou z MaterialPrice pro výpočet řádku.
     // =========================================================================
     public class MaterialCascadeService
     {

@@ -95,6 +95,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\ElektroOffer_app.Invoice\ElektroOffer_app.Invoice.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
       <Resource Include="Resources\Icons\LOGO.jpg">
         <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       </Resource>

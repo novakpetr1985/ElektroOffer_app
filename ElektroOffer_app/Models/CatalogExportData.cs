@@ -3,9 +3,7 @@
     /// <summary>
     /// Obálka pro export/import ceníku do JSON souboru.
     /// 
-    /// Obsahuje obě tabulky:
-    /// - PriceItems  → ceník práce
-    /// - Materials   → ceník materiálu
+    /// Obsahuje pracovní a materiálový ceník.
     ///
     /// Soubor má příponu .eofcat (ElektroOffer Catalog).
     /// </summary>
@@ -23,10 +21,10 @@
         public string FormatVersion { get; set; } = "1.0";
 
         /// <summary>
-        /// Seznam všech položek ceníku práce (tabulka PriceItems).
+        /// Seznam všech položek pracovního ceníku.
         /// Ukládají se názvy – nezávislé na ID v databázi.
         /// </summary>
-        public List<PriceItemExportData> PriceItems { get; set; } = new();
+        public List<WorkCatalogExportData> WorkItems { get; set; } = new();
 
         /// <summary>
         /// Seznam všech položek ceníku materiálu (tabulka Materials).
@@ -36,27 +34,18 @@
     }
 
     /// <summary>
-    /// Serializovatelná data jedné položky z tabulky PriceItems.
-    /// Odpovídá sloupcům:
-    /// - Task
-    /// - Specification
-    /// - Material
-    /// - Location
-    /// - BasePrice
-    /// - Unit
-    /// - MaterialCoef
-    /// - PositionCoef
+    /// Serializovatelná data jedné položky pracovního ceníku.
     /// </summary>
-    public class PriceItemExportData
+    public class WorkCatalogExportData
     {
-        public string Task { get; set; } = "";
-        public string Specification { get; set; } = "";
-        public string Material { get; set; } = "";
-        public string Location { get; set; } = "";
-        public double BasePrice { get; set; }
+        public string WorkTask { get; set; } = "";
+        public string WorkSpecification { get; set; } = "";
+        public string BaseMaterial { get; set; } = "";
+        public string WorkPosition { get; set; } = "";
+        public decimal BasePrice { get; set; }
         public string Unit { get; set; } = "";
-        public double MaterialCoef { get; set; }
-        public double PositionCoef { get; set; }
+        public decimal BaseMaterialCoef { get; set; }
+        public decimal PositionCoef { get; set; }
     }
 
     /// <summary>
