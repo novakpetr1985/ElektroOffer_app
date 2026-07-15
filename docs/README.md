@@ -161,7 +161,7 @@ Menu `Možnosti → Nastavení...` otevírá první stránku nastavení aplikace
 
 Workflow `.github/workflows/elektrooffer-ci-pipeline.yml` je nastavený tak, aby se testovalo jen tam, kde to dává smysl:
 
-- `push` do `feature/**`, `hotfix/**`, `release/**` spouští restore, Debug build, unit testy a integrační testy
+- `push` do `feature/**`, `hotfix/**`, `release/**` spouští restore, Debug build, samostatný krok unit testů a samostatný krok integračních testů
 - `pull_request` do `dev`, `test`, `main` spouští stejný CI běh pro kontrolu chráněných větví
 - `workflow_dispatch` umožňuje ruční spuštění
 - tag spouští CI a po něm samostatný Release publish

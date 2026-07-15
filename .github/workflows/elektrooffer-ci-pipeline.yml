@@ -38,8 +38,11 @@ jobs:
       - name: Build solution
         run: dotnet build ElektroOffer_app.slnx --configuration Debug --no-restore
 
-      - name: Run tests
-        run: dotnet test ElektroOffer_app.slnx --configuration Debug --no-restore --verbosity normal --logger trx --results-directory TestResults
+      - name: Run unit tests
+        run: dotnet test ElektroOffer_app.Tests.Unit/ElektroOffer_app.Tests.Unit.csproj --configuration Debug --no-restore --verbosity normal --logger trx --results-directory TestResults/Unit
+
+      - name: Run integration tests
+        run: dotnet test ElektroOffer_app.Tests.Integration/ElektroOffer_app.Tests.Integration.csproj --configuration Debug --no-restore --verbosity normal --logger trx --results-directory TestResults/Integration
 
       - name: Upload test results
         if: failure()
