@@ -36,6 +36,8 @@ Formát vychází z [Keep a Changelog](https://keepachangelog.com/cs/1.0.0/).
 - `ProjectData` nově ukládá počet řádků v sekcích PRÁCE a MATERIÁL (`WorkRowCount`, `MaterialRowCount`), aby se zachoval i stav přidaných nebo odebraných prázdných řádků.
 - Doporučený směr importu materiálů je CSV import přes UI s validací a mapováním sloupců, ne ruční SQL zásahy do databáze.
 - Globální WPF styly a barvy jsou nově zapojené přes `App.xaml` a používají dynamické resources pro světlý/tmavý režim.
+- Vzhled byl srovnán blíže ke standardnímu Windows chování; vlastní šablony tlačítek a přebarvení vstupů byly odstraněny kvůli lepší čitelnosti ComboBoxů, TextBoxů a detailů ovládacích prvků.
+- GitHub Actions workflow bylo zjednodušeno: běžné CI spouští restore/build/test, detailní diagnostický log se generuje jen při chybě a publish Release běží pouze při tagu.
 - Komentáře v upravovaných třídách byly srovnány na aktuální stav 1.9.0 a z kódu byly odstraněny zavádějící migrační poznámky.
 
 ### Odstraněno
@@ -51,6 +53,7 @@ Formát vychází z [Keep a Changelog](https://keepachangelog.com/cs/1.0.0/).
 
 ### Ověřeno
 - `dotnet build ElektroOffer_app.slnx`
+- `dotnet build ElektroOffer_app.slnx -p:OutputPath=...\artifacts\verify-build\` kvůli běžící aplikaci zamykající standardní `bin` výstup
 - `dotnet test ElektroOffer_app.slnx --no-build`
 
 ---

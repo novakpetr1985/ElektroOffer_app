@@ -1,203 +1,119 @@
 name: ElektroOffer CI Pipeline
 
-# =====================================================================
-# 🚀 TRIGGERY
-# =====================================================================
 on:
   push:
     branches:
-      - hotfix/**
       - feature/**
+      - hotfix/**
       - release/**
+    tags:
+      - "*"
   pull_request:
     branches:
       - dev
       - test
       - main
-  # Tag = release pipeline
   workflow_dispatch:
-  # Tag trigger
-  create:
-    tags:
-      - '*'
 
-# =====================================================================
-# 🟩 JOB 1 — CI elektrooffer
-# Běží na: Push (feature/release/hotfix), Pull Request, Tag
-# Obsahuje: Restore, Build, Testy, Minimal Log
-# =====================================================================
 jobs:
-  CI-elektrooffer:
-    if: |
-      github.event_name == 'push' ||
-      github.event_name == 'pull_request' ||
-      startsWith(github.ref, 'refs/tags/')
+  ci:
+    name: Build and test
     runs-on: windows-latest
 
     steps:
       - name: Checkout repository
-        if: always()
         uses: actions/checkout@v4
 
       - name: Setup .NET
-        if: always()
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '10.0.x'
+          dotnet-version: "10.0.x"
 
-      - name: Restore NuGet Packages
-        if: always()
+      - name: Restore NuGet packages
         run: dotnet restore ElektroOffer_app.slnx
 
-      - name: Build Solution
-        if: always()
-        run: dotnet build ElektroOffer_app.slnx --configuration Release --no-restore
+      - name: Build solution
+        run: dotnet build ElektroOffer_app.slnx --configuration Debug --no-restore
 
-      - name: Run Unit Tests
-        if: always()
-        run: dotnet test ElektroOffer_app.Tests.Unit/ElektroOffer_app.Tests.Unit.csproj --configuration Release --verbosity normal
+      - name: Run unit tests
+        run: dotnet test ElektroOffer_app.Tests.Unit/ElektroOffer_app.Tests.Unit.csproj --configuration Debug --no-build --verbosity normal
 
-      - name: Run Integration Tests
-        if: always()
-        run: dotnet test ElektroOffer_app.Tests.Integration/ElektroOffer_app.Tests.Integration.csproj --configuration Release --verbosity normal
+      - name: Run integration tests
+        run: dotnet test ElektroOffer_app.Tests.Integration/ElektroOffer_app.Tests.Integration.csproj --configuration Debug --no-build --verbosity normal
 
-      - name: Generate CI Log
-        if: always()
-        run: |
-          echo "============================================================" > elektrooffer-ci.log
-          echo "🟩 CI SHORT LOG" >> elektrooffer-ci.log
-          echo "Timestamp: $(date)" >> elektrooffer-ci.log
-          echo "Working directory: $(pwd)" >> elektrooffer-ci.log
-          echo "============================================================" >> elektrooffer-ci.log
-
-          echo "" >> elektrooffer-ci.log
-          echo "------------------------------------------------------------" >> elektrooffer-ci.log
-          echo "🔧 BUILD (minimal)" >> elektrooffer-ci.log
-          echo "------------------------------------------------------------" >> elektrooffer-ci.log
-          dotnet build ElektroOffer_app.slnx --configuration Release --verbosity minimal >> elektrooffer-ci.log
-          echo "Exit code (build): $?" >> elektrooffer-ci.log
-
-          echo "" >> elektrooffer-ci.log
-          echo "------------------------------------------------------------" >> elektrooffer-ci.log
-          echo "🧪 UNIT TESTS (minimal)" >> elektrooffer-ci.log
-          echo "------------------------------------------------------------" >> elektrooffer-ci.log
-          dotnet test ElektroOffer_app.Tests.Unit/ElektroOffer_app.Tests.Unit.csproj --verbosity minimal >> elektrooffer-ci.log
-          echo "Exit code (unit tests): $?" >> elektrooffer-ci.log
-
-          echo "" >> elektrooffer-ci.log
-          echo "------------------------------------------------------------" >> elektrooffer-ci.log
-          echo "🧪 INTEGRATION TESTS (minimal)" >> elektrooffer-ci.log
-          echo "------------------------------------------------------------" >> elektrooffer-ci.log
-          dotnet test ElektroOffer_app.Tests.Integration/ElektroOffer_app.Tests.Integration.csproj --verbosity minimal >> elektrooffer-ci.log
-          echo "Exit code (integration tests): $?" >> elektrooffer-ci.log
-
-          echo "" >> elektrooffer-ci.log
-          echo "============================================================" >> elektrooffer-ci.log
-          echo "🟩 CI SHORT LOG END" >> elektrooffer-ci.log
-          echo "============================================================" >> elektrooffer-ci.log
-
-
-      - name: Upload CI log artifact
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: elektrooffer-ci-log
-          path: elektrooffer-ci.log
-
-
-# =====================================================================
-# 🟥 JOB 2 — Release build
-# Běží pouze při TAGU
-# Obsahuje: Publish, Full Log, Artefakty
-# =====================================================================
-  Release-build:
+  release:
+    name: Release publish
     if: startsWith(github.ref, 'refs/tags/')
+    needs: ci
     runs-on: windows-latest
-    needs: CI-elektrooffer
 
     steps:
       - name: Checkout repository
-        if: always()
         uses: actions/checkout@v4
 
       - name: Setup .NET
-        if: always()
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '10.0.x'
+          dotnet-version: "10.0.x"
 
-      - name: Publish Application
-        if: always()
-        run: |
-          dotnet publish `
-            ElektroOffer_app/ElektroOffer_app.csproj `
-            --configuration Release `
-            --output ElektroOffer_app/publish
+      - name: Publish application
+        run: >
+          dotnet publish ElektroOffer_app/ElektroOffer_app.csproj
+          --configuration Release
+          --output ElektroOffer_app/publish
 
-      - name: Upload Publish Artifact
-        if: always()
+      - name: Upload publish artifact
         uses: actions/upload-artifact@v4
         with:
           name: elektrooffer-publish
           path: ElektroOffer_app/publish
 
-
-# =====================================================================
-# 🟦 JOB — CI diagnostic
-# Vygeneruje detailní log pokaždé, když CI-elektrooffer nebo Release-build selže
-# =====================================================================
-  CI-diagnostic:
-    needs: [CI-elektrooffer, Release-build]
-    if: always() && (
-          needs.CI-elektrooffer.result == 'failure' ||
-          needs.Release-build.result == 'failure'
-        )
+  diagnostic:
+    name: Diagnostic log
+    if: failure()
+    needs:
+      - ci
+      - release
     runs-on: windows-latest
 
     steps:
       - name: Checkout repository
-        if: always()
         uses: actions/checkout@v4
 
-      - name: Generate Full CI Log (Error)
-        if: always()
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "10.0.x"
+
+      - name: Generate detailed failure log
+        shell: pwsh
         run: |
-          echo "============================================================" > elektrooffer-ci-error.log
-          echo "🔴 CI DIAGNOSTIC LOG" >> elektrooffer-ci-error.log
-          echo "Timestamp: $(date)" >> elektrooffer-ci-error.log
-          echo "Working directory: $(pwd)" >> elektrooffer-ci-error.log
-          echo "============================================================" >> elektrooffer-ci-error.log
+          "============================================================" | Out-File elektrooffer-ci-error.log
+          "CI DIAGNOSTIC LOG" | Out-File elektrooffer-ci-error.log -Append
+          "Timestamp: $(Get-Date -Format o)" | Out-File elektrooffer-ci-error.log -Append
+          "Ref: $env:GITHUB_REF" | Out-File elektrooffer-ci-error.log -Append
+          "Event: $env:GITHUB_EVENT_NAME" | Out-File elektrooffer-ci-error.log -Append
+          "============================================================" | Out-File elektrooffer-ci-error.log -Append
 
-          echo "" >> elektrooffer-ci-error.log
-          echo "------------------------------------------------------------" >> elektrooffer-ci-error.log
-          echo "🔧 BUILD (detailed)" >> elektrooffer-ci-error.log
-          echo "------------------------------------------------------------" >> elektrooffer-ci-error.log
-          dotnet build ElektroOffer_app.slnx --configuration Release --verbosity detailed >> elektrooffer-ci-error.log
-          echo "Exit code (build): $?" >> elektrooffer-ci-error.log
+          "" | Out-File elektrooffer-ci-error.log -Append
+          "RESTORE" | Out-File elektrooffer-ci-error.log -Append
+          dotnet restore ElektroOffer_app.slnx --verbosity detailed *>> elektrooffer-ci-error.log
 
-          echo "" >> elektrooffer-ci-error.log
-          echo "------------------------------------------------------------" >> elektrooffer-ci-error.log
-          echo "🧪 UNIT TESTS (detailed)" >> elektrooffer-ci-error.log
-          echo "------------------------------------------------------------" >> elektrooffer-ci-error.log
-          dotnet test ElektroOffer_app.Tests.Unit/ElektroOffer_app.Tests.Unit.csproj --verbosity detailed >> elektrooffer-ci-error.log
-          echo "Exit code (unit tests): $?" >> elektrooffer-ci-error.log
+          "" | Out-File elektrooffer-ci-error.log -Append
+          "BUILD" | Out-File elektrooffer-ci-error.log -Append
+          dotnet build ElektroOffer_app.slnx --configuration Debug --no-restore --verbosity detailed *>> elektrooffer-ci-error.log
 
-          echo "" >> elektrooffer-ci-error.log
-          echo "------------------------------------------------------------" >> elektrooffer-ci-error.log
-          echo "🧪 INTEGRATION TESTS (detailed)" >> elektrooffer-ci-error.log
-          echo "------------------------------------------------------------" >> elektrooffer-ci-error.log
-          dotnet test ElektroOffer_app.Tests.Integration/ElektroOffer_app.Tests.Integration.csproj --verbosity detailed >> elektrooffer-ci-error.log
-          echo "Exit code (integration tests): $?" >> elektrooffer-ci-error.log
+          "" | Out-File elektrooffer-ci-error.log -Append
+          "UNIT TESTS" | Out-File elektrooffer-ci-error.log -Append
+          dotnet test ElektroOffer_app.Tests.Unit/ElektroOffer_app.Tests.Unit.csproj --configuration Debug --verbosity detailed *>> elektrooffer-ci-error.log
 
-          echo "" >> elektrooffer-ci-error.log
-          echo "============================================================" >> elektrooffer-ci-error.log
-          echo "🔴 CI DIAGNOSTIC LOG END" >> elektrooffer-ci-error.log
-          echo "============================================================" >> elektrooffer-ci-error.log
+          "" | Out-File elektrooffer-ci-error.log -Append
+          "INTEGRATION TESTS" | Out-File elektrooffer-ci-error.log -Append
+          dotnet test ElektroOffer_app.Tests.Integration/ElektroOffer_app.Tests.Integration.csproj --configuration Debug --verbosity detailed *>> elektrooffer-ci-error.log
 
-      - name: Upload CI log error artifact
+      - name: Upload diagnostic log
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: elektrooffer-ci-error-log
           path: elektrooffer-ci-error.log
-

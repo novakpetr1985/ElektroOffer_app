@@ -149,6 +149,17 @@ Menu `Možnosti → Nastavení...` otevírá první stránku nastavení aplikace
 - pravá část obsahuje detailní volbu režimu
 - dostupné režimy: `Dle nastavení systému`, `Světlý režim`, `Tmavý režim`
 - volba se ukládá do uživatelských dat aplikace a použije se při dalším spuštění
+- ovládací prvky ponechávají standardní Windows chování kvůli čitelnosti a správnému zobrazení detailů ComboBoxů, TextBoxů a tlačítek
+
+### GitHub Actions
+
+Workflow `.github/workflows/elektrooffer-ci-pipeline.yml` je nastavený tak, aby se testovalo jen tam, kde to dává smysl:
+
+- `push` do `feature/**`, `hotfix/**`, `release/**` spouští restore, Debug build, unit testy a integrační testy
+- `pull_request` do `dev`, `test`, `main` spouští stejný CI běh pro kontrolu chráněných větví
+- `workflow_dispatch` umožňuje ruční spuštění
+- tag spouští CI a po něm samostatný Release publish
+- detailní diagnostický log se vytváří jen při chybě, aby se běžné úspěšné běhy zbytečně neduplikovaly
 
 ### Import materiálů
 

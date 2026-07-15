@@ -74,18 +74,18 @@ namespace ElektroOffer_app.Services
 
             if (useDark)
             {
-                SetBrush(resources, "AppBackgroundBrush", "#1F2329");
-                SetBrush(resources, "AppSurfaceBrush", "#2A3038");
-                SetBrush(resources, "AppSurfaceAltBrush", "#343B45");
-                SetBrush(resources, "AppBorderBrush", "#46515E");
-                SetBrush(resources, "AppTextBrush", "#F4F7FA");
-                SetBrush(resources, "AppMutedTextBrush", "#AAB4C0");
-                SetBrush(resources, "AppInputBrush", "#20262E");
-                SetBrush(resources, "AppAccentBrush", "#2563EB");
-                SetBrush(resources, "AppAccentHoverBrush", "#1D4ED8");
-                SetBrush(resources, "AppDangerBrush", "#DC2626");
-                SetBrush(resources, "AppSuccessBrush", "#22C55E");
-                SetBrush(resources, "AppWarningBrush", "#F87171");
+                SetBrush(resources, "AppBackgroundBrush", "#202020");
+                SetBrush(resources, "AppSurfaceBrush", "#2D2D30");
+                SetBrush(resources, "AppSurfaceAltBrush", "#3A3A3D");
+                SetBrush(resources, "AppBorderBrush", "#555555");
+                SetBrush(resources, "AppTextBrush", "#F3F3F3");
+                SetBrush(resources, "AppMutedTextBrush", "#C8C8C8");
+                SetBrush(resources, "AppInputBrush", "#FFFFFF");
+                SetBrush(resources, "AppAccentBrush", "#1E5AA8");
+                SetBrush(resources, "AppAccentHoverBrush", "#164A8A");
+                SetBrush(resources, "AppDangerBrush", "#B3261E");
+                SetBrush(resources, "AppSuccessBrush", "#57A64A");
+                SetBrush(resources, "AppWarningBrush", "#F1707A");
             }
             else
             {
