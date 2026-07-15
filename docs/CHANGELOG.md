@@ -42,6 +42,7 @@ Formát vychází z [Keep a Changelog](https://keepachangelog.com/cs/1.0.0/).
 - Opraveno přebíjení barvy textu u vybraných položek v tmavém režimu; text nyní dědí kontrastní barvu výběru i uvnitř ComboBoxů, ListBoxů a DataGrid buněk.
 - Zavřený stav ComboBoxů má vlastní šablonu, aby po výběru položky zůstal text čitelný i v tmavém režimu.
 - Menu a detailní rozpočet (`ListView`/`GridView`) mají doplněné tmavé styly pro čitelný text, hlavičky tabulky, řádky a výběr.
+- Řádkové ceny práce a materiálu jsou barevně sjednocené, součty mají jasné odlišení podle sekce a deaktivované kaskádové výběry jsou v tmavém režimu čitelnější.
 - Aplikace už nevyžaduje zdrojový soubor `ElektroOffer_app/elektrooffer.db` při buildu; při startu chybějící SQLite databázi založí a naplní testovacími daty ze SQL seedu `Data/Seed/elektrooffer_1_9_0.sql`.
 - Vývojová DB cesta je sjednocená se SQLite Browser projektem: při běhu z Visual Studia aplikace používá `ElektroOffer_app/elektrooffer.db` vedle `elektrooffer.sqbpro`, ne samostatnou DB v `bin`.
 - GitHub Actions workflow bylo zjednodušeno: běžné CI spouští restore/build/test, detailní diagnostický log se generuje jen při chybě a publish Release běží pouze při tagu.

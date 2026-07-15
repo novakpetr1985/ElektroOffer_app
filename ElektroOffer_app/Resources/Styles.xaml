@@ -104,7 +104,8 @@
                                             <Setter TargetName="ToggleBorder" Property="BorderBrush" Value="{DynamicResource AppAccentBrush}"/>
                                         </Trigger>
                                         <Trigger Property="IsEnabled" Value="False">
-                                            <Setter TargetName="ToggleBorder" Property="Opacity" Value="0.65"/>
+                                            <Setter TargetName="ToggleBorder" Property="Background" Value="{DynamicResource AppDisabledInputBrush}"/>
+                                            <Setter TargetName="ToggleBorder" Property="BorderBrush" Value="{DynamicResource AppBorderBrush}"/>
                                         </Trigger>
                                     </ControlTemplate.Triggers>
                                 </ControlTemplate>
@@ -160,8 +161,9 @@
                             <Setter TargetName="PART_Popup" Property="MinHeight" Value="40"/>
                         </Trigger>
                         <Trigger Property="IsEnabled" Value="False">
-                            <Setter Property="Foreground" Value="{DynamicResource AppMutedTextBrush}"/>
-                            <Setter Property="TextElement.Foreground" Value="{DynamicResource AppMutedTextBrush}"/>
+                            <Setter Property="Background" Value="{DynamicResource AppDisabledInputBrush}"/>
+                            <Setter Property="Foreground" Value="{DynamicResource AppDisabledTextBrush}"/>
+                            <Setter Property="TextElement.Foreground" Value="{DynamicResource AppDisabledTextBrush}"/>
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>

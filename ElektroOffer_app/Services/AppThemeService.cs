@@ -76,15 +76,19 @@ namespace ElektroOffer_app.Services
 
             if (useDark)
             {
-                SetBrush(resources, "AppBackgroundBrush", "#202020");
-                SetBrush(resources, "AppSurfaceBrush", "#2D2D30");
-                SetBrush(resources, "AppSurfaceAltBrush", "#3A3A3D");
-                SetBrush(resources, "AppBorderBrush", "#555555");
+                var useWindows11Palette = IsWindows11OrNewer();
+
+                SetBrush(resources, "AppBackgroundBrush", useWindows11Palette ? "#202020" : "#1F1F1F");
+                SetBrush(resources, "AppSurfaceBrush", useWindows11Palette ? "#2B2B2B" : "#2D2D30");
+                SetBrush(resources, "AppSurfaceAltBrush", useWindows11Palette ? "#383838" : "#3A3A3D");
+                SetBrush(resources, "AppBorderBrush", useWindows11Palette ? "#5A5A5A" : "#555555");
                 SetBrush(resources, "AppTextBrush", "#F3F3F3");
                 SetBrush(resources, "AppMutedTextBrush", "#C8C8C8");
-                SetBrush(resources, "AppInputBrush", "#252526");
+                SetBrush(resources, "AppInputBrush", useWindows11Palette ? "#242424" : "#252526");
                 SetBrush(resources, "AppInputTextBrush", "#F3F3F3");
-                SetBrush(resources, "AppButtonBrush", "#3A3A3D");
+                SetBrush(resources, "AppDisabledInputBrush", useWindows11Palette ? "#404040" : "#3F3F46");
+                SetBrush(resources, "AppDisabledTextBrush", "#D1D5DB");
+                SetBrush(resources, "AppButtonBrush", useWindows11Palette ? "#3A3A3A" : "#3A3A3D");
                 SetBrush(resources, "AppAccentBrush", "#1E5AA8");
                 SetBrush(resources, "AppAccentHoverBrush", "#164A8A");
                 SetBrush(resources, "AppSelectionBrush", "#2B78D4");
@@ -103,6 +107,8 @@ namespace ElektroOffer_app.Services
                 SetBrush(resources, "AppMutedTextBrush", "#667085");
                 SetBrush(resources, "AppInputBrush", "#FFFFFF");
                 SetBrush(resources, "AppInputTextBrush", "#1F2937");
+                SetBrush(resources, "AppDisabledInputBrush", "#EEF2F6");
+                SetBrush(resources, "AppDisabledTextBrush", "#7B8794");
                 SetBrush(resources, "AppButtonBrush", "#F3F4F6");
                 SetBrush(resources, "AppAccentBrush", "#2563EB");
                 SetBrush(resources, "AppAccentHoverBrush", "#1D4ED8");
@@ -150,6 +156,9 @@ namespace ElektroOffer_app.Services
                 return false;
             }
         }
+
+        private static bool IsWindows11OrNewer()
+            => OperatingSystem.IsWindowsVersionAtLeast(10, 0, 22000);
 
         private static void SetBrush(ResourceDictionary resources, string key, string color)
             => resources[key] = new SolidColorBrush((Color)ColorConverter.ConvertFromString(color));

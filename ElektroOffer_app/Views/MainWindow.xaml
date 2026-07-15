@@ -284,7 +284,7 @@
                                         <!-- 💰 CENA PRÁCE -->
                                         <TextBlock Grid.Column="7"
                                                 FontWeight="Bold"
-                                                Foreground="{DynamicResource AppAccentBrush}"
+                                                Foreground="{DynamicResource AppTextBrush}"
                                                 VerticalAlignment="Center"
                                                 HorizontalAlignment="Right"
                                                 TextAlignment="Right"
@@ -342,7 +342,8 @@
                             </Grid.ColumnDefinitions>
 
                             <TextBlock Text="Součet práce"
-                                    FontWeight="Bold"/>
+                                    FontWeight="Bold"
+                                    Foreground="{DynamicResource AppSuccessBrush}"/>
 
                             <TextBlock Grid.Column="1"
                                     Text="{Binding WorkTotal, StringFormat={}{0:N0} Kč}"
@@ -536,7 +537,8 @@
                             </Grid.ColumnDefinitions>
 
                             <TextBlock Text="Součet materiálu"
-                                    FontWeight="Bold"/>
+                                    FontWeight="Bold"
+                                    Foreground="{DynamicResource AppAccentBrush}"/>
 
                             <TextBlock Grid.Column="1"
                                     Text="{Binding MaterialTotal, StringFormat={}{0:N0} Kč}"

@@ -9,6 +9,8 @@
     <SolidColorBrush x:Key="AppMutedTextBrush" Color="#667085"/>
     <SolidColorBrush x:Key="AppInputBrush" Color="#FFFFFF"/>
     <SolidColorBrush x:Key="AppInputTextBrush" Color="#1F2937"/>
+    <SolidColorBrush x:Key="AppDisabledInputBrush" Color="#EEF2F6"/>
+    <SolidColorBrush x:Key="AppDisabledTextBrush" Color="#7B8794"/>
     <SolidColorBrush x:Key="AppButtonBrush" Color="#F3F4F6"/>
     <SolidColorBrush x:Key="AppAccentBrush" Color="#2563EB"/>
     <SolidColorBrush x:Key="AppAccentHoverBrush" Color="#1D4ED8"/>
