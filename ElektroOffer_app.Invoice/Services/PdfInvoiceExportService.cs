@@ -1,6 +1,7 @@
 using System.Globalization;
 using System.IO;
 using System.Text;
+using System.Windows;
 using ElektroOffer_app.Invoice.Models;
 
 namespace ElektroOffer_app.Invoice.Services
@@ -59,18 +60,23 @@ namespace ElektroOffer_app.Invoice.Services
         {
             var sb = new StringBuilder();
             sb.AppendLine("BT");
-            sb.AppendLine("/F1 10 Tf");
-            sb.AppendLine("50 800 Td");
+            var fontSize = Token("Typography.FontSize.Document", 10d);
+            var pagePadding = Token("Spacing.DocumentPagePadding", new Thickness(50));
+            sb.AppendLine($"/F1 {fontSize.ToString(CultureInfo.InvariantCulture)} Tf");
+            sb.AppendLine($"{pagePadding.Left.ToString(CultureInfo.InvariantCulture)} {(842 - pagePadding.Top).ToString(CultureInfo.InvariantCulture)} Td");
 
             foreach (var line in lines.Take(48))
             {
                 sb.Append('(').Append(EscapePdf(ToAscii(line))).AppendLine(") Tj");
-                sb.AppendLine("0 -15 Td");
+                sb.AppendLine($"0 {(-fontSize * 1.5d).ToString(CultureInfo.InvariantCulture)} Td");
             }
 
             sb.AppendLine("ET");
             return sb.ToString();
         }
+
+        private static T Token<T>(string key, T fallback)
+            => Application.Current?.TryFindResource(key) is T value ? value : fallback;
 
         private static byte[] BuildPdf(string content)
         {

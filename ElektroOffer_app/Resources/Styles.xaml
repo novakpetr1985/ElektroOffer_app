@@ -4,8 +4,8 @@
     <Style TargetType="Window">
         <Setter Property="Background" Value="{DynamicResource AppBackgroundBrush}"/>
         <Setter Property="Foreground" Value="{DynamicResource AppTextBrush}"/>
-        <Setter Property="FontFamily" Value="Segoe UI"/>
-        <Setter Property="FontSize" Value="13"/>
+        <Setter Property="FontFamily" Value="{DynamicResource Typography.FontFamily.Ui}"/>
+        <Setter Property="FontSize" Value="{DynamicResource Typography.FontSize.Body}"/>
     </Style>
 
     <Style TargetType="Menu">
@@ -43,7 +43,7 @@
         <Setter Property="Foreground" Value="{DynamicResource AppTextBrush}"/>
         <Setter Property="Background" Value="{DynamicResource AppSurfaceBrush}"/>
         <Setter Property="BorderBrush" Value="{DynamicResource AppBorderBrush}"/>
-        <Setter Property="Padding" Value="6"/>
+        <Setter Property="Padding" Value="{DynamicResource Spacing.GroupBoxPadding}"/>
     </Style>
 
     <Style TargetType="StatusBar">
@@ -64,8 +64,8 @@
         <Setter Property="Background" Value="{DynamicResource AppButtonBrush}"/>
         <Setter Property="Foreground" Value="{DynamicResource AppTextBrush}"/>
         <Setter Property="BorderBrush" Value="{DynamicResource AppBorderBrush}"/>
-        <Setter Property="Padding" Value="8,4"/>
-        <Setter Property="MinHeight" Value="26"/>
+        <Setter Property="Padding" Value="{DynamicResource Spacing.ControlPadding}"/>
+        <Setter Property="MinHeight" Value="{DynamicResource Size.ControlHeight.Default}"/>
     </Style>
 
     <Style TargetType="TextBox">
@@ -73,7 +73,7 @@
         <Setter Property="Foreground" Value="{DynamicResource AppInputTextBrush}"/>
         <Setter Property="BorderBrush" Value="{DynamicResource AppBorderBrush}"/>
         <Setter Property="CaretBrush" Value="{DynamicResource AppInputTextBrush}"/>
-        <Setter Property="Padding" Value="4,2"/>
+        <Setter Property="Padding" Value="{DynamicResource Spacing.InputPadding}"/>
     </Style>
 
     <Style TargetType="ComboBox">
@@ -81,8 +81,8 @@
         <Setter Property="Foreground" Value="{DynamicResource AppInputTextBrush}"/>
         <Setter Property="TextElement.Foreground" Value="{DynamicResource AppInputTextBrush}"/>
         <Setter Property="BorderBrush" Value="{DynamicResource AppBorderBrush}"/>
-        <Setter Property="Padding" Value="4,2"/>
-        <Setter Property="MinHeight" Value="24"/>
+        <Setter Property="Padding" Value="{DynamicResource Spacing.InputPadding}"/>
+        <Setter Property="MinHeight" Value="{DynamicResource Size.ControlHeight.Small}"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="ComboBox">

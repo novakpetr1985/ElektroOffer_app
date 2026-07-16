@@ -1,14 +1,14 @@
 <ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
-    <SolidColorBrush x:Key="AppBackgroundBrush" Color="#F4F6F8"/>
-    <SolidColorBrush x:Key="AppSurfaceBrush" Color="#FFFFFF"/>
-    <SolidColorBrush x:Key="AppSurfaceAltBrush" Color="#EEF2F6"/>
-    <SolidColorBrush x:Key="AppBorderBrush" Color="#D6DDE6"/>
-    <SolidColorBrush x:Key="AppTextBrush" Color="#1F2937"/>
-    <SolidColorBrush x:Key="AppMutedTextBrush" Color="#667085"/>
-    <SolidColorBrush x:Key="AppInputBrush" Color="#FFFFFF"/>
-    <SolidColorBrush x:Key="AppInputTextBrush" Color="#1F2937"/>
-    <SolidColorBrush x:Key="AppSelectionBrush" Color="#2563EB"/>
-    <SolidColorBrush x:Key="AppSelectionTextBrush" Color="#FFFFFF"/>
+    <SolidColorBrush x:Key="AppBackgroundBrush" Color="{DynamicResource Color.Background}"/>
+    <SolidColorBrush x:Key="AppSurfaceBrush" Color="{DynamicResource Color.Surface}"/>
+    <SolidColorBrush x:Key="AppSurfaceAltBrush" Color="{DynamicResource Color.SurfaceAlt}"/>
+    <SolidColorBrush x:Key="AppBorderBrush" Color="{DynamicResource Color.Border}"/>
+    <SolidColorBrush x:Key="AppTextBrush" Color="{DynamicResource Color.Text}"/>
+    <SolidColorBrush x:Key="AppMutedTextBrush" Color="{DynamicResource Color.TextMuted}"/>
+    <SolidColorBrush x:Key="AppInputBrush" Color="{DynamicResource Color.Surface}"/>
+    <SolidColorBrush x:Key="AppInputTextBrush" Color="{DynamicResource Color.Text}"/>
+    <SolidColorBrush x:Key="AppSelectionBrush" Color="{DynamicResource Color.Accent}"/>
+    <SolidColorBrush x:Key="AppSelectionTextBrush" Color="{DynamicResource Color.OnAccent}"/>
 </ResourceDictionary>

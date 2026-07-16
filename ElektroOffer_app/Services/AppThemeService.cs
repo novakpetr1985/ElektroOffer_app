@@ -76,47 +76,45 @@ namespace ElektroOffer_app.Services
 
             if (useDark)
             {
-                var useWindows11Palette = IsWindows11OrNewer();
-
-                SetBrush(resources, "AppBackgroundBrush", useWindows11Palette ? "#202020" : "#1F1F1F");
-                SetBrush(resources, "AppSurfaceBrush", useWindows11Palette ? "#2B2B2B" : "#2D2D30");
-                SetBrush(resources, "AppSurfaceAltBrush", useWindows11Palette ? "#383838" : "#3A3A3D");
-                SetBrush(resources, "AppBorderBrush", useWindows11Palette ? "#5A5A5A" : "#555555");
-                SetBrush(resources, "AppTextBrush", "#F3F3F3");
-                SetBrush(resources, "AppMutedTextBrush", "#C8C8C8");
-                SetBrush(resources, "AppInputBrush", useWindows11Palette ? "#242424" : "#252526");
-                SetBrush(resources, "AppInputTextBrush", "#F3F3F3");
-                SetBrush(resources, "AppDisabledInputBrush", useWindows11Palette ? "#404040" : "#3F3F46");
-                SetBrush(resources, "AppDisabledTextBrush", "#D1D5DB");
-                SetBrush(resources, "AppButtonBrush", useWindows11Palette ? "#3A3A3A" : "#3A3A3D");
-                SetBrush(resources, "AppAccentBrush", "#1E5AA8");
-                SetBrush(resources, "AppAccentHoverBrush", "#164A8A");
-                SetBrush(resources, "AppSelectionBrush", "#2B78D4");
-                SetBrush(resources, "AppSelectionTextBrush", "#FFFFFF");
-                SetBrush(resources, "AppDangerBrush", "#B3261E");
-                SetBrush(resources, "AppSuccessBrush", "#57A64A");
-                SetBrush(resources, "AppWarningBrush", "#F1707A");
+                SetBrush(resources, "AppBackgroundBrush", "Color.Dark.Background");
+                SetBrush(resources, "AppSurfaceBrush", "Color.Dark.Surface");
+                SetBrush(resources, "AppSurfaceAltBrush", "Color.Dark.SurfaceAlt");
+                SetBrush(resources, "AppBorderBrush", "Color.Dark.Border");
+                SetBrush(resources, "AppTextBrush", "Color.Dark.Text");
+                SetBrush(resources, "AppMutedTextBrush", "Color.Dark.TextMuted");
+                SetBrush(resources, "AppInputBrush", "Color.Dark.Background");
+                SetBrush(resources, "AppInputTextBrush", "Color.Dark.Text");
+                SetBrush(resources, "AppDisabledInputBrush", "Color.Dark.SurfaceAlt");
+                SetBrush(resources, "AppDisabledTextBrush", "Color.Dark.TextMuted");
+                SetBrush(resources, "AppButtonBrush", "Color.Dark.SurfaceAlt");
+                SetBrush(resources, "AppAccentBrush", "Color.Dark.Accent");
+                SetBrush(resources, "AppAccentHoverBrush", "Color.Dark.AccentHover");
+                SetBrush(resources, "AppSelectionBrush", "Color.Dark.Accent");
+                SetBrush(resources, "AppSelectionTextBrush", "Color.OnAccent");
+                SetBrush(resources, "AppDangerBrush", "Color.Dark.Danger");
+                SetBrush(resources, "AppSuccessBrush", "Color.Dark.Success");
+                SetBrush(resources, "AppWarningBrush", "Color.Dark.Warning");
             }
             else
             {
-                SetBrush(resources, "AppBackgroundBrush", "#F4F6F8");
-                SetBrush(resources, "AppSurfaceBrush", "#FFFFFF");
-                SetBrush(resources, "AppSurfaceAltBrush", "#EEF2F6");
-                SetBrush(resources, "AppBorderBrush", "#D6DDE6");
-                SetBrush(resources, "AppTextBrush", "#1F2937");
-                SetBrush(resources, "AppMutedTextBrush", "#667085");
-                SetBrush(resources, "AppInputBrush", "#FFFFFF");
-                SetBrush(resources, "AppInputTextBrush", "#1F2937");
-                SetBrush(resources, "AppDisabledInputBrush", "#EEF2F6");
-                SetBrush(resources, "AppDisabledTextBrush", "#7B8794");
-                SetBrush(resources, "AppButtonBrush", "#F3F4F6");
-                SetBrush(resources, "AppAccentBrush", "#2563EB");
-                SetBrush(resources, "AppAccentHoverBrush", "#1D4ED8");
-                SetBrush(resources, "AppSelectionBrush", "#2563EB");
-                SetBrush(resources, "AppSelectionTextBrush", "#FFFFFF");
-                SetBrush(resources, "AppDangerBrush", "#DC2626");
-                SetBrush(resources, "AppSuccessBrush", "#15803D");
-                SetBrush(resources, "AppWarningBrush", "#B91C1C");
+                SetBrush(resources, "AppBackgroundBrush", "Color.Background");
+                SetBrush(resources, "AppSurfaceBrush", "Color.Surface");
+                SetBrush(resources, "AppSurfaceAltBrush", "Color.SurfaceAlt");
+                SetBrush(resources, "AppBorderBrush", "Color.Border");
+                SetBrush(resources, "AppTextBrush", "Color.Text");
+                SetBrush(resources, "AppMutedTextBrush", "Color.TextMuted");
+                SetBrush(resources, "AppInputBrush", "Color.Surface");
+                SetBrush(resources, "AppInputTextBrush", "Color.Text");
+                SetBrush(resources, "AppDisabledInputBrush", "Color.SurfaceAlt");
+                SetBrush(resources, "AppDisabledTextBrush", "Color.TextDisabled");
+                SetBrush(resources, "AppButtonBrush", "Color.SurfaceAlt");
+                SetBrush(resources, "AppAccentBrush", "Color.Accent");
+                SetBrush(resources, "AppAccentHoverBrush", "Color.AccentHover");
+                SetBrush(resources, "AppSelectionBrush", "Color.Accent");
+                SetBrush(resources, "AppSelectionTextBrush", "Color.OnAccent");
+                SetBrush(resources, "AppDangerBrush", "Color.Danger");
+                SetBrush(resources, "AppSuccessBrush", "Color.Success");
+                SetBrush(resources, "AppWarningBrush", "Color.Warning");
             }
 
             ApplySystemBrushes(resources);
@@ -157,11 +155,8 @@ namespace ElektroOffer_app.Services
             }
         }
 
-        private static bool IsWindows11OrNewer()
-            => OperatingSystem.IsWindowsVersionAtLeast(10, 0, 22000);
-
-        private static void SetBrush(ResourceDictionary resources, string key, string color)
-            => resources[key] = new SolidColorBrush((Color)ColorConverter.ConvertFromString(color));
+        private static void SetBrush(ResourceDictionary resources, string brushKey, string colorToken)
+            => resources[brushKey] = new SolidColorBrush((Color)resources[colorToken]);
 
         private sealed record ThemeSettings(string ThemeMode);
     }
