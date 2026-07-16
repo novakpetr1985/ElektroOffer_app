@@ -1,8 +1,10 @@
-# Manuální testy - ElektroOffer 1.10.0
+# Manuální testy - ElektroOffer 1.11.1
 
 Datum aktualizace: 2026-07-15  
-Testovaná větev: `codex/1.10.0-catalog-import`
-Testovaná verze: `1.10.0`
+Testovaná větev: `hotfix/1.11.1-stabilization`
+Testovaná verze: `1.11.1-hotfix`
+
+Strukturované release scénáře s ID, prioritou, daty, očekáváním a polem pro výsledek jsou v `docs/testing/MANUAL_TEST_SCENARIOS.md`.
 
 Tento checklist doplňuje automatické unit a integrační testy. Používej ho hlavně před PR do `dev`, `test` nebo `main`, případně před tagem/release.
 
@@ -17,8 +19,8 @@ Tento checklist doplňuje automatické unit a integrační testy. Používej ho 
 4. Spusť build.
 5. Spusť aplikaci.
 6. Ověř, že aplikace nastartuje bez chyby.
-7. Ověř, že vznikne `ElektroOffer_app/elektrooffer.db`.
-8. Otevři `ElektroOffer_app/elektrooffer.sqbpro` a ověř, že DB obsahuje testovací data ze seedu.
+7. Ověř, že vznikne `%LocalAppData%\ElektroOffer\elektrooffer.db`.
+8. Otevři tuto DB v SQLite Browseru a ověř výchozí katalog ze seedu.
 
 Očekávání:
 - `Tasks`: 5 záznamů
@@ -32,7 +34,7 @@ Očekávání:
 ### 1.2 SQL Seed
 1. Ověř, že seed je uložený v `ElektroOffer_app/Data/Seed/elektrooffer_1_9_0.sql`.
 2. Ověř, že v aplikaci nejsou žádná jiná ručně vymyšlená seed data.
-3. Ověř, že aplikace při běhu z Visual Studia používá `ElektroOffer_app/elektrooffer.db`, ne kopii v `bin`.
+3. Ověř, že aplikace používá `%LocalAppData%\ElektroOffer\elektrooffer.db`, ne kopii v projektu, `bin` ani instalační složce.
 
 ---
 

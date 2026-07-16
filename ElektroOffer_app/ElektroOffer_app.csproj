@@ -44,10 +44,10 @@
       <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
 
       <!-- Hlavní verze aplikace (suffixy povoleny) -->
-      <Version>1.11.0-feature</Version>
+      <Version>1.11.1-hotfix</Version>
 
       <!-- Verze souboru (Windows Explorer) -->
-      <FileVersion>1.11.0.0</FileVersion>
+      <FileVersion>1.11.1.0</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>

@@ -1,5 +1,30 @@
 # Changelog
 
+## [1.11.1] - rozpracováno
+
+### Opraveno
+
+- Souborová SQLite databáze se ukládá do `%LocalAppData%\ElektroOffer`; existující cílová DB se nikdy automaticky nepřepisuje a starší DB lze jednorázově bezpečně převzít.
+- Bootstrap vždy idempotentně připraví chybějící tabulky/indexy a seed spustí pouze pro prázdný katalog.
+- Unit testovací základna používá skutečnou SQLite databázi v paměti místo výchozí produkční cesty.
+
+### Změněno
+
+- ARES je abstrahován přes `IAresClient`, podporuje injektovaný `HttpClient`, timeout a zrušení požadavku.
+- CI ukládá Cobertura coverage, rozšířenou diagnostiku a nabízí bezpečnou ruční simulaci selhání.
+
+### Testování
+
+- Přidány testy AppData cesty, převzetí starší DB, ochrany existující DB, idempotentního bootstrapu a zachování uživatelského katalogu.
+- ARES testy používají lokální JSON fixtures a pokrývají úspěch, 400/404/429/500, timeout, poškozená/neúplná data a cancellation bez síťových požadavků.
+- Kontrolní běh prošel s 76 unit a 33 integračními testy; kombinované řádkové pokrytí je 57,4 % a ARES klient dosahuje 91,9 %.
+
+### Dokumentace
+
+- Doplněn životní cyklus databáze, popis ARES integrace, CI diagnostika, branch/release workflow, manuální scénáře, testovací roadmapa, audit tisku/šablon a návrh terénní podaplikace pro směr k 2.0.
+
+---
+
 ## [1.11.0] - rozpracováno
 
 ### Změněno
