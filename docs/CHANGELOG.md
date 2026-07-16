@@ -1,5 +1,25 @@
 # Changelog
 
+## [1.11.0] - rozpracováno
+
+### Změněno
+
+- Přidán centrální WPF slovník design tokenů pro barvy, typografii, velikosti, odsazení, rádiusy, ohraničení, stíny a animace.
+- Hlavní i fakturační aplikace používají jeden fyzický zdroj tokenů a stávající `App*Brush` názvy fungují jako kompatibilní sémantické aliasy.
+- Světlý a tmavý motiv čtou palety z tokenů namísto hodnot zapsaných v C#.
+- Tisk a PDF export čtou dokumentové písmo, velikost a okraje ze stejných tokenů jako WPF rozhraní.
+
+### Opraveno
+
+- Token `Space.2` typu `Double` už není přiřazen vlastnosti `GroupBox.Padding`; nový `Spacing.GroupBoxPadding` má správný WPF typ `Thickness` a zabraňuje pádu `XamlParseException` při vykreslení okna.
+
+### Testy
+
+- Přidány automatické STA integrační testy, které za běhu načtou tokeny, barvy a styly obou WPF projektů a aplikují všechny implicitní styly podporovaných ovládacích prvků.
+- Regresní test ověřuje typy klíčových tokenů (`Double`, `Thickness`) a konkrétní hodnotu odsazení `GroupBox`.
+- Ověřeno 63 unit a 30 integračních testů; tři dialogové smoke testy zůstávají explicitní.
+- Kombinované řádkové pokrytí unit a integrační sady je přibližně 56 %; README nově popisuje hlavní nepokryté oblasti a nutnost manuálního release checklistu.
+
 Všechny důležité změny projektu jsou dokumentovány v tomto souboru.  
 Formát vychází z [Keep a Changelog](https://keepachangelog.com/cs/1.0.0/).
 
