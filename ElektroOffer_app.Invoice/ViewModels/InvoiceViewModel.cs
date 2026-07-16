@@ -13,7 +13,7 @@ namespace ElektroOffer_app.Invoice.ViewModels
     public class InvoiceViewModel : INotifyPropertyChanged
     {
         private readonly FakturoidExportService _fakturoidExport = new();
-        private readonly AresLookupService _aresLookup = new();
+        private readonly IAresClient _aresLookup;
         private readonly InvoiceFileService _invoiceFiles = new();
         private readonly PdfInvoiceExportService _pdfExport = new();
         private string _statusText = "Navrh faktury pripraven";
@@ -21,8 +21,12 @@ namespace ElektroOffer_app.Invoice.ViewModels
         private bool _hasUnsavedChanges;
         private string? _currentInvoicePath;
 
-        public InvoiceViewModel(IEnumerable<InvoiceSourceItem> sourceItems, InvoiceDraft? savedDraft = null)
+        public InvoiceViewModel(
+            IEnumerable<InvoiceSourceItem> sourceItems,
+            InvoiceDraft? savedDraft = null,
+            IAresClient? aresClient = null)
         {
+            _aresLookup = aresClient ?? new AresLookupService();
             Draft = savedDraft != null
                 ? InvoiceDraftCloneService.Clone(savedDraft)
                 : CreateDraftFromSource(sourceItems);

@@ -5,27 +5,39 @@ using ElektroOffer_app.Invoice.Models;
 
 namespace ElektroOffer_app.Invoice.Services
 {
-    public class AresLookupService
+    public class AresLookupService : IAresClient
     {
-        private static readonly HttpClient Client = new()
+        private static readonly HttpClient DefaultClient = new()
         {
-            BaseAddress = new Uri("https://ares.gov.cz/ekonomicke-subjekty-v-be/rest/")
+            BaseAddress = new Uri("https://ares.gov.cz/ekonomicke-subjekty-v-be/rest/"),
+            Timeout = TimeSpan.FromSeconds(15)
         };
+        private readonly HttpClient _client;
 
-        public async Task<InvoiceParty?> FindByRegistrationNoAsync(string registrationNo)
+        public AresLookupService(HttpClient? client = null)
+        {
+            _client = client ?? DefaultClient;
+        }
+
+        public async Task<InvoiceParty?> FindByRegistrationNoAsync(
+            string registrationNo,
+            CancellationToken cancellationToken = default)
         {
             var ico = NormalizeRegistrationNo(registrationNo);
             if (ico == null)
                 return null;
 
-            using var response = await Client.GetAsync($"ekonomicke-subjekty/{ico}");
+            using var response = await _client.GetAsync(
+                $"ekonomicke-subjekty/{ico}",
+                HttpCompletionOption.ResponseHeadersRead,
+                cancellationToken);
             if (response.StatusCode == HttpStatusCode.NotFound)
                 return null;
 
             response.EnsureSuccessStatusCode();
 
-            await using var stream = await response.Content.ReadAsStreamAsync();
-            using var document = await JsonDocument.ParseAsync(stream);
+            await using var stream = await response.Content.ReadAsStreamAsync(cancellationToken);
+            using var document = await JsonDocument.ParseAsync(stream, cancellationToken: cancellationToken);
             var root = document.RootElement;
 
             var party = new InvoiceParty
