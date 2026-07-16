@@ -170,13 +170,16 @@ Workflow `.github/workflows/elektrooffer-ci-pipeline.yml` je nastavený tak, aby
 
 ### Import materiálů
 
-Pro pravidelné doplňování materiálů z XLSX/CSV je vhodnější import v UI než ruční SQL v databázi.
+Katalog se doplňuje přímo z jednoho XLSX přes `Soubor -> Importovat katalog z Excelu...`.
 
 Doporučený postup:
-- XLSX uložit jako CSV
-- v aplikaci přidat import s mapováním sloupců na materiál, dodavatele a cenu
-- při importu validovat povinná technická data, cenu a jednotku
-- duplicitní záznamy řešit jako aktualizaci existující položky, ne jako nový řádek
+- zkopírovat šablonu `docs/templates/ElektroOffer_Catalog_Import_Template_1.0.xlsx`
+- vyplnit jednotlivé listy; názvy listů a hlaviček neměnit
+- nejdříve vyplnit hlavní číselníky a potom vazební listy `TaskSpecifications` a `MaterialPrices`
+- spustit import a případné chyby opravit podle názvu listu, řádku a sloupce
+- po úspěchu zkontrolovat načtené volby v sekcích PRÁCE a MATERIÁL
+
+Import kontroluje povinné hodnoty, čísla, datum, duplicity a odkazy mezi listy. Existující položky aktualizuje bez rozlišování velikosti písmen; chybějící přidá a žádné záznamy automaticky nemaže. Neplatný soubor se do databáze nezapíše. Přímý XLSX import nevyžaduje export jednotlivých listů do CSV.
 
 Ruční SQL je vhodné jen pro jednorázovou servisní úpravu databáze, protože snadno obejde validaci a může vytvořit duplicity.
 

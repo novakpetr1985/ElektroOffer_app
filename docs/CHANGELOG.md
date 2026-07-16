@@ -5,6 +5,21 @@ Formát vychází z [Keep a Changelog](https://keepachangelog.com/cs/1.0.0/).
 
 ---
 
+## [1.10.0] - 2026-07-15
+
+### Přidáno
+- Přímý import normalizovaného katalogu z jednoho XLSX přes menu `Soubor -> Importovat katalog z Excelu...`.
+- Připravená šablona `docs/templates/ElektroOffer_Catalog_Import_Template_1.0.xlsx` pro práce, specifikace, podklady, umístění, materiály, kategorie, dodavatele a dodavatelské ceny.
+- Kontrola povinných listů, hlaviček, datových typů, duplicit a vazeb mezi listy před zápisem do databáze.
+- Integrační testy prvního importu, opakovaného importu a odmítnutí neplatných vazeb bez změny databáze.
+
+### Změněno
+- Existující záznamy se při importu aktualizují podle názvu, dodavatelské ceny podle dvojice dodavatel + kód. Import automaticky nic nemaže.
+- Celý zápis probíhá v jedné databázové transakci.
+- Hlavní i fakturační aplikace používají společnou verzi `1.10.0-feature`.
+
+---
+
 ## [1.9.1] - 2026-07-15
 
 ### Změněno

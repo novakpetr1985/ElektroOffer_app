@@ -1,8 +1,8 @@
-# Manuální testy - ElektroOffer 1.9.1
+# Manuální testy - ElektroOffer 1.10.0
 
 Datum aktualizace: 2026-07-15  
-Testovaná větev: `codex/1.9.1-service-cleanup`
-Testovaná verze: `1.9.1`
+Testovaná větev: `codex/1.10.0-catalog-import`
+Testovaná verze: `1.10.0`
 
 Tento checklist doplňuje automatické unit a integrační testy. Používej ho hlavně před PR do `dev`, `test` nebo `main`, případně před tagem/release.
 
@@ -237,9 +237,33 @@ Očekávání:
 3. Ověř náhled/dialog.
 4. Ověř, že se v tiskovém výstupu zobrazí položky a součty.
 
-## 9. GitHub Actions A PR Proces
+## 9. Import katalogu z XLSX
 
-### 9.1 CI na feature větvi
+### 9.1 Platná šablona
+1. Zkopíruj `docs/templates/ElektroOffer_Catalog_Import_Template_1.0.xlsx` mimo repozitář.
+2. Změň cenu existující práce a materiálu, přidej novou práci se specifikací a nový materiál s dodavatelem a cenou.
+3. V aplikaci zvol `Soubor -> Importovat katalog z Excelu...` a vyber soubor.
+4. Ověř hlášení o počtu nových a aktualizovaných záznamů.
+5. Ověř nové i změněné hodnoty v kaskádách PRÁCE a MATERIÁL bez restartu aplikace.
+
+### 9.2 Opakovaný import
+1. Importuj stejný soubor podruhé.
+2. Ověř, že nevzniknou duplicitní úkony, materiály, dodavatelé ani dodavatelské ceny.
+3. Ověř, že import žádný existující záznam automaticky nesmazal.
+
+### 9.3 Chybné vazby a hodnoty
+1. Do kopie šablony zadej u materiálu kategorii, která není v listu `Categories`.
+2. Spusť import a ověř chybu s listem, řádkem a sloupcem.
+3. Ověř, že se z chybného sešitu neuložila ani jeho jinak platná data.
+4. Zopakuj kontrolu s nečíselnou cenou, duplicitním názvem a odstraněným povinným listem.
+
+### 9.4 Zrušení výběru
+1. Otevři import a dialog zavři bez výběru souboru.
+2. Ověř, že aplikace nezobrazí chybu a databázi nezmění.
+
+## 10. GitHub Actions A PR Proces
+
+### 10.1 CI na feature větvi
 1. Pushni změnu do `feature/**`.
 2. Ověř, že se spustí GitHub Actions workflow `ElektroOffer CI Pipeline`.
 3. Ověř, že projde `Restore`, `Build solution`, `Run unit tests` a `Run integration tests`.
@@ -247,16 +271,16 @@ Očekávání:
 
 Poznámka: Unit a integrační testy jsou v CI oddělené, aby bylo hned vidět, která sada případně selhala.
 
-### 9.2 PR do dev/test/main
+### 10.2 PR do dev/test/main
 1. Vytvoř PR do `dev`, `test` nebo `main`.
 2. Ověř, že se spustí stejné CI.
 3. Merge povol až po zeleném CI a ruční kontrole.
 
-### 9.3 Release
+### 10.3 Release
 1. Release publish se spouští pouze při tagu.
 2. Ověř, že běžný push do feature větve release build nespouští.
 
-### 9.4 Diagnostický log
+### 10.4 Diagnostický log
 1. Běžný krátký souhrn `elektrooffer-ci-summary` se vytvoří po každém běhu, včetně úspěšného běhu.
 2. Dlouhý diagnostický log se vytvoří pouze při chybě CI nebo release jobu.
 
@@ -274,4 +298,5 @@ Poznámka: Unit a integrační testy jsou v CI oddělené, aby bylo hned vidět,
 | Fakturace | | |
 | Vzhled | | |
 | Tisk/export | | |
+| Import katalogu XLSX | | |
 | GitHub Actions | | |

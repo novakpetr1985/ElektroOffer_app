@@ -10,6 +10,7 @@ using ElektroOffer_app.Invoice.Models;
 using ElektroOffer_app.Invoice.Services;
 using ElektroOffer_app.Models;
 using ElektroOffer_app.Services;
+using ElektroOffer_app.Services.Abstractions;
 using ElektroOffer_app.ViewModels.Items;
 
 namespace ElektroOffer_app.ViewModels
@@ -37,6 +38,9 @@ namespace ElektroOffer_app.ViewModels
         private readonly IPrintService _printService;
         private readonly IApplicationService _applicationService;
         private readonly IWindowService _windowService;
+        private readonly CatalogWorkbookImportService? _catalogImportService;
+        private readonly IFileDialogService? _catalogImportDialog;
+        private readonly IMessageBoxService? _catalogImportMessages;
 
         // =========================================================
         // COLLECTIONS
@@ -138,6 +142,7 @@ namespace ElektroOffer_app.ViewModels
         public ICommand SaveAsCommand { get; }
         public ICommand PrintCommand { get; }
         public ICommand InvoiceCommand { get; }
+        public ICommand ImportCatalogCommand { get; }
         public ICommand SettingsCommand { get; }
         public ICommand ExitCommand { get; }
         public ICommand AboutCommand { get; }
@@ -166,7 +171,10 @@ namespace ElektroOffer_app.ViewModels
             IMessageService messageService,
             IPrintService printService,
             IApplicationService applicationService,
-            IWindowService windowService)
+            IWindowService windowService,
+            CatalogWorkbookImportService? catalogImportService = null,
+            IFileDialogService? catalogImportDialog = null,
+            IMessageBoxService? catalogImportMessages = null)
         {
             // DI – všechny služby + jeden sdílený AppDbContext
             _projectService = projectService;
@@ -178,6 +186,9 @@ namespace ElektroOffer_app.ViewModels
             _printService = printService;
             _applicationService = applicationService;
             _windowService = windowService;
+            _catalogImportService = catalogImportService;
+            _catalogImportDialog = catalogImportDialog;
+            _catalogImportMessages = catalogImportMessages;
 
             LoadCatalogDataFromDb();
 
@@ -199,6 +210,7 @@ namespace ElektroOffer_app.ViewModels
             SaveAsCommand = new RelayCommand(_ => SaveAs());
             PrintCommand = new RelayCommand(_ => Print());
             InvoiceCommand = new RelayCommand(_ => ShowInvoice());
+            ImportCatalogCommand = new RelayCommand(_ => ImportCatalog(), _ => _catalogImportService != null);
             SettingsCommand = new RelayCommand(_ => ShowSettings());
             ExitCommand = new RelayCommand(_ => Exit());
             AboutCommand = new RelayCommand(_ => ShowAbout());
@@ -817,6 +829,35 @@ namespace ElektroOffer_app.ViewModels
                 _invoiceDraft = savedDraft;
                 MarkAsChanged();
             }
+        }
+
+        public void ImportCatalog()
+        {
+            if (_catalogImportService == null || _catalogImportDialog == null || _catalogImportMessages == null)
+                return;
+
+            var path = _catalogImportDialog.ShowOpenFileDialog(
+                "Katalog ElektroOffer (*.xlsx)|*.xlsx",
+                "Importovat katalog z Excelu");
+            if (path == null) return;
+
+            var result = _catalogImportService.Import(path);
+            if (!result.Success)
+            {
+                var details = string.Join(Environment.NewLine, result.Issues.Take(20)
+                    .Select(x => $"{x.Sheet}, řádek {x.Row}, {x.Column}: {x.Message}"));
+                if (result.Issues.Count > 20)
+                    details += $"{Environment.NewLine}… a dalších {result.Issues.Count - 20} chyb.";
+                _catalogImportMessages.Show(details, "Import katalogu – chyby", System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Error);
+                return;
+            }
+
+            LoadCatalogDataFromDb();
+            _catalogImportMessages.Show(
+                $"Import dokončen.\n\nNové záznamy: {result.Inserted}\nAktualizované záznamy: {result.Updated}",
+                "Import katalogu",
+                System.Windows.MessageBoxButton.OK,
+                System.Windows.MessageBoxImage.Information);
         }
 
         public void ShowSettings()

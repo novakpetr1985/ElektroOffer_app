@@ -24,7 +24,10 @@ namespace ElektroOffer_app.Tests.Unit.ViewModels
                 Mock.Of<IMessageService>(),
                 Mock.Of<IPrintService>(),
                 Mock.Of<IApplicationService>(),
-                Mock.Of<IWindowService>())!;
+                Mock.Of<IWindowService>(),
+                null,
+                null,
+                null)!;
 
             var item = vm.WorkCalcItems[0];
             item.SelectedWorkTaskEntity = new WorkTask { BasePrice = 960m };

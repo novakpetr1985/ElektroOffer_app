@@ -40,6 +40,11 @@
                 <MenuItem Header="_Fakturace"
                           Command="{Binding InvoiceCommand}" />
 
+                <Separator/>
+
+                <MenuItem Header="_Importovat katalog z Excelu..."
+                          Command="{Binding ImportCatalogCommand}" />
+
                 <MenuItem Header="_Konec"
                           InputGestureText="Alt+F4"
                           Command="{Binding ExitCommand}" />
