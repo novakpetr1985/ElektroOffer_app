@@ -15,12 +15,19 @@ namespace ElektroOffer_app.Services
 
         public static void EnsureReady(AppDbContext db)
         {
+            var scriptPath = ResolveSeedScriptPath();
+            var script = File.ReadAllText(scriptPath);
+            var dataMarker = script.IndexOf("-- 3) DATA", StringComparison.Ordinal);
+            if (dataMarker < 0)
+                throw new InvalidDataException($"Seed SQL skript {SeedScriptName} neobsahuje oddělovač dat.");
+
+            // CREATE TABLE/INDEX IF NOT EXISTS is safe for both new and existing databases.
+            ExecuteScript(db, script[..dataMarker]);
+
             if (HasCatalogData(db))
                 return;
 
-            var scriptPath = ResolveSeedScriptPath();
-            var script = File.ReadAllText(scriptPath);
-            ExecuteScript(db, script);
+            ExecuteScript(db, "PRAGMA foreign_keys = ON;" + Environment.NewLine + script[dataMarker..]);
         }
 
         private static bool HasCatalogData(AppDbContext db)

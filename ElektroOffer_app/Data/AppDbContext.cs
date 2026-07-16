@@ -2,6 +2,7 @@ using ElektroOffer_app.Models;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using System.IO;
+using ElektroOffer_app.Services;
 
 namespace ElektroOffer_app.Data
 {
@@ -18,9 +19,8 @@ namespace ElektroOffer_app.Data
     //      1) Běžný provoz aplikace (SQLite soubor elektrooffer.db)
     //      2) Unit testy (SQLite InMemory přes DbContextOptions)
     //
-    // Vývojová databáze se při běhu z Visual Studia ukládá do složky projektu,
-    // tedy vedle elektrooffer.sqbpro. Aplikace a SQLite Browser tak otevírají
-    // stejný soubor.
+    // Produkční i vývojová souborová databáze se ukládá do uživatelského
+    // %LocalAppData%\ElektroOffer. Testy předávají vlastní DbContextOptions.
     //
     // Katalog PRÁCE používá samostatné tabulky:
     // - WorkTask, WorkSpecification,
@@ -92,39 +92,10 @@ namespace ElektroOffer_app.Data
 
             var connectionString = new SqliteConnectionStringBuilder
             {
-                DataSource = ResolveDatabasePath()
+                DataSource = new AppDataPathProvider().DatabasePath
             }.ToString();
 
             optionsBuilder.UseSqlite(connectionString);
-        }
-
-        private static string ResolveDatabasePath()
-        {
-            var projectDirectory = FindProjectDirectory(AppContext.BaseDirectory)
-                                ?? FindProjectDirectory(Environment.CurrentDirectory);
-
-            if (projectDirectory != null)
-                return Path.Combine(projectDirectory.FullName, "elektrooffer.db");
-
-            return Path.Combine(AppContext.BaseDirectory, "elektrooffer.db");
-        }
-
-        private static DirectoryInfo? FindProjectDirectory(string startPath)
-        {
-            var directory = new DirectoryInfo(startPath);
-
-            while (directory != null)
-            {
-                var hasProjectFile = File.Exists(Path.Combine(directory.FullName, "ElektroOffer_app.csproj"));
-                var hasSqliteBrowserProject = File.Exists(Path.Combine(directory.FullName, "elektrooffer.sqbpro"));
-
-                if (hasProjectFile || hasSqliteBrowserProject)
-                    return directory;
-
-                directory = directory.Parent;
-            }
-
-            return null;
         }
 
         // =========================================================================

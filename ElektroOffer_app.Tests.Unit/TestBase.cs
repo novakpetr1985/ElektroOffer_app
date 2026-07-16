@@ -1,5 +1,6 @@
 using ElektroOffer_app.Data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Data.Sqlite;
 using NUnit.Framework;
 
 namespace ElektroOffer_app.Tests.Unit
@@ -61,6 +62,7 @@ namespace ElektroOffer_app.Tests.Unit
         // Null-forgiving operator (!) je bezpečný, protože SetUp garantuje,
         // že _db bude vždy inicializováno před každým testem.
         protected AppDbContext _db = null!;
+        private SqliteConnection _connection = null!;
 
         // -----------------------------------------------------------------
         // 🚀 SETUP – spustí se před KAŽDÝM testem
@@ -82,10 +84,12 @@ namespace ElektroOffer_app.Tests.Unit
         [SetUp]
         public void SetUp()
         {
-            _db = new AppDbContext();
-
-            // kompletní reset databáze
-            _db.Database.EnsureDeleted();
+            _connection = new SqliteConnection("Data Source=:memory:");
+            _connection.Open();
+            var options = new DbContextOptionsBuilder<AppDbContext>()
+                .UseSqlite(_connection)
+                .Options;
+            _db = new AppDbContext(options);
             _db.Database.EnsureCreated();
         }
 
@@ -99,6 +103,7 @@ namespace ElektroOffer_app.Tests.Unit
         public void TearDown()
         {
             _db.Dispose();
+            _connection.Dispose();
         }
     }
 }
