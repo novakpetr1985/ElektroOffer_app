@@ -1,15 +1,27 @@
 using System.Windows;
 using ElektroOffer_app.Invoice.Models;
+using ElektroOffer_app.Invoice.Services;
 using ElektroOffer_app.Invoice.ViewModels;
 
 namespace ElektroOffer_app.Invoice.Views
 {
+    /// <summary>Hostuje fakturační ViewModel a řeší pouze životní cyklus WPF okna.</summary>
     public partial class InvoiceWindow : Window
     {
         public InvoiceWindow(IEnumerable<InvoiceSourceItem> sourceItems, InvoiceDraft? savedDraft = null)
         {
             InitializeComponent();
-            var viewModel = new InvoiceViewModel(sourceItems, savedDraft);
+            var sourceList = sourceItems.ToList();
+            if (savedDraft == null && sourceList.Count == 0)
+            {
+                var recovered = new InvoiceAutosaveService().LoadLatest();
+                if (recovered != null && new WpfInvoiceMessageService().ShowYesNo(
+                        "Byl nalezen automaticky uložený koncept faktury. Obnovit jej?",
+                        "Obnova faktury"))
+                    savedDraft = recovered;
+            }
+
+            var viewModel = new InvoiceViewModel(sourceList, savedDraft);
             viewModel.SaveToProjectRequested += (_, draft) =>
             {
                 SavedDraft = draft;

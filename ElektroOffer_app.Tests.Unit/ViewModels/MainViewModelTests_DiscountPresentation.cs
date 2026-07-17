@@ -7,6 +7,7 @@ using NUnit.Framework;
 namespace ElektroOffer_app.Tests.Unit.ViewModels
 {
     [TestFixture]
+    /// <summary>Ověřuje přenos slev a součtů z hlavního ViewModelu do prezentačních dat.</summary>
     public class MainViewModelTests_DiscountPresentation : TestBase
     {
         [Test]

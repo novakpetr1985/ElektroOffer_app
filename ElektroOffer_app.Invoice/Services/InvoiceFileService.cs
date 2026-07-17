@@ -4,6 +4,9 @@ using ElektroOffer_app.Invoice.Models;
 
 namespace ElektroOffer_app.Invoice.Services
 {
+    /// <summary>
+    /// Ukládá a načítá samostatné přenositelné soubory faktur ve formátu JSON.
+    /// </summary>
     public class InvoiceFileService
     {
         private static readonly JsonSerializerOptions JsonOptions = new()

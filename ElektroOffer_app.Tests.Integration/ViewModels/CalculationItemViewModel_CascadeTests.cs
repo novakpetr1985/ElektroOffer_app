@@ -9,6 +9,7 @@ using NUnit.Framework;
 namespace ElektroOffer_app.Tests.Integration.ViewModels
 {
     [TestFixture]
+    /// <summary>Ověřuje pracovní a materiálové kaskády ViewModelu nad skutečnou databází.</summary>
     public class CalculationItemViewModel_CascadeTests
     {
         private SqliteConnection _connection = null!;

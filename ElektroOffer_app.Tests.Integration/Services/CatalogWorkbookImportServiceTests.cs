@@ -10,6 +10,7 @@ using System.Xml.Linq;
 namespace ElektroOffer_app.Tests.Integration.Services
 {
     [TestFixture]
+    /// <summary>Ověřuje validaci a transakční import katalogového XLSX bez částečných zápisů.</summary>
     public class CatalogWorkbookImportServiceTests
     {
         private SqliteConnection _connection = null!;

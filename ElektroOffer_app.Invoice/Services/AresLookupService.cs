@@ -5,6 +5,9 @@ using ElektroOffer_app.Invoice.Models;
 
 namespace ElektroOffer_app.Invoice.Services
 {
+    /// <summary>
+    /// Ověří české IČO a načte veřejné identifikační údaje firmy z REST API ARES.
+    /// </summary>
     public class AresLookupService : IAresClient
     {
         private static readonly HttpClient DefaultClient = new()

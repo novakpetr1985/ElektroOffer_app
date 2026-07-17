@@ -13,6 +13,9 @@ namespace ElektroOffer_app.Services
     // Poslední krok zobrazuje název položky od dodavatele; cena a jednotka
     // se načtou z MaterialPrice pro výpočet řádku.
     // =========================================================================
+    /// <summary>
+    /// Načítá navazující volby materiálu v pořadí kategorie, produkt, dodavatel a nabídka.
+    /// </summary>
     public class MaterialCascadeService
     {
         private readonly AppDbContext _db;

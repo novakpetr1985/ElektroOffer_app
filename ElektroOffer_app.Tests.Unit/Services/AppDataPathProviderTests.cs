@@ -4,6 +4,7 @@ using NUnit.Framework;
 namespace ElektroOffer_app.Tests.Unit.Services;
 
 [TestFixture]
+/// <summary>Ověřuje umístění DB, bezpečnou adopci legacy souboru a zákaz přepsání.</summary>
 public class AppDataPathProviderTests
 {
     private string _root = null!;

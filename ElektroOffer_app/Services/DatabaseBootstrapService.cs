@@ -32,9 +32,6 @@ namespace ElektroOffer_app.Services
 
         private static bool HasCatalogData(AppDbContext db)
         {
-            if (!HasUserTables(db))
-                return false;
-
             return db.Tasks.Any() ||
                    db.Specifications.Any() ||
                    db.BaseMaterials.Any() ||
@@ -43,27 +40,6 @@ namespace ElektroOffer_app.Services
                    db.Categories.Any() ||
                    db.Suppliers.Any() ||
                    db.MaterialPrices.Any();
-        }
-
-        private static bool HasUserTables(AppDbContext db)
-        {
-            var connection = db.Database.GetDbConnection();
-            var closeAfterQuery = connection.State != ConnectionState.Open;
-
-            if (closeAfterQuery)
-                connection.Open();
-
-            try
-            {
-                using var command = connection.CreateCommand();
-                command.CommandText = "SELECT COUNT(*) FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%';";
-                return Convert.ToInt32(command.ExecuteScalar()) > 0;
-            }
-            finally
-            {
-                if (closeAfterQuery)
-                    connection.Close();
-            }
         }
 
         private static void ExecuteScript(AppDbContext db, string script)

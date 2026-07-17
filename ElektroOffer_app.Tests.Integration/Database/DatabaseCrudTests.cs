@@ -8,6 +8,7 @@ using NUnit.Framework;
 namespace ElektroOffer_app.Tests.Integration.Database;
 
 [TestFixture]
+/// <summary>Ověřuje zápis, načtení a vazby základních databázových entit.</summary>
 public class DatabaseCrudTests
 {
     private SqliteConnection _connection = null!;

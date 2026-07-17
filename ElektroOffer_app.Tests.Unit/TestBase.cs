@@ -54,6 +54,7 @@ namespace ElektroOffer_app.Tests.Unit
     // TestBase není označen jako [TestFixture], protože sám neobsahuje testy.
     // Testovací třídy mají vlastní [TestFixture].
     // =====================================================================
+    /// <summary>Vytváří pro každý test izolovanou SQLite databázi a společná katalogová data.</summary>
     public abstract class TestBase
     {
         // -----------------------------------------------------------------

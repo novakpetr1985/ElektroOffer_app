@@ -1,5 +1,6 @@
 namespace ElektroOffer_app.Invoice.Models
 {
+    /// <summary>Přenáší potvrzený řádek rozpočtu z hlavní aplikace do návrhu faktury.</summary>
     public class InvoiceSourceItem
     {
         public string Type { get; set; } = string.Empty;

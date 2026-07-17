@@ -7,6 +7,7 @@ using NUnit.Framework;
 namespace ElektroOffer_app.Tests.Unit.Invoice
 {
     [TestFixture]
+    /// <summary>Regresní testy serializace, klonování, Fakturoid exportu a základního PDF.</summary>
     public class InvoiceServicesTests
     {
         [Test]

@@ -12,6 +12,9 @@ using ElektroOffer_app.Services;
 
 namespace ElektroOffer_app.Services.Implementations
 {
+    /// <summary>
+    /// Vytvoří jednoduchý FlowDocument a odešle jej do systémového PrintDialogu.
+    /// </summary>
     public class PrintService : IPrintService
     {
         public void Print(string text)

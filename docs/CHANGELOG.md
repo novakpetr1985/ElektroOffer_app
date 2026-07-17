@@ -1,5 +1,36 @@
 # Changelog
 
+## [1.12.0] - 2026-07-17
+
+### Přidáno
+
+- Profesionální vícestránková šablona `ProfessionalA4` postavená na QuestPDF, s českými znaky, opakovaným záhlavím, rekapitulací podle sazeb DPH a QR platbou.
+- Lokální SPAYD/PNG generování přes QRCoder pouze z validního uživatelem ověřeného IBANu; domácí účet se automaticky nepřevádí.
+- Bankovní údaje, DUZP, číslo objednávky, číslo zakázky a volitelné logo v návrhu faktury.
+- Automatická záchrana rozpracované faktury do `%LocalAppData%\\ElektroOffer\\Drafts\\Invoices` a nabídka obnovy samostatně spuštěného modulu.
+- Unit testy QR, validace a autosave a integrační testy jednostránkového i vícestránkového PDF s/bez QR.
+- Samostatný Windows x64 publish včetně .NET runtime; cílový počítač nepotřebuje instalovat .NET.
+- Per-user instalační EXE balíček s odinstalací a zástupci v nabídce Start a volitelně na ploše.
+
+### Změněno
+
+- Původní ručně skládaný jednostránkový PDF export byl nahrazen typovaným QuestPDF dokumentem.
+- Export PDF zůstává vždy dostupný, ale před pokračováním zobrazí souhrn neúplných či neplatných údajů.
+- Verze hlavní i fakturační aplikace je finální `1.12.0`.
+- Dokumentace fakturační šablony a QR je sjednocena s architekturou tisku; terénní měření, kaskádové ukládání a dodavatelské strategie mají jeden společný návrh.
+- Produkční služby a testovací třídy mají stručné popisy odpovědností; z databázového bootstrapu byla odstraněna nadbytečná interní kontrola tabulek.
+- Lokální release skript vytváří self-contained aplikaci i instalátor do složky `artifacts`.
+- Release workflow při tagu ukládá samostatný instalační a portable artefakt pro Windows x64.
+
+### Ověřeno
+
+- Debug build bez chyb a upozornění.
+- 88 unit testů a 36 integračních testů; kombinované řádkové pokrytí je 62,7 %.
+- Vizuální kontrola vícestránkové A4 faktury včetně zalamování, opakovaného záhlaví, DPH a QR bloku.
+- Instalace a odinstalace výsledného EXE balíčku byla ověřena na čistém cílovém umístění; uživatelský smoke test proběhl také na jiném počítači.
+
+---
+
 ## [1.11.1] - rozpracováno
 
 ### Opraveno

@@ -4,6 +4,9 @@ using ElektroOffer_app.Invoice.Models;
 
 namespace ElektroOffer_app.Invoice.Services
 {
+    /// <summary>
+    /// Mapuje interní návrh faktury do JSON payloadu kompatibilního s Fakturoid API.
+    /// </summary>
     public class FakturoidExportService
     {
         private static readonly JsonSerializerOptions JsonOptions = new()

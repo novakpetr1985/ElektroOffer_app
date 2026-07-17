@@ -9,6 +9,9 @@ using ElektroOffer_app.Services;
 
 namespace ElektroOffer_app.Services.Implementations
 {
+    /// <summary>
+    /// Produkční implementace obecných potvrzovacích dialogů hlavního okna.
+    /// </summary>
     public class MessageService : IMessageService
     {
         public bool ShowYesNo(string message, string title)

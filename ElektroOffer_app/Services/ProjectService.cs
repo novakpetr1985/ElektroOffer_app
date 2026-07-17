@@ -23,6 +23,9 @@ namespace ElektroOffer_app.Services
     //
     // ============================================================================
 
+    /// <summary>
+    /// Serializuje celý projekt do .eof a koordinuje dialogy, souborový systém a hlášení chyb.
+    /// </summary>
     public class ProjectService
     {
         // ------------------------------------------------------------------------

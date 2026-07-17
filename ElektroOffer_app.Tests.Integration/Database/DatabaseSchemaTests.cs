@@ -6,6 +6,7 @@ using NUnit.Framework;
 namespace ElektroOffer_app.Tests.Integration.Database;
 
 [TestFixture]
+/// <summary>Ověřuje tabulky, sloupce, indexy a cizí klíče výsledného SQLite schématu.</summary>
 public class DatabaseSchemaTests
 {
     private SqliteConnection _connection = null!;

@@ -16,6 +16,9 @@ namespace ElektroOffer_app.Services.Implementations
     // - Třída neobsahuje žádnou logiku ProjectService
     // - Pouze zobrazuje dialog a vrací MessageBoxResult
     // ========================================================================
+    /// <summary>
+    /// Zobrazuje informační a chybové zprávy souborových operací projektu.
+    /// </summary>
     public class RealMessageBoxService : IMessageBoxService
     {
         // --------------------------------------------------------------------

@@ -9,6 +9,9 @@ using ElektroOffer_app.Invoice.Models;
 
 namespace ElektroOffer_app.Services
 {
+    /// <summary>
+    /// Otevírá aplikační okna a převádí jejich výsledky zpět do ViewModelu.
+    /// </summary>
     public interface IWindowService
     {
         void ShowAbout();

@@ -8,6 +8,7 @@ using ElektroOffer_app.Services;
 
 namespace ElektroOffer_app.ViewModels.Items
 {
+    /// <summary>Reprezentuje jeden editovatelný řádek práce nebo materiálu včetně výpočtu a validace.</summary>
     public class CalculationItemViewModel : INotifyPropertyChanged
     {
         private readonly AppDbContext _db;

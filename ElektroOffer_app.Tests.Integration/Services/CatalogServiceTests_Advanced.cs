@@ -9,6 +9,7 @@ using NUnit.Framework;
 namespace ElektroOffer_app.Tests.Integration.Services
 {
     [TestFixture]
+    /// <summary>Ověřuje hraniční katalogové vazby, aktualizace a kaskádové scénáře.</summary>
     public class CatalogServiceTests_Advanced
     {
         private SqliteConnection _connection = null!;

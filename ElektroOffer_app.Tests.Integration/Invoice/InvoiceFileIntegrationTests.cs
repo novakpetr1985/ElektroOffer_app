@@ -7,6 +7,7 @@ using System.Text.Json;
 namespace ElektroOffer_app.Tests.Integration.Invoice
 {
     [TestFixture]
+    /// <summary>Ověřuje samostatné uložení a načtení faktury přes skutečný soubor.</summary>
     public class InvoiceFileIntegrationTests
     {
         [Test]

@@ -8,6 +8,7 @@ namespace ElektroOffer_app.Tests.Integration.UI;
 
 [TestFixture]
 [Apartment(ApartmentState.STA)]
+/// <summary>Načítá WPF resources za běhu a chrání typy tokenů i implicitní styly.</summary>
 public class DesignTokenResourceTests
 {
     [OneTimeSetUp]

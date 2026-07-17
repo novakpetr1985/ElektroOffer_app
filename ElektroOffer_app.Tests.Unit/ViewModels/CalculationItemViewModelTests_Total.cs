@@ -5,6 +5,7 @@ using NUnit.Framework;
 namespace ElektroOffer_app.Tests.Unit.ViewModels
 {
     [TestFixture]
+    /// <summary>Ověřuje výsledné ceny řádku před slevou i po slevě.</summary>
     public class CalculationItemViewModelTests_Total : TestBase
     {
         private CalculationItemViewModel CreateWorkVm(double quantity = 2)

@@ -6,6 +6,9 @@ using ElektroOffer_app.Models;
 
 namespace ElektroOffer_app.Services
 {
+    /// <summary>
+    /// Čte nízkoúrovňovou strukturu XLSX a převádí listy na řádky použitelné importérem katalogu.
+    /// </summary>
     public sealed class XlsxCatalogReader
     {
         private static readonly XNamespace Main = "http://schemas.openxmlformats.org/spreadsheetml/2006/main";

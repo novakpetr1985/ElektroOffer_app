@@ -6,6 +6,7 @@ using NUnit.Framework;
 namespace ElektroOffer_app.Tests.Unit.Invoice;
 
 [TestFixture]
+/// <summary>Ověřuje mapování a chybové stavy ARES klienta bez síťových požadavků.</summary>
 public class AresLookupServiceTests
 {
     [Test]

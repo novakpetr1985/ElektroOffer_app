@@ -6,6 +6,9 @@ using System.Xml;
 
 namespace ElektroOffer_app.Services
 {
+    /// <summary>
+    /// Validuje katalogový XLSX a provede jeho transakční upsert do normalizované databáze.
+    /// </summary>
     public sealed class CatalogWorkbookImportService
     {
         private readonly AppDbContext _db;

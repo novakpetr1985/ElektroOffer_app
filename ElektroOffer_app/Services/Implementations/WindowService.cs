@@ -11,6 +11,9 @@ using ElektroOffer_app.Views;   // ⚠ Namespace, kde máš AboutWindow
 
 namespace ElektroOffer_app.Services.Implementations
 {
+    /// <summary>
+    /// Otevírá nastavení, informace a fakturační modul a mapuje rozpočet do fakturačních položek.
+    /// </summary>
     public class WindowService : IWindowService
     {
         public void ShowAbout()

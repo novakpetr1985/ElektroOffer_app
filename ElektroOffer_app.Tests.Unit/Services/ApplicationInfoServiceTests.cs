@@ -4,6 +4,7 @@ using NUnit.Framework;
 namespace ElektroOffer_app.Tests.Unit.Services
 {
     [TestFixture]
+    /// <summary>Ověřuje čtení a formátování verze aplikace z assembly metadat.</summary>
     public class ApplicationInfoServiceTests
     {
         [Test]

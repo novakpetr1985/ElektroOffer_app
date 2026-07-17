@@ -3,22 +3,30 @@ using ElektroOffer_app.Invoice.Models;
 
 namespace ElektroOffer_app.Invoice.Services
 {
+    /// <summary>
+    /// Vytváří hlubokou kopii faktury pro bezpečné předání mezi oknem, projektem a souborem.
+    /// </summary>
     public static class InvoiceDraftCloneService
     {
         public static InvoiceDraft Clone(InvoiceDraft source)
         {
             var clone = new InvoiceDraft
             {
+                DraftId = source.DraftId == Guid.Empty ? Guid.NewGuid() : source.DraftId,
                 Supplier = CloneParty(source.Supplier),
                 Customer = CloneParty(source.Customer),
                 Number = source.Number,
                 VariableSymbol = source.VariableSymbol,
                 IssuedOn = source.IssuedOn,
+                TaxableSupplyOn = source.TaxableSupplyOn,
                 DueDays = source.DueDays,
                 Currency = source.Currency,
                 PaymentMethod = source.PaymentMethod,
                 Note = source.Note,
                 FooterNote = source.FooterNote,
+                LogoPath = source.LogoPath,
+                OrderNumber = source.OrderNumber,
+                ProjectNumber = source.ProjectNumber,
                 Lines = new ObservableCollection<InvoiceLine>(source.Lines.Select(CloneLine))
             };
 
@@ -36,7 +44,12 @@ namespace ElektroOffer_app.Invoice.Services
                 Zip = source.Zip,
                 Country = source.Country,
                 Email = source.Email,
-                Phone = source.Phone
+                Phone = source.Phone,
+                AccountPrefix = source.AccountPrefix,
+                AccountNumber = source.AccountNumber,
+                BankCode = source.BankCode,
+                Iban = source.Iban,
+                Swift = source.Swift
             };
 
         private static InvoiceLine CloneLine(InvoiceLine source)

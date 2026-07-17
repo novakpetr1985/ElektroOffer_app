@@ -4,6 +4,7 @@ using NUnit.Framework;
 namespace ElektroOffer_app.Tests.Unit.LogicTests
 {
     [TestFixture]
+    /// <summary>Ověřuje základní skládání cen práce a materiálu.</summary>
     public class PriceCalculationTests
     {
         private static double CalculateWorkTotal(

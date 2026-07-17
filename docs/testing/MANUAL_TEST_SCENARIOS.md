@@ -1,4 +1,4 @@
-# Kritické manuální scénáře ElektroOffer 1.11.1
+# Kritické manuální scénáře ElektroOffer 1.12.0
 
 Skutečný výsledek, stav a poznámku doplní tester. `P0` blokuje vydání, `P1` blokuje dotčenou funkci, `P2` je následná kontrola.
 
@@ -29,13 +29,13 @@ Skutečný výsledek, stav a poznámku doplní tester. `P0` blokuje vydání, `P
 | PRT-01 | Windows PrintDialog | P0 | Vyplněná kalkulace; tiskárna | Tisk → vybrat tiskárnu | Dialog a tisk dokončeny bez pádu | — / Neprovedeno / — | Ne |
 | PRT-02 | Microsoft Print to PDF | P0 | Jako PRT-01 | Vybrat virtuální PDF tiskárnu | Vznikne čitelné PDF se správnými daty | — / Neprovedeno / — | Ne |
 | PRT-03 | Zrušení/bez tiskárny | P1 | Různé Windows profily | Zrušit dialog; test bez tiskárny | Bez změny projektu a bez pádu | — / Neprovedeno / — | Ne |
-| PRT-04 | Mnoho položek | P0 | Více než jedna A4 | Tisk/PDF | Žádná data se neztratí; zalomení je čitelné | — / Neprovedeno / současný fakturační PDF limit 48 řádků | Částečně |
-| PRT-05 | Čeština a kontrast | P0 | Text s diakritikou; grayscale | Exportovat oba druhy PDF | Znaky, součty a text jsou čitelné | — / Neprovedeno / přímý PDF export nyní ASCII | Částečně |
+| PRT-04 | Mnoho položek | P0 | Více než jedna A4 | Tisk/PDF | Žádná data se neztratí; zalomení je čitelné | — / Neprovedeno / Windows tisk kalkulace vyžaduje ruční kontrolu | Částečně |
+| PRT-05 | Čeština a kontrast | P0 | Text s diakritikou; grayscale | Exportovat oba druhy PDF | Znaky, součty a text jsou čitelné | — / Neprovedeno / ProfessionalA4 automatizováno, tisk ručně | Částečně |
 | INV-01 | Plátce/neplátce DPH | P0 | Dvě faktury | Nastavit 21 % a 0 % | Řádky a celky odpovídají režimu | — / Neprovedeno / — | Ano |
 | INV-02 | Splatnost a VS | P0 | Datum, 14 dní, VS | Exportovat a znovu načíst | Hodnoty zůstávají a jsou v PDF/JSON | — / Neprovedeno / — | Ano |
 | INV-03 | Sleva a zaokrouhlení | P0 | Více řádků | Nastavit slevy a desetinné ceny | Součet faktury odpovídá rozpočtu | — / Neprovedeno / — | Ano |
 | INV-04 | Dlouhé/zahraniční údaje | P1 | Dlouhá adresa; měna EUR | Exportovat | Bez ořezu dat a chyb formátu | — / Neprovedeno / jednoduché PDF omezené | Částečně |
-| INV-05 | QR a více sazeb | P1 | Bankovní účet; 0/12/21 % | Vytvořit fakturu | Funkce je buď správná, nebo jasně nedostupná | — / Neprovedeno / QR není implementováno | Ano po implementaci |
+| INV-05 | QR a více sazeb | P1 | Platný IBAN; 0/12/21 % | Vytvořit fakturu | ProfessionalA4 zobrazí rekapitulaci DPH a čitelný QR kód | — / Neprovedeno / QR ověřit dvěma bankovními aplikacemi | Částečně |
 | ARES-01 | Platné IČO | P0 | Internet; známé IČO | Vyhledat jednou | Doplní veřejné údaje z oficiálního REST API | — / Neprovedeno / explicitní online smoke | Ne |
 | ARES-02 | Neplatné/neexistující IČO | P0 | `123`, validní nenalezené IČO | Vyhledat | Validace nebo „nenalezeno“, bez pádu | — / Neprovedeno / — | Ano |
 | ARES-03 | Timeout/offline/HTTP chyba | P0 | Odpojit síť nebo stub | Vyhledat | Čitelný stav chyby, UI zůstane použitelné | — / Neprovedeno / — | Ano |

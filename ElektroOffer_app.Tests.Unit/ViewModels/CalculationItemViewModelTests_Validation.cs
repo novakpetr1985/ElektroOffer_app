@@ -22,6 +22,7 @@ namespace ElektroOffer_app.Tests.Unit.ViewModels
     // v TestBase.cs, ze kterého tato třída dědí.
     // =====================================================================
     [TestFixture]
+    /// <summary>Ověřuje validaci množství, slev a povinných voleb kalkulačního řádku.</summary>
     public class CalculationItemViewModelTests_Validation : TestBase
     {
         

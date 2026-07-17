@@ -5,6 +5,7 @@ using NUnit.Framework;
 namespace ElektroOffer_app.Tests.Unit.ViewModels
 {
     [TestFixture]
+    /// <summary>Ověřuje rozpoznání prázdných a částečně vyplněných řádků.</summary>
     public class CalculationItemViewModelTests_IsEmpty : TestBase
     {
         [Test]

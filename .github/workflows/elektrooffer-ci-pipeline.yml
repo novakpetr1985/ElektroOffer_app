@@ -146,16 +146,23 @@ jobs:
           dotnet-version: "10.0.x"
 
       - name: Publish application
-        run: >
-          dotnet publish ElektroOffer_app/ElektroOffer_app.csproj
-          --configuration Release
-          --output ElektroOffer_app/publish
+        shell: pwsh
+        run: ./scripts/commands/run-publish.ps1
 
-      - name: Upload publish artifact
+      - name: Upload portable application
         uses: actions/upload-artifact@v4
         with:
-          name: elektrooffer-publish
-          path: ElektroOffer_app/publish
+          name: elektrooffer-portable-win-x64
+          path: artifacts/publish/win-x64
+          retention-days: 30
+
+      - name: Upload Windows installer
+        uses: actions/upload-artifact@v4
+        with:
+          name: elektrooffer-installer-win-x64
+          path: artifacts/installer/*.exe
+          if-no-files-found: error
+          retention-days: 30
 
   diagnostic:
     name: Diagnostic log

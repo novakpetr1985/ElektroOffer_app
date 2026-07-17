@@ -1,8 +1,9 @@
-# Manuální testy - ElektroOffer 1.11.1
+# Manuální testy - ElektroOffer 1.12.0
 
-Datum aktualizace: 2026-07-15  
-Testovaná větev: `hotfix/1.11.1-stabilization`
-Testovaná verze: `1.11.1-hotfix`
+Datum aktualizace: 2026-07-17
+
+Testovaná větev: `release/1.12.0`
+Testovaná verze: `1.12.0`
 
 Strukturované release scénáře s ID, prioritou, daty, očekáváním a polem pro výsledek jsou v `docs/testing/MANUAL_TEST_SCENARIOS.md`.
 
@@ -153,6 +154,17 @@ Očekávání:
 ---
 
 ## 6. Fakturace
+
+### ProfessionalA4, QR a automaticky uložený koncept
+
+- [ ] Vyplnit fakturu s českými znaky, dvěma sazbami DPH a více než 25 položkami; ověřit opakované záhlaví a nedělené řádky.
+- [ ] Exportovat s platným IBANem a načíst QR nejméně dvěma bankovními aplikacemi; ověřit účet, částku, CZK, splatnost, VS a zprávu.
+- [ ] Odstranit IBAN; ověřit varování a PDF bez QR, bez pádu aplikace.
+- [ ] Zavřít neuloženou samostatnou fakturu, aplikaci znovu spustit a potvrdit nabídku obnovy autosave konceptu.
+- [ ] Uložit `.eofinvoice`; ověřit opětovné načtení bankovních údajů, DUZP a identifikátorů zakázky.
+- [ ] Použít `Uložit do projektu`, uložit hlavní `.eof`, aplikaci restartovat a ověřit vloženou fakturu.
+- [ ] Vytisknout barevně i černobíle a zkontrolovat kontrast, okraje A4, podpis a čitelnost tabulky.
+- [ ] Před produkčním použitím nechat daňové náležitosti potvrdit účetním nebo daňovým specialistou.
 
 ### 6.1 Otevření z hlavní aplikace
 1. Otevři fakturaci z hlavního menu.

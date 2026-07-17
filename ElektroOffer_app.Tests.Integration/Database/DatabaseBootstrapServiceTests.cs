@@ -8,6 +8,7 @@ using NUnit.Framework;
 namespace ElektroOffer_app.Tests.Integration.Database;
 
 [TestFixture]
+/// <summary>Ověřuje první inicializaci, idempotenci a zachování existující databáze.</summary>
 public class DatabaseBootstrapServiceTests
 {
     private SqliteConnection _connection = null!;

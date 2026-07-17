@@ -34,6 +34,7 @@ namespace ElektroOffer_app.Tests.Integration.Services
 
     [TestFixture]
     [Apartment(ApartmentState.STA)]
+    /// <summary>Explicitní smoke test skutečného WPF MessageBoxu pro ruční spuštění.</summary>
     public class RealMessageBoxServiceTests
     {
         [DllImport("user32.dll")]

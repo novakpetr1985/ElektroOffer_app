@@ -10,12 +10,16 @@ using Microsoft.Win32;
 
 namespace ElektroOffer_app.Invoice.ViewModels
 {
+    /// <summary>Řídí editaci, validaci, ukládání, obnovu a export rozpracované faktury.</summary>
     public class InvoiceViewModel : INotifyPropertyChanged
     {
         private readonly FakturoidExportService _fakturoidExport = new();
         private readonly IAresClient _aresLookup;
         private readonly InvoiceFileService _invoiceFiles = new();
-        private readonly PdfInvoiceExportService _pdfExport = new();
+        private readonly PdfInvoiceExportService _pdfExport;
+        private readonly InvoiceValidationService _invoiceValidation;
+        private readonly IInvoiceMessageService _messageService;
+        private readonly InvoiceAutosaveService _autosave;
         private string _statusText = "Navrh faktury pripraven";
         private bool _isInitializing = true;
         private bool _hasUnsavedChanges;
@@ -24,9 +28,17 @@ namespace ElektroOffer_app.Invoice.ViewModels
         public InvoiceViewModel(
             IEnumerable<InvoiceSourceItem> sourceItems,
             InvoiceDraft? savedDraft = null,
-            IAresClient? aresClient = null)
+            IAresClient? aresClient = null,
+            IInvoiceMessageService? messageService = null,
+            InvoiceValidationService? invoiceValidation = null,
+            PdfInvoiceExportService? pdfExport = null,
+            InvoiceAutosaveService? autosave = null)
         {
             _aresLookup = aresClient ?? new AresLookupService();
+            _messageService = messageService ?? new WpfInvoiceMessageService();
+            _invoiceValidation = invoiceValidation ?? new InvoiceValidationService();
+            _pdfExport = pdfExport ?? new PdfInvoiceExportService();
+            _autosave = autosave ?? new InvoiceAutosaveService();
             Draft = savedDraft != null
                 ? InvoiceDraftCloneService.Clone(savedDraft)
                 : CreateDraftFromSource(sourceItems);
@@ -102,6 +114,20 @@ namespace ElektroOffer_app.Invoice.ViewModels
 
         private void ExportPdf()
         {
+            // Příkaz zůstává aktivní, ale před exportem upozorní na neúplné údaje.
+            var warnings = _invoiceValidation.GetMissingFieldWarnings(Draft);
+            if (warnings.Count > 0)
+            {
+                var message = "Faktura obsahuje následující upozornění:" + Environment.NewLine + Environment.NewLine +
+                              string.Join(Environment.NewLine, warnings.Select(warning => $"• {warning}")) +
+                              Environment.NewLine + Environment.NewLine + "Pokračovat i tak?";
+                if (!_messageService.ShowYesNo(message, "Kontrola faktury"))
+                {
+                    StatusText = "Export PDF zrušen po kontrole faktury";
+                    return;
+                }
+            }
+
             var dialog = new SaveFileDialog
             {
                 Title = "Ulozit fakturu do PDF",
@@ -151,6 +177,7 @@ namespace ElektroOffer_app.Invoice.ViewModels
         private void SaveInvoiceToPath(string path)
         {
             _invoiceFiles.Save(path, Draft);
+            _autosave.Delete(Draft);
             _currentInvoicePath = path;
             HasUnsavedChanges = false;
             StatusText = $"Fakturacni data ulozena: {path}";
@@ -185,6 +212,7 @@ namespace ElektroOffer_app.Invoice.ViewModels
 
         private void SaveToProject()
         {
+            _autosave.Delete(Draft);
             HasUnsavedChanges = false;
             SaveToProjectRequested?.Invoke(this, InvoiceDraftCloneService.Clone(Draft));
             StatusText = "Fakturacni data ulozena do projektu";
@@ -229,11 +257,9 @@ namespace ElektroOffer_app.Invoice.ViewModels
             if (!HasUnsavedChanges)
                 return true;
 
-            var result = MessageBox.Show(
+            var result = _messageService.ShowYesNoCancel(
                 "Fakturace obsahuje neulozene zmeny. Ulozit je do samostatneho souboru?",
-                "Neulozena fakturace",
-                MessageBoxButton.YesNoCancel,
-                MessageBoxImage.Warning);
+                "Neulozena fakturace");
 
             if (result == MessageBoxResult.Cancel)
                 return false;
@@ -244,6 +270,7 @@ namespace ElektroOffer_app.Invoice.ViewModels
                 return !HasUnsavedChanges;
             }
 
+            _autosave.Delete(Draft);
             return true;
         }
 
@@ -349,6 +376,14 @@ namespace ElektroOffer_app.Invoice.ViewModels
                 return;
 
             HasUnsavedChanges = true;
+            try
+            {
+                _autosave.Save(Draft);
+            }
+            catch (Exception ex)
+            {
+                StatusText = $"Koncept se nepodařilo automaticky uložit: {ex.Message}";
+            }
             if (!StatusText.EndsWith(" *", StringComparison.Ordinal))
                 StatusText += " *";
         }

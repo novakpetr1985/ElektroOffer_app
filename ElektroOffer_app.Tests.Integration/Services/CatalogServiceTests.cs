@@ -9,6 +9,7 @@ using NUnit.Framework;
 namespace ElektroOffer_app.Tests.Integration.Services;
 
 [TestFixture]
+/// <summary>Ověřuje základní katalogové dotazy a změny nad skutečným SQLite providerem.</summary>
 public class CatalogServiceTests
 {
     private SqliteConnection _connection = null!;

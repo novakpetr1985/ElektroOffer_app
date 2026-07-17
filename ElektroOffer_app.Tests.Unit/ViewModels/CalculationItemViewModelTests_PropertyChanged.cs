@@ -6,6 +6,7 @@ using NUnit.Framework;
 namespace ElektroOffer_app.Tests.Unit.ViewModels
 {
     [TestFixture]
+    /// <summary>Ověřuje notifikace změn a přepočet závislých vlastností řádku.</summary>
     public class CalculationItemViewModelTests_PropertyChanged : TestBase
     {
         [Test]

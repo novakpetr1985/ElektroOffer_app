@@ -3,6 +3,7 @@ using System.Runtime.CompilerServices;
 
 namespace ElektroOffer_app.Invoice.Models
 {
+    /// <summary>Reprezentuje jednu fakturovanou položku a odvozuje její základ, DPH a konečnou cenu.</summary>
     public class InvoiceLine : INotifyPropertyChanged
     {
         private string _type = string.Empty;

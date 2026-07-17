@@ -13,6 +13,9 @@ namespace ElektroOffer_app.Services
         Dark
     }
 
+    /// <summary>
+    /// Volí světlý, tmavý nebo systémový motiv a aktualizuje sdílené WPF zdroje.
+    /// </summary>
     public class AppThemeService
     {
         // Uživatelská volba motivu se ukládá mimo projektový soubor,

@@ -4,6 +4,7 @@ using Microsoft.Data.Sqlite;
 namespace ElektroOffer_app.Tests.Integration.Database;
 
 [TestFixture]
+/// <summary>Ověřuje otevření skutečného SQLite připojení pro integrační prostředí.</summary>
 public class DatabaseConnectionTests
 {
     // =========================================================

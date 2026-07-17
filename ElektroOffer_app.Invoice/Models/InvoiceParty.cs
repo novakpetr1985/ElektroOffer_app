@@ -3,6 +3,7 @@ using System.Runtime.CompilerServices;
 
 namespace ElektroOffer_app.Invoice.Models
 {
+    /// <summary>Obsahuje identifikační a kontaktní údaje dodavatele nebo odběratele.</summary>
     public class InvoiceParty : INotifyPropertyChanged
     {
         private string _name = string.Empty;
@@ -14,6 +15,11 @@ namespace ElektroOffer_app.Invoice.Models
         private string _country = "CZ";
         private string _email = string.Empty;
         private string _phone = string.Empty;
+        private string _accountPrefix = string.Empty;
+        private string _accountNumber = string.Empty;
+        private string _bankCode = string.Empty;
+        private string _iban = string.Empty;
+        private string _swift = string.Empty;
 
         public string Name { get => _name; set => SetField(ref _name, value); }
         public string RegistrationNo { get => _registrationNo; set => SetField(ref _registrationNo, value); }
@@ -24,6 +30,12 @@ namespace ElektroOffer_app.Invoice.Models
         public string Country { get => _country; set => SetField(ref _country, value); }
         public string Email { get => _email; set => SetField(ref _email, value); }
         public string Phone { get => _phone; set => SetField(ref _phone, value); }
+        // Bankovní údaje dodavatele slouží tisku i QR platbě.
+        public string AccountPrefix { get => _accountPrefix; set => SetField(ref _accountPrefix, value); }
+        public string AccountNumber { get => _accountNumber; set => SetField(ref _accountNumber, value); }
+        public string BankCode { get => _bankCode; set => SetField(ref _bankCode, value); }
+        public string Iban { get => _iban; set => SetField(ref _iban, value); }
+        public string Swift { get => _swift; set => SetField(ref _swift, value); }
 
         public event PropertyChangedEventHandler? PropertyChanged;
 

@@ -6,6 +6,7 @@ using NUnit.Framework;
 namespace ElektroOffer_app.Tests.Unit.ViewModels
 {
     [TestFixture]
+    /// <summary>Ověřuje reset a doplňování navazujících voleb práce.</summary>
     public class CalculationItemViewModelTests_CascadeWork : TestBase
     {
         private void SeedWorkCatalog()

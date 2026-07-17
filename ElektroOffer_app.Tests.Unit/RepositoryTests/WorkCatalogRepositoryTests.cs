@@ -8,6 +8,7 @@ using NUnit.Framework;
 namespace ElektroOffer_app.Tests.Unit.RepositoryTests
 {
     [TestFixture]
+    /// <summary>Ověřuje pracovní katalog a vazby úkon–specifikace–podklad–pozice.</summary>
     public class WorkCatalogRepositoryTests
     {
         private static AppDbContext CreateInMemoryContext(SqliteConnection connection)

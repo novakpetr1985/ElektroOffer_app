@@ -4,6 +4,7 @@ using ElektroOffer_app.Services;
 
 namespace ElektroOffer_app.ViewModels
 {
+    /// <summary>Zpřístupňuje volbu motivu nastavení a oznamuje změny všech přepínačů UI.</summary>
     public class SettingsViewModel : INotifyPropertyChanged
     {
         private readonly AppThemeService _themeService;

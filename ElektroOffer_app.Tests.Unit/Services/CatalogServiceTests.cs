@@ -9,6 +9,7 @@ using NUnit.Framework;
 namespace ElektroOffer_app.Tests.Unit.Services
 {
     [TestFixture]
+    /// <summary>Ověřuje aplikační operace katalogu nad izolovanou SQLite databází.</summary>
     public class CatalogServiceTests
     {
         private SqliteConnection _connection = null!;
