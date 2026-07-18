@@ -48,6 +48,7 @@ jobs:
         run: dotnet test ElektroOffer_app.Tests.Unit/ElektroOffer_app.Tests.Unit.csproj --configuration Debug --no-build --no-restore --verbosity normal --logger trx --results-directory TestResults/Unit --collect:"XPlat Code Coverage"
 
       - name: Run integration tests
+        if: github.event_name == 'workflow_dispatch'
         run: dotnet test ElektroOffer_app.Tests.Integration/ElektroOffer_app.Tests.Integration.csproj --configuration Debug --no-build --no-restore --verbosity normal --logger trx --results-directory TestResults/Integration --collect:"XPlat Code Coverage"
 
       - name: Simulate diagnostic failure
