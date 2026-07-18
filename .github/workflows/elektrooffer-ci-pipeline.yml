@@ -2,13 +2,10 @@ name: ElektroOffer CI Pipeline
 
 on:
   push:
+    branches:
+      - "**"
     tags:
       - "*"
-  pull_request:
-    branches:
-      - dev
-      - test
-      - main
   workflow_dispatch:
     inputs:
       simulate_failure:
