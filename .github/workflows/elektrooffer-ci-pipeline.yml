@@ -6,6 +6,7 @@ on:
       - "**"
     tags:
       - "*"
+  pull_request:
   workflow_dispatch:
     inputs:
       simulate_failure:
@@ -38,10 +39,11 @@ jobs:
         run: dotnet build ElektroOffer_app.slnx --configuration Debug --no-restore
 
       - name: Run unit tests
+        if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
         run: dotnet test ElektroOffer_app.Tests.Unit/ElektroOffer_app.Tests.Unit.csproj --configuration Debug --no-build --no-restore --verbosity normal --logger trx --results-directory TestResults/Unit --collect:"XPlat Code Coverage"
 
       - name: Run integration tests
-        if: github.event_name == 'workflow_dispatch'
+        if: github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch' || startsWith(github.ref, 'refs/tags/')
         run: dotnet test ElektroOffer_app.Tests.Integration/ElektroOffer_app.Tests.Integration.csproj --configuration Debug --no-build --no-restore --verbosity normal --logger trx --results-directory TestResults/Integration --collect:"XPlat Code Coverage"
 
       - name: Simulate diagnostic failure
@@ -208,10 +210,12 @@ jobs:
 
           "" | Out-File elektrooffer-ci-error.log -Append
           "INTEGRATION TESTS" | Out-File elektrooffer-ci-error.log -Append
-          if ($env:GITHUB_EVENT_NAME -eq "workflow_dispatch") {
+          if ($env:GITHUB_EVENT_NAME -eq "pull_request" -or
+              $env:GITHUB_EVENT_NAME -eq "workflow_dispatch" -or
+              $env:GITHUB_REF -like "refs/tags/*") {
             dotnet test ElektroOffer_app.Tests.Integration/ElektroOffer_app.Tests.Integration.csproj --configuration Debug --verbosity detailed *>> elektrooffer-ci-error.log
           } else {
-            "Skipped: integration tests run only through manual workflow dispatch." | Out-File elektrooffer-ci-error.log -Append
+            "Skipped: integration tests run only for pull requests, tags, or manual workflow dispatch." | Out-File elektrooffer-ci-error.log -Append
           }
 
       - name: Upload diagnostic log
