@@ -48,10 +48,10 @@
         // =====================================================================
         //
         // Obsahuje pouze pracovní hodnoty:
-        // - SelectedTask
-        // - SelectedSpecification
-        // - SelectedMaterial
-        // - SelectedLocation
+        // - SelectedWorkTask
+        // - SelectedWorkSpecification
+        // - SelectedBaseMaterial
+        // - SelectedWorkPosition
         // - SelectedWorkPrice (volitelné)
         // - SelectedWorkUnit  (volitelné)
         //
@@ -91,5 +91,20 @@
         //
         // =========================================================================
         public List<CalculationItemData> CommonItems { get; set; } = new();
+
+        /// <summary>
+        /// Volitelný uložený návrh faktury navázaný na projekt.
+        /// </summary>
+        public ElektroOffer_app.Invoice.Models.InvoiceDraft? InvoiceDraft { get; set; }
+
+        /// <summary>
+        /// Počet viditelných řádků v sekci PRÁCE, včetně prázdných řádků.
+        /// </summary>
+        public int WorkRowCount { get; set; } = 5;
+
+        /// <summary>
+        /// Počet viditelných řádků v sekci MATERIÁL, včetně prázdných řádků.
+        /// </summary>
+        public int MaterialRowCount { get; set; } = 5;
     }
 }

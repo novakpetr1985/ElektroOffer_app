@@ -1,237 +1,118 @@
-using ElektroOffer_app.Data;
+using System.Linq;
 using ElektroOffer_app.Models;
 using ElektroOffer_app.ViewModels.Items;
 using NUnit.Framework;
 
 namespace ElektroOffer_app.Tests.Unit.ViewModels
 {
-    // =====================================================================
-    // 🔧 UNIT TESTS – CalculationItemViewModel – KASKÁDA PRÁCE
-    // =====================================================================
-    // Tento soubor obsahuje testy ověřující kaskádu výběru pro PRÁCI:
-    //
-    //   Task → Specification → Material → Location → WorkItem
-    //
-    // Zaměřuje se na:
-    //   • ResetBelowX metody (CalculationCascadeService)
-    //   • PropertyChanged pro CanSelectX vlastnosti
-    //   • správné dohledání WorkItem z DB po vyplnění celé kaskády
-    //
-    // Rozsah testů v tomto souboru:
-    //   T_008–T_014
-    //
-    // Sdílený databázový kontext (_db) a SetUp/TearDown jsou definované
-    // v TestBase.cs, ze kterého tato třída dědí.
-    // =====================================================================
     [TestFixture]
+    /// <summary>Ověřuje reset a doplňování navazujících voleb práce.</summary>
     public class CalculationItemViewModelTests_CascadeWork : TestBase
     {
-    
-        // -----------------------------------------------------------------
-        // 🧪 TEST 008: ResetBelowTask – musí vymazat Specification, Material, Location
-        // -----------------------------------------------------------------
-        // Co testujeme:
-        //  • že ResetBelowTask vymaže všechny hodnoty pod SelectedTask
-        //  • že kaskáda se chová konzistentně
-        // -----------------------------------------------------------------
-        [Test]
-        [Order(008)]
-        public void T_008_CascadeWork_ResetBelowTask_Should_Clear_All_Selections()
+        private void SeedWorkCatalog()
         {
-            var vm = new CalculationItemViewModel(_db)
-            {
-                SelectedTask = "Montáž",
-                SelectedSpecification = "Zásuvka",
-                SelectedMaterial = "CYKY 3x2.5",
-                SelectedLocation = "Obývák"
-            };
+            var task = new WorkTask { Name = "Montaz", BasePrice = 100m };
+            var otherTask = new WorkTask { Name = "Demontaz", BasePrice = 50m };
+            var specification = new WorkSpecification { Name = "Zasuvka", Unit = "ks" };
+            var otherSpecification = new WorkSpecification { Name = "Kabel", Unit = "m" };
 
-            vm.SelectedTask = "Nový úkon"; // vyvolá ResetBelowTask
+            _db.Tasks.AddRange(task, otherTask);
+            _db.Specifications.AddRange(specification, otherSpecification);
+            _db.BaseMaterials.Add(new BaseMaterial { Name = "Cihla", BaseMaterialCoef = 1.2m });
+            _db.Positions.Add(new WorkPosition { Name = "Stena", PositionCoef = 1.1m });
+            _db.SaveChanges();
 
-            Assert.IsNull(vm.SelectedSpecification);
-            Assert.IsNull(vm.SelectedMaterial);
-            Assert.IsNull(vm.SelectedLocation);
+            _db.TaskSpecifications.AddRange(
+                new TaskSpecification { TaskId = task.Id, SpecificationId = specification.Id },
+                new TaskSpecification { TaskId = task.Id, SpecificationId = otherSpecification.Id });
+            _db.SaveChanges();
         }
 
-        // -----------------------------------------------------------------
-        // 🧪 TEST 009: ResetBelowSpecification – musí vymazat Material + Location
-        // -----------------------------------------------------------------
-        // Co testujeme:
-        //  • že ResetBelowSpecification vymaže materiál a lokaci
-        // -----------------------------------------------------------------
         [Test]
-        [Order(009)]
-        public void T_009_CascadeWork_ResetBelowSpecification_Should_Clear_Material_And_Location()
+        public void SelectedWorkTask_Should_Reset_All_Lower_Work_Selections()
         {
+            SeedWorkCatalog();
             var vm = new CalculationItemViewModel(_db)
             {
-                SelectedTask = "Montáž",
-                SelectedSpecification = "Zásuvka",
-                SelectedMaterial = "CYKY 3x2.5",
-                SelectedLocation = "Obývák"
+                SelectedWorkSpecification = "Zasuvka",
+                SelectedBaseMaterial = "Cihla",
+                SelectedWorkPosition = "Stena"
             };
 
-            vm.SelectedSpecification = "Nová specifikace";
+            vm.SelectedWorkTask = "Montaz";
 
-            Assert.IsNull(vm.SelectedMaterial);
-            Assert.IsNull(vm.SelectedLocation);
+            Assert.That(vm.SelectedWorkSpecification, Is.Null);
+            Assert.That(vm.SelectedBaseMaterial, Is.Null);
+            Assert.That(vm.SelectedWorkPosition, Is.Null);
         }
 
-        // -----------------------------------------------------------------
-        // 🧪 TEST 010: ResetBelowMaterial – musí vymazat Location
-        // -----------------------------------------------------------------
-        // Co testujeme:
-        //  • že ResetBelowMaterial vymaže pouze SelectedLocation
-        // -----------------------------------------------------------------
         [Test]
-        [Order(010)]
-        public void T_010_CascadeWork_ResetBelowMaterial_Should_Clear_Location()
+        public void SelectedWorkTask_Should_Load_Available_WorkSpecifications()
         {
+            SeedWorkCatalog();
+            var vm = new CalculationItemViewModel(_db);
+
+            vm.SelectedWorkTask = "Montaz";
+
+            Assert.That(vm.AvailableWorkSpecifications, Has.Count.EqualTo(2));
+            Assert.That(vm.AvailableWorkSpecifications.ToArray(), Does.Contain("Zasuvka"));
+            Assert.That(vm.AvailableWorkSpecifications.ToArray(), Does.Contain("Kabel"));
+        }
+
+        [Test]
+        public void WorkSelections_Should_Resolve_Entities_For_Total()
+        {
+            SeedWorkCatalog();
             var vm = new CalculationItemViewModel(_db)
             {
-                SelectedTask = "Montáž",
-                SelectedSpecification = "Zásuvka",
-                SelectedMaterial = "CYKY 3x2.5",
-                SelectedLocation = "Obývák"
+                SelectedWorkTask = "Montaz",
+                SelectedBaseMaterial = "Cihla",
+                SelectedWorkPosition = "Stena",
+                Quantity = 2
             };
 
-            vm.SelectedMaterial = "Jiný materiál";
-
-            Assert.IsNull(vm.SelectedLocation);
+            Assert.That(vm.SelectedWorkTaskEntity, Is.Not.Null);
+            Assert.That(vm.SelectedBaseMaterialEntity, Is.Not.Null);
+            Assert.That(vm.SelectedWorkPositionEntity, Is.Not.Null);
+            Assert.That(vm.Total, Is.EqualTo(264d).Within(0.0001));
         }
 
-        // -----------------------------------------------------------------
-        // 🧪 TEST 011: SelectedTask – musí vyvolat PropertyChanged pro CanSelectSpecification
-        // -----------------------------------------------------------------
-        // Co testujeme:
-        //  • že změna SelectedTask aktivuje první krok WORK kaskády
-        //  • že ViewModel správně vyvolá PropertyChanged pro CanSelectSpecification
-        //  • že UI může reagovat (povolit výběr Specification)
-        //  • že logika kaskády správně navazuje na výběr Task
-        // -----------------------------------------------------------------
         [Test]
-        [Order(011)]
-        public void T_011_CascadeWork_SelectedTask_Should_Raise_PropertyChanged_For_CanSelectSpecification()
+        public void SelectedWorkTask_Should_Raise_CanSelectWorkSpecification()
+        {
+            var vm = new CalculationItemViewModel(_db);
+            var raised = false;
+
+            vm.PropertyChanged += (_, e) =>
+            {
+                if (e.PropertyName == nameof(vm.CanSelectWorkSpecification))
+                    raised = true;
+            };
+
+            vm.SelectedWorkTask = "Montaz";
+
+            Assert.That(raised, Is.True);
+        }
+
+        [Test]
+        public void WorkCascade_Should_Enable_Lower_Selections_Sequentially()
         {
             var vm = new CalculationItemViewModel(_db);
 
-            bool raised = false;
+            Assert.That(vm.CanSelectWorkSpecification, Is.False);
+            Assert.That(vm.CanSelectBaseMaterial, Is.False);
+            Assert.That(vm.CanSelectWorkPosition, Is.False);
 
-            vm.PropertyChanged += (_, e) =>
-            {
-                if (e.PropertyName == nameof(vm.CanSelectSpecification))
-                    raised = true;
-            };
+            vm.SelectedWorkTask = "Montaz";
+            Assert.That(vm.CanSelectWorkSpecification, Is.True);
+            Assert.That(vm.CanSelectBaseMaterial, Is.False);
 
-            vm.SelectedTask = "Montáž";
+            vm.SelectedWorkSpecification = "Zasuvka";
+            Assert.That(vm.CanSelectBaseMaterial, Is.True);
+            Assert.That(vm.CanSelectWorkPosition, Is.False);
 
-            Assert.IsTrue(raised);
-        }
-
-        // -----------------------------------------------------------------
-        // 🧪 TEST 012: SelectedSpecification – musí vyvolat PropertyChanged pro CanSelectMaterial
-        // -----------------------------------------------------------------
-        // Co testujeme:
-        //  • že změna SelectedSpecification aktivuje druhý krok WORK kaskády
-        //  • že ViewModel správně vyvolá PropertyChanged pro CanSelectMaterial
-        //  • že UI může reagovat (povolit výběr Material)
-        //  • že logika kaskády správně navazuje na výběr Specification
-        // -----------------------------------------------------------------
-        [Test]
-        [Order(012)]
-        public void T_012_CascadeWork_SelectedSpecification_Should_Raise_PropertyChanged_For_CanSelectMaterial()
-        {
-            var vm = new CalculationItemViewModel(_db)
-            {
-                SelectedTask = "Montáž"
-            };
-
-            bool raised = false;
-
-            vm.PropertyChanged += (_, e) =>
-            {
-                if (e.PropertyName == nameof(vm.CanSelectMaterial))
-                    raised = true;
-            };
-
-            vm.SelectedSpecification = "Zásuvka";
-
-            Assert.IsTrue(raised);
-        }
-
-        // -----------------------------------------------------------------
-        // 🧪 TEST 013: SelectedMaterial – musí vyvolat PropertyChanged pro CanSelectLocation
-        // -----------------------------------------------------------------
-        // Co testujeme:
-        //  • že změna SelectedMaterial aktivuje třetí krok WORK kaskády
-        //  • že ViewModel správně vyvolá PropertyChanged pro CanSelectLocation
-        //  • že UI může reagovat (povolit výběr Location)
-        //  • že logika kaskády správně navazuje na výběr Material
-        // -----------------------------------------------------------------
-        [Test]
-        [Order(013)]
-        public void T_013_CascadeWork_SelectedMaterial_Should_Raise_PropertyChanged_For_CanSelectLocation()
-        {
-            var vm = new CalculationItemViewModel(_db)
-            {
-                SelectedTask = "Montáž",
-                SelectedSpecification = "Zásuvka"
-            };
-
-            bool raised = false;
-
-            vm.PropertyChanged += (_, e) =>
-            {
-                if (e.PropertyName == nameof(vm.CanSelectLocation))
-                    raised = true;
-            };
-
-            vm.SelectedMaterial = "CYKY 3x2.5";
-
-            Assert.IsTrue(raised);
-        }
-
-        // -----------------------------------------------------------------
-        // 🧪 TEST 014: SelectedLocation – musí aktualizovat WorkItem
-        // -----------------------------------------------------------------
-        // Co testujeme:
-        //  • že změna lokace vyvolá _cascade.UpdateWorkItem()
-        //  • že WorkItem se změní (není null)
-        //
-        // 🔥 OPRAVA:
-        //  • UpdateWorkItem() hledá řádek v _db.PriceItems podle
-        //    Task + Specification + Material + Location.
-        //  • Test dřív žádný takový řádek neseedoval, takže hledání
-        //    vždy vrátilo null. Teď se odpovídající PriceItems záznam
-        //    nejdřív uloží do testovací DB.
-        // -----------------------------------------------------------------
-        [Test]
-        [Order(014)]
-        public void T_014_CascadeWork_SelectedLocation_Should_Update_WorkItem()
-        {
-            // 1) Seed odpovídajícího PriceItems záznamu
-            _db.PriceItems.Add(new PriceItems
-            {
-                Task = "Montáž",
-                Specification = "Zásuvka",
-                Material = "CYKY 3x2.5",
-                Location = "Obývák",
-                Unit = "ks"
-            });
-            _db.SaveChanges(); // 🔥 nutné, aby ho UpdateWorkItem() našel
-
-            // 2) ViewModel – projede kaskádu Task → Specification → Material
-            var vm = new CalculationItemViewModel(_db)
-            {
-                SelectedTask = "Montáž",
-                SelectedSpecification = "Zásuvka",
-                SelectedMaterial = "CYKY 3x2.5"
-            };
-
-            vm.SelectedLocation = "Obývák";
-
-            // 3) Ověření
-            Assert.IsNotNull(vm.WorkItem);
+            vm.SelectedBaseMaterial = "Cihla";
+            Assert.That(vm.CanSelectWorkPosition, Is.True);
         }
     }
 }

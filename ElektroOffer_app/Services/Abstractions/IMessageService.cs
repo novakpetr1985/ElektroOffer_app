@@ -8,6 +8,9 @@ using System.Windows;
 
 namespace ElektroOffer_app.Services
 {
+    /// <summary>
+    /// Poskytuje obecné potvrzovací dialogy používané hlavním ViewModelem.
+    /// </summary>
     public interface IMessageService
     {
         // Zobrazí dialog Ano/Ne a vrátí true, pokud uživatel zvolí Ano.

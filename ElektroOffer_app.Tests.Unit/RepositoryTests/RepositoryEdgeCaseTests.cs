@@ -25,6 +25,7 @@ namespace ElektroOffer_app.Tests.Unit.RepositoryTests
     /// DŮLEŽITÉ:
     /// Tvůj AppDbContext používá SQLite → testy musí používat SQLite InMemory.
     /// ==================================================================
+    /// <summary>Ověřuje prázdné výsledky, neexistující klíče a další hraniční repository scénáře.</summary>
     public class RepositoryEdgeCaseTests
     {
         private SqliteConnection? _connection;

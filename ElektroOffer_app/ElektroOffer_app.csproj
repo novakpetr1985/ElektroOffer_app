@@ -44,10 +44,10 @@
       <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
 
       <!-- Hlavní verze aplikace (suffixy povoleny) -->
-      <Version>1.8.0-test</Version>
+      <Version>1.12.0-dev</Version>
 
       <!-- Verze souboru (Windows Explorer) -->
-      <FileVersion>1.8.0.0</FileVersion>
+      <FileVersion>1.12.0.0</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>
@@ -84,14 +84,17 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="elektrooffer.db" />
     <None Remove="Resources\Icons\LOGO.jpg" />
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="elektrooffer.db">
+    <Content Include="Data\Seed\elektrooffer_1_9_0.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ElektroOffer_app.Invoice\ElektroOffer_app.Invoice.csproj" />
   </ItemGroup>
 
   <ItemGroup>

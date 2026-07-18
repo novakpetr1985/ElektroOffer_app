@@ -16,6 +16,7 @@ namespace ElektroOffer_app
             // 1) Jeden sdílený EF Core kontext pro celou aplikaci
             // ---------------------------------------------------------
             var db = new AppDbContext();
+            DatabaseBootstrapService.EnsureReady(db);
 
             // ---------------------------------------------------------
             // 2) Služby (DI bez kontejneru)
@@ -26,13 +27,13 @@ namespace ElektroOffer_app
 
             var projectService = new ProjectService(fileDialogService, fileSystemService, messageBoxService);
             var catalogService = new CatalogService();
-            var cascadeService = new CalculationCascadeService(db);
             var priceService = new CalculationPriceService();
 
             var messageService = new MessageService();
             var printService = new PrintService();
             var applicationService = new ApplicationService();
             var windowService = new WindowService();
+            var catalogImportService = new CatalogWorkbookImportService(db);
 
             // ---------------------------------------------------------
             // 3) Hlavní ViewModel (nastavíme DataContext JEDNOU)
@@ -40,13 +41,15 @@ namespace ElektroOffer_app
             DataContext = new MainViewModel(
                 projectService,
                 catalogService,
-                cascadeService,
                 priceService,
                 db,
                 messageService,
                 printService,
                 applicationService,
-                windowService);
+                windowService,
+                catalogImportService,
+                fileDialogService,
+                messageBoxService);
         }
 
         // ---------------------------------------------------------

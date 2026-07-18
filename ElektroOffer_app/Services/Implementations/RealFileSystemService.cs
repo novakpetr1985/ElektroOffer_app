@@ -16,6 +16,9 @@ namespace ElektroOffer_app.Services.Implementations
     // - Třída neobsahuje žádnou logiku ProjectService
     // - Pouze volá File.ReadAllText / File.WriteAllText
     // ========================================================================
+    /// <summary>
+    /// Zapouzdřuje skutečné čtení a zápis souborů pro ProjectService.
+    /// </summary>
     public class RealFileSystemService : IFileSystemService
     {
         // --------------------------------------------------------------------

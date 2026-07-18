@@ -22,7 +22,7 @@ namespace ElektroOffer_app.Models
     //
     // Proč je zde ID:
     // ---------------
-    // Každý řádek MATERIÁLU má vlastní identifikátor (Guid Id).
+    // Každý uložený řádek MATERIÁLU má vlastní sekvenční identifikátor.
     // Stejné ID se ukládá i do odpovídající položky CalculationItemData.
     //
     // Díky tomu lze jednoznačně spárovat:
@@ -31,7 +31,7 @@ namespace ElektroOffer_app.Models
     //
     // To je zásadní pro stabilní Load/Save a pro budoucí rozšiřování projektu.
     //
-    // 🔴 ZMĚNA – Id vs. Position:
+    // Id vs. Position:
     // ----------------------------------------------------------------
     // Id a Position mají nyní odlišný účel:
     //
