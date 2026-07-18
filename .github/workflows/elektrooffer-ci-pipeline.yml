@@ -2,10 +2,6 @@ name: ElektroOffer CI Pipeline
 
 on:
   push:
-    branches:
-      - feature/**
-      - hotfix/**
-      - release/**
     tags:
       - "*"
   pull_request:
@@ -215,7 +211,11 @@ jobs:
 
           "" | Out-File elektrooffer-ci-error.log -Append
           "INTEGRATION TESTS" | Out-File elektrooffer-ci-error.log -Append
-          dotnet test ElektroOffer_app.Tests.Integration/ElektroOffer_app.Tests.Integration.csproj --configuration Debug --verbosity detailed *>> elektrooffer-ci-error.log
+          if ($env:GITHUB_EVENT_NAME -eq "workflow_dispatch") {
+            dotnet test ElektroOffer_app.Tests.Integration/ElektroOffer_app.Tests.Integration.csproj --configuration Debug --verbosity detailed *>> elektrooffer-ci-error.log
+          } else {
+            "Skipped: integration tests run only through manual workflow dispatch." | Out-File elektrooffer-ci-error.log -Append
+          }
 
       - name: Upload diagnostic log
         if: always()
