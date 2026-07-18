@@ -50,7 +50,7 @@ namespace ElektroOffer_app.Models
     //
     // Co se NEukládá:
     // ----------------
-    // ✘ SelectedTask, SelectedSpecification, SelectedMaterial, SelectedLocation
+    // ✘ SelectedWorkTask, SelectedWorkSpecification, SelectedBaseMaterial, SelectedWorkPosition
     // ✘ SelectedCategory, SelectedProductName, SelectedSupplier, SelectedOffer
     // ✘ SelectedMaterialPrice, SelectedMaterialUnit
     //

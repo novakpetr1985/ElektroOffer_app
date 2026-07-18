@@ -5,7 +5,8 @@
         Height="1200"
         Width="1000">
 
-    <DockPanel LastChildFill="True">
+    <DockPanel LastChildFill="True"
+               Background="{DynamicResource AppBackgroundBrush}">
 
         <!-- MENU -->
         <Menu DockPanel.Dock="Top">
@@ -36,10 +37,23 @@
                           InputGestureText="Ctrl+P"
                           Command="{Binding PrintCommand}" />
 
+                <MenuItem Header="_Fakturace"
+                          Command="{Binding InvoiceCommand}" />
+
+                <Separator/>
+
+                <MenuItem Header="_Importovat katalog z Excelu..."
+                          Command="{Binding ImportCatalogCommand}" />
+
                 <MenuItem Header="_Konec"
                           InputGestureText="Alt+F4"
                           Command="{Binding ExitCommand}" />
 
+            </MenuItem>
+
+            <MenuItem Header="_Možnosti">
+                <MenuItem Header="_Nastavení..."
+                          Command="{Binding SettingsCommand}" />
             </MenuItem>
 
             <MenuItem Header="_Nápověda">
@@ -80,6 +94,11 @@
                         Command="{Binding PrintCommand}"
                         Margin="2"/>
 
+                <Button Content="Fakturace"
+                        ToolTip="Vytvořit fakturu z detailního rozpočtu"
+                        Command="{Binding InvoiceCommand}"
+                        Margin="2"/>
+
             </ToolBar>
         </ToolBarTray>
 
@@ -87,14 +106,16 @@
         <StatusBar DockPanel.Dock="Bottom">
             <StatusBarItem>
                 <TextBlock Text="{Binding StatusText}"
-                           Foreground="Gray"
+                           Foreground="{DynamicResource AppMutedTextBrush}"
                            FontSize="12"/>
             </StatusBarItem>
         </StatusBar>
 
         <!-- HLAVNÍ OBSAH -->
-        <ScrollViewer VerticalScrollBarVisibility="Auto">
-            <Grid Margin="20">
+        <ScrollViewer VerticalScrollBarVisibility="Auto"
+                      Background="{DynamicResource AppBackgroundBrush}">
+            <Grid Margin="20"
+                  Background="{DynamicResource AppBackgroundBrush}">
 
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
@@ -129,7 +150,7 @@
                             <ColumnDefinition Width="35"/>  <!-- ➖ SMAZÁNÍ ŘÁDKU -->
                             <ColumnDefinition Width="150"/> <!-- ÚKON -->
                             <ColumnDefinition Width="150"/> <!-- UPŘESNĚNÍ -->
-                            <ColumnDefinition Width="150"/> <!-- MATERIÁL -->
+                            <ColumnDefinition Width="150"/> <!-- PODKLAD -->
                             <ColumnDefinition Width="120"/> <!-- UMÍSTĚNÍ -->
                             <ColumnDefinition Width="60"/>  <!-- MNOŽSTVÍ -->
                             <ColumnDefinition Width="40"/>  <!-- 🔥 MJ -->
@@ -148,9 +169,9 @@
                                    Text="Upřesnění"
                                    FontWeight="Bold"/>
 
-                        <!-- MATERIÁL -->
+                        <!-- PODKLAD -->
                         <TextBlock Grid.Column="3"
-                                   Text="Materiál"
+                                   Text="Podklad"
                                    FontWeight="Bold"/>
 
                         <!-- UMÍSTĚNÍ -->
@@ -174,7 +195,7 @@
 
                         <!-- 💰 CENA PRÁCE -->
                         <TextBlock Grid.Column="7"
-                                   Text="Cena"
+                                   Text="Po slevě"
                                    FontWeight="Bold"
                                    HorizontalAlignment="Right"
                                    TextAlignment="Right"/>
@@ -194,7 +215,7 @@
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
 
-                                <Border BorderBrush="#E0E0E0"
+                                <Border BorderBrush="{DynamicResource AppBorderBrush}"
                                         BorderThickness="0,0,0,1"
                                         Padding="0,5">
 
@@ -203,7 +224,7 @@
                                             <ColumnDefinition Width="35"/>  <!-- ➖ SMAZÁNÍ ŘÁDKU -->
                                             <ColumnDefinition Width="150"/> <!-- ÚKON -->
                                             <ColumnDefinition Width="150"/> <!-- UPŘESNĚNÍ -->
-                                            <ColumnDefinition Width="150"/> <!-- MATERIÁL -->
+                                            <ColumnDefinition Width="150"/> <!-- PODKLAD -->
                                             <ColumnDefinition Width="120"/> <!-- UMÍSTĚNÍ -->
                                             <ColumnDefinition Width="60"/>  <!-- MNOŽSTVÍ -->
                                             <ColumnDefinition Width="40"/>  <!-- 🔥 MJ -->
@@ -217,7 +238,7 @@
                                                 Content="−"
                                                 Width="25"
                                                 Height="25"
-                                                Background="#E53935"
+                                                Background="{DynamicResource AppDangerBrush}"
                                                 Foreground="White"
                                                 Command="{Binding DataContext.DeleteWorkItemCommand, RelativeSource={RelativeSource AncestorType=Window}}"
                                                 CommandParameter="{Binding}"
@@ -225,26 +246,26 @@
 
                                         <!-- ÚKON -->
                                         <ComboBox Grid.Column="1"
-                                                ItemsSource="{Binding DataContext.Tasks, RelativeSource={RelativeSource AncestorType=Window}}"
-                                                SelectedItem="{Binding SelectedTask, Mode=TwoWay}"/>
+                                                ItemsSource="{Binding DataContext.WorkTasks, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                SelectedItem="{Binding SelectedWorkTask, Mode=TwoWay}"/>
 
                                         <!-- UPŘESNĚNÍ -->
                                         <ComboBox Grid.Column="2"
-                                                IsEnabled="{Binding CanSelectSpecification}"
-                                                ItemsSource="{Binding AvailableSpecifications}"
-                                                SelectedItem="{Binding SelectedSpecification, Mode=TwoWay}"/>
+                                                IsEnabled="{Binding CanSelectWorkSpecification}"
+                                                ItemsSource="{Binding AvailableWorkSpecifications}"
+                                                SelectedItem="{Binding SelectedWorkSpecification, Mode=TwoWay}"/>
 
-                                        <!-- MATERIÁL -->
+                                        <!-- PODKLAD -->
                                         <ComboBox Grid.Column="3"
-                                                IsEnabled="{Binding CanSelectMaterial}"
-                                                ItemsSource="{Binding AvailableMaterials}"
-                                                SelectedItem="{Binding SelectedMaterial, Mode=TwoWay}"/>
+                                                IsEnabled="{Binding CanSelectBaseMaterial}"
+                                                ItemsSource="{Binding DataContext.BaseMaterialsList, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                SelectedItem="{Binding SelectedBaseMaterial, Mode=TwoWay}"/>
 
                                         <!-- UMÍSTĚNÍ -->
                                         <ComboBox Grid.Column="4"
-                                                IsEnabled="{Binding CanSelectLocation}"
-                                                ItemsSource="{Binding AvailableLocations}"
-                                                SelectedItem="{Binding SelectedLocation, Mode=TwoWay}"/>
+                                                IsEnabled="{Binding CanSelectWorkPosition}"
+                                                ItemsSource="{Binding DataContext.WorkPositionsList, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                SelectedItem="{Binding SelectedWorkPosition, Mode=TwoWay}"/>
 
                                         <!-- MNOŽSTVÍ -->
                                         <TextBox Grid.Column="5"
@@ -256,13 +277,13 @@
                                                 VerticalAlignment="Center"
                                                 HorizontalAlignment="Center"
                                                 TextAlignment="Center"
-                                                Foreground="Gray"
+                                                Foreground="{DynamicResource AppMutedTextBrush}"
                                                 Text="{Binding WorkUnit}"/>
 
                                         <!-- 💰 CENA PRÁCE -->
                                         <TextBlock Grid.Column="7"
                                                 FontWeight="Bold"
-                                                Foreground="DarkBlue"
+                                                Foreground="{DynamicResource AppTextBrush}"
                                                 VerticalAlignment="Center"
                                                 HorizontalAlignment="Right"
                                                 TextAlignment="Right"
@@ -271,7 +292,7 @@
                                         <!-- 🔄 RESET ŘÁDKU -->
                                         <Button Grid.Column="8"
                                                 Content="SMAZAT"
-                                                Background="DarkBlue"
+                                                Background="{DynamicResource AppAccentBrush}"
                                                 Foreground="White"
                                                 Command="{Binding DataContext.ResetWorkItemCommand, RelativeSource={RelativeSource AncestorType=Window}}"
                                                 CommandParameter="{Binding}"
@@ -294,7 +315,7 @@
 
                                             <TextBlock Text="%"
                                                     Margin="2,0,0,0"
-                                                    Foreground="Gray"/>
+                                                    Foreground="{DynamicResource AppMutedTextBrush}"/>
                                         </StackPanel>
 
                                     </Grid>
@@ -310,7 +331,7 @@
                     <!-- ========================= -->
                     <Border Margin="0,10,0,0"
                             Padding="10"
-                            BorderBrush="Gray"
+                            BorderBrush="{DynamicResource AppBorderBrush}"
                             BorderThickness="1">
 
                         <Grid>
@@ -320,13 +341,14 @@
                             </Grid.ColumnDefinitions>
 
                             <TextBlock Text="Součet práce"
-                                    FontWeight="Bold"/>
+                                    FontWeight="Bold"
+                                    Foreground="{DynamicResource AppSuccessBrush}"/>
 
                             <TextBlock Grid.Column="1"
                                     Text="{Binding WorkTotal, StringFormat={}{0:N0} Kč}"
                                     FontSize="16"
                                     FontWeight="Bold"
-                                    Foreground="DarkGreen"
+                                    Foreground="{DynamicResource AppSuccessBrush}"
                                     HorizontalAlignment="Right"
                                     TextAlignment="Right"/>
 
@@ -376,7 +398,7 @@
                                 HorizontalAlignment="Right" TextAlignment="Right"/>
                         <TextBlock Grid.Column="6" Text="MJ" FontWeight="Bold"
                                 HorizontalAlignment="Center" TextAlignment="Center"/>
-                        <TextBlock Grid.Column="7" Text="Cena" FontWeight="Bold"
+                        <TextBlock Grid.Column="7" Text="Po slevě" FontWeight="Bold"
                                 HorizontalAlignment="Right" TextAlignment="Right"/>
                         <TextBlock Grid.Column="9" Text="Sleva %" FontWeight="Bold"
                                 HorizontalAlignment="Center"/>
@@ -389,7 +411,7 @@
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
 
-                                <Border BorderBrush="#E0E0E0"
+                                <Border BorderBrush="{DynamicResource AppBorderBrush}"
                                         BorderThickness="0,0,0,1"
                                         Padding="0,5">
 
@@ -412,7 +434,7 @@
                                                 Content="−"
                                                 Width="25"
                                                 Height="25"
-                                                Background="#E53935"
+                                                Background="{DynamicResource AppDangerBrush}"
                                                 Foreground="White"
                                                 Command="{Binding DataContext.DeleteMaterialItemCommand, RelativeSource={RelativeSource AncestorType=Window}}"
                                                 CommandParameter="{Binding}"
@@ -464,7 +486,7 @@
                                         <!-- 🔄 RESET ŘÁDKU -->
                                         <Button Grid.Column="8"
                                                 Content="SMAZAT"
-                                                Background="DarkBlue"
+                                                Background="{DynamicResource AppAccentBrush}"
                                                 Foreground="White"
                                                 Command="{Binding DataContext.ResetMaterialItemCommand, RelativeSource={RelativeSource AncestorType=Window}}"
                                                 CommandParameter="{Binding}"
@@ -488,7 +510,7 @@
 
                                             <TextBlock Text="%"
                                                     Margin="2,0,0,0"
-                                                    Foreground="Gray"/>
+                                                    Foreground="{DynamicResource AppMutedTextBrush}"/>
                                         </StackPanel>
 
                                     </Grid>
@@ -504,7 +526,7 @@
                     <!-- ========================= -->
                     <Border Margin="0,10,0,0"
                             Padding="10"
-                            BorderBrush="Gray"
+                            BorderBrush="{DynamicResource AppBorderBrush}"
                             BorderThickness="1">
 
                         <Grid>
@@ -514,13 +536,14 @@
                             </Grid.ColumnDefinitions>
 
                             <TextBlock Text="Součet materiálu"
-                                    FontWeight="Bold"/>
+                                    FontWeight="Bold"
+                                    Foreground="{DynamicResource AppSuccessBrush}"/>
 
                             <TextBlock Grid.Column="1"
                                     Text="{Binding MaterialTotal, StringFormat={}{0:N0} Kč}"
                                     FontSize="16"
                                     FontWeight="Bold"
-                                    Foreground="DarkBlue"
+                                    Foreground="{DynamicResource AppSuccessBrush}"
                                     HorizontalAlignment="Right"
                                     TextAlignment="Right"/>
                         </Grid>
@@ -578,11 +601,11 @@
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
 
-                                <!-- Cena (se slevou) -->
+                                <!-- Cena před slevou -->
                                 <GridViewColumn Width="120">
                                     <GridViewColumn.HeaderTemplate>
                                         <DataTemplate>
-                                            <TextBlock Text="Cena"
+                                            <TextBlock Text="Před slevou"
                                                        FontWeight="Bold"
                                                        HorizontalAlignment="Right"
                                                        TextAlignment="Right"
@@ -592,7 +615,7 @@
 
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
-                                            <TextBlock Text="{Binding Price, StringFormat={}{0:N0} Kč}"
+                                            <TextBlock Text="{Binding PriceBeforeDiscount, StringFormat={}{0:N0} Kč}"
                                                        HorizontalAlignment="Right"
                                                        TextAlignment="Right"
                                                        Width="100"/>
@@ -643,7 +666,30 @@
                                                                StringFormat={}{0:N0} Kč}"
                                                        HorizontalAlignment="Right"
                                                        TextAlignment="Right"
-                                                       Foreground="DarkRed"
+                                                       Foreground="{DynamicResource AppWarningBrush}"
+                                                       Width="100"/>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+
+                                <!-- Výsledná cena po slevě -->
+                                <GridViewColumn Width="120">
+                                    <GridViewColumn.HeaderTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="Po slevě"
+                                                       FontWeight="Bold"
+                                                       HorizontalAlignment="Right"
+                                                       TextAlignment="Right"
+                                                       Width="100"/>
+                                        </DataTemplate>
+                                    </GridViewColumn.HeaderTemplate>
+
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding Price, StringFormat={}{0:N0} Kč}"
+                                                       FontWeight="Bold"
+                                                       HorizontalAlignment="Right"
+                                                       TextAlignment="Right"
                                                        Width="100"/>
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
@@ -659,7 +705,7 @@
                 <!-- ========================================================= -->
                 <!-- 💰 CELKOVÁ CENA (GRAND TOTAL) -->
                 <!-- ========================================================= -->
-                <!-- 🔴 ZMĚNA: Grid rozšířen o 3 řádky — před slevou / sleva / po slevě -->
+                <!-- Souhrn ceny před slevou, výše slevy a výsledné ceny. -->
                 <Grid Grid.Row="3"
                       Margin="0,10,0,20">
 
@@ -681,7 +727,7 @@
                                Grid.Column="0"
                                Text="Cena před slevou:"
                                FontSize="15"
-                               Foreground="Gray">
+                               Foreground="{DynamicResource AppMutedTextBrush}">
                         <TextBlock.Style>
                             <Style TargetType="TextBlock">
                                 <Setter Property="Visibility" Value="Collapsed"/>
@@ -697,7 +743,7 @@
                     <TextBlock Grid.Row="0"
                                Grid.Column="1"
                                FontSize="15"
-                               Foreground="Gray"
+                               Foreground="{DynamicResource AppMutedTextBrush}"
                                HorizontalAlignment="Right"
                                TextAlignment="Right"
                                Text="{Binding GrandTotalBeforeDiscount, StringFormat={}{0:N0} Kč}">
@@ -719,7 +765,7 @@
                     <TextBlock Grid.Row="1"
                                Grid.Column="0"
                                FontSize="15"
-                               Foreground="DarkRed"
+                               Foreground="{DynamicResource AppWarningBrush}"
                                HorizontalAlignment="Left"
                                Text="Celková sleva:">
                         <TextBlock.Style>
@@ -737,7 +783,7 @@
                     <TextBlock Grid.Row="1"
                                Grid.Column="1"
                                FontSize="15"
-                               Foreground="DarkRed"
+                               Foreground="{DynamicResource AppWarningBrush}"
                                HorizontalAlignment="Right"
                                Text="{Binding TotalDiscount, StringFormat={}- {0:N0} Kč}">
                         <TextBlock.Style>
@@ -757,7 +803,7 @@
                     <Border Grid.Row="2"
                             Grid.Column="0"
                             Grid.ColumnSpan="2"
-                            BorderBrush="LightGray"
+                            BorderBrush="{DynamicResource AppBorderBrush}"
                             BorderThickness="0,0,0,1"
                             Margin="0,4,0,0">
                         <Border.Style>
@@ -784,7 +830,7 @@
                                Grid.Column="1"
                                FontSize="26"
                                FontWeight="Bold"
-                               Foreground="DarkGreen"
+                               Foreground="{DynamicResource AppSuccessBrush}"
                                Text="{Binding GrandTotal, StringFormat={}{0:N0} Kč}"
                                HorizontalAlignment="Right"
                                TextAlignment="Right"/>

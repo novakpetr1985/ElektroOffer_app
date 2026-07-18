@@ -1,9 +1,8 @@
 ﻿﻿using ElektroOffer_app.Models;
 using ElektroOffer_app.Services.Abstractions;   // 🧩 Rozhraní pro DI (mockovatelné v testech)
-using Microsoft.Win32;                          // 📁 OpenFileDialog / SaveFileDialog
 using System.IO;                                // 📄 File.ReadAllText / WriteAllText
 using System.Text.Json;                         // 🔧 JSON serializace
-using System.Windows;                           // ⚠️ MessageBox (později nahradíme službou)
+using System.Windows;                           // MessageBox typy používané přes IMessageBoxService
 
 namespace ElektroOffer_app.Services
 {
@@ -16,18 +15,17 @@ namespace ElektroOffer_app.Services
     //   ✔ Ukládání projektu (Save / SaveAs)
     //   ✔ Načítání projektu (Load)
     //   ✔ Kontrola neuložených změn (ConfirmNewProject)
-    //   ✔ Export / import ceníku (.eofcat)
     //
     // Architektura:
     //   • UI pracuje s MainViewModel → ten sestaví ProjectData
     //   • ProjectService pracuje výhradně s ProjectData (datový model)
     //   • ProjectData je čistý JSON-friendly model bez logiky
     //
-    // Poznámka:
-    //   • MessageBoxService je dočasné řešení – později bude nahrazeno UI službou
-    //
     // ============================================================================
 
+    /// <summary>
+    /// Serializuje celý projekt do .eof a koordinuje dialogy, souborový systém a hlášení chyb.
+    /// </summary>
     public class ProjectService
     {
         // ------------------------------------------------------------------------
@@ -177,84 +175,6 @@ namespace ElektroOffer_app.Services
                 MessageBoxResult.No => true,
                 _ => false
             };
-        }
-
-        // ============================================================================
-        // 📤 Export ceníku (.eofcat)
-        // ============================================================================
-        //
-        // Exportuje ceník do samostatného souboru.
-        //
-        // ============================================================================
-        public bool ExportCatalog(CatalogExportData data)
-        {
-            EnsureDialogService();
-            EnsureFileSystemService();
-            EnsureMessageBoxService();
-
-            var path = _dialogs!.ShowSaveFileDialog(
-                "Ceník ElektroOffer (*.eofcat)|*.eofcat",
-                "Exportovat ceník",
-                ".eofcat",
-                $"cenik_export_{DateTime.Now:yyyy-MM-dd}");
-
-            if (path == null)
-                return false;
-
-            try
-            {
-                data.ExportedAt = DateTime.Now;
-
-                var json = JsonSerializer.Serialize(data, _jsonOptions);
-                _fs!.WriteAllText(path, json);
-
-                _msg!.Show(
-                    $"Export dokončen.\n\nPráce: {data.PriceItems.Count}\nMateriál: {data.Materials.Count}",
-                    "Hotovo",
-                    MessageBoxButton.OK,
-                    MessageBoxImage.Information);
-
-                return true;
-            }
-            catch (Exception ex)
-            {
-                _msg!.Show($"Chyba exportu:\n{ex.Message}", "Chyba",
-                    MessageBoxButton.OK, MessageBoxImage.Error);
-                return false;
-            }
-        }
-
-        // ============================================================================
-        // 📥 Import ceníku (.eofcat)
-        // ============================================================================
-        //
-        // Načte ceník ze souboru .eofcat.
-        //
-        // ============================================================================
-        public CatalogExportData? ImportCatalog()
-        {
-            EnsureDialogService();
-            EnsureFileSystemService();
-            EnsureMessageBoxService();
-
-            var path = _dialogs!.ShowOpenFileDialog(
-                "Ceník ElektroOffer (*.eofcat)|*.eofcat",
-                "Importovat ceník");
-
-            if (path == null)
-                return null;
-
-            try
-            {
-                var json = _fs!.ReadAllText(path);
-                return JsonSerializer.Deserialize<CatalogExportData>(json, _jsonOptions);
-            }
-            catch (Exception ex)
-            {
-                _msg!.Show($"Chyba importu:\n{ex.Message}", "Chyba",
-                    MessageBoxButton.OK, MessageBoxImage.Error);
-                return null;
-            }
         }
 
         // ============================================================================

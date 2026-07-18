@@ -1,7 +1,191 @@
 # Changelog
 
+## [1.12.0] - 2026-07-17
+
+### Přidáno
+
+- Profesionální vícestránková šablona `ProfessionalA4` postavená na QuestPDF, s českými znaky, opakovaným záhlavím, rekapitulací podle sazeb DPH a QR platbou.
+- Lokální SPAYD/PNG generování přes QRCoder pouze z validního uživatelem ověřeného IBANu; domácí účet se automaticky nepřevádí.
+- Bankovní údaje, DUZP, číslo objednávky, číslo zakázky a volitelné logo v návrhu faktury.
+- Automatická záchrana rozpracované faktury do `%LocalAppData%\\ElektroOffer\\Drafts\\Invoices` a nabídka obnovy samostatně spuštěného modulu.
+- Unit testy QR, validace a autosave a integrační testy jednostránkového i vícestránkového PDF s/bez QR.
+- Samostatný Windows x64 publish včetně .NET runtime; cílový počítač nepotřebuje instalovat .NET.
+- Per-user instalační EXE balíček s odinstalací a zástupci v nabídce Start a volitelně na ploše.
+
+### Změněno
+
+- Původní ručně skládaný jednostránkový PDF export byl nahrazen typovaným QuestPDF dokumentem.
+- Export PDF zůstává vždy dostupný, ale před pokračováním zobrazí souhrn neúplných či neplatných údajů.
+- Verze hlavní i fakturační aplikace je finální `1.12.0`.
+- Dokumentace fakturační šablony a QR je sjednocena s architekturou tisku; terénní měření, kaskádové ukládání a dodavatelské strategie mají jeden společný návrh.
+- Produkční služby a testovací třídy mají stručné popisy odpovědností; z databázového bootstrapu byla odstraněna nadbytečná interní kontrola tabulek.
+- Lokální release skript vytváří self-contained aplikaci i instalátor do složky `artifacts`.
+- Release workflow při tagu ukládá samostatný instalační a portable artefakt pro Windows x64.
+
+### Ověřeno
+
+- Debug build bez chyb a upozornění.
+- 88 unit testů a 36 integračních testů; kombinované řádkové pokrytí je 62,7 %.
+- Vizuální kontrola vícestránkové A4 faktury včetně zalamování, opakovaného záhlaví, DPH a QR bloku.
+- Instalace a odinstalace výsledného EXE balíčku byla ověřena na čistém cílovém umístění; uživatelský smoke test proběhl také na jiném počítači.
+
+---
+
+## [1.11.1] - rozpracováno
+
+### Opraveno
+
+- Souborová SQLite databáze se ukládá do `%LocalAppData%\ElektroOffer`; existující cílová DB se nikdy automaticky nepřepisuje a starší DB lze jednorázově bezpečně převzít.
+- Bootstrap vždy idempotentně připraví chybějící tabulky/indexy a seed spustí pouze pro prázdný katalog.
+- Unit testovací základna používá skutečnou SQLite databázi v paměti místo výchozí produkční cesty.
+
+### Změněno
+
+- ARES je abstrahován přes `IAresClient`, podporuje injektovaný `HttpClient`, timeout a zrušení požadavku.
+- CI ukládá Cobertura coverage, rozšířenou diagnostiku a nabízí bezpečnou ruční simulaci selhání.
+
+### Testování
+
+- Přidány testy AppData cesty, převzetí starší DB, ochrany existující DB, idempotentního bootstrapu a zachování uživatelského katalogu.
+- ARES testy používají lokální JSON fixtures a pokrývají úspěch, 400/404/429/500, timeout, poškozená/neúplná data a cancellation bez síťových požadavků.
+- Kontrolní běh prošel s 76 unit a 33 integračními testy; kombinované řádkové pokrytí je 57,4 % a ARES klient dosahuje 91,9 %.
+
+### Dokumentace
+
+- Doplněn životní cyklus databáze, popis ARES integrace, CI diagnostika, branch/release workflow, manuální scénáře, testovací roadmapa, audit tisku/šablon a návrh terénní podaplikace pro směr k 2.0.
+
+---
+
+## [1.11.0] - rozpracováno
+
+### Změněno
+
+- Přidán centrální WPF slovník design tokenů pro barvy, typografii, velikosti, odsazení, rádiusy, ohraničení, stíny a animace.
+- Hlavní i fakturační aplikace používají jeden fyzický zdroj tokenů a stávající `App*Brush` názvy fungují jako kompatibilní sémantické aliasy.
+- Světlý a tmavý motiv čtou palety z tokenů namísto hodnot zapsaných v C#.
+- Tisk a PDF export čtou dokumentové písmo, velikost a okraje ze stejných tokenů jako WPF rozhraní.
+
+### Opraveno
+
+- Token `Space.2` typu `Double` už není přiřazen vlastnosti `GroupBox.Padding`; nový `Spacing.GroupBoxPadding` má správný WPF typ `Thickness` a zabraňuje pádu `XamlParseException` při vykreslení okna.
+
+### Testy
+
+- Přidány automatické STA integrační testy, které za běhu načtou tokeny, barvy a styly obou WPF projektů a aplikují všechny implicitní styly podporovaných ovládacích prvků.
+- Regresní test ověřuje typy klíčových tokenů (`Double`, `Thickness`) a konkrétní hodnotu odsazení `GroupBox`.
+- Ověřeno 63 unit a 30 integračních testů; tři dialogové smoke testy zůstávají explicitní.
+- Kombinované řádkové pokrytí unit a integrační sady je přibližně 56 %; README nově popisuje hlavní nepokryté oblasti a nutnost manuálního release checklistu.
+
 Všechny důležité změny projektu jsou dokumentovány v tomto souboru.  
 Formát vychází z [Keep a Changelog](https://keepachangelog.com/cs/1.0.0/).
+
+---
+
+## [1.10.0] - 2026-07-15
+
+### Přidáno
+- Přímý import normalizovaného katalogu z jednoho XLSX přes menu `Soubor -> Importovat katalog z Excelu...`.
+- Připravená šablona `docs/templates/ElektroOffer_Catalog_Import_Template_1.0.xlsx` pro práce, specifikace, podklady, umístění, materiály, kategorie, dodavatele a dodavatelské ceny.
+- Kontrola povinných listů, hlaviček, datových typů, duplicit a vazeb mezi listy před zápisem do databáze.
+- Integrační testy prvního importu, opakovaného importu a odmítnutí neplatných vazeb bez změny databáze.
+
+### Změněno
+- Existující záznamy se při importu aktualizují podle názvu, dodavatelské ceny podle dvojice dodavatel + kód. Import automaticky nic nemaže.
+- Celý zápis probíhá v jedné databázové transakci.
+- Hlavní i fakturační aplikace používají společnou verzi `1.10.0-feature`.
+
+---
+
+## [1.9.1] - 2026-07-15
+
+### Změněno
+- Hlavní a fakturační aplikace používají společnou verzi `1.9.1-feature`.
+- Okno O aplikaci čte verzi ze společného `ApplicationInfoService`.
+- Unit projekt už neodkazuje na integrační testovací projekt.
+
+### Odstraněno
+- Nepoužívaný starý `.eofcat` model a metody importu/exportu, které neměly UI a neodpovídaly současné normalizované databázi.
+- Duplicitní kopie produkčního `ProjectService` v unit testovacím projektu.
+- Nahrazený `VersionService`, nepoužívané `AboutWindowViewModel` a `BaseViewModel`.
+- Zastaralý dokument testů navázaný na odstraněný pracovní model.
+
+### Ověřeno
+- 63 unit testů.
+- 22 integračních testů.
+
+---
+
+## [1.9.0] - 2026-07-15
+
+### Přidáno
+- Nová kaskáda sekce PRÁCE postavená na samostatných entitách `WorkTask`, `WorkSpecification`, `BaseMaterial`, `WorkPosition` a vazební tabulce `TaskSpecification`.
+- Doplněn manuální testovací checklist `docs/MANUAL-TESTS.md` pro celkovou regresi aplikace, DB, fakturaci, vzhled, CI a PR proces.
+- Nová služba `WorkCascadeService`, která nahrazuje původní práci nad `PriceItems`.
+- Nový samostatně spustitelný WPF modul `ElektroOffer_app.Invoice` pro přípravu faktury z detailního rozpočtu nebo prázdné faktury mimo hlavní aplikaci.
+- Nové menu a toolbar akce `Fakturace`, které otevřou fakturační okno z hlavní aplikace.
+- Fakturační okno obsahuje volitelná pole pro dodavatele, odběratele, číslo faktury, variabilní symbol, splatnost, poznámku a položky převzaté z detailního rozpočtu.
+- Export návrhu faktury do JSON payloadu kompatibilního se strukturou Fakturoid API (`client_*`, `lines`, `quantity`, `unit_name`, `unit_price`, `vat_rate`).
+- Fakturace umí vyhledat dodavatele i odběratele přes veřejné ARES REST API podle platného IČO po kliknutí na `Vyhledat`.
+- Fakturace má samostatné uložení/načtení do souboru `*.eofinvoice`.
+- Fakturační data lze uložit také přímo do hlavního projektu `*.eof`; při dalším otevření projektu se znovu předají do fakturačního okna.
+- Přidán export faktury do jednoduchého PDF souboru.
+- Přidána ochrana proti zavření fakturačního okna s neuloženými změnami.
+- Přidáno okno `Nastavení` v menu `Možnosti` s první stránkou `Vzhled`.
+- Přidána volba motivu `Dle systému`, `Světlý režim`, `Tmavý režim` přes `AppThemeService`.
+- Přidány unit testy pro Fakturoid JSON, PDF export, validaci IČO a klonování fakturačního návrhu.
+- Přidány integrační testy pro samostatné uložení/načtení fakturace a serializaci faktury do `ProjectData`.
+- Detailní rozpočet nově zobrazuje samostatné sloupce `Před slevou`, `Sleva %`, `Sleva Kč` a `Po slevě`.
+- Doplněny regresní testy scénáře 960 Kč, sleva 10 %, sleva 96 Kč a výsledná cena 864 Kč v rozpočtu i fakturaci.
+
+### Změněno
+- Výpočet ceny práce už nečte jednu spojenou položku `PriceItems`; cena se skládá z `WorkTask.BasePrice × BaseMaterial.BaseMaterialCoef × WorkPosition.PositionCoef × Quantity`.
+- `WorkItemData` ukládá nové názvy polí `SelectedWorkTask`, `SelectedWorkSpecification`, `SelectedBaseMaterial`, `SelectedWorkPosition`.
+- `MainViewModel` už nepřijímá ani neinstancuje zrušený `CalculationCascadeService`.
+- XAML sekce PRÁCE je přepojená na nové bindingy `WorkTasks`, `AvailableWorkSpecifications`, `BaseMaterialsList`, `WorkPositionsList`.
+- Kaskáda PRÁCE nyní v UI postupuje sekvenčně: `Úkon → Upřesnění → Podklad → Umístění`. Nižší ComboBoxy jsou zakázané, dokud není vybraná předchozí položka.
+- Při změně vyšší položky v kaskádě PRÁCE se nižší výběry resetují, aby v řádku nezůstala neplatná kombinace.
+- Unit a integrační testy byly přepsány ze starého modelu `PriceItems` / `WorkItem` na nový pracovní model.
+- Databázové a katalogové testy ověřují nové tabulky práce (`Tasks`, `Specifications`, `BaseMaterials`, `Positions`, `TaskSpecifications`).
+- `ProjectData` nově ukládá počet řádků v sekcích PRÁCE a MATERIÁL (`WorkRowCount`, `MaterialRowCount`), aby se zachoval i stav přidaných nebo odebraných prázdných řádků.
+- Doporučený směr importu materiálů je CSV import přes UI s validací a mapováním sloupců, ne ruční SQL zásahy do databáze.
+- Globální WPF styly a barvy jsou nově zapojené přes `App.xaml` a používají dynamické resources pro světlý/tmavý režim.
+- Vzhled byl srovnán blíže ke standardnímu Windows chování; zůstávají jen ty vlastní styly a šablony, které jsou potřeba pro čitelnost světlého/tmavého režimu.
+- Tmavý režim se nově aplikuje na hlavní okno, fakturaci, nastavení i okno O aplikaci včetně kořenových panelů, menu, toolbarů, vstupů, tabulek a systémových WPF barev.
+- Výběr položek v tmavém režimu má nově vlastní kontrastní barvy pro ComboBox, ListBox a DataGrid, aby byl text vybrané položky čitelný.
+- Opraveno přebíjení barvy textu u vybraných položek v tmavém režimu; text nyní dědí kontrastní barvu výběru i uvnitř ComboBoxů, ListBoxů a DataGrid buněk.
+- Zavřený stav ComboBoxů má vlastní šablonu, aby po výběru položky zůstal text čitelný i v tmavém režimu.
+- Menu a detailní rozpočet (`ListView`/`GridView`) mají doplněné tmavé styly pro čitelný text, hlavičky tabulky, řádky a výběr.
+- Řádkové ceny práce a materiálu jsou barevně sjednocené, součty mají jasné odlišení podle sekce a deaktivované kaskádové výběry jsou v tmavém režimu čitelnější.
+- Aplikace už nevyžaduje zdrojový soubor `ElektroOffer_app/elektrooffer.db` při buildu; při startu chybějící SQLite databázi založí a naplní testovacími daty ze SQL seedu `Data/Seed/elektrooffer_1_9_0.sql`.
+- Vývojová DB cesta je sjednocená se SQLite Browser projektem: při běhu z Visual Studia aplikace používá `ElektroOffer_app/elektrooffer.db` vedle `elektrooffer.sqbpro`, ne samostatnou DB v `bin`.
+- GitHub Actions workflow bylo zjednodušeno: běžné CI spouští restore/build/test, detailní diagnostický log se generuje jen při chybě a publish Release běží pouze při tagu.
+- Unit a integrační testy jsou v GitHub Actions oddělené do samostatných kroků, aby bylo v logu hned vidět, která sada případně selhala.
+- GitHub Actions joby jsou připravené na ruční schválení přes environment `manual-approval`.
+- GitHub Actions nově ukládají krátký CI souhrn `elektrooffer-ci-summary` při každém běhu včetně úspěšných běhů.
+- Komentáře v upravovaných třídách a datových modelech byly srovnány na aktuální stav 1.9.0; zavádějící migrační poznámky a zastaralé odkazy na `Guid` identifikátory byly odstraněny.
+- Řádková hlavička ceny v sekcích PRÁCE a MATERIÁL je označená `Po slevě`, aby bylo zřejmé, že po zadání slevy zobrazuje výslednou částku.
+- Fakturační řádky přebírají cenu za jednotku a celkem před slevou, procento a částku slevy i výsledné celkem po slevě; Fakturoid export zachovává výslednou fakturovanou částku.
+
+### Odstraněno
+- `CalculationCascadeService` a model `PriceItems` jako stará spojená kaskáda PRÁCE.
+- Testovací stub a testy navázané výhradně na zaniklou tabulku `PriceItems`.
+
+### Opraveno
+- Chyba konstruktoru `MainViewModel` po odebrání `CalculationCascadeService`.
+- Neplatné bindingy v XAML na staré `Tasks`, `SelectedTask`, `AvailableSpecifications`, `SelectedMaterial`, `SelectedLocation`.
+- Nefunkční uložení/načtení pracovních polí po přejmenování modelu `WorkItemData`.
+- Uložení projektu po přidání nebo odebrání prázdného řádku nyní zachová počet řádků i tehdy, když řádek neobsahuje žádná kalkulační data.
+- Opraveno nullable warning v integračním testu `RealMessageBoxServiceTests`.
+- Odstraněna nejednoznačnost sloupce `Cena`, který dříve zobrazoval cenu po slevě vedle údajů o slevě bez explicitního označení.
+
+### Ověřeno
+- `dotnet build ElektroOffer_app.slnx`
+- `dotnet build ElektroOffer_app.slnx -p:OutputPath=...\artifacts\verify-build\` kvůli běžící aplikaci zamykající standardní `bin` výstup
+- `dotnet build ElektroOffer_app.slnx -p:OutputPath=...\artifacts\verify-theme\`
+- `dotnet build ElektroOffer_app.slnx -p:OutputPath=...\artifacts\verify-selection\`
+- `dotnet build ElektroOffer_app.slnx --configuration Debug`
+- `dotnet test ElektroOffer_app.slnx --no-build`
+- `dotnet test ElektroOffer_app.slnx --configuration Debug --no-build`
 
 ---
 
@@ -98,8 +282,7 @@ Formát vychází z [Keep a Changelog](https://keepachangelog.com/cs/1.0.0/).
 - Kaskádový výběr materiálu v kalkulaci: Kategorie → Název → Dodavatel → Materiál
   (obdobně jako existující kaskáda Task → Specification → Material → Location u práce)
 - `MaterialCascadeService` – řízení kaskády výběru materiálu a dotažení ceny
-(- `MaterialImportService`, `ImportCsvReader`, `Import` (`Services/DataImport/`)
-  - import ceníku materiálu z CSV exportu Excel listu Import_Master, s upsert logikou podle dvojice (SupplierId, SupplierCode) pro bezpečné opakované importy)
+- Naplánován import ceníku materiálu z CSV exportu Excel listu Import_Master s upsert logikou podle jednoznačného klíče dodavatele a položky.
 - Unikátní databázový index na `MaterialPrices (SupplierId, SupplierCode)`
 - Testovací sada 10 materiálů (kabely, chráničky, spínače, zásuvky, rozvaděče,  jističe, chrániče) s cenami od dvou dodavatelů (ELKOV, EMAS)
 - uložené hodnoty pro práci `SelectedWorkPrice`, `SelectedWorkUnit`
@@ -159,7 +342,7 @@ Formát vychází z [Keep a Changelog](https://keepachangelog.com/cs/1.0.0/).
 - výpočet Total je plně delegován do `CalculationPriceService`
 
 ### Na obzoru
-- Reálné vyzkoušení importu ceníku materiálu z CSV přes `MaterialImportService` (zatím jen ručně vložená testovací data přes SQL)
+- Doplnění a reálné vyzkoušení UI importu ceníku materiálu z CSV; zatím jsou testovací data vložená ručně přes SQL.
 - Zobrazení kódu a ceny konkrétní nabídky (`SupplierCode`, `Price`) v detailním rozpočtu
   - aktuálně se v kalkulaci zobrazuje jen název položky od dodavatele
 - Odstranění staršího pole `Material.Price` po úplném přechodu na `MaterialPrice`

@@ -1,0 +1,12 @@
+{
+  "ico": "27074358",
+  "obchodniJmeno": "Test Company s.r.o.",
+  "dic": "CZ27074358",
+  "sidlo": {
+    "nazevUlice": "Testovací",
+    "cisloDomovni": 10,
+    "cisloOrientacni": 2,
+    "nazevObce": "Praha",
+    "psc": 11000
+  }
+}

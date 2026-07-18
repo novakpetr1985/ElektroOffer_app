@@ -24,6 +24,7 @@ namespace ElektroOffer_app.Commands
     //   - RaiseCanExecuteChanged() → oznámí WPF, že se má znovu vyhodnotit CanExecute
     //
     // ============================================================================
+    /// <summary>Propojuje akci a podmínku její dostupnosti s WPF rozhraním <see cref="ICommand"/>.</summary>
     public class RelayCommand : ICommand
     {
         // ------------------------------------------------------------------------

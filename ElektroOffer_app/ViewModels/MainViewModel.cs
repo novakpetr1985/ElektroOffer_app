@@ -6,8 +6,11 @@ using System.Runtime.CompilerServices;
 using System.Windows.Input;
 using ElektroOffer_app.Commands;
 using ElektroOffer_app.Data;
+using ElektroOffer_app.Invoice.Models;
+using ElektroOffer_app.Invoice.Services;
 using ElektroOffer_app.Models;
 using ElektroOffer_app.Services;
+using ElektroOffer_app.Services.Abstractions;
 using ElektroOffer_app.ViewModels.Items;
 
 namespace ElektroOffer_app.ViewModels
@@ -26,7 +29,7 @@ namespace ElektroOffer_app.ViewModels
 
         private readonly ProjectService _projectService;
         private readonly CatalogService _catalogService;
-        private readonly CalculationCascadeService _cascade;
+
         private readonly CalculationPriceService _price;
         private readonly AppDbContext _db;
 
@@ -35,12 +38,20 @@ namespace ElektroOffer_app.ViewModels
         private readonly IPrintService _printService;
         private readonly IApplicationService _applicationService;
         private readonly IWindowService _windowService;
+        private readonly CatalogWorkbookImportService? _catalogImportService;
+        private readonly IFileDialogService? _catalogImportDialog;
+        private readonly IMessageBoxService? _catalogImportMessages;
 
         // =========================================================
         // COLLECTIONS
         // =========================================================
 
-        public ObservableCollection<string> Tasks { get; } = new();
+        // Sdílené katalogové seznamy pro sekci PRÁCE.
+        // Specifikace jsou řádkové, protože se filtrují podle vybraného úkonu.
+        public ObservableCollection<string> WorkTasks { get; } = new();
+        public ObservableCollection<string> BaseMaterialsList { get; } = new();
+        public ObservableCollection<string> WorkPositionsList { get; } = new();
+
         public ObservableCollection<Material> Materials { get; } = new();
         public ObservableCollection<CalculationItemViewModel> WorkCalcItems { get; } = new();
         public ObservableCollection<CalculationItemViewModel> MaterialItems { get; } = new();
@@ -52,6 +63,7 @@ namespace ElektroOffer_app.ViewModels
 
         private string? _currentFilePath = null;
         private bool _hasUnsavedChanges = false;
+        private InvoiceDraft? _invoiceDraft;
 
         private string _statusText = "Nový projekt";
         public string StatusText
@@ -129,6 +141,9 @@ namespace ElektroOffer_app.ViewModels
         public ICommand SaveCommand { get; }
         public ICommand SaveAsCommand { get; }
         public ICommand PrintCommand { get; }
+        public ICommand InvoiceCommand { get; }
+        public ICommand ImportCatalogCommand { get; }
+        public ICommand SettingsCommand { get; }
         public ICommand ExitCommand { get; }
         public ICommand AboutCommand { get; }
 
@@ -142,14 +157,6 @@ namespace ElektroOffer_app.ViewModels
         // =====================================================================
         // 🚫 _isLoading – blokace přepočtů a reakcí během načítání projektu
         // =====================================================================
-        //
-        // Během ApplyProjectData se nastaví na TRUE,
-        // aby Item_PropertyChanged nereagoval na změny,
-        // kaskády se nespouštěly,
-        // a kolekce se nepřeskupovala.
-        //
-        // Po načtení se nastaví zpět na FALSE.
-        //
         private bool _isLoading = false;
 
         // =========================================================
@@ -159,18 +166,19 @@ namespace ElektroOffer_app.ViewModels
         public MainViewModel(
             ProjectService projectService,
             CatalogService catalogService,
-            CalculationCascadeService cascade,
             CalculationPriceService price,
             AppDbContext db,
             IMessageService messageService,
             IPrintService printService,
             IApplicationService applicationService,
-            IWindowService windowService)
+            IWindowService windowService,
+            CatalogWorkbookImportService? catalogImportService = null,
+            IFileDialogService? catalogImportDialog = null,
+            IMessageBoxService? catalogImportMessages = null)
         {
             // DI – všechny služby + jeden sdílený AppDbContext
             _projectService = projectService;
             _catalogService = catalogService;
-            _cascade = cascade;
             _price = price;
             _db = db;
 
@@ -178,6 +186,9 @@ namespace ElektroOffer_app.ViewModels
             _printService = printService;
             _applicationService = applicationService;
             _windowService = windowService;
+            _catalogImportService = catalogImportService;
+            _catalogImportDialog = catalogImportDialog;
+            _catalogImportMessages = catalogImportMessages;
 
             LoadCatalogDataFromDb();
 
@@ -198,6 +209,9 @@ namespace ElektroOffer_app.ViewModels
             SaveCommand = new RelayCommand(_ => Save());
             SaveAsCommand = new RelayCommand(_ => SaveAs());
             PrintCommand = new RelayCommand(_ => Print());
+            InvoiceCommand = new RelayCommand(_ => ShowInvoice());
+            ImportCatalogCommand = new RelayCommand(_ => ImportCatalog(), _ => _catalogImportService != null);
+            SettingsCommand = new RelayCommand(_ => ShowSettings());
             ExitCommand = new RelayCommand(_ => Exit());
             AboutCommand = new RelayCommand(_ => ShowAbout());
 
@@ -213,16 +227,24 @@ namespace ElektroOffer_app.ViewModels
         // LOAD CATALOG
         // =========================================================
 
+        // Načte katalogy sdílené napříč všemi řádky hlavního okna.
         private void LoadCatalogDataFromDb()
         {
-            // Katalog se načítá z jednoho sdíleného AppDbContext (_db)
-            var (tasks, materials) = _catalogService.LoadCatalog(_db);
-
-            Tasks.Clear();
-            foreach (var t in tasks) Tasks.Add(t);
-
+            var materials = _catalogService.LoadMaterials(_db);
             Materials.Clear();
             foreach (var m in materials) Materials.Add(m);
+
+            var tasks = _catalogService.GetWorkTasks(_db);
+            WorkTasks.Clear();
+            foreach (var t in tasks) WorkTasks.Add(t.Name);
+
+            var baseMaterials = _catalogService.GetBaseMaterials(_db);
+            BaseMaterialsList.Clear();
+            foreach (var b in baseMaterials) BaseMaterialsList.Add(b.Name);
+
+            var positions = _catalogService.GetWorkPositions(_db);
+            WorkPositionsList.Clear();
+            foreach (var p in positions) WorkPositionsList.Add(p.Name);
         }
 
         // =========================================================
@@ -271,14 +293,15 @@ namespace ElektroOffer_app.ViewModels
         // RESET ITEMS
         // =========================================================
 
+        // Vyčistí pracovní řádek včetně všech kroků kaskády PRÁCE.
         public void ResetWorkItem(object? obj)
         {
             if (obj is CalculationItemViewModel item)
             {
-                item.SelectedTask = null;
-                item.SelectedSpecification = null;
-                item.SelectedMaterial = null;
-                item.SelectedLocation = null;
+                item.SelectedWorkTask = null;
+                item.SelectedWorkSpecification = null;
+                item.SelectedBaseMaterial = null;
+                item.SelectedWorkPosition = null;
                 item.Quantity = 0;
                 item.IsDiscountEnabled = false;
                 item.DiscountPercent = null;
@@ -291,7 +314,7 @@ namespace ElektroOffer_app.ViewModels
         {
             if (obj is CalculationItemViewModel item)
             {
-                // Kategorie + Název (to ti chybělo)
+                // Kategorie + Název
                 item.SelectedCategory = null;
                 item.SelectedProductName = null;
 
@@ -318,16 +341,18 @@ namespace ElektroOffer_app.ViewModels
         // PROPERTY CHANGED
         // =========================================================
 
+        // Přepočet spouštíme jen při změnách, které mají vliv na cenu nebo rozpočet.
         private void Item_PropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
             // 🔒 Během načítání projektu se nesmí nic přepočítávat ani spouštět
             if (_isLoading)
                 return;
 
-            // 🔧 Reagujeme jen na změny, které ovlivňují cenu
             if (e.PropertyName == nameof(CalculationItemViewModel.Total) ||
                 e.PropertyName == nameof(CalculationItemViewModel.Quantity) ||
-                e.PropertyName == nameof(CalculationItemViewModel.WorkItem) ||
+                e.PropertyName == nameof(CalculationItemViewModel.SelectedWorkTaskEntity) ||
+                e.PropertyName == nameof(CalculationItemViewModel.SelectedBaseMaterialEntity) ||
+                e.PropertyName == nameof(CalculationItemViewModel.SelectedWorkPositionEntity) ||
                 e.PropertyName == nameof(CalculationItemViewModel.MaterialItem))
             {
                 MarkAsChanged();
@@ -340,12 +365,20 @@ namespace ElektroOffer_app.ViewModels
         // =========================================================
         public void Recalculate()
         {
+            // Základ bez slevy: práce se skládá z úkonu, podkladu a umístění;
+            // materiál bere cenu z vybrané nabídky dodavatele.
             static double BaseTotal(CalculationItemViewModel x)
             {
-                if (x.WorkItem != null)
-                    return x.WorkItem.BasePrice * x.WorkItem.MaterialCoef * x.WorkItem.PositionCoef * x.Quantity;
+                if (x.SelectedWorkTaskEntity != null &&
+                    x.SelectedBaseMaterialEntity != null &&
+                    x.SelectedWorkPositionEntity != null)
+                {
+                    return (double)x.SelectedWorkTaskEntity.BasePrice
+                         * (double)x.SelectedBaseMaterialEntity.BaseMaterialCoef
+                         * (double)x.SelectedWorkPositionEntity.PositionCoef
+                         * x.Quantity;
+                }
 
-                // ✔ Tady je oprava – materiál počítat ze SelectedMaterialPrice
                 if (x.SelectedMaterialPrice != null)
                     return (double)x.SelectedMaterialPrice.Price * x.Quantity;
 
@@ -376,7 +409,7 @@ namespace ElektroOffer_app.ViewModels
             TotalDiscount = WorkDiscountTotal + MaterialDiscountTotal;
 
             // ============================
-            // 3) CENA PŘED SLEVOU (SPRÁVNĚ)
+            // 3) CENA PŘED SLEVOU
             // ============================
             double workBefore = WorkCalcItems.Sum(x => BaseTotal(x));
             double materialBefore = MaterialItems.Sum(x => BaseTotal(x));
@@ -389,12 +422,12 @@ namespace ElektroOffer_app.ViewModels
                 WorkCalcItems.Any(x => x.IsDiscountEnabled && x.DiscountPercent.HasValue)
                 || MaterialItems.Any(x => x.IsDiscountEnabled && x.DiscountPercent.HasValue);
 
-
             // ============================
             // 5) DETAILNÍ ROZPOČET
             // ============================
             BudgetItems.Clear();
 
+            // Popis řádku PRÁCE skládá všechny kroky pracovní kaskády.
             foreach (var x in WorkCalcItems.Where(x => x.Total > 0))
             {
                 double basePrice = BaseTotal(x);
@@ -403,9 +436,10 @@ namespace ElektroOffer_app.ViewModels
                 BudgetItems.Add(new BudgetItem
                 {
                     Type = "PRÁCE",
-                    Description = $"{x.SelectedTask} / {x.SelectedSpecification} / {x.SelectedMaterial} / {x.SelectedLocation}",
+                    Description = $"{x.SelectedWorkTask} / {x.SelectedWorkSpecification} / {x.SelectedBaseMaterial} / {x.SelectedWorkPosition}",
                     Unit = x.WorkUnit ?? "",
                     Quantity = x.Quantity,
+                    PriceBeforeDiscount = basePrice,
                     Price = x.Total,
                     DiscountPercent = (x.IsDiscountEnabled && x.DiscountPercent.HasValue) ? x.DiscountPercent : null,
                     DiscountAmount = discountAmount > 0.0001 ? discountAmount : null
@@ -423,6 +457,7 @@ namespace ElektroOffer_app.ViewModels
                     Description = x.SelectedOffer ?? "",
                     Unit = x.SelectedMaterialPrice?.Unit ?? "",
                     Quantity = x.Quantity,
+                    PriceBeforeDiscount = basePrice,
                     Price = x.Total,
                     DiscountPercent = (x.IsDiscountEnabled && x.DiscountPercent.HasValue) ? x.DiscountPercent : null,
                     DiscountAmount = discountAmount > 0.0001 ? discountAmount : null
@@ -498,6 +533,7 @@ namespace ElektroOffer_app.ViewModels
 
             _currentFilePath = null;
             _hasUnsavedChanges = false;
+            _invoiceDraft = null;
 
             StatusText = "Nový projekt";
         }
@@ -508,7 +544,6 @@ namespace ElektroOffer_app.ViewModels
 
         private void ClearAllItems()
         {
-            // 🔒 vypnout reakce na změny
             _isLoading = true;
 
             foreach (var item in WorkCalcItems)
@@ -517,115 +552,40 @@ namespace ElektroOffer_app.ViewModels
             foreach (var item in MaterialItems)
                 item.PropertyChanged -= Item_PropertyChanged;
 
-            // ❗ Kolekce se musí opravdu vymazat
             WorkCalcItems.Clear();
             MaterialItems.Clear();
 
-            // Rozpočet se může mazat – nemá pozice
             BudgetItems.Clear();
 
             _isLoading = false;
         }
 
         // =========================================================
-        // BUILD PROJECT DATA – vytvoření kompletního ProjectData objektu
+        // BUILD PROJECT DATA
         // =========================================================
         //
-        // Tento blok vytváří tři oddělené datové sekce:
-        //
-        //   1) WorkItems        → pracovní hodnoty (WorkItemData)
-        //   2) MaterialItems    → materiálové hodnoty (MaterialItemData)
-        //   3) CommonItems      → společné hodnoty (CalculationItemData)
-        //
-        // Díky tomu:
-        // - PRÁCE a MATERIÁL se nemíchají
-        // - společné hodnoty jsou opravdu společné
-        // - JSON je čistý a přehledný
-        // - Load/Save je stabilní
-        //
-        // ❗ Prázdné řádky se neukládají (item.IsEmpty)
-        // ❗ Každý řádek má vlastní ID → jednoznačné párování PRÁCE/MATERIÁL ↔ SPOLEČNÉ
-        // ❗ ID je krátké a čitelné: PRÁCE = W-1, W-2… / MATERIÁL = M-1, M-2…
-        //
-        // 🔴 ZMĚNA (Id vs. Position):
-        // ----------------------------------------------------------------
-        // Id a Position mají nyní odlišný účel:
-        //
-        //   • Id        → sekvenční identifikátor záznamu (W-1, W-2, W-3...),
-        //                  generovaný čítačem POUZE pro vyplněné řádky.
-        //                  Slouží výhradně k párování se CalculationItemData.
-        //
-        //   • Position  → skutečná pozice řádku v UI (1-based), zjištěná
-        //                  z indexu v kolekci JEŠTĚ PŘED odfiltrováním
-        //                  prázdných řádků.
-        //
-        // Např. pokud je vyplněný jen 1. a 5. řádek:
-        //   • 1. řádek → Id = "W-1", Position = 1
-        //   • 5. řádek → Id = "W-2", Position = 5
-        //
-        // Díky tomu Id zůstává hezky sekvenční a čitelné („druhý vyplněný
-        // záznam“), zatímco Position spolehlivě nese informaci o tom, kam
-        // se má řádek vrátit v UI při načítání projektu.
-        // =========================================================
-
         private ProjectData BuildProjectData()
         {
-            // ---------------------------------------------------------
-            // Interní čítače pro generování krátkých ID
-            // ---------------------------------------------------------
-            //
-            // PRÁCE → W-1, W-2, W-3...
-            // MATERIÁL → M-1, M-2, M-3...
-            //
-            // Čítače se zvyšují POUZE u vyplněných řádků – Id je tedy
-            // vždy hezky sekvenční, bez děr, bez ohledu na to, na jaké
-            // pozici v UI daný řádek fyzicky stojí.
-            //
             int workCounter = 1;
             int materialCounter = 1;
 
-            // ---------------------------------------------------------
-            // 🔧 PRÁCE → WorkItemData
-            // ---------------------------------------------------------
-            //
-            // Ukládají se pouze pracovní hodnoty:
-            // - SelectedTask
-            // - SelectedSpecification
-            // - SelectedMaterial
-            // - SelectedLocation
-            // - SelectedWorkPrice (volitelné)
-            // - SelectedWorkUnit  (volitelné)
-            //
-            // Každý řádek dostane sekvenční ID (W-1, W-2…), které se použije
-            // i ve společné sekci, a zároveň Position – svoji SKUTEČNOU
-            // pozici v kolekci WorkCalcItems (index + 1), zjištěnou ještě
-            // před odfiltrováním prázdných řádků.
-            //
-            // Postup:
-            //   1) Select((x, i) => ...) – ke každému řádku přiřadíme jeho
-            //      skutečné číslo pozice (Position = index + 1), a to ještě
-            //      před odfiltrováním prázdných řádků.
-            //   2) Where(!IsEmpty) – teprve teď odfiltrujeme prázdné řádky.
-            //      Position vyplněných řádků tím zůstane zachovaná přesně
-            //      tak, jak řádek stojí v UI.
-            //
             var workItemsWithCommon = WorkCalcItems
-                .Select((x, i) => new { Item = x, Position = i + 1 }) // 🔴 pozice řádku PŘED filtrováním
+                .Select((x, i) => new { Item = x, Position = i + 1 })
                 .Where(x => !x.Item.IsEmpty)
                 .Select(x =>
                 {
-                    var id = $"W-{workCounter++}"; // krátké, čitelné, sekvenční ID
+                    var id = $"W-{workCounter++}";
 
                     return new
                     {
                         Work = new WorkItemData
                         {
                             Id = id,
-                            Position = x.Position, // 🔴 NOVÉ: skutečná pozice řádku v UI
-                            SelectedTask = x.Item.SelectedTask,
-                            SelectedSpecification = x.Item.SelectedSpecification,
-                            SelectedMaterial = x.Item.SelectedMaterial,
-                            SelectedLocation = x.Item.SelectedLocation,
+                            Position = x.Position,
+                            SelectedWorkTask = x.Item.SelectedWorkTask,
+                            SelectedWorkSpecification = x.Item.SelectedWorkSpecification,
+                            SelectedBaseMaterial = x.Item.SelectedBaseMaterial,
+                            SelectedWorkPosition = x.Item.SelectedWorkPosition,
                             SelectedWorkPrice = x.Item.SelectedWorkPrice,
                             SelectedWorkUnit = x.Item.SelectedWorkUnit
                         },
@@ -643,36 +603,19 @@ namespace ElektroOffer_app.ViewModels
 
             var workItems = workItemsWithCommon.Select(x => x.Work).ToList();
 
-
-            // ---------------------------------------------------------
-            // 📦 MATERIÁL → MaterialItemData
-            // ---------------------------------------------------------
-            //
-            // Ukládají se pouze materiálové hodnoty:
-            // - SelectedCategory
-            // - SelectedProductName
-            // - SelectedSupplier
-            // - SelectedOffer
-            // - SelectedMaterialPrice (volitelné)
-            // - SelectedMaterialUnit  (volitelné)
-            //
-            // Stejný princip jako u PRÁCE výše: Id je sekvenční (M-1, M-2…),
-            // Position nese skutečnou pozici řádku v kolekci MaterialItems
-            // (index + 1), zjištěnou ještě před odfiltrováním prázdných řádků.
-            //
             var materialItemsWithCommon = MaterialItems
-                .Select((x, i) => new { Item = x, Position = i + 1 }) // 🔴 pozice řádku PŘED filtrováním
+                .Select((x, i) => new { Item = x, Position = i + 1 })
                 .Where(x => !x.Item.IsEmpty)
                 .Select(x =>
                 {
-                    var id = $"M-{materialCounter++}"; // krátké, čitelné, sekvenční ID
+                    var id = $"M-{materialCounter++}";
 
                     return new
                     {
                         Material = new MaterialItemData
                         {
                             Id = id,
-                            Position = x.Position, // 🔴 NOVÉ: skutečná pozice řádku v UI
+                            Position = x.Position,
                             SelectedCategory = x.Item.SelectedCategory,
                             SelectedProductName = x.Item.SelectedProductName,
                             SelectedSupplier = x.Item.SelectedSupplier,
@@ -694,31 +637,11 @@ namespace ElektroOffer_app.ViewModels
 
             var materialItems = materialItemsWithCommon.Select(x => x.Material).ToList();
 
-
-            // ---------------------------------------------------------
-            // 🧮 SPOLEČNÉ → CalculationItemData
-            // ---------------------------------------------------------
-            //
-            // Společné hodnoty jsou stejné pro PRÁCI i MATERIÁL:
-            // - Quantity
-            // - DiscountPercent
-            // - IsDiscountEnabled
-            // - Total
-            //
-            // Každý řádek má ID shodné s WorkItemData nebo MaterialItemData.
-            // Díky tomu lze jednoznačně spárovat položky při načítání.
-            // Position se v CalculationItemData neukládá – ta je čistě
-            // záležitostí WorkItemData / MaterialItemData a UI rozložení.
-            //
             var commonItems =
                 workItemsWithCommon.Select(x => x.Common)
                 .Concat(materialItemsWithCommon.Select(x => x.Common))
                 .ToList();
 
-
-            // ---------------------------------------------------------
-            // Sestavení ProjectData
-            // ---------------------------------------------------------
             return new ProjectData
             {
                 ProjectName = _currentFilePath != null
@@ -729,55 +652,21 @@ namespace ElektroOffer_app.ViewModels
 
                 WorkItems = workItems,
                 MaterialItems = materialItems,
-                CommonItems = commonItems
+                CommonItems = commonItems,
+                InvoiceDraft = _invoiceDraft != null
+                    ? InvoiceDraftCloneService.Clone(_invoiceDraft)
+                    : null,
+                WorkRowCount = WorkCalcItems.Count,
+                MaterialRowCount = MaterialItems.Count
             };
         }
 
         // ============================================================================
-        // 📥 APPLY PROJECT DATA – načtení uloženého projektu do ViewModelů
+        // 📥 APPLY PROJECT DATA
         // ============================================================================
         //
-        // Nový datový model:
-        //   • WorkItems        → pouze pracovní hodnoty
-        //   • MaterialItems    → pouze materiálové hodnoty
-        //   • CommonItems      → Quantity, sleva, Total
-        //
-        // ❗ Prázdné řádky se NEukládají do JSONu.
-        // ❗ Pozice řádků se obnovují podle pole Position (ne podle Id).
-        //
-        // Logika:
-        // -------
-        // 1) Vytvoří se dostatečný počet prázdných řádků – zvlášť pro PRÁCI
-        //    a zvlášť pro MATERIÁL, podle nejvyšší hodnoty Position, která
-        //    se v uložených datech reálně vyskytuje.
-        // 2) Načtou se uložené položky → vloží se na index = Position - 1.
-        // 3) Společné hodnoty (CommonItems) se dohledávají podle Id
-        //    (Id ↔ Id, stejně jako doteď – Position s tímto párováním
-        //    nemá nic společného).
-        // 4) UI tak přesně obnoví původní strukturu řádků, včetně mezer
-        //    mezi vyplněnými řádky (např. vyplněný 1. a 5. řádek zůstanou
-        //    na svých pozicích, řádky 2–4 zůstanou prázdné).
-        //
-        // 🔴 ZMĚNA (Position místo parsování Id):
-        // ----------------------------------------------------------------
-        // Dříve se pozice řádku odvozovala parsováním čísla z Id
-        // (např. "W-5" → 5). To fungovalo jen do doby, než Id přestalo
-        // odpovídat pozici v UI (Id je nyní čistě sekvenční – W-1, W-2...).
-        //
-        // Nově se pozice čte přímo z nového pole Position, které se
-        // ukládá zvlášť a nezávisle na Id (viz WorkItemData / MaterialItemData
-        // a komentář v BuildProjectData()).
-        //
-        // Zároveň se počet vytvářených prázdných řádků počítá dynamicky –
-        // zvlášť pro PRÁCI a MATERIÁL – jako maximum z:
-        //   - minimálního počtu řádků (minRowCount = 5), aby nový/prázdný
-        //     projekt měl rozumně široké UI hned po otevření,
-        //   - nejvyšší hodnoty Position, která se reálně vyskytuje
-        //     v uložených datech dané sekce.
-        // ============================================================================
         private void ApplyProjectData(ProjectData data, string path)
         {
-            // 🔒 vypnout reakce na změny během načítání
             _isLoading = true;
 
             ClearAllItems();
@@ -785,36 +674,22 @@ namespace ElektroOffer_app.ViewModels
             var workItems = data.WorkItems;
             var materialItems = data.MaterialItems;
             var commonItems = data.CommonItems;
+            _invoiceDraft = data.InvoiceDraft != null
+                ? InvoiceDraftCloneService.Clone(data.InvoiceDraft)
+                : null;
 
-            // =====================================================================
-            // 🔧 1) Vytvoření dostatečného počtu prázdných řádků
-            // =====================================================================
-            //
-            // Prázdné řádky se NEukládají do JSONu, ale UI je potřebuje.
-            // Proto se zde vytvoří základní struktura řádků (prázdné
-            // CalculationItemViewModel instance), do kterých se pak
-            // v krocích 2) a 3) vloží uložená data na správné indexy
-            // (podle Position, ne podle Id).
-            //
-            // Počet řádků se počítá zvlášť pro PRÁCI a MATERIÁL jako
-            // maximum z minRowCount a nejvyšší hodnoty Position nalezené
-            // mezi uloženými položkami dané sekce.
-            //
             const int minRowCount = 5;
 
-            // Nejvyšší Position mezi uloženými PRÁCE položkami (0, pokud žádné nejsou)
             int maxWorkRow = workItems.Count > 0
                 ? workItems.Max(w => w.Position)
                 : 0;
 
-            // Nejvyšší Position mezi uloženými MATERIÁL položkami (0, pokud žádné nejsou)
             int maxMaterialRow = materialItems.Count > 0
                 ? materialItems.Max(m => m.Position)
                 : 0;
 
-            // Výsledný počet řádků = větší z (minimum, nejvyšší uložená Position)
-            int workRowCount = Math.Max(minRowCount, maxWorkRow);
-            int materialRowCount = Math.Max(minRowCount, maxMaterialRow);
+            int workRowCount = Math.Max(Math.Max(minRowCount, maxWorkRow), data.WorkRowCount);
+            int materialRowCount = Math.Max(Math.Max(minRowCount, maxMaterialRow), data.MaterialRowCount);
 
             for (int i = 0; i < workRowCount; i++)
             {
@@ -830,34 +705,23 @@ namespace ElektroOffer_app.ViewModels
                 MaterialItems.Add(emptyMaterial);
             }
 
-            // =====================================================================
-            // 🔧 2) PRÁCE – načtení WorkItemData + společných hodnot podle ID
-            // =====================================================================
-            //
-            // Position určuje, na který index v UI se řádek vloží
-            // (index = Position - 1, protože kolekce je 0-based).
-            //
-            // Id se nadále používá výhradně pro dohledání odpovídající
-            // společné položky v CommonItems.
-            //
             foreach (var savedWork in workItems)
             {
-                // Position 5 → index 4
                 int index = savedWork.Position - 1;
-
                 var item = WorkCalcItems[index];
 
-                // ---------------------- PRÁCE ----------------------
                 item.Id = savedWork.Id;
-                item.SelectedTask = savedWork.SelectedTask;
-                item.SelectedSpecification = savedWork.SelectedSpecification;
-                item.SelectedMaterial = savedWork.SelectedMaterial;
-                item.SelectedLocation = savedWork.SelectedLocation;
+
+                // Nastavení vybraných textových hodnot zároveň dohledá EF entity,
+                // které jsou potřeba pro výpočet ceny práce.
+                item.SelectedWorkTask = savedWork.SelectedWorkTask;
+                item.SelectedWorkSpecification = savedWork.SelectedWorkSpecification;
+                item.SelectedBaseMaterial = savedWork.SelectedBaseMaterial;
+                item.SelectedWorkPosition = savedWork.SelectedWorkPosition;
 
                 item.SelectedWorkPrice = savedWork.SelectedWorkPrice;
                 item.SelectedWorkUnit = savedWork.SelectedWorkUnit;
 
-                // ---------------------- SPOLEČNÉ ----------------------
                 var savedCommon = commonItems.First(c => c.Id == savedWork.Id);
 
                 item.Quantity = savedCommon.Quantity;
@@ -865,20 +729,11 @@ namespace ElektroOffer_app.ViewModels
                 item.IsDiscountEnabled = savedCommon.IsDiscountEnabled;
             }
 
-            // =====================================================================
-            // 📦 3) MATERIÁL – načtení MaterialItemData + společných hodnot podle ID
-            // =====================================================================
-            //
-            // Stejný princip jako u PRÁCE výše: Position určuje index v UI,
-            // Id slouží k dohledání odpovídající společné položky.
-            //
             foreach (var savedMaterial in materialItems)
             {
                 int index = savedMaterial.Position - 1;
-
                 var item = MaterialItems[index];
 
-                // ---------------------- MATERIÁL ----------------------
                 item.Id = savedMaterial.Id;
                 item.SelectedCategory = savedMaterial.SelectedCategory;
                 item.SelectedProductName = savedMaterial.SelectedProductName;
@@ -888,7 +743,6 @@ namespace ElektroOffer_app.ViewModels
                 item.SelectedMaterialPriceValue = savedMaterial.SelectedMaterialPrice;
                 item.SelectedMaterialUnit = savedMaterial.SelectedMaterialUnit;
 
-                // ---------------------- SPOLEČNÉ ----------------------
                 var savedCommon = commonItems.First(c => c.Id == savedMaterial.Id);
 
                 item.Quantity = savedCommon.Quantity;
@@ -896,11 +750,11 @@ namespace ElektroOffer_app.ViewModels
                 item.IsDiscountEnabled = savedCommon.IsDiscountEnabled;
             }
 
-            // =====================================================================
-            // 🔄 4) Přepočet všech hodnot po načtení
-            // =====================================================================
             _isLoading = false;
             Recalculate();
+            _currentFilePath = path;
+            _hasUnsavedChanges = false;
+            StatusText = path;
         }
 
         // =========================================================
@@ -943,10 +797,10 @@ namespace ElektroOffer_app.ViewModels
         private bool IsProjectEmpty()
         {
             bool workEmpty = WorkCalcItems.All(x =>
-                x.SelectedTask == null &&
-                x.SelectedSpecification == null &&
-                x.SelectedMaterial == null &&
-                x.SelectedLocation == null &&
+                x.SelectedWorkTask == null &&
+                x.SelectedWorkSpecification == null &&
+                x.SelectedBaseMaterial == null &&
+                x.SelectedWorkPosition == null &&
                 x.Quantity == 0);
 
             bool materialEmpty = MaterialItems.All(x =>
@@ -966,10 +820,56 @@ namespace ElektroOffer_app.ViewModels
             _printService.Print(text);
         }
 
+        public void ShowInvoice()
+        {
+            Recalculate();
+            var savedDraft = _windowService.ShowInvoice(BudgetItems.ToList(), _invoiceDraft);
+            if (savedDraft != null)
+            {
+                _invoiceDraft = savedDraft;
+                MarkAsChanged();
+            }
+        }
+
+        public void ImportCatalog()
+        {
+            if (_catalogImportService == null || _catalogImportDialog == null || _catalogImportMessages == null)
+                return;
+
+            var path = _catalogImportDialog.ShowOpenFileDialog(
+                "Katalog ElektroOffer (*.xlsx)|*.xlsx",
+                "Importovat katalog z Excelu");
+            if (path == null) return;
+
+            var result = _catalogImportService.Import(path);
+            if (!result.Success)
+            {
+                var details = string.Join(Environment.NewLine, result.Issues.Take(20)
+                    .Select(x => $"{x.Sheet}, řádek {x.Row}, {x.Column}: {x.Message}"));
+                if (result.Issues.Count > 20)
+                    details += $"{Environment.NewLine}… a dalších {result.Issues.Count - 20} chyb.";
+                _catalogImportMessages.Show(details, "Import katalogu – chyby", System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Error);
+                return;
+            }
+
+            LoadCatalogDataFromDb();
+            _catalogImportMessages.Show(
+                $"Import dokončen.\n\nNové záznamy: {result.Inserted}\nAktualizované záznamy: {result.Updated}",
+                "Import katalogu",
+                System.Windows.MessageBoxButton.OK,
+                System.Windows.MessageBoxImage.Information);
+        }
+
+        public void ShowSettings()
+        {
+            _windowService.ShowSettings();
+        }
+
         // =========================================================
         // EXPORT TEXT
         // =========================================================
 
+        // Textový export používá stejnou skladbu ceny jako detailní rozpočet.
         public string ExportAsText()
         {
             var sb = new System.Text.StringBuilder();
@@ -983,25 +883,28 @@ namespace ElektroOffer_app.ViewModels
 
             foreach (var item in WorkCalcItems)
             {
-                if (item.WorkItem == null) continue;
+                if (item.SelectedWorkTaskEntity == null ||
+                    item.SelectedBaseMaterialEntity == null ||
+                    item.SelectedWorkPositionEntity == null)
+                    continue;
 
-                double basePrice = item.WorkItem.BasePrice
-                                 * item.WorkItem.MaterialCoef
-                                 * item.WorkItem.PositionCoef
-                                 * item.Quantity;
+                double basePrice = (double)item.SelectedWorkTaskEntity.BasePrice
+                                  * (double)item.SelectedBaseMaterialEntity.BaseMaterialCoef
+                                  * (double)item.SelectedWorkPositionEntity.PositionCoef
+                                  * item.Quantity;
 
                 if (item.IsDiscountEnabled && item.DiscountPercent.HasValue)
                 {
                     double discount = basePrice - item.Total;
 
-                    sb.AppendLine($"  {item.SelectedTask} | {item.Quantity}");
+                    sb.AppendLine($"  {item.SelectedWorkTask} | {item.Quantity}");
                     sb.AppendLine($"    Cena bez slevy:  {basePrice:N0} Kč");
                     sb.AppendLine($"    Sleva:           -{discount:N0} Kč ({item.DiscountPercent:N0} %)");
                     sb.AppendLine($"    Cena se slevou:  {item.Total:N0} Kč");
                 }
                 else
                 {
-                    sb.AppendLine($"  {item.SelectedTask} | {item.Quantity} | {item.Total:N0} Kč");
+                    sb.AppendLine($"  {item.SelectedWorkTask} | {item.Quantity} | {item.Total:N0} Kč");
                 }
             }
 
@@ -1052,7 +955,6 @@ namespace ElektroOffer_app.ViewModels
         // =========================================================
         public void ShowAbout()
         {
-            // ViewModel nezná AboutWindow, volá jen abstrakci IWindowService.
             _windowService.ShowAbout();
         }
 
