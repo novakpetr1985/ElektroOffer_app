@@ -16,6 +16,9 @@ namespace ElektroOffer_app.Services.Implementations
     // - Třída neobsahuje žádnou logiku ProjectService
     // - Pouze zobrazuje dialogy a vrací cestu k souboru
     // ========================================================================
+    /// <summary>
+    /// Zobrazuje systémové dialogy pro výběr projektových souborů.
+    /// </summary>
     public class RealFileDialogService : IFileDialogService
     {
         // --------------------------------------------------------------------

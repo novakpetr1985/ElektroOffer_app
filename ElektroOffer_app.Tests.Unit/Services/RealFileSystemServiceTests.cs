@@ -16,6 +16,7 @@ namespace ElektroOffer_app.Tests.Unit.Services
     // ❗ Cílem je ověřit, že RealFileSystemService funguje korektně
     // ============================================================================
 
+    /// <summary>Ověřuje skutečný souborový adaptér používaný ProjectService.</summary>
     public class RealFileSystemServiceTests
     {
         private RealFileSystemService _service = null!;

@@ -12,6 +12,7 @@ namespace ElektroOffer_app.Tests.Integration.Services   // ← OPRAVENO
     /// Testujeme reálné ukládání a načítání projektů do souboru.
     /// =====================================================================
 
+    /// <summary>Ověřuje chyby, zrušené dialogy a nestandardní souborové scénáře projektu.</summary>
     public class ProjectServiceTests_Advanced
     {
         private ProjectService? _service;

@@ -12,6 +12,9 @@ using ElektroOffer_app.Services;
 
 namespace ElektroOffer_app.Services.Implementations
 {
+    /// <summary>
+    /// Vytvoří jednoduchý FlowDocument a odešle jej do systémového PrintDialogu.
+    /// </summary>
     public class PrintService : IPrintService
     {
         public void Print(string text)
@@ -23,14 +26,17 @@ namespace ElektroOffer_app.Services.Implementations
             var flowDoc = new FlowDocument(
                 new Paragraph(new Run(text)))
             {
-                FontFamily = new FontFamily("Consolas"),
-                FontSize = 12,
-                PagePadding = new Thickness(50)
+                FontFamily = Token<FontFamily>("Typography.FontFamily.Document", new FontFamily("Arial")),
+                FontSize = Token("Typography.FontSize.Document", 10d),
+                PagePadding = Token("Spacing.DocumentPagePadding", new Thickness(50))
             };
 
             dialog.PrintDocument(
                 ((IDocumentPaginatorSource)flowDoc).DocumentPaginator,
                 "ElektroOffer – Kalkulace");
         }
+
+        private static T Token<T>(string key, T fallback)
+            => Application.Current?.TryFindResource(key) is T value ? value : fallback;
     }
 }

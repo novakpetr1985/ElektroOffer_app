@@ -1,0 +1,166 @@
+using System.IO;
+using System.Text.Json;
+using System.Windows;
+using System.Windows.Media;
+using Microsoft.Win32;
+
+namespace ElektroOffer_app.Services
+{
+    public enum AppThemeMode
+    {
+        System,
+        Light,
+        Dark
+    }
+
+    /// <summary>
+    /// Volí světlý, tmavý nebo systémový motiv a aktualizuje sdílené WPF zdroje.
+    /// </summary>
+    public class AppThemeService
+    {
+        // Uživatelská volba motivu se ukládá mimo projektový soubor,
+        // aby platila pro celou aplikaci a všechny otevírané projekty.
+        private static readonly string SettingsPath = Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+            "ElektroOffer",
+            "settings.json");
+
+        public AppThemeMode CurrentMode { get; private set; } = AppThemeMode.System;
+
+        public void LoadAndApply()
+        {
+            CurrentMode = LoadMode();
+            Apply(CurrentMode);
+        }
+
+        public void SetMode(AppThemeMode mode)
+        {
+            CurrentMode = mode;
+            SaveMode(mode);
+            Apply(mode);
+        }
+
+        private static AppThemeMode LoadMode()
+        {
+            if (!File.Exists(SettingsPath))
+                return AppThemeMode.System;
+
+            try
+            {
+                var json = File.ReadAllText(SettingsPath);
+                var settings = JsonSerializer.Deserialize<ThemeSettings>(json);
+                return Enum.TryParse<AppThemeMode>(settings?.ThemeMode, out var mode)
+                    ? mode
+                    : AppThemeMode.System;
+            }
+            catch
+            {
+                return AppThemeMode.System;
+            }
+        }
+
+        private static void SaveMode(AppThemeMode mode)
+        {
+            Directory.CreateDirectory(Path.GetDirectoryName(SettingsPath)!);
+            var json = JsonSerializer.Serialize(new ThemeSettings(mode.ToString()), new JsonSerializerOptions
+            {
+                WriteIndented = true
+            });
+
+            File.WriteAllText(SettingsPath, json);
+        }
+
+        private static void Apply(AppThemeMode mode)
+        {
+            var useDark = mode == AppThemeMode.Dark ||
+                          mode == AppThemeMode.System && IsWindowsDarkMode();
+
+            var resources = Application.Current.Resources;
+
+            if (useDark)
+            {
+                SetBrush(resources, "AppBackgroundBrush", "Color.Dark.Background");
+                SetBrush(resources, "AppSurfaceBrush", "Color.Dark.Surface");
+                SetBrush(resources, "AppSurfaceAltBrush", "Color.Dark.SurfaceAlt");
+                SetBrush(resources, "AppBorderBrush", "Color.Dark.Border");
+                SetBrush(resources, "AppTextBrush", "Color.Dark.Text");
+                SetBrush(resources, "AppMutedTextBrush", "Color.Dark.TextMuted");
+                SetBrush(resources, "AppInputBrush", "Color.Dark.Background");
+                SetBrush(resources, "AppInputTextBrush", "Color.Dark.Text");
+                SetBrush(resources, "AppDisabledInputBrush", "Color.Dark.SurfaceAlt");
+                SetBrush(resources, "AppDisabledTextBrush", "Color.Dark.TextMuted");
+                SetBrush(resources, "AppButtonBrush", "Color.Dark.SurfaceAlt");
+                SetBrush(resources, "AppAccentBrush", "Color.Dark.Accent");
+                SetBrush(resources, "AppAccentHoverBrush", "Color.Dark.AccentHover");
+                SetBrush(resources, "AppSelectionBrush", "Color.Dark.Accent");
+                SetBrush(resources, "AppSelectionTextBrush", "Color.OnAccent");
+                SetBrush(resources, "AppDangerBrush", "Color.Dark.Danger");
+                SetBrush(resources, "AppSuccessBrush", "Color.Dark.Success");
+                SetBrush(resources, "AppWarningBrush", "Color.Dark.Warning");
+            }
+            else
+            {
+                SetBrush(resources, "AppBackgroundBrush", "Color.Background");
+                SetBrush(resources, "AppSurfaceBrush", "Color.Surface");
+                SetBrush(resources, "AppSurfaceAltBrush", "Color.SurfaceAlt");
+                SetBrush(resources, "AppBorderBrush", "Color.Border");
+                SetBrush(resources, "AppTextBrush", "Color.Text");
+                SetBrush(resources, "AppMutedTextBrush", "Color.TextMuted");
+                SetBrush(resources, "AppInputBrush", "Color.Surface");
+                SetBrush(resources, "AppInputTextBrush", "Color.Text");
+                SetBrush(resources, "AppDisabledInputBrush", "Color.SurfaceAlt");
+                SetBrush(resources, "AppDisabledTextBrush", "Color.TextDisabled");
+                SetBrush(resources, "AppButtonBrush", "Color.SurfaceAlt");
+                SetBrush(resources, "AppAccentBrush", "Color.Accent");
+                SetBrush(resources, "AppAccentHoverBrush", "Color.AccentHover");
+                SetBrush(resources, "AppSelectionBrush", "Color.Accent");
+                SetBrush(resources, "AppSelectionTextBrush", "Color.OnAccent");
+                SetBrush(resources, "AppDangerBrush", "Color.Danger");
+                SetBrush(resources, "AppSuccessBrush", "Color.Success");
+                SetBrush(resources, "AppWarningBrush", "Color.Warning");
+            }
+
+            ApplySystemBrushes(resources);
+        }
+
+        private static void ApplySystemBrushes(ResourceDictionary resources)
+        {
+            // Některé standardní WPF šablony čtou přímo SystemColors.
+            // Přemapování drží čitelný výběr, menu a vstupy i v tmavém režimu.
+            resources[SystemColors.WindowBrushKey] = resources["AppBackgroundBrush"];
+            resources[SystemColors.WindowTextBrushKey] = resources["AppTextBrush"];
+            resources[SystemColors.ControlBrushKey] = resources["AppSurfaceBrush"];
+            resources[SystemColors.ControlTextBrushKey] = resources["AppTextBrush"];
+            resources[SystemColors.ControlLightBrushKey] = resources["AppSurfaceAltBrush"];
+            resources[SystemColors.ControlDarkBrushKey] = resources["AppBorderBrush"];
+            resources[SystemColors.MenuBrushKey] = resources["AppSurfaceBrush"];
+            resources[SystemColors.MenuTextBrushKey] = resources["AppTextBrush"];
+            resources[SystemColors.HighlightBrushKey] = resources["AppSelectionBrush"];
+            resources[SystemColors.HighlightTextBrushKey] = resources["AppSelectionTextBrush"];
+            resources[SystemColors.InactiveSelectionHighlightBrushKey] = resources["AppSelectionBrush"];
+            resources[SystemColors.InactiveSelectionHighlightTextBrushKey] = resources["AppSelectionTextBrush"];
+            resources[SystemColors.HotTrackBrushKey] = resources["AppSelectionBrush"];
+            resources[SystemColors.GrayTextBrushKey] = resources["AppMutedTextBrush"];
+        }
+
+        private static bool IsWindowsDarkMode()
+        {
+            try
+            {
+                using var key = Registry.CurrentUser.OpenSubKey(
+                    @"Software\Microsoft\Windows\CurrentVersion\Themes\Personalize");
+                var value = key?.GetValue("AppsUseLightTheme");
+                return value is int intValue && intValue == 0;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        private static void SetBrush(ResourceDictionary resources, string brushKey, string colorToken)
+            => resources[brushKey] = new SolidColorBrush((Color)resources[colorToken]);
+
+        private sealed record ThemeSettings(string ThemeMode);
+    }
+}

@@ -27,6 +27,7 @@ namespace ElektroOffer_app.Tests.Integration.Services
 
     [TestFixture]
     [Apartment(ApartmentState.STA)] // 🔥 WPF dialogy vyžadují STA thread
+    /// <summary>Explicitní smoke testy skutečných systémových dialogů pro ruční spuštění.</summary>
     public class RealFileDialogServiceTests
     {
         private string _testFilePath = null!;

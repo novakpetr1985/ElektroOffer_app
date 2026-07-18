@@ -105,11 +105,24 @@ namespace ElektroOffer_app.Models
         // 💰 CENA CELKEM ZA ŘÁDEK
         // =========================================================
 
+        private double _priceBeforeDiscount;
+
+        /// <summary>Celková cena položky před aplikací řádkové slevy.</summary>
+        public double PriceBeforeDiscount
+        {
+            get => _priceBeforeDiscount;
+            set
+            {
+                if (Math.Abs(_priceBeforeDiscount - value) < 0.0001) return;
+                _priceBeforeDiscount = value;
+                OnPropertyChanged();
+            }
+        }
+
         private double _price;
 
         /// <summary>
-        /// Celková cena položky.
-        /// (už je spočítaná v Recalculate)
+        /// Výsledná celková cena položky po aplikaci řádkové slevy.
         /// </summary>
         public double Price
         {

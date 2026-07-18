@@ -10,6 +10,7 @@ namespace ElektroOffer_app.Tests.Unit.CommandTests
     /// 🧩 UNIT TESTS — RelayCommand
     /// Testujeme MVVM command logiku (Execute, CanExecute, eventy).
     /// ============================================================
+    /// <summary>Ověřuje spuštění, parametry a CanExecute společného RelayCommandu.</summary>
     public class RelayCommandTests
     {
         [Test]

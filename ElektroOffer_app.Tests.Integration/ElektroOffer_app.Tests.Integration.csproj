@@ -36,6 +36,7 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\ElektroOffer_app\ElektroOffer_app.csproj" />
+		<ProjectReference Include="..\ElektroOffer_app.Invoice\ElektroOffer_app.Invoice.csproj" />
 	</ItemGroup>
 
 </Project>

@@ -25,6 +25,7 @@ namespace ElektroOffer_app.Tests.Unit.ViewModels
     // v TestBase.cs, ze kterého tato třída dědí.
     // =====================================================================
     [TestFixture]
+    /// <summary>Ověřuje reset a doplňování navazujících voleb materiálu.</summary>
     public class CalculationItemViewModelTests_CascadeMaterial : TestBase
     {
 

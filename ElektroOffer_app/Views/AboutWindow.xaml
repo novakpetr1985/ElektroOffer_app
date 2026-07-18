@@ -11,8 +11,10 @@
     <!-- =========================================================== -->
     <!-- HLAVNÍ LAYOUT: ScrollViewer pro případ velkého obsahu        -->
     <!-- =========================================================== -->
-    <ScrollViewer VerticalScrollBarVisibility="Auto">
+    <ScrollViewer VerticalScrollBarVisibility="Auto"
+                  Background="{DynamicResource AppBackgroundBrush}">
         <StackPanel Margin="30"
+                    Background="{DynamicResource AppBackgroundBrush}"
                     HorizontalAlignment="Center">
 
             <!-- ======================================================= -->
@@ -44,7 +46,7 @@
             <!-- ======================================================= -->
             <TextBlock x:Name="VersionText"
                        FontSize="14"
-                       Foreground="Gray"
+                       Foreground="{DynamicResource AppMutedTextBrush}"
                        HorizontalAlignment="Center"
                        TextAlignment="Center"
                        Margin="0,0,0,20"/>
@@ -59,7 +61,7 @@
             <!-- ======================================================= -->
             <TextBlock Text="Vyrobeno"
                        FontSize="13"
-                       Foreground="Gray"
+                       Foreground="{DynamicResource AppMutedTextBrush}"
                        HorizontalAlignment="Center"
                        TextAlignment="Center"
                        Margin="0,0,0,4"/>
