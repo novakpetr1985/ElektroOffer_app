@@ -17,6 +17,7 @@
 
 - Hlavní i fakturační aplikace a terénní klient používají verzi `1.13.0-feature`.
 - CI používá cílené joby: unit testy běží při každém pushi, integrační testy při PR, tagu a ručním spuštění a náročné mobilní sestavení pouze při změně mobilního či sdíleného kódu. Povinný status `Build and test` zůstává stabilní pro Ruleset.
+- Souhrn každého CI běhu znovu obsahuje metadata, přesné počty provedených a neúspěšných testů a samostatné výsledky Windows, Android a release kontroly včetně důvodu přeskočení.
 - Rozpracovaná fakturace se průběžně uchovává a lze samostatně vymazat celý formulář, dodavatele nebo odběratele.
 - Publikační skript umí připravit testovací balíček pro druhý počítač a samostatné Android APK.
 - Mobilní projekt cílí pouze na používané platformy Android a Windows; nepoužité šablony iOS, MacCatalyst a demonstrační assety byly odstraněny.

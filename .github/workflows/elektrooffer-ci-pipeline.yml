@@ -82,6 +82,13 @@ jobs:
   unit:
     name: Unit tests
     runs-on: windows-latest
+    outputs:
+      outcome: ${{ steps.unit_summary.outputs.outcome }}
+      total: ${{ steps.unit_summary.outputs.total }}
+      executed: ${{ steps.unit_summary.outputs.executed }}
+      passed: ${{ steps.unit_summary.outputs.passed }}
+      failed: ${{ steps.unit_summary.outputs.failed }}
+      skipped: ${{ steps.unit_summary.outputs.skipped }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -107,6 +114,33 @@ jobs:
       - name: Run unit tests
         run: dotnet test ElektroOffer_app.Tests.Unit/ElektroOffer_app.Tests.Unit.csproj --configuration Debug --no-build --no-restore --verbosity normal --logger trx --results-directory TestResults/Unit --collect:"XPlat Code Coverage"
 
+      - name: Summarize unit tests
+        id: unit_summary
+        if: always()
+        shell: pwsh
+        run: |
+          $file = Get-ChildItem TestResults/Unit -Filter *.trx -Recurse -ErrorAction SilentlyContinue |
+            Sort-Object LastWriteTime | Select-Object -Last 1
+          $values = [ordered]@{ outcome = "not run"; total = 0; executed = 0; passed = 0; failed = 0; skipped = 0 }
+          if ($file) {
+            [xml] $xml = Get-Content $file.FullName
+            $summary = $xml.SelectSingleNode("//*[local-name()='ResultSummary']")
+            $counters = $xml.SelectSingleNode("//*[local-name()='ResultSummary']/*[local-name()='Counters']")
+            $values.outcome = $summary.outcome
+            $values.total = $counters.total
+            $values.executed = $counters.executed
+            $values.passed = $counters.passed
+            $values.failed = $counters.failed
+            $values.skipped = $counters.notExecuted
+          }
+          foreach ($entry in $values.GetEnumerator()) {
+            "$($entry.Key)=$($entry.Value)" | Out-File $env:GITHUB_OUTPUT -Append -Encoding utf8
+          }
+          "### Unit tests" | Out-File $env:GITHUB_STEP_SUMMARY -Append -Encoding utf8
+          "| Outcome | Total | Executed | Passed | Failed | Skipped |" | Out-File $env:GITHUB_STEP_SUMMARY -Append -Encoding utf8
+          "|---|---:|---:|---:|---:|---:|" | Out-File $env:GITHUB_STEP_SUMMARY -Append -Encoding utf8
+          "| $($values.outcome) | $($values.total) | $($values.executed) | $($values.passed) | $($values.failed) | $($values.skipped) |" | Out-File $env:GITHUB_STEP_SUMMARY -Append -Encoding utf8
+
       - name: Upload unit coverage
         if: always()
         uses: actions/upload-artifact@v4
@@ -128,6 +162,13 @@ jobs:
     name: Integration tests
     if: github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch' || startsWith(github.ref, 'refs/tags/')
     runs-on: windows-latest
+    outputs:
+      outcome: ${{ steps.integration_summary.outputs.outcome }}
+      total: ${{ steps.integration_summary.outputs.total }}
+      executed: ${{ steps.integration_summary.outputs.executed }}
+      passed: ${{ steps.integration_summary.outputs.passed }}
+      failed: ${{ steps.integration_summary.outputs.failed }}
+      skipped: ${{ steps.integration_summary.outputs.skipped }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -153,6 +194,33 @@ jobs:
       - name: Run integration tests
         run: dotnet test ElektroOffer_app.Tests.Integration/ElektroOffer_app.Tests.Integration.csproj --configuration Debug --no-build --no-restore --verbosity normal --logger trx --results-directory TestResults/Integration --collect:"XPlat Code Coverage"
 
+      - name: Summarize integration tests
+        id: integration_summary
+        if: always()
+        shell: pwsh
+        run: |
+          $file = Get-ChildItem TestResults/Integration -Filter *.trx -Recurse -ErrorAction SilentlyContinue |
+            Sort-Object LastWriteTime | Select-Object -Last 1
+          $values = [ordered]@{ outcome = "not run"; total = 0; executed = 0; passed = 0; failed = 0; skipped = 0 }
+          if ($file) {
+            [xml] $xml = Get-Content $file.FullName
+            $summary = $xml.SelectSingleNode("//*[local-name()='ResultSummary']")
+            $counters = $xml.SelectSingleNode("//*[local-name()='ResultSummary']/*[local-name()='Counters']")
+            $values.outcome = $summary.outcome
+            $values.total = $counters.total
+            $values.executed = $counters.executed
+            $values.passed = $counters.passed
+            $values.failed = $counters.failed
+            $values.skipped = $counters.notExecuted
+          }
+          foreach ($entry in $values.GetEnumerator()) {
+            "$($entry.Key)=$($entry.Value)" | Out-File $env:GITHUB_OUTPUT -Append -Encoding utf8
+          }
+          "### Integration tests" | Out-File $env:GITHUB_STEP_SUMMARY -Append -Encoding utf8
+          "| Outcome | Total | Executed | Passed | Failed | Skipped |" | Out-File $env:GITHUB_STEP_SUMMARY -Append -Encoding utf8
+          "|---|---:|---:|---:|---:|---:|" | Out-File $env:GITHUB_STEP_SUMMARY -Append -Encoding utf8
+          "| $($values.outcome) | $($values.total) | $($values.executed) | $($values.passed) | $($values.failed) | $($values.skipped) |" | Out-File $env:GITHUB_STEP_SUMMARY -Append -Encoding utf8
+
       - name: Upload integration coverage
         if: always()
         uses: actions/upload-artifact@v4
@@ -175,6 +243,9 @@ jobs:
     needs: changes
     if: needs.changes.outputs.field == 'true'
     runs-on: windows-latest
+    outputs:
+      windows: ${{ steps.field_summary.outputs.windows }}
+      android: ${{ steps.field_summary.outputs.android }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -192,11 +263,29 @@ jobs:
           restore-keys: ${{ runner.os }}-nuget-
 
       - name: Build mobile application for Windows
+        id: field_windows
         run: dotnet build ElektroOffer.Field/ElektroOffer.Field.csproj --configuration Debug --framework net10.0-windows10.0.19041.0
 
       - name: Build mobile application for Android
+        id: field_android
         if: github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch' || startsWith(github.ref, 'refs/tags/')
         run: dotnet build ElektroOffer.Field/ElektroOffer.Field.csproj --configuration Debug --framework net10.0-android --no-restore
+
+      - name: Summarize mobile build
+        id: field_summary
+        if: always()
+        shell: pwsh
+        env:
+          WINDOWS_RESULT: ${{ steps.field_windows.outcome }}
+          ANDROID_RESULT: ${{ steps.field_android.outcome }}
+        run: |
+          "windows=$env:WINDOWS_RESULT" | Out-File $env:GITHUB_OUTPUT -Append -Encoding utf8
+          "android=$env:ANDROID_RESULT" | Out-File $env:GITHUB_OUTPUT -Append -Encoding utf8
+          "### Mobile build" | Out-File $env:GITHUB_STEP_SUMMARY -Append -Encoding utf8
+          "| Target | Result |" | Out-File $env:GITHUB_STEP_SUMMARY -Append -Encoding utf8
+          "|---|---|" | Out-File $env:GITHUB_STEP_SUMMARY -Append -Encoding utf8
+          "| Windows | $env:WINDOWS_RESULT |" | Out-File $env:GITHUB_STEP_SUMMARY -Append -Encoding utf8
+          "| Android | $env:ANDROID_RESULT |" | Out-File $env:GITHUB_STEP_SUMMARY -Append -Encoding utf8
 
   ci:
     name: Build and test
@@ -215,6 +304,20 @@ jobs:
           UNIT_RESULT: ${{ needs.unit.result }}
           INTEGRATION_RESULT: ${{ needs.integration.result }}
           FIELD_RESULT: ${{ needs.field.result }}
+          UNIT_OUTCOME: ${{ needs.unit.outputs.outcome }}
+          UNIT_TOTAL: ${{ needs.unit.outputs.total }}
+          UNIT_EXECUTED: ${{ needs.unit.outputs.executed }}
+          UNIT_PASSED: ${{ needs.unit.outputs.passed }}
+          UNIT_FAILED: ${{ needs.unit.outputs.failed }}
+          UNIT_SKIPPED: ${{ needs.unit.outputs.skipped }}
+          INTEGRATION_OUTCOME: ${{ needs.integration.outputs.outcome }}
+          INTEGRATION_TOTAL: ${{ needs.integration.outputs.total }}
+          INTEGRATION_EXECUTED: ${{ needs.integration.outputs.executed }}
+          INTEGRATION_PASSED: ${{ needs.integration.outputs.passed }}
+          INTEGRATION_FAILED: ${{ needs.integration.outputs.failed }}
+          INTEGRATION_SKIPPED: ${{ needs.integration.outputs.skipped }}
+          FIELD_WINDOWS: ${{ needs.field.outputs.windows }}
+          FIELD_ANDROID: ${{ needs.field.outputs.android }}
         run: |
           $results = [ordered]@{
             "Change detection" = $env:CHANGES_RESULT
@@ -225,10 +328,37 @@ jobs:
 
           "# ElektroOffer CI Summary" | Out-File elektrooffer-ci-summary.md -Encoding utf8
           "" | Out-File elektrooffer-ci-summary.md -Append -Encoding utf8
-          "| Check | Result |" | Out-File elektrooffer-ci-summary.md -Append -Encoding utf8
-          "|---|---|" | Out-File elektrooffer-ci-summary.md -Append -Encoding utf8
-          foreach ($entry in $results.GetEnumerator()) {
-            "| $($entry.Key) | $($entry.Value) |" | Out-File elektrooffer-ci-summary.md -Append -Encoding utf8
+          "- Timestamp: $(Get-Date -Format o)" | Out-File elektrooffer-ci-summary.md -Append -Encoding utf8
+          "- Event: $env:GITHUB_EVENT_NAME" | Out-File elektrooffer-ci-summary.md -Append -Encoding utf8
+          "- Ref: $env:GITHUB_REF" | Out-File elektrooffer-ci-summary.md -Append -Encoding utf8
+          "- Commit: $env:GITHUB_SHA" | Out-File elektrooffer-ci-summary.md -Append -Encoding utf8
+          "- Run: $env:GITHUB_SERVER_URL/$env:GITHUB_REPOSITORY/actions/runs/$env:GITHUB_RUN_ID" | Out-File elektrooffer-ci-summary.md -Append -Encoding utf8
+          "" | Out-File elektrooffer-ci-summary.md -Append -Encoding utf8
+          "## Tests" | Out-File elektrooffer-ci-summary.md -Append -Encoding utf8
+          "| Suite | Job | Outcome | Total | Executed | Passed | Failed | Skipped |" | Out-File elektrooffer-ci-summary.md -Append -Encoding utf8
+          "|---|---|---|---:|---:|---:|---:|---:|" | Out-File elektrooffer-ci-summary.md -Append -Encoding utf8
+          "| Unit | $env:UNIT_RESULT | $env:UNIT_OUTCOME | $env:UNIT_TOTAL | $env:UNIT_EXECUTED | $env:UNIT_PASSED | $env:UNIT_FAILED | $env:UNIT_SKIPPED |" | Out-File elektrooffer-ci-summary.md -Append -Encoding utf8
+          if ($env:INTEGRATION_RESULT -eq "skipped") {
+            "| Integration | skipped | not required for push | - | - | - | - | - |" | Out-File elektrooffer-ci-summary.md -Append -Encoding utf8
+          } else {
+            "| Integration | $env:INTEGRATION_RESULT | $env:INTEGRATION_OUTCOME | $env:INTEGRATION_TOTAL | $env:INTEGRATION_EXECUTED | $env:INTEGRATION_PASSED | $env:INTEGRATION_FAILED | $env:INTEGRATION_SKIPPED |" | Out-File elektrooffer-ci-summary.md -Append -Encoding utf8
+          }
+          "" | Out-File elektrooffer-ci-summary.md -Append -Encoding utf8
+          "## Build and release" | Out-File elektrooffer-ci-summary.md -Append -Encoding utf8
+          "| Check | Result | Detail |" | Out-File elektrooffer-ci-summary.md -Append -Encoding utf8
+          "|---|---|---|" | Out-File elektrooffer-ci-summary.md -Append -Encoding utf8
+          "| Change detection | $env:CHANGES_RESULT | Mobile/shared change: ${{ needs.changes.outputs.field }} |" | Out-File elektrooffer-ci-summary.md -Append -Encoding utf8
+          if ($env:FIELD_RESULT -eq "skipped") {
+            "| Mobile Windows | skipped | no relevant mobile/shared change |" | Out-File elektrooffer-ci-summary.md -Append -Encoding utf8
+            "| Mobile Android | skipped | no relevant change or ordinary push |" | Out-File elektrooffer-ci-summary.md -Append -Encoding utf8
+          } else {
+            "| Mobile Windows | $env:FIELD_WINDOWS | runs for relevant changes |" | Out-File elektrooffer-ci-summary.md -Append -Encoding utf8
+            "| Mobile Android | $env:FIELD_ANDROID | PR, tag or manual run only |" | Out-File elektrooffer-ci-summary.md -Append -Encoding utf8
+          }
+          if ($env:GITHUB_REF -like "refs/tags/*") {
+            "| Release publish | pending | starts after successful CI and manual approval |" | Out-File elektrooffer-ci-summary.md -Append -Encoding utf8
+          } else {
+            "| Release publish | skipped | tags only |" | Out-File elektrooffer-ci-summary.md -Append -Encoding utf8
           }
           Get-Content elektrooffer-ci-summary.md | Out-File $env:GITHUB_STEP_SUMMARY -Append -Encoding utf8
 
