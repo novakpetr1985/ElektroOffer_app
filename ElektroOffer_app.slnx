@@ -1,5 +1,7 @@
 <Solution>
   <Project Path="ElektroOffer_app\ElektroOffer_app.csproj" />
+  <Project Path="ElektroOffer.Contracts\ElektroOffer.Contracts.csproj" />
+  <Project Path="ElektroOffer.Field\ElektroOffer.Field.csproj" />
   <Project Path="ElektroOffer_app.Invoice\ElektroOffer_app.Invoice.csproj" />
   <Project Path="ElektroOffer_app.Tests.Unit/ElektroOffer_app.Tests.Unit.csproj" />
   <Project Path="ElektroOffer_app.Tests.Integration/ElektroOffer_app.Tests.Integration.csproj" />

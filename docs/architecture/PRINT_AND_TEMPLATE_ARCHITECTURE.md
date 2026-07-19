@@ -1,6 +1,6 @@
 # Tisk, PDF a šablony
 
-## Současný stav 1.12.0
+## Současný stav 1.13.0-feature
 
 Tisk kalkulace vede cestou `MainViewModel.ExportAsText()` → `IPrintService.Print(string)` → WPF `FlowDocument` → systémový `PrintDialog`. Uživatel může vybrat fyzickou tiskárnu nebo `Microsoft Print to PDF`. Neexistuje náhled, tiskový DTO model, tabulka, opakované záhlaví ani řízené stránkování.
 

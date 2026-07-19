@@ -7,6 +7,7 @@
 using ElektroOffer_app.Services;
 using ElektroOffer_app.Invoice.Models;
 using ElektroOffer_app.Invoice.Views;
+using ElektroOffer_app.Models;
 using ElektroOffer_app.Views;   // ⚠ Namespace, kde máš AboutWindow
 
 namespace ElektroOffer_app.Services.Implementations
@@ -43,9 +44,20 @@ namespace ElektroOffer_app.Services.Implementations
             }).ToList();
 
             var invoice = new InvoiceWindow(sourceItems, savedDraft);
-            return invoice.ShowDialog() == true
-                ? invoice.SavedDraft
-                : null;
+            invoice.ShowDialog();
+            return invoice.SavedDraft;
+        }
+
+        public bool ShowMeasurementImportPreview(MeasurementImportPreview preview)
+        {
+            var window = new MeasurementImportWindow(preview);
+            return window.ShowDialog() == true;
+        }
+
+        public void ShowMeasurementImports(IEnumerable<ImportedMeasurementData> imports, string projectPath)
+        {
+            var window = new MeasurementImportsWindow(imports, projectPath);
+            window.ShowDialog();
         }
     }
 }

@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "exportId": "7517f24e-e693-48cc-a9c8-920f6fce3281",
+  "createdAtUtc": "2026-07-18T08:00:00Z",
+  "sourceAppVersion": "1.13.0-feature",
+  "catalogVersion": "2026.07",
+  "project": {
+    "id": "14ad2de7-b38e-4165-bdaa-52e7fe901b74",
+    "name": "Testovaci rodinny dum",
+    "customerName": "Jan Novak",
+    "siteAddress": "Praha 1",
+    "note": "Offline testovaci mereni",
+    "areas": [{
+      "id": "daf661f4-e687-40c5-997d-1070bc31b4e8",
+      "name": "Kuchyne",
+      "items": [{
+        "id": "f395cf80-9e97-45bc-9977-932e620e2504",
+        "kind": "cableRoute",
+        "catalogCode": "WORK-CABLE-CYKY-3X2.5",
+        "displayName": "Kabelova trasa CYKY 3x2,5",
+        "quantity": 18.5,
+        "unit": "m",
+        "reservePercent": 10,
+        "workPositionCode": "WORK-CABLE-001",
+        "baseMaterialCode": "MAT-CYKY-3X2.5",
+        "note": "Trasa pod omitkou"
+      }]
+    }]
+  },
+  "attachments": []
+}

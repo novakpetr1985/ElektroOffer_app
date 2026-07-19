@@ -35,8 +35,17 @@ namespace ElektroOffer_app.Invoice.Views
 
         protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
         {
-            if (DataContext is InvoiceViewModel viewModel && !viewModel.ConfirmDiscardChanges())
-                e.Cancel = true;
+            if (DataContext is InvoiceViewModel viewModel)
+            {
+                if (!viewModel.ConfirmDiscardChanges())
+                {
+                    e.Cancel = true;
+                }
+                else if (InvoiceDraftStateService.HasMeaningfulContent(viewModel.Draft))
+                {
+                    SavedDraft = InvoiceDraftCloneService.Clone(viewModel.Draft);
+                }
+            }
 
             base.OnClosing(e);
         }

@@ -4,6 +4,9 @@
 #ifndef OutputDir
   #define OutputDir "..\..\artifacts\installer"
 #endif
+#ifndef FieldSourceDir
+  #error FieldSourceDir must be supplied by the build script.
+#endif
 #ifndef AppVersion
   #define AppVersion "1.12.0"
 #endif
@@ -29,18 +32,26 @@ UninstallDisplayIcon={app}\ElektroOffer_app.exe
 CloseApplications=yes
 RestartApplications=no
 SetupLogging=yes
+#ifdef TestSigning
+SignTool=TestSign
+SignedUninstaller=yes
+#endif
 
 [Languages]
 Name: "czech"; MessagesFile: "compiler:Languages\Czech.isl"
 
 [Files]
 Source: "{#SourceDir}\*"; DestDir: "{app}"; Excludes: "*.pdb"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "{#FieldSourceDir}\*"; DestDir: "{app}\Field"; Excludes: "*.pdb"; Flags: ignoreversion recursesubdirs createallsubdirs
 
 [Icons]
 Name: "{autoprograms}\ElektroOffer"; Filename: "{app}\ElektroOffer_app.exe"; WorkingDir: "{app}"
+Name: "{autoprograms}\ElektroOffer Terén"; Filename: "{app}\Field\ElektroOffer.Field.exe"; WorkingDir: "{app}\Field"
 Name: "{autodesktop}\ElektroOffer"; Filename: "{app}\ElektroOffer_app.exe"; WorkingDir: "{app}"; Tasks: desktopicon
+Name: "{autodesktop}\ElektroOffer Terén"; Filename: "{app}\Field\ElektroOffer.Field.exe"; WorkingDir: "{app}\Field"; Tasks: fielddesktopicon
 
 [Tasks]
+Name: "fielddesktopicon"; Description: "Vytvořit zástupce ElektroOffer Terén na ploše"; GroupDescription: "Další možnosti:"; Flags: unchecked
 Name: "desktopicon"; Description: "Vytvořit zástupce na ploše"; GroupDescription: "Další možnosti:"; Flags: unchecked
 
 [Run]

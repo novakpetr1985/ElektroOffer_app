@@ -17,5 +17,7 @@ namespace ElektroOffer_app.Services
         void ShowAbout();
         void ShowSettings();
         InvoiceDraft? ShowInvoice(IEnumerable<BudgetItem> budgetItems, InvoiceDraft? savedDraft);
+        bool ShowMeasurementImportPreview(MeasurementImportPreview preview);
+        void ShowMeasurementImports(IEnumerable<ImportedMeasurementData> imports, string projectPath);
     }
 }
