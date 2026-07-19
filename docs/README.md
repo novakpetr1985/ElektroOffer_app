@@ -202,13 +202,15 @@ Vizuální hodnoty nejsou zapisované přímo do jednotlivých oken. Sdílený s
 
 Workflow `.github/workflows/elektrooffer-ci-pipeline.yml` je nastavený tak, aby se testovalo jen tam, kde to dává smysl:
 
-- `push` do `feature/**`, `hotfix/**`, `release/**` spouští restore, Debug build, samostatný krok unit testů a samostatný krok integračních testů
-- `pull_request` do `dev`, `test`, `main` spouští stejný CI běh pro kontrolu chráněných větví
-- `workflow_dispatch` umožňuje ruční spuštění
-- tag spouští CI a po něm samostatný Release publish
-- krátký CI souhrn `elektrooffer-ci-summary` se ukládá jako artifact po každém běhu a obsahuje počty unit/integračních testů
+- každý `push` do libovolné větve spouští rychlé unit testy
+- `pull_request`, tag a `workflow_dispatch` navíc spouštějí integrační testy
+- Windows sestavení terénní aplikace proběhne jen při změně `ElektroOffer.Field`, sdílených kontraktů nebo konfigurace řešení; Android se z těchto událostí sestavuje pouze při PR, tagu a ručním běhu
+- tag po úspěšné povinné kontrole spouští samostatný Release publish
+- povinná kontrola se nadále jmenuje `ElektroOffer CI Pipeline / Build and test`; slučuje výsledky dílčích úloh a je vhodná pro GitHub Ruleset
+- krátký CI souhrn `elektrooffer-ci-summary` se ukládá jako artifact po každém běhu
 - detailní diagnostický log se vytváří jen při chybě, aby se běžné úspěšné běhy zbytečně neduplikovaly
-- všechny joby používají environment `manual-approval`; pro skutečné pozastavení běhu nastav v GitHubu `Settings -> Environments -> manual-approval -> Required reviewers`
+- nový push do stejné větve zruší její zastaralý rozpracovaný běh; tagové běhy se nikdy automaticky neruší
+- environment `manual-approval` používá pouze release job; pro skutečné pozastavení publikace nastav v GitHubu `Settings -> Environments -> manual-approval -> Required reviewers`
 
 ### Import materiálů
 
@@ -534,28 +536,26 @@ Každá změna prochází přes Pull Request, CI kontrolu a pravidla z GitHub Ru
 
 #### 📊 CI Pipeline – Matice běhu akcí
 
-| Akce                                    | Push | Pull Request | Tag | Error |
-| --------------------------------------- | ---- | ------------ | --- | ----- |
-| `Restore NuGet Packages`                |  ✔   |      ✔      |  ✔  |  ❌  |
-| `Build Solution`                        |  ✔   |      ✔      |  ✔  |  ❌  |
-| `Run Unit Tests`                        |  ✔   |      ✔      |  ✔  |  ❌  |
-| `Run Integration Tests`                 |  ✔   |      ✔      |  ✔  |  ❌  |
-| `Generate Minimal CI Log`               |  ✔   |      ✔      |  ✔  |  ❌  |
-| `Upload CI log artifact`                |  ✔   |      ✔      |  ✔  |  ❌  |
-| `Publish Application`                   |  ❌  |      ❌     |  ✔  |  ❌  |
-| `Upload Publish Artifact`               |  ❌  |      ❌     |  ✔  |  ❌  |
-| `Generate Detailed CI Log (release)`    |  ❌  |      ❌     |  ✔  |  ❌  |
-| `Upload CI log full artifact (release)` |  ❌  |      ❌     |  ✔  |  ❌  |
-| `Generate Detailed CI Log (error)`      |  ❌  |      ❌     |  ❌ |   ✔  |
-| `Upload CI log error artifact`          |  ❌  |      ❌     |  ❌ |   ✔  |
+| Akce                                      | Push | Pull Request | Tag | Ruční běh | Error |
+| ----------------------------------------- | ---- | ------------ | --- | ---------- | ----- |
+| `Run Unit Tests`                          |  ✔   |      ✔       |  ✔  |     ✔      |  ❌   |
+| `Run Integration Tests`                   |  ❌  |      ✔       |  ✔  |     ✔      |  ❌   |
+| `Build Field for Windows (při změně)`      |  ✔   |      ✔       |  ✔  |     ✔      |  ❌   |
+| `Build Field for Android (při změně)`      |  ❌  |      ✔       |  ✔  |     ✔      |  ❌   |
+| `Build and test` – povinná souhrnná kontrola |  ✔   |      ✔       |  ✔  |     ✔      |  ❌   |
+| `Publish Application`                     |  ❌  |      ❌      |  ✔  |     ❌     |  ❌   |
+| `Upload Publish Artifact`                  |  ❌  |      ❌      |  ✔  |     ❌     |  ❌   |
+| `Generate Detailed CI Log`                 |  ❌  |      ❌      |  ❌ |     ❌     |   ✔   |
+| `Upload CI error artifact`                 |  ❌  |      ❌      |  ❌ |     ❌     |   ✔   |
 
 
 #### 📝 Popis workflow
 
 - `.github/workflows/elektrooffer-ci-pipeline`
-- build + testy + minimální log probíhají při každém pushi a pull requestu
-- publish + upload artefaktů + detailní logy probíhají pouze při vytvoření tagu (např. v1.7.6)
-- CI je díky tomu rychlé při vývoji a plně automatické při vydání nové verze
+- unit testy probíhají při každém pushi i pull requestu; integrační testy při PR, tagu a ručním spuštění
+- mobilní sestavení se spouští jen při změně mobilního či sdíleného projektu a Android se na běžném pushi vynechá
+- publish a upload release artefaktů probíhají pouze při vytvoření tagu (např. `v1.13.0`)
+- detailní log se generuje jen po chybě; úspěšný běh se podruhé neopakuje
 
 ```
 📁 Core Application
@@ -628,7 +628,7 @@ Původní model `Material` měl jedinou cenu na položku, což neumožňovalo po
 - [x] Integrační testy
 - [x] NuGet závislosti stabilizovány a zabezpečeny
 - [x] PDF export (aktuálně přes Windows PrintDialog → „Microsoft Print to PDF“)
-- [x] GitHub tests - UNIT + integration + build + minimální CI log při každé akci; detailní log + publish jen při tagu
+- [x] GitHub CI - UNIT při každém pushi, integrace při PR/tagu/ručním běhu, mobilní build podle změněných cest, detailní log jen při chybě a publish jen při tagu
 - [x] MVVM refactor – `MainViewModel` jako náhrada `MainWindow.xaml.cs`, `ICommand` bindings, UI služby oddělené od ViewModelu
 - [x] Multi-dodavatelské ceny materiálu (`Category`, `Supplier`, `MaterialPrice`) + kaskádový výběr Kategorie → Název → Dodavatel → Materiál
 - [x] Nová kaskáda PRÁCE bez `PriceItems` (`WorkTask`, `WorkSpecification`, `BaseMaterial`, `WorkPosition`)

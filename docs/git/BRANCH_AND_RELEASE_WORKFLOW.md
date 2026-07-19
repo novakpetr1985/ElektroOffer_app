@@ -14,3 +14,11 @@
 - Oprava přijatá do produkční linie se vrací do aktivního vývoje samostatnou synchronizační větví a PR. Automatický merge mezi `main`, `test` a `dev` se neprovádí.
 
 Konflikty se řeší pouze v pracovní větvi, následuje kompletní build a testy a teprve potom nový review. Historie chráněných větví se nepřepisuje.
+
+## CI před vydáním 1.13.0
+
+- `hotfix/1.13.0.1` nejprve ověří rychlé unit testy a podle změněných cest také terénní aplikaci pro Windows.
+- Hotfix se po úspěšném CI začlení přes uživatelem řízený PR do `feature/1.13.0`; přímý merge automatizace neprovádí.
+- PR spustí unit testy, integrační testy a při mobilních či sdílených změnách také Windows a Android build.
+- Z ověřené `feature/1.13.0` se vytvoří `release/1.13.0`, která postupuje výhradně přes PR do `dev`, `test` a `main`.
+- Ruleset má vyžadovat jediný souhrnný status `ElektroOffer CI Pipeline / Build and test`; dílčí joby se nespouštějí duplicitně kvůli názvu povinné kontroly.
