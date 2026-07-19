@@ -25,13 +25,15 @@ public sealed class MeasurementImportService
             Category = "Práce",
             Unit = _db.TaskSpecifications.Where(link => link.TaskId == task.Id).Select(link => link.Specification!.Unit).FirstOrDefault() ?? string.Empty
         }).ToList();
-        options.AddRange(_db.Materials.AsNoTracking().Include(material => material.Category).OrderBy(material => material.Name).Select(material => new FieldCatalogOption
+        options.AddRange(_db.Categories.AsNoTracking().Include(category => category.Materials).OrderBy(category => category.Name).Select(category => new FieldCatalogOption
         {
-            Code = $"MAT-{material.Id}",
-            Kind = FieldCatalogOptionKind.Material,
-            Name = material.Name,
-            Category = material.Category != null ? material.Category.Name : "Materiál",
-            Unit = material.Unit
+            Code = $"MATCAT-{category.Id}",
+            Kind = FieldCatalogOptionKind.MaterialCategory,
+            Name = category.Name,
+            Category = "Materiál",
+            Unit = category.Materials.Select(material => material.Unit).Distinct().Count() == 1
+                ? category.Materials.Select(material => material.Unit).FirstOrDefault() ?? string.Empty
+                : string.Empty
         }));
         return new FieldCatalogSnapshot
         {
@@ -70,9 +72,22 @@ public sealed class MeasurementImportService
         foreach (var area in package.Project.Areas)
         foreach (var item in area.Items)
         {
+            if (item.WorkHints.Count == 0 && item.MaterialRequirements.Count == 0 && string.IsNullOrWhiteSpace(item.CatalogCode))
+            {
+                preview.Items.Add(Unresolved(
+                    item,
+                    area.Name,
+                    MeasurementImportRowKind.Unknown,
+                    item.DisplayName,
+                    item.Quantity,
+                    item.Unit,
+                    "Položka byla v terénu zadána bez načteného katalogu. Nelze bezpečně určit, zda jde o práci nebo materiál."));
+                continue;
+            }
+
             var workHints = item.WorkHints.Count > 0
                 ? item.WorkHints
-                : item.CatalogCode.StartsWith("MAT-", StringComparison.OrdinalIgnoreCase) ? [] : [InferWork(item)];
+                : item.CatalogCode.StartsWith("WORK-", StringComparison.OrdinalIgnoreCase) ? [InferWork(item)] : [];
             foreach (var hint in workHints)
                 preview.Items.Add(MapWork(area.Name, item, hint));
 
@@ -172,64 +187,49 @@ public sealed class MeasurementImportService
         if (task == null)
             return Unresolved(item, areaName, MeasurementImportRowKind.Work, hint.DisplayName, hint.Quantity, hint.Unit, "Pracovní úkon nebyl nalezen v aktuálním katalogu.");
 
-        var specifications = _db.TaskSpecifications.AsNoTracking()
-            .Where(link => link.TaskId == task.Id)
-            .Select(link => link.Specification!)
-            .ToList();
-        var specificationAlias = SpecificationAlias(item.Kind, task.Name);
-        var (specification, specificationScore) = Best(specifications, value => value.Name, specificationAlias);
-        specification ??= specifications.FirstOrDefault(value => string.Equals(value.Unit, hint.Unit, StringComparison.OrdinalIgnoreCase));
-        if (specification == null)
-            return Unresolved(item, areaName, MeasurementImportRowKind.Work, hint.DisplayName, hint.Quantity, hint.Unit, "Pro pracovní úkon nebyla nalezena kompatibilní specifikace.");
+        if (codedTask == null && taskScore < 0.4)
+            return Unresolved(item, areaName, MeasurementImportRowKind.Work, hint.DisplayName, hint.Quantity, hint.Unit, "Pracovní úkon nebyl bezpečně spárován s aktuálním katalogem.");
 
-        var baseMaterial = _db.BaseMaterials.AsNoTracking().OrderBy(value => value.Id).FirstOrDefault(value => value.Name == "-")
-            ?? _db.BaseMaterials.AsNoTracking().OrderBy(value => value.Id).FirstOrDefault();
-        var positions = _db.Positions.AsNoTracking().ToList();
-        var (position, positionScore) = Best(positions, value => value.Name, "stena");
-        position ??= positions.FirstOrDefault();
-        if (baseMaterial == null || position == null)
-            return Unresolved(item, areaName, MeasurementImportRowKind.Work, hint.DisplayName, hint.Quantity, hint.Unit, "Katalog neobsahuje podklad nebo umístění práce.");
-
-        var confidence = Math.Clamp(Math.Min(hint.Confidence <= 0 ? 0.7m : hint.Confidence, (decimal)Math.Min(taskScore, Math.Max(specificationScore, 0.7))), 0, 1);
+        var confidence = Math.Clamp(Math.Min(hint.Confidence <= 0 ? 0.7m : hint.Confidence, (decimal)taskScore), 0, 1);
         return new MeasurementImportPreviewItem
         {
             SourceItemId = item.Id,
             AreaName = areaName,
             Kind = MeasurementImportRowKind.Work,
             SourceDescription = string.IsNullOrWhiteSpace(hint.DisplayName) ? item.DisplayName : hint.DisplayName,
-            SuggestedMapping = $"{task.Name} → {specification.Name} → {baseMaterial.Name} → {position.Name}",
+            SuggestedMapping = $"{task.Name} → upřesnění, podklad a umístění doplníte v kalkulaci",
             Quantity = (double)(hint.Quantity > 0 ? hint.Quantity : item.Quantity),
-            Unit = specification.Unit ?? hint.Unit,
+            Unit = hint.Unit,
             Confidence = confidence,
             CanImport = true,
             IsSelected = true,
-            Warning = confidence < 0.75m ? "Mapování má nižší jistotu – před importem jej zkontrolujte." : string.Empty,
-            WorkTask = task.Name,
-            WorkSpecification = specification.Name,
-            BaseMaterial = baseMaterial.Name,
-            WorkPosition = position.Name
+            Warning = "Doplňte upřesnění práce, podklad a umístění.",
+            WorkTask = task.Name
         };
     }
 
     private MeasurementImportPreviewItem MapMaterial(string areaName, MeasurementItem item, MaterialRequirement requirement)
     {
-        var materials = _db.Materials.AsNoTracking().Include(material => material.Category).ToList();
-        var desired = $"{requirement.MaterialCode} {requirement.Specification} {item.DisplayName}";
-        var codedMaterial = ParseCatalogId(requirement.MaterialCode, "MAT-") ?? ParseCatalogId(item.CatalogCode, "MAT-");
-        var material = codedMaterial.HasValue ? materials.FirstOrDefault(candidate => candidate.Id == codedMaterial.Value) : null;
-        var score = material != null ? 1d : 0d;
-        if (material == null)
-            (material, score) = Best(materials, value => value.Name, desired);
-        if (material == null || score < 0.28)
-            return Unresolved(item, areaName, MeasurementImportRowKind.Material, requirement.Specification, requirement.Quantity, requirement.Unit, "Materiál nebyl bezpečně spárován s aktuálním katalogem.");
+        var categories = _db.Categories.AsNoTracking().ToList();
+        var categoryId = ParseCatalogId(requirement.CategoryCode, "MATCAT-") ?? ParseCatalogId(item.CatalogCode, "MATCAT-");
+        var category = categoryId.HasValue ? categories.FirstOrDefault(candidate => candidate.Id == categoryId.Value) : null;
+        var score = category != null ? 1d : 0d;
 
-        var offer = _db.MaterialPrices.AsNoTracking()
-            .Include(price => price.Supplier)
-            .Where(price => price.MaterialId == material.Id)
-            .OrderBy(price => price.Price)
-            .FirstOrDefault();
-        if (material.Category == null || offer == null)
-            return Unresolved(item, areaName, MeasurementImportRowKind.Material, requirement.Specification, requirement.Quantity, requirement.Unit, "Materiál nemá kategorii nebo platnou nabídku dodavatele.");
+        if (category == null)
+        {
+            var legacyMaterialId = ParseCatalogId(requirement.MaterialCode, "MAT-") ?? ParseCatalogId(item.CatalogCode, "MAT-");
+            if (legacyMaterialId.HasValue)
+                category = _db.Materials.AsNoTracking().Include(material => material.Category)
+                    .Where(material => material.Id == legacyMaterialId.Value)
+                    .Select(material => material.Category)
+                    .FirstOrDefault();
+            if (category != null) score = 1d;
+        }
+
+        if (category == null)
+            (category, score) = Best(categories, value => value.Name, $"{requirement.Category} {requirement.Specification} {item.DisplayName}");
+        if (category == null || score < 0.28)
+            return Unresolved(item, areaName, MeasurementImportRowKind.Material, requirement.Specification, requirement.Quantity, requirement.Unit, "Kategorie materiálu nebyla bezpečně spárována s aktuálním katalogem.");
 
         var quantity = requirement.Quantity * (1 + requirement.ReservePercent / 100m);
         return new MeasurementImportPreviewItem
@@ -237,18 +237,17 @@ public sealed class MeasurementImportService
             SourceItemId = item.Id,
             AreaName = areaName,
             Kind = MeasurementImportRowKind.Material,
-            SourceDescription = requirement.Specification,
-            SuggestedMapping = $"{material.Category.Name} → {material.Name} → {offer.Supplier.Name} → {offer.SupplierName}",
+            SourceDescription = string.IsNullOrWhiteSpace(requirement.Specification)
+                ? string.IsNullOrWhiteSpace(requirement.Category) ? item.DisplayName : requirement.Category
+                : requirement.Specification,
+            SuggestedMapping = $"{category.Name} → konkrétní materiál a dodavatele doplníte v kalkulaci",
             Quantity = (double)quantity,
-            Unit = offer.Unit,
+            Unit = requirement.Unit,
             Confidence = (decimal)Math.Clamp(score, 0, 1),
             CanImport = true,
             IsSelected = true,
-            Warning = score < 0.65 ? "Mapování má nižší jistotu – před importem jej zkontrolujte." : string.Empty,
-            MaterialCategory = material.Category.Name,
-            MaterialName = material.Name,
-            Supplier = offer.Supplier.Name,
-            Offer = offer.SupplierName
+            Warning = "Doplňte konkrétní materiál, dodavatele a nabídku.",
+            MaterialCategory = category.Name
         };
     }
 
@@ -286,15 +285,6 @@ public sealed class MeasurementImportService
             MeasurementKind.Socket or MeasurementKind.Switch or MeasurementKind.Light or MeasurementKind.DistributionBoard => "osazeni",
             _ => source
         };
-    }
-
-    private static string SpecificationAlias(MeasurementKind kind, string taskName)
-    {
-        var task = Normalize(taskName);
-        if (kind == MeasurementKind.CableRoute)
-            return task.Contains("draz") ? "spara" : "vlozeni kabelu";
-        if (kind == MeasurementKind.DistributionBoard) return "rozvadec";
-        return "elektricka krabice";
     }
 
     private static (T? Item, double Score) Best<T>(IEnumerable<T> candidates, Func<T, string> selector, string desired) where T : class

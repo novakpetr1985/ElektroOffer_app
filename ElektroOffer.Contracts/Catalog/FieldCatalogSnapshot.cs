@@ -4,7 +4,7 @@ namespace ElektroOffer.Contracts.Catalog;
 
 public sealed class FieldCatalogSnapshot
 {
-    public const int CurrentSchemaVersion = 1;
+    public const int CurrentSchemaVersion = 2;
     public int SchemaVersion { get; set; } = CurrentSchemaVersion;
     public Guid ExportId { get; set; } = Guid.NewGuid();
     public DateTime CreatedAtUtc { get; set; } = DateTime.UtcNow;
@@ -24,7 +24,8 @@ public sealed class FieldCatalogOption
 public enum FieldCatalogOptionKind
 {
     Work,
-    Material
+    Material,
+    MaterialCategory
 }
 
 public static class FieldCatalogSerializer

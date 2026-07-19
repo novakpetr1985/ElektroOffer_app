@@ -19,6 +19,8 @@ Každý krok lze uložit samostatně. Předání do dalšího kroku vytvoří ve
 
 První fáze nepotřebuje cloud ani SOAP službu. Přenos může bezpečně fungovat přes verzovaný souborový balíček. Synchronizační API má smysl až po ověření reálného offline workflow.
 
+Terénní katalog verze 2 je odvozen přímo z hlavní databáze a obsahuje jen dvě úrovně: pracovní úkony a kategorie materiálu. Mobilní klient neudržuje vlastní kopii dodavatelů ani konkrétních výrobků. Po změně hlavního katalogu se vytvoří nový `.eofcatalog`; starší verze katalogu se odmítne a uživatel ji musí nahradit.
+
 ## Datový model měření
 
 Základní kontrakty:
@@ -96,12 +98,12 @@ Stávající mobilní klient úmyslně nevytváří druhou databázi cen. Katalo
 End-to-end offline workflow je implementován bez cloudu a serveru:
 
 1. Hlavní aplikace vyexportuje aktuální databázový katalog do `.eofcatalog`.
-2. ElektroOffer Terén katalog načte, umožní offline měření, místnosti, práce, materiál a fotografie.
+2. ElektroOffer Terén katalog načte a umožní vybrat pracovní úkon nebo kategorii materiálu, zadat množství, místnost, poznámku a fotografie.
 3. Terénní aplikace průběžně ukládá recovery koncept a exportuje `.eofmeasure`.
 4. Hlavní aplikace balíček bezpečně ověří, zkontroluje cesty, velikosti a SHA-256 příloh.
 5. Importní náhled spáruje stabilní katalogové kódy; u ručních položek použije konzervativní textové mapování.
 6. Uživatel vybere práce, materiály a fotografie. Nevyřešené položky se automaticky nevloží.
-7. Potvrzené řádky se přidají k aktuální kalkulaci s aktuální cenou hlavní databáze.
+7. Potvrzený pracovní řádek předvyplní pouze úkon a množství; materiálový řádek pouze kategorii a množství. Zbývající kaskádu uživatel dokončí v hlavní aplikaci a teprve tím zvolí cenu.
 8. Projekt uloží historii `exportId`, mapování, zdrojový balíček a fotografie do doprovodné složky `.assets`.
 9. Opakovaný import stejného `exportId` je zablokován. „Uložit jako“ kopíruje také doprovodné přílohy.
 

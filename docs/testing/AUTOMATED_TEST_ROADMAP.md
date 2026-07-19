@@ -2,7 +2,7 @@
 
 ## Baseline
 
-Pro 1.13.0-feature prochází 100 unit a 36 automatických integračních testů; tři testy systémových dialogů jsou záměrně `[Explicit]`. Nové testy pokrývají verzované terénní kontrakty, kontrolní součty a cesty v balíčku, mapování importu, blokování duplicitního `exportId`, kopírování fotografií a zachování historie při `Uložit jako`. Aktuální coverage po rozšíření 1.13.0 zatím nebylo znovu změřeno, proto se starší procenta nepoužívají jako současný baseline.
+Pro 1.13.0-feature prochází 102 unit a 36 automatických integračních testů; tři testy systémových dialogů jsou záměrně `[Explicit]`. Nové testy pokrývají verzované terénní kontrakty, kontrolní součty a cesty v balíčku, mapování pouze na úkon/kategorii, blokování duplicitního `exportId`, ochranu proti dvojímu přidání řádku, kopírování fotografií a zachování historie při `Uložit jako`. Aktuální coverage po rozšíření 1.13.0 zatím nebylo znovu změřeno, proto se starší procenta nepoužívají jako současný baseline.
 
 ## Priority
 

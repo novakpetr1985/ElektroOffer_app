@@ -2,6 +2,8 @@ using ElektroOffer.Contracts.Measurements;
 using ElektroOffer.Contracts.Catalog;
 using ElektroOffer_app.Models;
 using ElektroOffer_app.Services;
+using ElektroOffer_app.ViewModels;
+using Moq;
 using NUnit.Framework;
 using System.Security.Cryptography;
 
@@ -11,7 +13,7 @@ namespace ElektroOffer_app.Tests.Unit.Services;
 public sealed class MeasurementImportServiceTests : TestBase
 {
     [Test]
-    public async Task Prepare_MapsWorkAndChoosesLowestMaterialOffer()
+    public async Task Prepare_MapsOnlyWorkTaskAndMaterialCategory()
     {
         SeedCatalog();
         var package = CreatePackage();
@@ -26,7 +28,10 @@ public sealed class MeasurementImportServiceTests : TestBase
                 Assert.That(preview.Items, Has.Count.EqualTo(2));
                 Assert.That(preview.Items.All(item => item.CanImport), Is.True);
                 Assert.That(preview.Items.Single(item => item.Kind == MeasurementImportRowKind.Work).WorkTask, Is.EqualTo("Drážkování"));
-                Assert.That(preview.Items.Single(item => item.Kind == MeasurementImportRowKind.Material).Supplier, Is.EqualTo("Levný dodavatel"));
+                Assert.That(preview.Items.Single(item => item.Kind == MeasurementImportRowKind.Work).WorkSpecification, Is.Null);
+                Assert.That(preview.Items.Single(item => item.Kind == MeasurementImportRowKind.Material).MaterialCategory, Is.EqualTo("Kabel"));
+                Assert.That(preview.Items.Single(item => item.Kind == MeasurementImportRowKind.Material).MaterialName, Is.Null);
+                Assert.That(preview.Items.Single(item => item.Kind == MeasurementImportRowKind.Material).Supplier, Is.Null);
                 Assert.That(preview.Items.Single(item => item.Kind == MeasurementImportRowKind.Material).Quantity, Is.EqualTo(22d).Within(0.001));
             });
         }
@@ -34,6 +39,100 @@ public sealed class MeasurementImportServiceTests : TestBase
         {
             File.Delete(archivePath);
         }
+    }
+
+    [Test]
+    public async Task Prepare_UncataloguedItemProducesOneUnresolvedRow()
+    {
+        SeedCatalog();
+        var package = new MeasurementPackage
+        {
+            Project = new MeasurementProject
+            {
+                Name = "Bez katalogu",
+                Areas = [new MeasurementArea
+                {
+                    Name = "Chodba",
+                    Items = [new MeasurementItem
+                    {
+                        Kind = MeasurementKind.CableRoute,
+                        DisplayName = "Kabel pro světlo",
+                        Quantity = 100,
+                        Unit = "m"
+                    }]
+                }]
+            }
+        };
+        var archivePath = await WritePackageAsync(package);
+
+        try
+        {
+            var preview = await new MeasurementImportService(_db).PrepareAsync(archivePath, []);
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(preview.Items, Has.Count.EqualTo(1));
+                Assert.That(preview.Items[0].Kind, Is.EqualTo(MeasurementImportRowKind.Unknown));
+                Assert.That(preview.Items[0].CanImport, Is.False);
+                Assert.That(preview.Items[0].Warning, Does.Contain("bez načteného katalogu"));
+            });
+        }
+        finally
+        {
+            File.Delete(archivePath);
+        }
+    }
+
+    [Test]
+    public void ApplyMeasurementRows_FillsExistingRowsWithoutDuplicatingThem()
+    {
+        SeedCatalog();
+        var productionAssembly = typeof(MainViewModel).Assembly;
+        var projectServiceType = productionAssembly.GetType("ElektroOffer_app.Services.ProjectService")!;
+        var projectService = Activator.CreateInstance(projectServiceType)!;
+        var viewModel = (MainViewModel)Activator.CreateInstance(
+            typeof(MainViewModel),
+            projectService,
+            new CatalogService(),
+            new CalculationPriceService(),
+            _db,
+            Mock.Of<IMessageService>(),
+            Mock.Of<IPrintService>(),
+            Mock.Of<IApplicationService>(),
+            Mock.Of<IWindowService>(),
+            null,
+            null,
+            null)!;
+
+        viewModel.ApplyMeasurementRows(
+        [
+            new MeasurementImportPreviewItem
+            {
+                Kind = MeasurementImportRowKind.Work,
+                WorkTask = "Drážkování",
+                Quantity = 100,
+                Unit = "m",
+                CanImport = true,
+                IsSelected = true
+            },
+            new MeasurementImportPreviewItem
+            {
+                Kind = MeasurementImportRowKind.Material,
+                MaterialCategory = "Kabel",
+                Quantity = 100,
+                Unit = "m",
+                CanImport = true,
+                IsSelected = true
+            }
+        ]);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(viewModel.WorkCalcItems, Has.Count.EqualTo(5));
+            Assert.That(viewModel.MaterialItems, Has.Count.EqualTo(5));
+            Assert.That(viewModel.WorkCalcItems.Count(item => item.SelectedWorkTask == "Drážkování"), Is.EqualTo(1));
+            Assert.That(viewModel.MaterialItems.Count(item => item.SelectedCategory == "Kabel"), Is.EqualTo(1));
+        });
     }
 
     [Test]
@@ -111,7 +210,9 @@ public sealed class MeasurementImportServiceTests : TestBase
             Assert.That(restored.Options, Has.Count.EqualTo(2));
             Assert.That(restored.Options.Select(option => option.Code), Is.Unique);
             Assert.That(restored.Options.Any(option => option.Code.StartsWith("WORK-") && option.Name == "Drážkování"), Is.True);
-            Assert.That(restored.Options.Any(option => option.Code.StartsWith("MAT-") && option.Name == "CYKY-J 3x2,5"), Is.True);
+            Assert.That(restored.SchemaVersion, Is.EqualTo(2));
+            Assert.That(restored.Options.Any(option => option.Kind == FieldCatalogOptionKind.MaterialCategory
+                && option.Code.StartsWith("MATCAT-") && option.Name == "Kabel"), Is.True);
         });
     }
 

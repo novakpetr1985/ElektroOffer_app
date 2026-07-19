@@ -5,6 +5,7 @@ namespace ElektroOffer_app.Models;
 
 public enum MeasurementImportRowKind
 {
+    Unknown,
     Work,
     Material
 }

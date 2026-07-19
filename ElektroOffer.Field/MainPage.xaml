@@ -9,7 +9,7 @@
                 <Label Text="ElektroOffer Terén" FontSize="22" FontAttributes="Bold" TextColor="White" />
                 <Label Text="Offline zaměření stavby" FontSize="13" TextColor="#D8ECF7" />
             </VerticalStackLayout>
-            <Button Grid.Column="1" Text="Katalog" Clicked="OnImportCatalogClicked" BackgroundColor="#D8ECF7" TextColor="#17212B" />
+            <Button Grid.Column="1" Text="Načíst katalog" Clicked="OnImportCatalogClicked" BackgroundColor="#D8ECF7" TextColor="#17212B" />
             <Button Grid.Column="2" Text="Nové" Clicked="OnNewClicked" BackgroundColor="#F9A826" TextColor="#17212B" />
         </Grid>
 
@@ -40,10 +40,10 @@
                 <Border x:Name="ItemSection" IsVisible="False" Stroke="#CBD5E1" StrokeShape="RoundRectangle 10" Padding="14" BackgroundColor="{AppThemeBinding Light=White, Dark=#182027}">
                     <VerticalStackLayout Spacing="10">
                         <Label Text="Práce a materiál" FontSize="20" FontAttributes="Bold" />
-                        <Label x:Name="CatalogStatusLabel" Text="Katalog není načten – lze zadávat ručně" FontSize="12" TextColor="Gray" />
-                        <Picker x:Name="CatalogPicker" Title="Vybrat položku z hlavního katalogu" ItemDisplayBinding="{Binding DisplayName}" SelectedIndexChanged="OnCatalogSelected" />
-                        <Picker x:Name="KindPicker" Title="Typ měření" ItemDisplayBinding="{Binding Label}" />
-                        <Entry x:Name="ItemNameEntry" Placeholder="Popis položky *" />
+                        <Label x:Name="CatalogStatusLabel" Text="Nejprve načtěte katalog z hlavní aplikace" FontSize="12" TextColor="Gray" />
+                        <Picker x:Name="CatalogPicker" Title="Vybrat pracovní úkon nebo kategorii materiálu *" ItemDisplayBinding="{Binding DisplayName}" SelectedIndexChanged="OnCatalogSelected" />
+                        <Picker x:Name="KindPicker" Title="Druh měření" ItemDisplayBinding="{Binding Label}" IsEnabled="False" />
+                        <Entry x:Name="ItemNameEntry" Placeholder="Popis položky" />
                         <Grid ColumnDefinitions="2*,*,*" ColumnSpacing="8">
                             <Entry x:Name="QuantityEntry" Placeholder="Množství *" Keyboard="Numeric" />
                             <Entry x:Name="UnitEntry" Grid.Column="1" Placeholder="Jednotka" />

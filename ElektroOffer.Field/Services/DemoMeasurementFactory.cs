@@ -1,54 +1,51 @@
 using ElektroOffer.Contracts.Measurements;
+using ElektroOffer.Contracts.Catalog;
 
 namespace ElektroOffer.Field.Services;
 
 public static class DemoMeasurementFactory
 {
-    public static MeasurementPackage Create()
+    public static MeasurementPackage Create(FieldCatalogSnapshot catalog)
     {
+        ArgumentNullException.ThrowIfNull(catalog);
+        var work = catalog.Options.First(option => option.Kind == FieldCatalogOptionKind.Work);
+        var materialCategory = catalog.Options.First(option => option.Kind == FieldCatalogOptionKind.MaterialCategory);
         var kitchen = new MeasurementArea { Name = "Kuchyně" };
         kitchen.Items.Add(new MeasurementItem
         {
             Kind = MeasurementKind.CableRoute,
-            DisplayName = "Kabelová trasa CYKY 3×2,5",
-            CatalogCode = "WORK-CABLE-CYKY-3X2.5",
+            DisplayName = work.Name,
+            CatalogCode = work.Code,
             Quantity = 18.5m,
-            Unit = "m",
-            ReservePercent = 10,
+            Unit = string.IsNullOrWhiteSpace(work.Unit) ? "m" : work.Unit,
             Note = "Vedení pod omítkou",
             WorkHints =
             [
-                new WorkHint { WorkPositionCode = "WORK-GROOVE-001", DisplayName = "Drážkování ve zdivu", Quantity = 18.5m, Unit = "m", RuleId = "cable-wall-v1", Confidence = 0.9m },
-                new WorkHint { WorkPositionCode = "WORK-CABLE-001", DisplayName = "Uložení kabelu", Quantity = 18.5m, Unit = "m", RuleId = "cable-wall-v1", Confidence = 0.95m }
-            ],
-            MaterialRequirements =
-            [
-                new MaterialRequirement { MaterialCode = "MAT-CYKY-3X2.5", Category = "Kabely", Specification = "CYKY-J 3×2,5", Quantity = 18.5m, Unit = "m", ReservePercent = 10 }
+                new WorkHint { CatalogCode = work.Code, DisplayName = work.Name, Quantity = 18.5m, Unit = string.IsNullOrWhiteSpace(work.Unit) ? "m" : work.Unit, RuleId = "catalog-selection-v1", Confidence = 1m }
             ]
         });
         kitchen.Items.Add(new MeasurementItem
         {
-            Kind = MeasurementKind.Socket,
-            DisplayName = "Dvojzásuvka pod omítku",
-            Quantity = 6,
-            Unit = "ks",
-            WorkHints = [new WorkHint { DisplayName = "Montáž zásuvky", Quantity = 6, Unit = "ks", RuleId = "socket-v1", Confidence = 0.85m }],
-            MaterialRequirements = [new MaterialRequirement { Category = "Přístroje", Specification = "Dvojzásuvka 230 V pod omítku", Quantity = 6, Unit = "ks" }]
-        });
-
-        var hall = new MeasurementArea { Name = "Chodba" };
-        hall.Items.Add(new MeasurementItem
-        {
-            Kind = MeasurementKind.Light,
-            DisplayName = "Vývod pro svítidlo",
-            Quantity = 3,
-            Unit = "ks"
+            Kind = materialCategory.Name.Contains("kabel", StringComparison.OrdinalIgnoreCase) ? MeasurementKind.CableRoute : MeasurementKind.Custom,
+            DisplayName = materialCategory.Name,
+            CatalogCode = materialCategory.Code,
+            Quantity = 20,
+            Unit = string.IsNullOrWhiteSpace(materialCategory.Unit) ? "m" : materialCategory.Unit,
+            ReservePercent = 10,
+            MaterialRequirements = [new MaterialRequirement
+            {
+                CategoryCode = materialCategory.Code,
+                Category = materialCategory.Name,
+                Quantity = 20,
+                Unit = string.IsNullOrWhiteSpace(materialCategory.Unit) ? "m" : materialCategory.Unit,
+                ReservePercent = 10
+            }]
         });
 
         return new MeasurementPackage
         {
             SourceAppVersion = "1.13.0-feature",
-            CatalogVersion = "demo-2026.07",
+            CatalogVersion = catalog.CatalogVersion,
             Project = new MeasurementProject
             {
                 Name = "Vzor – rodinný dům",
@@ -56,7 +53,7 @@ public static class DemoMeasurementFactory
                 SiteAddress = "Praha 1",
                 TechnicianName = "Petr Novák",
                 Note = "Testovací offline měření",
-                Areas = [kitchen, hall]
+                Areas = [kitchen]
             }
         };
     }

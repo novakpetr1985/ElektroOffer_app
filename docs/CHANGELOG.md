@@ -22,7 +22,7 @@
 
 ### Ověřeno
 
-- 100 unit testů a 36 automatických integračních testů prošlo; tři systémové dialogové testy zůstávají záměrně ruční.
+- 102 unit testů a 36 automatických integračních testů prošlo; tři systémové dialogové testy zůstávají záměrně ruční.
 - Windows projekty byly sestaveny bez chyb a upozornění.
 - Samostatné Android APK bylo podepsáno, ověřeno schématy APK Signature v2/v3 a spuštěno na Samsung Galaxy S8 s Androidem 9.
 - Offline tok katalog → telefon → měření a fotografie → hlavní aplikace byl ověřen bez cloudu a serveru.
@@ -30,6 +30,12 @@
 ### Známé omezení
 
 - Terénní aplikace nepřenáší ceny a nepočítá DPH; hlavní aplikace vždy použije aktuální lokální ceník. Sazba DPH se ve fakturaci zadává po řádcích a její automatické určení není součástí 1.13.0.
+- Katalog pro terén přenáší pouze pracovní úkony a kategorie materiálu. Upřesnění práce, podklad, umístění, konkrétní materiál, dodavatel a nabídka se záměrně vybírají až v hlavní kalkulaci.
+
+### Opraveno
+
+- Import již nepřidává naplněný existující řádek do kolekce podruhé.
+- Položka vytvořená bez načteného katalogu se neodhaduje jako práce; zůstane jako jediný nevyřešený záznam s vysvětlením.
 
 ---
 

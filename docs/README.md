@@ -52,13 +52,15 @@ SQLite databáze není verzovaná v Gitu (`*.db` je v `.gitignore`). Uživatelsk
 `ElektroOffer.Field` neobsahuje produkční databázi cen a bez internetu pořizuje pouze technické zaměření. Ceny se vždy doplní z aktuální databáze hlavní aplikace až při schváleném importu.
 
 1. V hlavní aplikaci zvol `Soubor → Exportovat katalog pro terén` a vytvoř `.eofcatalog`.
-2. Přenes soubor do telefonu nebo druhého počítače a v ElektroOffer Terén zvol `Katalog`.
-3. Zadej zakázku, místnosti, práce, materiál, poznámky a fotografie; rozpracovaný stav se průběžně obnovuje.
+2. Přenes soubor do telefonu nebo druhého počítače a v ElektroOffer Terén zvol `Načíst katalog`.
+3. Pro práci vyber pouze úkon a množství; pro materiál pouze kategorii a množství. Zadej zakázku, místnosti, poznámky a fotografie; rozpracovaný stav se průběžně obnovuje.
 4. Zvol `Uložit a exportovat` a přenes vytvořený `.eofmeasure` zpět do hlavního počítače.
 5. V hlavní aplikaci zvol `Soubor → Importovat terénní měření`, zkontroluj mapování a potvrď vybrané řádky a fotografie.
 6. Ulož projekt `.eof`; zdrojový balíček a přílohy se uchovají v doprovodné složce `.assets`.
 
 Přenos je záměrně souborový a nevyžaduje cloud, účet ani server. Podrobný datový a bezpečnostní návrh je v `docs/architecture/FIELD_APPLICATION_PROPOSAL.md`; testovací balíčky a podpis popisuje `docs/TEST-SIGNING.md`.
+
+Tlačítko `Načíst katalog` načítá aktuální pracovní úkony a materiálové kategorie přímo z hlavní databáze. Díky katalogovým kódům se názvy nemusí ručně udržovat ve dvou aplikacích. Po změně, přidání nebo odstranění katalogových dat v hlavní aplikaci vyexportuj a v telefonu načti nový `.eofcatalog`. Katalog verze 2 je nutné po této změně vytvořit znovu; starší katalog s konkrétními výrobky mobilní aplikace záměrně nepoužije.
 
 ---
 
@@ -470,7 +472,7 @@ Testují spolupráci:
 
 ### Reálné pokrytí a omezení
 
-Automatické testy nejsou end-to-end test celé desktopové ani mobilní aplikace. Pro 1.13.0-feature prošlo **100 unit a 36 automatických integračních testů**. Tři dialogové smoke scénáře jsou `[Explicit]` a v běžném CI se nespouštějí. Coverage po rozšíření 1.13.0 nebylo znovu změřeno, proto dokumentace neuvádí starší procenta jako současný stav. Start a oprávnění na fyzickém Android zařízení, systémové pickery, fotoaparát, tisk a instalace zůstávají součástí manuálního checklistu.
+Automatické testy nejsou end-to-end test celé desktopové ani mobilní aplikace. Pro 1.13.0-feature prošlo **102 unit a 36 automatických integračních testů**. Tři dialogové smoke scénáře jsou `[Explicit]` a v běžném CI se nespouštějí. Coverage po rozšíření 1.13.0 nebylo znovu změřeno, proto dokumentace neuvádí starší procenta jako současný stav. Start a oprávnění na fyzickém Android zařízení, systémové pickery, fotoaparát, tisk a instalace zůstávají součástí manuálního checklistu.
 
 WPF XAML se může úspěšně zkompilovat a přesto selhat až při aplikaci šablony za běhu. Proto integrační sada načítá oba `ResourceDictionary`, vytváří prvky s implicitními styly, volá `ApplyTemplate` a `Measure`. Tato kontrola zachytí například předání tokenu typu `Double` vlastnosti `Padding`, která vyžaduje `Thickness`. Před vydáním je stále nutné projít `docs/MANUAL-TESTS.md`.
 

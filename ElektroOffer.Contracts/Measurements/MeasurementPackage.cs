@@ -86,6 +86,7 @@ public sealed class WorkHint
 
 public sealed class MaterialRequirement
 {
+    public string CategoryCode { get; set; } = string.Empty;
     public string MaterialCode { get; set; } = string.Empty;
     public string Category { get; set; } = string.Empty;
     public string Specification { get; set; } = string.Empty;

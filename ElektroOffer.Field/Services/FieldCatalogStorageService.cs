@@ -10,7 +10,14 @@ public sealed class FieldCatalogStorageService
     public async Task<FieldCatalogSnapshot?> LoadAsync(CancellationToken cancellationToken = default)
     {
         if (!File.Exists(_path)) return null;
-        return FieldCatalogSerializer.Deserialize(await File.ReadAllTextAsync(_path, cancellationToken));
+        try
+        {
+            return FieldCatalogSerializer.Deserialize(await File.ReadAllTextAsync(_path, cancellationToken));
+        }
+        catch (InvalidDataException)
+        {
+            return null;
+        }
     }
 
     public async Task<FieldCatalogSnapshot> ImportAsync(FileResult file, CancellationToken cancellationToken = default)

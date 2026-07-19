@@ -949,7 +949,7 @@ namespace ElektroOffer_app.ViewModels
             }
         }
 
-        private void ApplyMeasurementRows(IEnumerable<MeasurementImportPreviewItem> rows)
+        internal void ApplyMeasurementRows(IEnumerable<MeasurementImportPreviewItem> rows)
         {
             _isLoading = true;
             try
@@ -970,9 +970,8 @@ namespace ElektroOffer_app.ViewModels
                         target.SelectedBaseMaterial = row.BaseMaterial;
                         target.SelectedWorkPosition = row.WorkPosition;
                         target.Quantity = row.Quantity;
-                        WorkCalcItems.Add(target);
                     }
-                    else
+                    else if (row.Kind == MeasurementImportRowKind.Material)
                     {
                         var target = MaterialItems.FirstOrDefault(item => item.IsEmpty);
                         if (target == null)
@@ -986,7 +985,6 @@ namespace ElektroOffer_app.ViewModels
                         target.SelectedSupplier = row.Supplier;
                         target.SelectedOffer = row.Offer;
                         target.Quantity = row.Quantity;
-                        MaterialItems.Add(target);
                     }
                 }
             }

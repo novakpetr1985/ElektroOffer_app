@@ -281,8 +281,9 @@ Očekávání:
 1. V hlavní aplikaci zvol `Soubor → Exportovat katalog pro terén`.
 2. Ulož `.eofcatalog` mimo repozitář.
 3. Přenes soubor do testovacího telefonu nebo druhého počítače.
-4. V ElektroOffer Terén zvol `Katalog` a soubor načti.
-5. Ověř, že jsou dostupné práce i materiál a že terénní aplikace nezobrazuje ani nepočítá ceny.
+4. V ElektroOffer Terén zvol `Načíst katalog` a soubor načti.
+5. Ověř, že jsou dostupné pracovní úkony a kategorie materiálu, nikoli dodavatelé a konkrétní výrobky, a že terénní aplikace nezobrazuje ani nepočítá ceny.
+6. Po změně hlavního katalogu vytvoř nový export a ověř, že mobilní aplikace zobrazí nové katalogové číslo verze.
 
 ### 10.2 Zaměření bez internetu
 1. Vypni na telefonu Wi-Fi i mobilní data.
@@ -301,10 +302,11 @@ Očekávání:
 ### 10.4 Importní náhled a ceny
 1. V hlavní aplikaci zvol `Soubor → Importovat terénní měření`.
 2. Ověř údaje zakázky, místnosti, mapování položek a seznam fotografií.
-3. Ověř, že katalogové položky jsou spárované přes stabilní kód a ruční/nevyřešené položky vyžadují kontrolu.
+3. Ověř, že katalogové položky jsou spárované přes stabilní kód a položka zadaná bez katalogu zůstane jako jediný nevyřešený řádek.
 4. Vyber řádky a fotografie a import potvrď.
-5. Ověř, že se množství a rezerva přenesly a cena se načetla z aktuální hlavní databáze, nikoli z telefonu.
-6. Ověř, že nevyřešená položka nebyla automaticky vložena.
+5. Ověř, že práce předvyplnila jen úkon a množství a materiál jen kategorii a množství; zbývající kaskádová pole jsou prázdná.
+6. Ručně dokonči kaskádu a ověř, že cena se načetla z aktuální hlavní databáze, nikoli z telefonu.
+7. Ověř, že nevyřešená položka nebyla automaticky vložena a žádný řádek se v seznamu neobjevil dvakrát.
 
 ### 10.5 Idempotence, projekt a přílohy
 1. Importuj stejný `.eofmeasure` znovu a ověř odmítnutí stejného `exportId`.

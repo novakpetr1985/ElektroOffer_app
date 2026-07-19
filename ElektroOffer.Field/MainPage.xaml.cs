@@ -39,7 +39,9 @@ public partial class MainPage : ContentPage
             _package = await _storage.LoadAsync() ?? _package;
             _catalog = await _catalogStorage.LoadAsync();
             RefreshPage();
-            SetStatus(_package.Project.Name.Length > 0 ? "Obnoven poslední lokální koncept" : "Založte zakázku nebo načtěte testovací data");
+            SetStatus(_catalog == null
+                ? "Načtěte aktuální katalog z hlavní aplikace"
+                : _package.Project.Name.Length > 0 ? "Obnoven poslední lokální koncept" : "Založte zakázku nebo načtěte testovací data");
         }
         catch (Exception ex)
         {
@@ -70,7 +72,11 @@ public partial class MainPage : ContentPage
         if (!await DisplayAlertAsync("Nové měření", "Nahradit aktuální lokální koncept novým měřením?", "Ano", "Ne"))
             return;
 
-        _package = new MeasurementPackage { SourceAppVersion = "1.13.0-feature" };
+        _package = new MeasurementPackage
+        {
+            SourceAppVersion = "1.13.0-feature",
+            CatalogVersion = _catalog?.CatalogVersion ?? string.Empty
+        };
         _selectedArea = null;
         _selectedItem = null;
         _selectedCatalogOption = null;
@@ -81,10 +87,16 @@ public partial class MainPage : ContentPage
 
     private async void OnLoadDemoClicked(object? sender, EventArgs e)
     {
+        if (_catalog == null)
+        {
+            SetStatus("Nejprve tlačítkem Načíst katalog načtěte .eofcatalog z hlavní aplikace");
+            return;
+        }
+
         if (!await DisplayAlertAsync("Testovací data", "Nahradit aktuální koncept vzorovým rodinným domem?", "Načíst", "Zrušit"))
             return;
 
-        _package = DemoMeasurementFactory.Create();
+        _package = DemoMeasurementFactory.Create(_catalog);
         _selectedArea = _package.Project.Areas.FirstOrDefault();
         _selectedItem = null;
         _selectedCatalogOption = null;
@@ -100,6 +112,8 @@ public partial class MainPage : ContentPage
             var file = await FilePicker.Default.PickAsync(new PickOptions { PickerTitle = "Vyberte katalog .eofcatalog z hlavní aplikace" });
             if (file == null) return;
             _catalog = await _catalogStorage.ImportAsync(file);
+            _package.CatalogVersion = _catalog.CatalogVersion;
+            await _storage.SaveAsync(_package);
             RefreshCatalog();
             SetStatus($"Katalog {_catalog.CatalogVersion} byl bezpečně načten");
         }
@@ -153,14 +167,20 @@ public partial class MainPage : ContentPage
             return;
         }
 
-        var name = ItemNameEntry.Text?.Trim();
-        if (string.IsNullOrWhiteSpace(name)
-            || !decimal.TryParse(QuantityEntry.Text, NumberStyles.Number, CultureInfo.CurrentCulture, out var quantity)
-            || quantity <= 0)
+        if (_catalog == null || _selectedCatalogOption == null)
         {
-            SetStatus("Vyplňte popis a platné množství větší než nula");
+            SetStatus("Nejprve načtěte katalog a vyberte pracovní úkon nebo kategorii materiálu");
             return;
         }
+
+        var name = ItemNameEntry.Text?.Trim();
+        if (!decimal.TryParse(QuantityEntry.Text, NumberStyles.Number, CultureInfo.CurrentCulture, out var quantity)
+            || quantity <= 0)
+        {
+            SetStatus("Vyplňte platné množství větší než nula");
+            return;
+        }
+        name = string.IsNullOrWhiteSpace(name) ? _selectedCatalogOption.Name : name;
 
         decimal.TryParse(ReserveEntry.Text, NumberStyles.Number, CultureInfo.CurrentCulture, out var reserve);
         var kind = (KindPicker.SelectedItem as KindOption)?.Kind ?? MeasurementKind.Custom;
@@ -186,13 +206,14 @@ public partial class MainPage : ContentPage
                 Confidence = 1m
             });
         }
-        else if (_selectedCatalogOption?.Kind == FieldCatalogOptionKind.Material)
+        else if (_selectedCatalogOption?.Kind is FieldCatalogOptionKind.MaterialCategory or FieldCatalogOptionKind.Material)
         {
             item.MaterialRequirements.Add(new MaterialRequirement
             {
-                MaterialCode = _selectedCatalogOption.Code,
-                Category = _selectedCatalogOption.Category,
-                Specification = _selectedCatalogOption.Name,
+                CategoryCode = _selectedCatalogOption.Kind == FieldCatalogOptionKind.MaterialCategory ? _selectedCatalogOption.Code : string.Empty,
+                MaterialCode = _selectedCatalogOption.Kind == FieldCatalogOptionKind.Material ? _selectedCatalogOption.Code : string.Empty,
+                Category = _selectedCatalogOption.Kind == FieldCatalogOptionKind.MaterialCategory ? _selectedCatalogOption.Name : _selectedCatalogOption.Category,
+                Specification = string.Empty,
                 Quantity = quantity,
                 Unit = item.Unit,
                 ReservePercent = item.ReservePercent
@@ -262,6 +283,7 @@ public partial class MainPage : ContentPage
         try
         {
             ApplyProjectFields();
+            _package.CatalogVersion = _catalog?.CatalogVersion ?? string.Empty;
             var validation = MeasurementPackageValidator.Validate(_package);
             if (!validation.IsValid)
             {
@@ -300,10 +322,14 @@ public partial class MainPage : ContentPage
             .OrderBy(option => option.Kind)
             .ThenBy(option => option.Category)
             .ThenBy(option => option.Name)
-            .Select(option => new CatalogChoice(option, $"{(option.Kind == FieldCatalogOptionKind.Work ? "Práce" : "Materiál")} · {option.Category} · {option.Name}"))
+            .Select(option => new CatalogChoice(
+                option,
+                option.Kind == FieldCatalogOptionKind.Work
+                    ? $"Práce · úkon · {option.Name}"
+                    : $"Materiál · kategorie · {option.Name}"))
             .ToList();
         CatalogStatusLabel.Text = _catalog == null
-            ? "Katalog není načten – lze zadávat ručně"
+            ? "Nejprve načtěte katalog z hlavní aplikace"
             : $"Katalog {_catalog.CatalogVersion} · {_catalog.Options.Count} položek";
     }
 
@@ -354,7 +380,8 @@ public partial class MainPage : ContentPage
     private static MeasurementKind InferKind(FieldCatalogOption option)
     {
         var text = option.Name.ToLowerInvariant();
-        if (option.Kind == FieldCatalogOptionKind.Material && (text.Contains("cyky") || text.Contains("kabel"))) return MeasurementKind.CableRoute;
+        if (option.Kind is FieldCatalogOptionKind.Material or FieldCatalogOptionKind.MaterialCategory
+            && (text.Contains("cyky") || text.Contains("kabel"))) return MeasurementKind.CableRoute;
         if (text.Contains("zásuv")) return MeasurementKind.Socket;
         if (text.Contains("spína") || text.Contains("vypína")) return MeasurementKind.Switch;
         if (text.Contains("svět") || text.Contains("vývod")) return MeasurementKind.Light;

@@ -99,6 +99,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <InternalsVisibleTo Include="ElektroOffer_app.Tests.Unit" />
+  </ItemGroup>
+
+  <ItemGroup>
       <Resource Include="Resources\Icons\LOGO.jpg">
         <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       </Resource>
