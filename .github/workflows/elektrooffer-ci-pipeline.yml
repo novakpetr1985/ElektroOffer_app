@@ -349,7 +349,11 @@ jobs:
             "| Integration | skipped | not required for push | - | - | - | - | - |" | Out-File elektrooffer-ci-summary.md -Append -Encoding utf8
           } else {
             "| Integration | $env:INTEGRATION_RESULT | $env:INTEGRATION_OUTCOME | $env:INTEGRATION_TOTAL | $env:INTEGRATION_EXECUTED | $env:INTEGRATION_PASSED | $env:INTEGRATION_FAILED | $env:INTEGRATION_SKIPPED |" | Out-File elektrooffer-ci-summary.md -Append -Encoding utf8
-            "| Manual UI | documented | explicit/manual only | $env:INTEGRATION_MANUAL | - | - | - | $env:INTEGRATION_MANUAL |" | Out-File elektrooffer-ci-summary.md -Append -Encoding utf8
+            "" | Out-File elektrooffer-ci-summary.md -Append -Encoding utf8
+            "## Manual UI scenarios" | Out-File elektrooffer-ci-summary.md -Append -Encoding utf8
+            "| Category | Count | CI execution | Result meaning |" | Out-File elektrooffer-ci-summary.md -Append -Encoding utf8
+            "|---|---:|---|---|" | Out-File elektrooffer-ci-summary.md -Append -Encoding utf8
+            "| ``ManualUI`` | $env:INTEGRATION_MANUAL | not executed | Explicit tests requiring local user interaction; not included in automated Total or Skipped |" | Out-File elektrooffer-ci-summary.md -Append -Encoding utf8
           }
           "" | Out-File elektrooffer-ci-summary.md -Append -Encoding utf8
           "## Build and release" | Out-File elektrooffer-ci-summary.md -Append -Encoding utf8

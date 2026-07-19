@@ -256,281 +256,281 @@ Ruční SQL je vhodné jen pro jednorázovou servisní úpravu databáze, proto�
 Úplný strom verzovaných souborů (bez generovaných `bin`, `obj`, `artifacts` a lokálních výsledků testů):
 
 ```
-ElektroOffer_app/
-├── .github
-│   └── workflows
-│       └── elektrooffer-ci-pipeline.yml
-├── .gitignore
-├── docs
-│   ├── architecture
-│   │   ├── ARES_INTEGRATION.md
-│   │   ├── DATABASE_LIFECYCLE.md
-│   │   ├── FIELD_APPLICATION_PROPOSAL.md
-│   │   └── PRINT_AND_TEMPLATE_ARCHITECTURE.md
-│   ├── ci
-│   │   └── CI_DIAGNOSTIC_TEST.md
-│   ├── DESIGN-TOKENS.md
-│   ├── git
-│   │   └── BRANCH_AND_RELEASE_WORKFLOW.md
-│   ├── CHANGELOG.md
-│   ├── MANUAL-TESTS.md
-│   ├── README.md
-│   ├── templates
-│   │   └── ElektroOffer_Catalog_Import_Template_1.0.xlsx
-│   ├── TEST-SIGNING.md
-│   └── testing
-│       ├── AUTOMATED_TEST_ROADMAP.md
-│       └── MANUAL_TEST_SCENARIOS.md
-├── ElektroOffer_app
-│   ├── App.xaml
-│   ├── App.xaml.cs
-│   ├── Commands
-│   │   └── RelayCommand.cs
-│   ├── Data
-│   │   ├── AppDbContext.cs
-│   │   └── Seed
-│   │       └── elektrooffer_1_9_0.sql
-│   ├── ElektroOffer_app.csproj
-│   ├── ElektroOffer_app.slnx
-│   ├── Models
-│   │   ├── BaseMaterial.cs
-│   │   ├── BudgetItem.cs
-│   │   ├── CalculationItemData.cs
-│   │   ├── CatalogWorkbookData.cs
-│   │   ├── Category.cs
-│   │   ├── Material.cs
-│   │   ├── MaterialItemData.cs
-│   │   ├── MaterialPrice.cs
-│   │   ├── Materials.cs
-│   │   ├── MeasurementImportModels.cs
-│   │   ├── ProjectData.cs
-│   │   ├── Supplier.cs
-│   │   ├── TaskSpecification.cs
-│   │   ├── WorkItemData.cs
-│   │   ├── WorkPosition.cs
-│   │   ├── WorkSpecification.cs
-│   │   └── WorkTask.cs
-│   ├── Resources
-│   │   ├── Colors.xaml
-│   │   ├── Icons
-│   │   │   └── LOGO.jpg
-│   │   └── Styles.xaml
-│   ├── Services
-│   │   ├── Abstractions
-│   │   │   ├── IApplicationService.cs
-│   │   │   ├── IFileDialogService.cs
-│   │   │   ├── IFileSystemService.cs
-│   │   │   ├── IMessageBoxService.cs
-│   │   │   ├── IMessageService.cs
-│   │   │   ├── IPrintService.cs
-│   │   │   └── IWindowService.cs
-│   │   ├── AppDataPathProvider.cs
-│   │   ├── ApplicationInfoService.cs
-│   │   ├── AppThemeService.cs
-│   │   ├── CalculationPriceService.cs
-│   │   ├── CatalogService.cs
-│   │   ├── CatalogWorkbookImportService.cs
-│   │   ├── DatabaseBootstrapService.cs
-│   │   ├── IAppDataPathProvider.cs
-│   │   ├── Implementations
-│   │   │   ├── ApplicationService.cs
-│   │   │   ├── MessageService.cs
-│   │   │   ├── PrintService.cs
-│   │   │   ├── RealFileDialogService.cs
-│   │   │   ├── RealFileSystemService.cs
-│   │   │   ├── RealMessageBoxService.cs
-│   │   │   └── WindowService.cs
-│   │   ├── MaterialCascadeService.cs
-│   │   ├── MeasurementImportService.cs
-│   │   ├── ProjectService.cs
-│   │   ├── WorkCascadeService.cs
-│   │   └── XlsxCatalogReader.cs
-│   ├── ViewModels
-│   │   ├── Items
-│   │   │   └── CalculationItemViewModel.cs
-│   │   ├── MainViewModel.cs
-│   │   └── SettingsViewModel.cs
-│   └── Views
-│       ├── AboutWindow.xaml
-│       ├── AboutWindow.xaml.cs
-│       ├── MainWindow.xaml
-│       ├── MainWindow.xaml.cs
-│       ├── MeasurementImportsWindow.xaml
-│       ├── MeasurementImportsWindow.xaml.cs
-│       ├── MeasurementImportWindow.xaml
-│       ├── MeasurementImportWindow.xaml.cs
-│       ├── SettingsWindow.xaml
-│       └── SettingsWindow.xaml.cs
-├── ElektroOffer_app.Invoice
-│   ├── App.xaml
-│   ├── App.xaml.cs
-│   ├── ElektroOffer_app.Invoice.csproj
-│   ├── Models
-│   │   ├── InvoiceDraft.cs
-│   │   ├── InvoiceLine.cs
-│   │   ├── InvoiceParty.cs
-│   │   └── InvoiceSourceItem.cs
-│   ├── Resources
-│   │   ├── Colors.xaml
-│   │   ├── DesignTokens.xaml
-│   │   └── Styles.xaml
-│   ├── Services
-│   │   ├── AresLookupService.cs
-│   │   ├── FakturoidExportService.cs
-│   │   ├── IAresClient.cs
-│   │   ├── IInvoiceMessageService.cs
-│   │   ├── InvoiceAutosaveService.cs
-│   │   ├── InvoiceDocument.cs
-│   │   ├── InvoiceDraftCloneService.cs
-│   │   ├── InvoiceDraftStateService.cs
-│   │   ├── InvoiceFileService.cs
-│   │   ├── InvoiceValidationService.cs
-│   │   ├── PdfInvoiceExportService.cs
-│   │   ├── QrPaymentService.cs
-│   │   └── WpfInvoiceMessageService.cs
-│   ├── ViewModels
-│   │   └── InvoiceViewModel.cs
-│   └── Views
-│       ├── InvoiceWindow.xaml
-│       └── InvoiceWindow.xaml.cs
-├── ElektroOffer_app.slnx
-├── ElektroOffer_app.Tests.Integration
-│   ├── Database
-│   │   ├── DatabaseBootstrapServiceTests.cs
-│   │   ├── DatabaseConnectionTests.cs
-│   │   ├── DatabaseCrudTests.cs
-│   │   └── DatabaseSchemaTests.cs
-│   ├── ElektroOffer_app.Tests.Integration.csproj
-│   ├── Invoice
-│   │   ├── InvoiceDocumentIntegrationTests.cs
-│   │   └── InvoiceFileIntegrationTests.cs
-│   ├── Services
-│   │   ├── CatalogServiceTests_Advanced.cs
-│   │   ├── CatalogServiceTests.cs
-│   │   ├── CatalogWorkbookImportServiceTests.cs
-│   │   ├── ProjectServiceTests_Advanced.cs
-│   │   ├── ProjectServiceTests.cs
-│   │   ├── RealFileDialogServiceTests.cs
-│   │   └── RealMessageBoxServiceTests.cs
-│   ├── UI
-│   │   └── DesignTokenResourceTests.cs
-│   └── ViewModels
-│       └── CalculationItemViewModel_CascadeTests.cs
-├── ElektroOffer_app.Tests.Unit
-│   ├── CommandTests
-│   │   └── RelayCommandTests.cs
-│   ├── Contracts
-│   │   └── MeasurementPackageTests.cs
-│   ├── ElektroOffer_app.Tests.Unit.csproj
-│   ├── Invoice
-│   │   ├── AresLookupServiceTests.cs
-│   │   ├── InvoiceAutosaveServiceTests.cs
-│   │   ├── InvoiceServicesTests.cs
-│   │   ├── InvoiceValidationServiceTests.cs
-│   │   └── QrPaymentServiceTests.cs
-│   ├── LogicTests
-│   │   ├── DiscountCalculationTests.cs
-│   │   └── PriceCalculationTests.cs
-│   ├── RepositoryTests
-│   │   ├── MaterialRepositoryTests.cs
-│   │   ├── RepositoryEdgeCaseTests.cs
-│   │   └── WorkCatalogRepositoryTests.cs
-│   ├── Services
-│   │   ├── AppDataPathProviderTests.cs
-│   │   ├── ApplicationInfoServiceTests.cs
-│   │   ├── CatalogServiceTests.cs
-│   │   ├── MeasurementImportServiceTests.cs
-│   │   ├── ProjectMeasurementPersistenceTests.cs
-│   │   └── RealFileSystemServiceTests.cs
-│   ├── TestBase.cs
-│   ├── TestData
-│   │   ├── Ares
-│   │   │   ├── ares-incomplete-response.json
-│   │   │   ├── ares-invalid-response.json
-│   │   │   ├── ares-non-vat-payer.json
-│   │   │   ├── ares-not-found.json
-│   │   │   └── ares-valid-company.json
-│   │   └── Measurements
-│   │       └── valid-measurement.json
-│   └── ViewModels
-│       ├── CalculationItemViewModelTests_CascadeMaterial.cs
-│       ├── CalculationItemViewModelTests_CascadeWork.cs
-│       ├── CalculationItemViewModelTests_IsEmpty.cs
-│       ├── CalculationItemViewModelTests_PropertyChanged.cs
-│       ├── CalculationItemViewModelTests_Total.cs
-│       ├── CalculationItemViewModelTests_Validation.cs
-│       └── MainViewModelTests_DiscountPresentation.cs
-├── ElektroOffer.Contracts
-│   ├── Catalog
-│   │   └── FieldCatalogSnapshot.cs
-│   ├── ElektroOffer.Contracts.csproj
-│   └── Measurements
-│       ├── MeasurementArchiveService.cs
-│       ├── MeasurementPackage.cs
-│       ├── MeasurementPackageSerializer.cs
-│       └── MeasurementPackageValidator.cs
-├── ElektroOffer.Field
-│   ├── App.xaml
-│   ├── App.xaml.cs
-│   ├── AppShell.xaml
-│   ├── AppShell.xaml.cs
-│   ├── ElektroOffer.Field.csproj
-│   ├── MainPage.xaml
-│   ├── MainPage.xaml.cs
-│   ├── MauiProgram.cs
-│   ├── Platforms
-│   │   ├── Android
-│   │   │   ├── AndroidManifest.xml
-│   │   │   ├── MainActivity.cs
-│   │   │   ├── MainApplication.cs
-│   │   │   └── Resources
-│   │   │       └── values
-│   │   │           └── colors.xml
-│   │   └── Windows
-│   │       ├── app.manifest
-│   │       ├── App.xaml
-│   │       ├── App.xaml.cs
-│   │       └── Package.appxmanifest
-│   ├── Properties
-│   │   └── launchSettings.json
-│   ├── Resources
-│   │   ├── AppIcon
-│   │   │   ├── appicon.svg
-│   │   │   └── appiconfg.svg
-│   │   ├── Fonts
-│   │   │   ├── OpenSans-Regular.ttf
-│   │   │   └── OpenSans-Semibold.ttf
-│   │   ├── Splash
-│   │   │   └── splash.svg
-│   │   └── Styles
-│   │       ├── Colors.xaml
-│   │       └── Styles.xaml
-│   └── Services
-│       ├── DemoMeasurementFactory.cs
-│       ├── FieldCatalogStorageService.cs
-│       └── FieldStorageService.cs
-└── scripts
-    ├── AllMainFile.py
-    ├── commands
-    │   ├── run-android-test-build.ps1
-    │   ├── run-publish.ps1
-    │   ├── run-tests-integration.ps1
-    │   ├── run-tests-unit.ps1
-    │   └── run-tests.ps1
-    ├── installer
-    │   └── ElektroOffer.iss
-    ├── run-publish.bat
-    ├── run-tests-integration.bat
-    ├── run-tests-unit.bat
-    ├── run-tests.bat
-    ├── scripts-output
-    │   └── AllMainFile.txt
-    └── signing
-        ├── Install-TestCertificate.ps1
-        ├── New-TestCodeSigningCertificate.ps1
-        ├── Remove-TestCertificate.ps1
-        ├── Sign-TestFile.ps1
-        └── Sign-TestPublish.ps1
+📁 ElektroOffer_app/
+├── 📁 .github
+│   └── 📁 workflows
+│       └── 📄 elektrooffer-ci-pipeline.yml
+├── 📄 .gitignore
+├── 📁 docs
+│   ├── 📁 architecture
+│   │   ├── 📄 ARES_INTEGRATION.md
+│   │   ├── 📄 DATABASE_LIFECYCLE.md
+│   │   ├── 📄 FIELD_APPLICATION_PROPOSAL.md
+│   │   └── 📄 PRINT_AND_TEMPLATE_ARCHITECTURE.md
+│   ├── 📁 ci
+│   │   └── 📄 CI_DIAGNOSTIC_TEST.md
+│   ├── 📄 DESIGN-TOKENS.md
+│   ├── 📁 git
+│   │   └── 📄 BRANCH_AND_RELEASE_WORKFLOW.md
+│   ├── 📄 CHANGELOG.md
+│   ├── 📄 MANUAL-TESTS.md
+│   ├── 📄 README.md
+│   ├── 📁 templates
+│   │   └── 📄 ElektroOffer_Catalog_Import_Template_1.0.xlsx
+│   ├── 📄 TEST-SIGNING.md
+│   └── 📁 testing
+│       ├── 📄 AUTOMATED_TEST_ROADMAP.md
+│       └── 📄 MANUAL_TEST_SCENARIOS.md
+├── 📁 ElektroOffer_app
+│   ├── 📄 App.xaml
+│   ├── 📄 App.xaml.cs
+│   ├── 📁 Commands
+│   │   └── 📄 RelayCommand.cs
+│   ├── 📁 Data
+│   │   ├── 📄 AppDbContext.cs
+│   │   └── 📁 Seed
+│   │       └── 📄 elektrooffer_1_9_0.sql
+│   ├── 📄 ElektroOffer_app.csproj
+│   ├── 📄 ElektroOffer_app.slnx
+│   ├── 📁 Models
+│   │   ├── 📄 BaseMaterial.cs
+│   │   ├── 📄 BudgetItem.cs
+│   │   ├── 📄 CalculationItemData.cs
+│   │   ├── 📄 CatalogWorkbookData.cs
+│   │   ├── 📄 Category.cs
+│   │   ├── 📄 Material.cs
+│   │   ├── 📄 MaterialItemData.cs
+│   │   ├── 📄 MaterialPrice.cs
+│   │   ├── 📄 Materials.cs
+│   │   ├── 📄 MeasurementImportModels.cs
+│   │   ├── 📄 ProjectData.cs
+│   │   ├── 📄 Supplier.cs
+│   │   ├── 📄 TaskSpecification.cs
+│   │   ├── 📄 WorkItemData.cs
+│   │   ├── 📄 WorkPosition.cs
+│   │   ├── 📄 WorkSpecification.cs
+│   │   └── 📄 WorkTask.cs
+│   ├── 📁 Resources
+│   │   ├── 📄 Colors.xaml
+│   │   ├── 📁 Icons
+│   │   │   └── 📄 LOGO.jpg
+│   │   └── 📄 Styles.xaml
+│   ├── 📁 Services
+│   │   ├── 📁 Abstractions
+│   │   │   ├── 📄 IApplicationService.cs
+│   │   │   ├── 📄 IFileDialogService.cs
+│   │   │   ├── 📄 IFileSystemService.cs
+│   │   │   ├── 📄 IMessageBoxService.cs
+│   │   │   ├── 📄 IMessageService.cs
+│   │   │   ├── 📄 IPrintService.cs
+│   │   │   └── 📄 IWindowService.cs
+│   │   ├── 📄 AppDataPathProvider.cs
+│   │   ├── 📄 ApplicationInfoService.cs
+│   │   ├── 📄 AppThemeService.cs
+│   │   ├── 📄 CalculationPriceService.cs
+│   │   ├── 📄 CatalogService.cs
+│   │   ├── 📄 CatalogWorkbookImportService.cs
+│   │   ├── 📄 DatabaseBootstrapService.cs
+│   │   ├── 📄 IAppDataPathProvider.cs
+│   │   ├── 📁 Implementations
+│   │   │   ├── 📄 ApplicationService.cs
+│   │   │   ├── 📄 MessageService.cs
+│   │   │   ├── 📄 PrintService.cs
+│   │   │   ├── 📄 RealFileDialogService.cs
+│   │   │   ├── 📄 RealFileSystemService.cs
+│   │   │   ├── 📄 RealMessageBoxService.cs
+│   │   │   └── 📄 WindowService.cs
+│   │   ├── 📄 MaterialCascadeService.cs
+│   │   ├── 📄 MeasurementImportService.cs
+│   │   ├── 📄 ProjectService.cs
+│   │   ├── 📄 WorkCascadeService.cs
+│   │   └── 📄 XlsxCatalogReader.cs
+│   ├── 📁 ViewModels
+│   │   ├── 📁 Items
+│   │   │   └── 📄 CalculationItemViewModel.cs
+│   │   ├── 📄 MainViewModel.cs
+│   │   └── 📄 SettingsViewModel.cs
+│   └── 📁 Views
+│       ├── 📄 AboutWindow.xaml
+│       ├── 📄 AboutWindow.xaml.cs
+│       ├── 📄 MainWindow.xaml
+│       ├── 📄 MainWindow.xaml.cs
+│       ├── 📄 MeasurementImportsWindow.xaml
+│       ├── 📄 MeasurementImportsWindow.xaml.cs
+│       ├── 📄 MeasurementImportWindow.xaml
+│       ├── 📄 MeasurementImportWindow.xaml.cs
+│       ├── 📄 SettingsWindow.xaml
+│       └── 📄 SettingsWindow.xaml.cs
+├── 📁 ElektroOffer_app.Invoice
+│   ├── 📄 App.xaml
+│   ├── 📄 App.xaml.cs
+│   ├── 📄 ElektroOffer_app.Invoice.csproj
+│   ├── 📁 Models
+│   │   ├── 📄 InvoiceDraft.cs
+│   │   ├── 📄 InvoiceLine.cs
+│   │   ├── 📄 InvoiceParty.cs
+│   │   └── 📄 InvoiceSourceItem.cs
+│   ├── 📁 Resources
+│   │   ├── 📄 Colors.xaml
+│   │   ├── 📄 DesignTokens.xaml
+│   │   └── 📄 Styles.xaml
+│   ├── 📁 Services
+│   │   ├── 📄 AresLookupService.cs
+│   │   ├── 📄 FakturoidExportService.cs
+│   │   ├── 📄 IAresClient.cs
+│   │   ├── 📄 IInvoiceMessageService.cs
+│   │   ├── 📄 InvoiceAutosaveService.cs
+│   │   ├── 📄 InvoiceDocument.cs
+│   │   ├── 📄 InvoiceDraftCloneService.cs
+│   │   ├── 📄 InvoiceDraftStateService.cs
+│   │   ├── 📄 InvoiceFileService.cs
+│   │   ├── 📄 InvoiceValidationService.cs
+│   │   ├── 📄 PdfInvoiceExportService.cs
+│   │   ├── 📄 QrPaymentService.cs
+│   │   └── 📄 WpfInvoiceMessageService.cs
+│   ├── 📁 ViewModels
+│   │   └── 📄 InvoiceViewModel.cs
+│   └── 📁 Views
+│       ├── 📄 InvoiceWindow.xaml
+│       └── 📄 InvoiceWindow.xaml.cs
+├── 📄 ElektroOffer_app.slnx
+├── 📁 ElektroOffer_app.Tests.Integration
+│   ├── 📁 Database
+│   │   ├── 📄 DatabaseBootstrapServiceTests.cs
+│   │   ├── 📄 DatabaseConnectionTests.cs
+│   │   ├── 📄 DatabaseCrudTests.cs
+│   │   └── 📄 DatabaseSchemaTests.cs
+│   ├── 📄 ElektroOffer_app.Tests.Integration.csproj
+│   ├── 📁 Invoice
+│   │   ├── 📄 InvoiceDocumentIntegrationTests.cs
+│   │   └── 📄 InvoiceFileIntegrationTests.cs
+│   ├── 📁 Services
+│   │   ├── 📄 CatalogServiceTests_Advanced.cs
+│   │   ├── 📄 CatalogServiceTests.cs
+│   │   ├── 📄 CatalogWorkbookImportServiceTests.cs
+│   │   ├── 📄 ProjectServiceTests_Advanced.cs
+│   │   ├── 📄 ProjectServiceTests.cs
+│   │   ├── 📄 RealFileDialogServiceTests.cs
+│   │   └── 📄 RealMessageBoxServiceTests.cs
+│   ├── 📁 UI
+│   │   └── 📄 DesignTokenResourceTests.cs
+│   └── 📁 ViewModels
+│       └── 📄 CalculationItemViewModel_CascadeTests.cs
+├── 📁 ElektroOffer_app.Tests.Unit
+│   ├── 📁 CommandTests
+│   │   └── 📄 RelayCommandTests.cs
+│   ├── 📁 Contracts
+│   │   └── 📄 MeasurementPackageTests.cs
+│   ├── 📄 ElektroOffer_app.Tests.Unit.csproj
+│   ├── 📁 Invoice
+│   │   ├── 📄 AresLookupServiceTests.cs
+│   │   ├── 📄 InvoiceAutosaveServiceTests.cs
+│   │   ├── 📄 InvoiceServicesTests.cs
+│   │   ├── 📄 InvoiceValidationServiceTests.cs
+│   │   └── 📄 QrPaymentServiceTests.cs
+│   ├── 📁 LogicTests
+│   │   ├── 📄 DiscountCalculationTests.cs
+│   │   └── 📄 PriceCalculationTests.cs
+│   ├── 📁 RepositoryTests
+│   │   ├── 📄 MaterialRepositoryTests.cs
+│   │   ├── 📄 RepositoryEdgeCaseTests.cs
+│   │   └── 📄 WorkCatalogRepositoryTests.cs
+│   ├── 📁 Services
+│   │   ├── 📄 AppDataPathProviderTests.cs
+│   │   ├── 📄 ApplicationInfoServiceTests.cs
+│   │   ├── 📄 CatalogServiceTests.cs
+│   │   ├── 📄 MeasurementImportServiceTests.cs
+│   │   ├── 📄 ProjectMeasurementPersistenceTests.cs
+│   │   └── 📄 RealFileSystemServiceTests.cs
+│   ├── 📄 TestBase.cs
+│   ├── 📁 TestData
+│   │   ├── 📁 Ares
+│   │   │   ├── 📄 ares-incomplete-response.json
+│   │   │   ├── 📄 ares-invalid-response.json
+│   │   │   ├── 📄 ares-non-vat-payer.json
+│   │   │   ├── 📄 ares-not-found.json
+│   │   │   └── 📄 ares-valid-company.json
+│   │   └── 📁 Measurements
+│   │       └── 📄 valid-measurement.json
+│   └── 📁 ViewModels
+│       ├── 📄 CalculationItemViewModelTests_CascadeMaterial.cs
+│       ├── 📄 CalculationItemViewModelTests_CascadeWork.cs
+│       ├── 📄 CalculationItemViewModelTests_IsEmpty.cs
+│       ├── 📄 CalculationItemViewModelTests_PropertyChanged.cs
+│       ├── 📄 CalculationItemViewModelTests_Total.cs
+│       ├── 📄 CalculationItemViewModelTests_Validation.cs
+│       └── 📄 MainViewModelTests_DiscountPresentation.cs
+├── 📁 ElektroOffer.Contracts
+│   ├── 📁 Catalog
+│   │   └── 📄 FieldCatalogSnapshot.cs
+│   ├── 📄 ElektroOffer.Contracts.csproj
+│   └── 📁 Measurements
+│       ├── 📄 MeasurementArchiveService.cs
+│       ├── 📄 MeasurementPackage.cs
+│       ├── 📄 MeasurementPackageSerializer.cs
+│       └── 📄 MeasurementPackageValidator.cs
+├── 📁 ElektroOffer.Field
+│   ├── 📄 App.xaml
+│   ├── 📄 App.xaml.cs
+│   ├── 📄 AppShell.xaml
+│   ├── 📄 AppShell.xaml.cs
+│   ├── 📄 ElektroOffer.Field.csproj
+│   ├── 📄 MainPage.xaml
+│   ├── 📄 MainPage.xaml.cs
+│   ├── 📄 MauiProgram.cs
+│   ├── 📁 Platforms
+│   │   ├── 📁 Android
+│   │   │   ├── 📄 AndroidManifest.xml
+│   │   │   ├── 📄 MainActivity.cs
+│   │   │   ├── 📄 MainApplication.cs
+│   │   │   └── 📁 Resources
+│   │   │       └── 📁 values
+│   │   │           └── 📄 colors.xml
+│   │   └── 📁 Windows
+│   │       ├── 📄 app.manifest
+│   │       ├── 📄 App.xaml
+│   │       ├── 📄 App.xaml.cs
+│   │       └── 📄 Package.appxmanifest
+│   ├── 📁 Properties
+│   │   └── 📄 launchSettings.json
+│   ├── 📁 Resources
+│   │   ├── 📁 AppIcon
+│   │   │   ├── 📄 appicon.svg
+│   │   │   └── 📄 appiconfg.svg
+│   │   ├── 📁 Fonts
+│   │   │   ├── 📄 OpenSans-Regular.ttf
+│   │   │   └── 📄 OpenSans-Semibold.ttf
+│   │   ├── 📁 Splash
+│   │   │   └── 📄 splash.svg
+│   │   └── 📁 Styles
+│   │       ├── 📄 Colors.xaml
+│   │       └── 📄 Styles.xaml
+│   └── 📁 Services
+│       ├── 📄 DemoMeasurementFactory.cs
+│       ├── 📄 FieldCatalogStorageService.cs
+│       └── 📄 FieldStorageService.cs
+└── 📁 scripts
+    ├── 📄 AllMainFile.py
+    ├── 📁 commands
+    │   ├── 📄 run-android-test-build.ps1
+    │   ├── 📄 run-publish.ps1
+    │   ├── 📄 run-tests-integration.ps1
+    │   ├── 📄 run-tests-unit.ps1
+    │   └── 📄 run-tests.ps1
+    ├── 📁 installer
+    │   └── 📄 ElektroOffer.iss
+    ├── 📄 run-publish.bat
+    ├── 📄 run-tests-integration.bat
+    ├── 📄 run-tests-unit.bat
+    ├── 📄 run-tests.bat
+    ├── 📁 scripts-output
+    │   └── 📄 AllMainFile.txt
+    └── 📁 signing
+        ├── 📄 Install-TestCertificate.ps1
+        ├── 📄 New-TestCodeSigningCertificate.ps1
+        ├── 📄 Remove-TestCertificate.ps1
+        ├── 📄 Sign-TestFile.ps1
+        └── 📄 Sign-TestPublish.ps1
 ```
 
 ---
