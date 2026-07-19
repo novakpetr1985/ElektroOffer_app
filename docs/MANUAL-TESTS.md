@@ -1,9 +1,9 @@
-# Manuální testy - ElektroOffer 1.12.0
+# Manuální testy - ElektroOffer 1.13.0-feature
 
-Datum aktualizace: 2026-07-17
+Datum aktualizace: 2026-07-19
 
-Testovaná větev: `release/1.12.0`
-Testovaná verze: `1.12.0`
+Testovaná větev: `feature/1.13.0`
+Testovaná verze: `1.13.0-feature`
 
 Strukturované release scénáře s ID, prioritou, daty, očekáváním a polem pro výsledek jsou v `docs/testing/MANUAL_TEST_SCENARIOS.md`.
 
@@ -275,26 +275,72 @@ Očekávání:
 1. Otevři import a dialog zavři bez výběru souboru.
 2. Ověř, že aplikace nezobrazí chybu a databázi nezmění.
 
-## 10. GitHub Actions A PR Proces
+## 10. Offline terénní workflow
 
-### 10.1 CI na feature větvi
+### 10.1 Export katalogu
+1. V hlavní aplikaci zvol `Soubor → Exportovat katalog pro terén`.
+2. Ulož `.eofcatalog` mimo repozitář.
+3. Přenes soubor do testovacího telefonu nebo druhého počítače.
+4. V ElektroOffer Terén zvol `Katalog` a soubor načti.
+5. Ověř, že jsou dostupné práce i materiál a že terénní aplikace nezobrazuje ani nepočítá ceny.
+
+### 10.2 Zaměření bez internetu
+1. Vypni na telefonu Wi-Fi i mobilní data.
+2. Založ zakázku, vyplň zákazníka, adresu, technika a poznámku.
+3. Přidej nejméně dvě místnosti a do každé práci i materiál.
+4. Jednu položku vyber z katalogu a jednu zadej ručně.
+5. Vyplň množství, jednotku, rezervu a poznámku.
+6. Ukonči aplikaci a znovu ji spusť; ověř obnovení rozpracovaného měření.
+
+### 10.3 Fotografie a export
+1. Přidej fotografii k místnosti a další ke konkrétní položce.
+2. Zkontroluj počet fotografií v aplikaci.
+3. Zvol `Uložit a exportovat` a vytvoř `.eofmeasure`.
+4. Přenes balíček zpět do hlavního počítače bez změny jeho obsahu.
+
+### 10.4 Importní náhled a ceny
+1. V hlavní aplikaci zvol `Soubor → Importovat terénní měření`.
+2. Ověř údaje zakázky, místnosti, mapování položek a seznam fotografií.
+3. Ověř, že katalogové položky jsou spárované přes stabilní kód a ruční/nevyřešené položky vyžadují kontrolu.
+4. Vyber řádky a fotografie a import potvrď.
+5. Ověř, že se množství a rezerva přenesly a cena se načetla z aktuální hlavní databáze, nikoli z telefonu.
+6. Ověř, že nevyřešená položka nebyla automaticky vložena.
+
+### 10.5 Idempotence, projekt a přílohy
+1. Importuj stejný `.eofmeasure` znovu a ověř odmítnutí stejného `exportId`.
+2. Ulož projekt jako `.eof` a ověř vznik doprovodné složky `.assets` se zdrojovým balíčkem a vybranými fotografiemi.
+3. Projekt zavři, znovu načti a otevři historii terénních importů.
+4. Použij `Uložit jako` a ověř, že nová kopie projektu dostala vlastní úplnou složku `.assets`.
+
+### 10.6 Android instalační smoke test
+1. Spusť `scripts\commands\run-android-test-build.ps1`.
+2. Ověř podpis APK a poznamenej jeho SHA-256.
+3. Nainstaluj APK na podporovaný testovací telefon; pro Samsung Galaxy S8 s Androidem 9 bylo spuštění ověřeno.
+4. Spusť aplikaci bez připojeného Visual Studia a ověř, že se ihned neukončí.
+5. Načti testovací data, přidej fotografii a dokonči export.
+
+## 11. GitHub Actions A PR Proces
+
+### 11.1 CI na feature větvi
 1. Pushni změnu do `feature/**`.
 2. Ověř, že se spustí GitHub Actions workflow `ElektroOffer CI Pipeline`.
-3. Ověř, že projde `Restore`, `Build solution`, `Run unit tests` a `Run integration tests`.
-4. Ověř, že se uloží artifact `elektrooffer-ci-summary`.
+3. Ověř, že projde `Restore`, `Build solution` a právě jeden běh `Run unit tests`.
+4. Ověř, že se při běžném pushi nespustí integrační sada ani release publish.
+5. Ověř, že se uloží artifact `elektrooffer-ci-summary`.
 
 Poznámka: Unit a integrační testy jsou v CI oddělené, aby bylo hned vidět, která sada případně selhala.
 
-### 10.2 PR do dev/test/main
+### 11.2 PR do dev/test/main
 1. Vytvoř PR do `dev`, `test` nebo `main`.
-2. Ověř, že se spustí stejné CI.
+2. Ověř, že se spustí build a právě jeden běh integračních testů; unit test se po stejném commitu z PR znovu nespouští.
 3. Merge povol až po zeleném CI a ruční kontrole.
 
-### 10.3 Release
+### 11.3 Release
 1. Release publish se spouští pouze při tagu.
-2. Ověř, že běžný push do feature větve release build nespouští.
+2. Ověř, že tag spustí build, unit i integrační testy a vytvoření Windows instalačních artefaktů.
+3. Ověř, že běžný push ani PR release build nespouští.
 
-### 10.4 Diagnostický log
+### 11.4 Diagnostický log
 1. Běžný krátký souhrn `elektrooffer-ci-summary` se vytvoří po každém běhu, včetně úspěšného běhu.
 2. Dlouhý diagnostický log se vytvoří pouze při chybě CI nebo release jobu.
 
@@ -313,4 +359,5 @@ Poznámka: Unit a integrační testy jsou v CI oddělené, aby bylo hned vidět,
 | Vzhled | | |
 | Tisk/export | | |
 | Import katalogu XLSX | | |
+| Offline terénní workflow | | |
 | GitHub Actions | | |

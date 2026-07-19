@@ -1,0 +1,77 @@
+<Window x:Class="ElektroOffer_app.Views.MeasurementImportWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Import terénního měření"
+        Width="1180" Height="760"
+        MinWidth="900" MinHeight="600"
+        WindowStartupLocation="CenterOwner">
+    <Grid Margin="16">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="180"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <Border Padding="14" CornerRadius="8" Background="#EAF3F8" BorderBrush="#9BB9C9" BorderThickness="1">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <StackPanel>
+                    <TextBlock Text="{Binding ProjectName}" FontSize="20" FontWeight="Bold"/>
+                    <TextBlock Text="{Binding CustomerName, StringFormat=Zákazník: {0}}" Margin="0,4,0,0"/>
+                    <TextBlock Text="{Binding SiteAddress, StringFormat=Stavba: {0}}"/>
+                    <TextBlock Text="{Binding TechnicianName, StringFormat=Technik: {0}}"/>
+                </StackPanel>
+                <StackPanel Grid.Column="1" HorizontalAlignment="Right">
+                    <TextBlock Text="Import pouze přidává nové řádky." FontWeight="Bold"/>
+                    <TextBlock Text="Existující kalkulaci ani ceny nepřepisuje."/>
+                    <TextBlock Text="Zeleně dostupné položky lze vybrat; nevyřešené zůstanou mimo import." TextWrapping="Wrap" MaxWidth="480"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <DataGrid Grid.Row="1" Margin="0,12,0,12"
+                  ItemsSource="{Binding Items}"
+                  AutoGenerateColumns="False" CanUserAddRows="False"
+                  IsReadOnly="False" SelectionMode="Extended">
+            <DataGrid.Columns>
+                <DataGridCheckBoxColumn Header="Import" Binding="{Binding IsSelected, UpdateSourceTrigger=PropertyChanged}" Width="55"/>
+                <DataGridTextColumn Header="Typ" Binding="{Binding Kind}" IsReadOnly="True" Width="75"/>
+                <DataGridTextColumn Header="Místnost" Binding="{Binding AreaName}" IsReadOnly="True" Width="110"/>
+                <DataGridTextColumn Header="Zdrojové měření" Binding="{Binding SourceDescription}" IsReadOnly="True" Width="180"/>
+                <DataGridTextColumn Header="Navržené mapování do katalogu" Binding="{Binding SuggestedMapping}" IsReadOnly="True" Width="*"/>
+                <DataGridTextColumn Header="Množství" Binding="{Binding Quantity, StringFormat=0.##}" IsReadOnly="True" Width="80"/>
+                <DataGridTextColumn Header="MJ" Binding="{Binding Unit}" IsReadOnly="True" Width="55"/>
+                <DataGridTextColumn Header="Jistota" Binding="{Binding Confidence, StringFormat=P0}" IsReadOnly="True" Width="65"/>
+                <DataGridTextColumn Header="Upozornění" Binding="{Binding Warning}" IsReadOnly="True" Width="220"/>
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <GroupBox Grid.Row="2" Header="Fotografie a přílohy">
+            <DataGrid ItemsSource="{Binding Attachments}" AutoGenerateColumns="False" CanUserAddRows="False">
+                <DataGrid.Columns>
+                    <DataGridCheckBoxColumn Header="Přenést" Binding="{Binding IsSelected, UpdateSourceTrigger=PropertyChanged}" Width="60"/>
+                    <DataGridTextColumn Header="Soubor" Binding="{Binding FileName}" IsReadOnly="True" Width="220"/>
+                    <DataGridTextColumn Header="Místnost" Binding="{Binding AreaName}" IsReadOnly="True" Width="140"/>
+                    <DataGridTextColumn Header="Položka" Binding="{Binding ItemName}" IsReadOnly="True" Width="*"/>
+                    <DataGridTextColumn Header="Typ" Binding="{Binding ContentType}" IsReadOnly="True" Width="120"/>
+                    <DataGridTextColumn Header="Velikost B" Binding="{Binding Size}" IsReadOnly="True" Width="90"/>
+                </DataGrid.Columns>
+            </DataGrid>
+        </GroupBox>
+
+        <Grid Grid.Row="3" Margin="0,12,0,0">
+            <StackPanel Orientation="Horizontal">
+                <Button Content="Vybrat vše vyřešené" Click="SelectResolved_Click" Padding="12,6" Margin="0,0,8,0"/>
+                <Button Content="Zrušit výběr položek" Click="ClearSelection_Click" Padding="12,6"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button Content="Zrušit" IsCancel="True" Padding="18,7" Margin="0,0,8,0"/>
+                <Button Content="Importovat vybrané" Click="Import_Click" Padding="18,7" Background="#237A57" Foreground="White"/>
+            </StackPanel>
+        </Grid>
+    </Grid>
+</Window>

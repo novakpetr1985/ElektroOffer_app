@@ -59,11 +59,15 @@
          musí být v repozitáři. -->
     <ProjectReference Include="..\ElektroOffer_app\ElektroOffer_app.csproj" />
     <ProjectReference Include="..\ElektroOffer_app.Invoice\ElektroOffer_app.Invoice.csproj" />
+    <ProjectReference Include="..\ElektroOffer.Contracts\ElektroOffer.Contracts.csproj" />
     <FrameworkReference Include="Microsoft.WindowsDesktop.App.WPF" />
   </ItemGroup>
 
   <ItemGroup>
     <None Update="TestData\Ares\*.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="TestData\Measurements\*.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>

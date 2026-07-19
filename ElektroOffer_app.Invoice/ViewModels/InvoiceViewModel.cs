@@ -52,6 +52,8 @@ namespace ElektroOffer_app.Invoice.ViewModels
             SaveToProjectCommand = new RelayCommand(_ => SaveToProject());
             LookupSupplierAresCommand = new RelayCommand(async _ => await LookupAresAsync(Supplier));
             LookupCustomerAresCommand = new RelayCommand(async _ => await LookupAresAsync(Customer));
+            ClearSupplierCommand = new RelayCommand(_ => ClearParty(Supplier, "Dodavatel byl vymazan"));
+            ClearCustomerCommand = new RelayCommand(_ => ClearParty(Customer, "Odberatel byl vymazan"));
             _isInitializing = false;
         }
 
@@ -67,6 +69,8 @@ namespace ElektroOffer_app.Invoice.ViewModels
         public ICommand SaveToProjectCommand { get; }
         public ICommand LookupSupplierAresCommand { get; }
         public ICommand LookupCustomerAresCommand { get; }
+        public ICommand ClearSupplierCommand { get; }
+        public ICommand ClearCustomerCommand { get; }
 
         public decimal Total => Draft.Total;
         public event EventHandler<InvoiceDraft>? SaveToProjectRequested;
@@ -216,6 +220,12 @@ namespace ElektroOffer_app.Invoice.ViewModels
             HasUnsavedChanges = false;
             SaveToProjectRequested?.Invoke(this, InvoiceDraftCloneService.Clone(Draft));
             StatusText = "Fakturacni data ulozena do projektu";
+        }
+
+        private void ClearParty(InvoiceParty party, string statusText)
+        {
+            InvoiceDraftStateService.ClearParty(party);
+            StatusText = statusText;
         }
 
         private async Task LookupAresAsync(InvoiceParty party)

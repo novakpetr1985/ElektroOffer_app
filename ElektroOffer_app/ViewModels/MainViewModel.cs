@@ -41,6 +41,7 @@ namespace ElektroOffer_app.ViewModels
         private readonly CatalogWorkbookImportService? _catalogImportService;
         private readonly IFileDialogService? _catalogImportDialog;
         private readonly IMessageBoxService? _catalogImportMessages;
+        private readonly MeasurementImportService? _measurementImportService;
 
         // =========================================================
         // COLLECTIONS
@@ -64,6 +65,7 @@ namespace ElektroOffer_app.ViewModels
         private string? _currentFilePath = null;
         private bool _hasUnsavedChanges = false;
         private InvoiceDraft? _invoiceDraft;
+        private readonly List<ImportedMeasurementData> _measurementImports = [];
 
         private string _statusText = "Nový projekt";
         public string StatusText
@@ -143,6 +145,9 @@ namespace ElektroOffer_app.ViewModels
         public ICommand PrintCommand { get; }
         public ICommand InvoiceCommand { get; }
         public ICommand ImportCatalogCommand { get; }
+        public ICommand ImportMeasurementCommand { get; }
+        public ICommand ShowMeasurementImportsCommand { get; }
+        public ICommand ExportFieldCatalogCommand { get; }
         public ICommand SettingsCommand { get; }
         public ICommand ExitCommand { get; }
         public ICommand AboutCommand { get; }
@@ -175,6 +180,24 @@ namespace ElektroOffer_app.ViewModels
             CatalogWorkbookImportService? catalogImportService = null,
             IFileDialogService? catalogImportDialog = null,
             IMessageBoxService? catalogImportMessages = null)
+            : this(projectService, catalogService, price, db, messageService, printService, applicationService,
+                windowService, catalogImportService, catalogImportDialog, catalogImportMessages, null)
+        {
+        }
+
+        public MainViewModel(
+            ProjectService projectService,
+            CatalogService catalogService,
+            CalculationPriceService price,
+            AppDbContext db,
+            IMessageService messageService,
+            IPrintService printService,
+            IApplicationService applicationService,
+            IWindowService windowService,
+            CatalogWorkbookImportService? catalogImportService,
+            IFileDialogService? catalogImportDialog,
+            IMessageBoxService? catalogImportMessages,
+            MeasurementImportService? measurementImportService)
         {
             // DI – všechny služby + jeden sdílený AppDbContext
             _projectService = projectService;
@@ -189,6 +212,7 @@ namespace ElektroOffer_app.ViewModels
             _catalogImportService = catalogImportService;
             _catalogImportDialog = catalogImportDialog;
             _catalogImportMessages = catalogImportMessages;
+            _measurementImportService = measurementImportService;
 
             LoadCatalogDataFromDb();
 
@@ -211,6 +235,9 @@ namespace ElektroOffer_app.ViewModels
             PrintCommand = new RelayCommand(_ => Print());
             InvoiceCommand = new RelayCommand(_ => ShowInvoice());
             ImportCatalogCommand = new RelayCommand(_ => ImportCatalog(), _ => _catalogImportService != null);
+            ImportMeasurementCommand = new RelayCommand(async _ => await ImportMeasurementAsync(), _ => _measurementImportService != null && _catalogImportDialog != null);
+            ShowMeasurementImportsCommand = new RelayCommand(_ => ShowMeasurementImports());
+            ExportFieldCatalogCommand = new RelayCommand(_ => ExportFieldCatalog(), _ => _measurementImportService != null && _catalogImportDialog != null);
             SettingsCommand = new RelayCommand(_ => ShowSettings());
             ExitCommand = new RelayCommand(_ => Exit());
             AboutCommand = new RelayCommand(_ => ShowAbout());
@@ -499,7 +526,7 @@ namespace ElektroOffer_app.ViewModels
         public void SaveAs()
         {
             var data = BuildProjectData();
-            var savedPath = _projectService.SaveAs(data);
+            var savedPath = _projectService.SaveAs(data, _currentFilePath);
 
             if (savedPath != null)
             {
@@ -534,6 +561,7 @@ namespace ElektroOffer_app.ViewModels
             _currentFilePath = null;
             _hasUnsavedChanges = false;
             _invoiceDraft = null;
+            _measurementImports.Clear();
 
             StatusText = "Nový projekt";
         }
@@ -657,7 +685,8 @@ namespace ElektroOffer_app.ViewModels
                     ? InvoiceDraftCloneService.Clone(_invoiceDraft)
                     : null,
                 WorkRowCount = WorkCalcItems.Count,
-                MaterialRowCount = MaterialItems.Count
+                MaterialRowCount = MaterialItems.Count,
+                MeasurementImports = _measurementImports.ToList()
             };
         }
 
@@ -677,6 +706,8 @@ namespace ElektroOffer_app.ViewModels
             _invoiceDraft = data.InvoiceDraft != null
                 ? InvoiceDraftCloneService.Clone(data.InvoiceDraft)
                 : null;
+            _measurementImports.Clear();
+            _measurementImports.AddRange(data.MeasurementImports ?? []);
 
             const int minRowCount = 5;
 
@@ -858,6 +889,154 @@ namespace ElektroOffer_app.ViewModels
                 "Import katalogu",
                 System.Windows.MessageBoxButton.OK,
                 System.Windows.MessageBoxImage.Information);
+        }
+
+        public async Task ImportMeasurementAsync()
+        {
+            if (_measurementImportService == null || _catalogImportDialog == null || _catalogImportMessages == null)
+                return;
+
+            if (_currentFilePath == null)
+            {
+                _catalogImportMessages.Show(
+                    "Před importem terénního měření nejprve uložte hlavní projekt. Fotografie se uloží do jeho doprovodné složky.",
+                    "Import terénního měření",
+                    System.Windows.MessageBoxButton.OK,
+                    System.Windows.MessageBoxImage.Information);
+                SaveAs();
+                if (_currentFilePath == null)
+                    return;
+            }
+
+            var path = _catalogImportDialog.ShowOpenFileDialog(
+                "Terénní měření ElektroOffer (*.eofmeasure)|*.eofmeasure",
+                "Importovat terénní měření");
+            if (path == null) return;
+
+            try
+            {
+                StatusText = "Kontroluji terénní balíček…";
+                var preview = await _measurementImportService.PrepareAsync(path, _measurementImports.Select(item => item.ExportId));
+                if (!_windowService.ShowMeasurementImportPreview(preview))
+                {
+                    StatusText = System.IO.Path.GetFileName(_currentFilePath);
+                    return;
+                }
+
+                StatusText = "Importuji vybrané položky a fotografie…";
+                var imported = await _measurementImportService.StoreApprovedImportAsync(preview, _currentFilePath);
+                ApplyMeasurementRows(preview.Items.Where(item => item.IsSelected));
+                _measurementImports.Add(imported);
+                MarkAsChanged();
+                Recalculate();
+
+                var workCount = preview.Items.Count(item => item.IsSelected && item.Kind == MeasurementImportRowKind.Work);
+                var materialCount = preview.Items.Count(item => item.IsSelected && item.Kind == MeasurementImportRowKind.Material);
+                _catalogImportMessages.Show(
+                    $"Import dokončen.\n\nPráce: {workCount}\nMateriál: {materialCount}\nPřílohy: {imported.Attachments.Count}\nNevyřešené položky: {preview.UnresolvedCount}",
+                    "Import terénního měření",
+                    System.Windows.MessageBoxButton.OK,
+                    System.Windows.MessageBoxImage.Information);
+            }
+            catch (Exception ex)
+            {
+                StatusText = System.IO.Path.GetFileName(_currentFilePath);
+                _catalogImportMessages.Show(
+                    $"Terénní měření nelze importovat:\n{ex.Message}",
+                    "Import terénního měření",
+                    System.Windows.MessageBoxButton.OK,
+                    System.Windows.MessageBoxImage.Error);
+            }
+        }
+
+        private void ApplyMeasurementRows(IEnumerable<MeasurementImportPreviewItem> rows)
+        {
+            _isLoading = true;
+            try
+            {
+                foreach (var row in rows)
+                {
+                    if (row.Kind == MeasurementImportRowKind.Work)
+                    {
+                        var target = WorkCalcItems.FirstOrDefault(item => item.IsEmpty);
+                        if (target == null)
+                        {
+                            target = new CalculationItemViewModel(_db);
+                            target.PropertyChanged += Item_PropertyChanged;
+                            WorkCalcItems.Add(target);
+                        }
+                        target.SelectedWorkTask = row.WorkTask;
+                        target.SelectedWorkSpecification = row.WorkSpecification;
+                        target.SelectedBaseMaterial = row.BaseMaterial;
+                        target.SelectedWorkPosition = row.WorkPosition;
+                        target.Quantity = row.Quantity;
+                        WorkCalcItems.Add(target);
+                    }
+                    else
+                    {
+                        var target = MaterialItems.FirstOrDefault(item => item.IsEmpty);
+                        if (target == null)
+                        {
+                            target = new CalculationItemViewModel(_db);
+                            target.PropertyChanged += Item_PropertyChanged;
+                            MaterialItems.Add(target);
+                        }
+                        target.SelectedCategory = row.MaterialCategory;
+                        target.SelectedProductName = row.MaterialName;
+                        target.SelectedSupplier = row.Supplier;
+                        target.SelectedOffer = row.Offer;
+                        target.Quantity = row.Quantity;
+                        MaterialItems.Add(target);
+                    }
+                }
+            }
+            finally
+            {
+                _isLoading = false;
+            }
+        }
+
+        private void ShowMeasurementImports()
+        {
+            if (_currentFilePath == null || _measurementImports.Count == 0)
+            {
+                _catalogImportMessages?.Show(
+                    "Aktuální projekt zatím neobsahuje žádný terénní import.",
+                    "Terénní importy",
+                    System.Windows.MessageBoxButton.OK,
+                    System.Windows.MessageBoxImage.Information);
+                return;
+            }
+            _windowService.ShowMeasurementImports(_measurementImports, _currentFilePath);
+        }
+
+        private void ExportFieldCatalog()
+        {
+            if (_measurementImportService == null || _catalogImportDialog == null || _catalogImportMessages == null)
+                return;
+            var path = _catalogImportDialog.ShowSaveFileDialog(
+                "Katalog pro ElektroOffer Terén (*.eofcatalog)|*.eofcatalog",
+                "Exportovat katalog pro terénní aplikaci",
+                ".eofcatalog",
+                $"elektrooffer-katalog-{DateTime.Now:yyyyMMdd}");
+            if (path == null) return;
+            try
+            {
+                var catalog = _measurementImportService.ExportFieldCatalog(path);
+                _catalogImportMessages.Show(
+                    $"Katalog byl uložen.\n\nPoložky: {catalog.Options.Count}\nVerze: {catalog.CatalogVersion}",
+                    "Export terénního katalogu",
+                    System.Windows.MessageBoxButton.OK,
+                    System.Windows.MessageBoxImage.Information);
+            }
+            catch (Exception ex)
+            {
+                _catalogImportMessages.Show(
+                    $"Katalog nelze exportovat:\n{ex.Message}",
+                    "Export terénního katalogu",
+                    System.Windows.MessageBoxButton.OK,
+                    System.Windows.MessageBoxImage.Error);
+            }
         }
 
         public void ShowSettings()

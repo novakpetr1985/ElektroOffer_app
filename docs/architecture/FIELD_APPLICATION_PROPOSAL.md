@@ -1,6 +1,6 @@
 # Terénní měření a návazný výpočet ceny
 
-Tento dokument je jediným zdrojem pravdy pro budoucí podaplikaci měření, její samostatné ukládání a předání dat do kalkulace, nabídky a faktury.
+Tento dokument je jediným zdrojem pravdy pro implementovanou podaplikaci měření, její samostatné ukládání a předání dat do kalkulace, nabídky a faktury.
 
 ## Cíl a hranice
 
@@ -14,7 +14,7 @@ Každý krok lze uložit samostatně. Předání do dalšího kroku vytvoří ve
 
 - `ElektroOffer.Contracts` — čisté .NET kontrakty, validace a verze schématu; bez WPF, EF Core a platformního UI.
 - `ElektroOffer_app` — import, mapování na katalog, výpočet cen, výběr dodavatele a schválení uživatelem.
-- `ElektroOffer.Field` — budoucí offline klient pro tablet/telefon; vhodný kandidát je .NET MAUI se SQLite.
+- `ElektroOffer.Field` — .NET MAUI offline klient pro Android a Windows s lokálním recovery konceptem a souborovým exportem.
 - `ElektroOffer_app.Invoice` — samostatný fakturační modul, který přijímá pouze potvrzený snapshot.
 
 První fáze nepotřebuje cloud ani SOAP službu. Přenos může bezpečně fungovat přes verzovaný souborový balíček. Synchronizační API má smysl až po ověření reálného offline workflow.
@@ -82,12 +82,27 @@ Pro známé dodavatele je vhodnější explicitní XLSX/CSV adaptér. Regex prof
 
 Balíček nesmí obsahovat spustitelný obsah ani uživatelský XAML. Při rozbalení se normalizují cesty, zakáže `..` a kontrolují maximální velikosti. Citlivá data zůstávají v uživatelském úložišti; pozdější export lze doplnit o šifrování.
 
-## Doporučená realizace do verze 2.0
+## Stav a další rozvoj do verze 2.0
 
-1. **1.13.0 — kontrakty a validátor:** `ElektroOffer.Contracts`, JSON schema, ukázkový balíček a unit testy verzování, validace a idempotence.
-2. **1.13.x — importní náhled:** načtení balíčku v hlavní aplikaci, diff, mapovací pravidla práce a ruční potvrzení.
-3. **1.14.x — materiál a dodavatelé:** `MaterialRequirement`, kompatibilní kandidáti, balení, strategie ceny a bezpečné importní profily.
-4. **1.x — samostatný offline prototyp:** lokální SQLite, autosave, fotografie a export/import bez serveru.
-5. **2.0.0 — stabilní end-to-end tok:** měření, kalkulace, nabídka/zakázka, profesionální tisk a faktura se sledovatelnými snapshoty.
+1. **1.13.0 — implementováno:** sdílené kontrakty a validace, export katalogu, MAUI klient, recovery koncept, fotografie, `.eofmeasure`, importní náhled, idempotence a persistence příloh.
+2. **1.14.x — plánováno:** rozšířené mapovací profily, pravidla balení materiálu a bezpečnější asistovaný výběr kompatibilních položek a dodavatelů.
+3. **1.x — plánováno:** řízené daňové nastavení fakturace; sazba nesmí být automaticky odvozena pouze z označení práce nebo materiálu.
+4. **2.0.0 — cíl:** stabilní end-to-end tok měření, kalkulace, nabídky/zakázky, profesionálního tisku a faktury se sledovatelnými snapshoty.
 
-Toto pořadí nejprve stabilizuje kontrakt a cenovou logiku. Mobilní UI pak nevytváří druhý, nekompatibilní datový model.
+Stávající mobilní klient úmyslně nevytváří druhou databázi cen. Katalog nese stabilní identity a popisy pro zadání v terénu; závazná cena se načte až v hlavní aplikaci.
+
+## Stav implementace 1.13.0-feature
+
+End-to-end offline workflow je implementován bez cloudu a serveru:
+
+1. Hlavní aplikace vyexportuje aktuální databázový katalog do `.eofcatalog`.
+2. ElektroOffer Terén katalog načte, umožní offline měření, místnosti, práce, materiál a fotografie.
+3. Terénní aplikace průběžně ukládá recovery koncept a exportuje `.eofmeasure`.
+4. Hlavní aplikace balíček bezpečně ověří, zkontroluje cesty, velikosti a SHA-256 příloh.
+5. Importní náhled spáruje stabilní katalogové kódy; u ručních položek použije konzervativní textové mapování.
+6. Uživatel vybere práce, materiály a fotografie. Nevyřešené položky se automaticky nevloží.
+7. Potvrzené řádky se přidají k aktuální kalkulaci s aktuální cenou hlavní databáze.
+8. Projekt uloží historii `exportId`, mapování, zdrojový balíček a fotografie do doprovodné složky `.assets`.
+9. Opakovaný import stejného `exportId` je zablokován. „Uložit jako“ kopíruje také doprovodné přílohy.
+
+Praktický postup: `Soubor → Exportovat katalog pro terén` v hlavní aplikaci, `Katalog` v terénní aplikaci, po zaměření `Uložit a exportovat`, a nakonec `Soubor → Importovat terénní měření` v hlavní aplikaci.

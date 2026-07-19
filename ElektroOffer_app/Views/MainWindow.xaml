@@ -45,6 +45,15 @@
                 <MenuItem Header="_Importovat katalog z Excelu..."
                           Command="{Binding ImportCatalogCommand}" />
 
+                <MenuItem Header="Importovat _terénní měření..."
+                          Command="{Binding ImportMeasurementCommand}" />
+
+                <MenuItem Header="Terénní importy a _přílohy..."
+                          Command="{Binding ShowMeasurementImportsCommand}" />
+
+                <MenuItem Header="_Exportovat katalog pro terén..."
+                          Command="{Binding ExportFieldCatalogCommand}" />
+
                 <MenuItem Header="_Konec"
                           InputGestureText="Alt+F4"
                           Command="{Binding ExitCommand}" />
@@ -97,6 +106,11 @@
                 <Button Content="Fakturace"
                         ToolTip="Vytvořit fakturu z detailního rozpočtu"
                         Command="{Binding InvoiceCommand}"
+                        Margin="2"/>
+
+                <Button Content="Terénní import"
+                        ToolTip="Importovat měření z ElektroOffer Terén"
+                        Command="{Binding ImportMeasurementCommand}"
                         Margin="2"/>
 
             </ToolBar>

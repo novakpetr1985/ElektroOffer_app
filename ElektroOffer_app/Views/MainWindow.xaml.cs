@@ -34,6 +34,7 @@ namespace ElektroOffer_app
             var applicationService = new ApplicationService();
             var windowService = new WindowService();
             var catalogImportService = new CatalogWorkbookImportService(db);
+            var measurementImportService = new MeasurementImportService(db);
 
             // ---------------------------------------------------------
             // 3) Hlavní ViewModel (nastavíme DataContext JEDNOU)
@@ -49,7 +50,8 @@ namespace ElektroOffer_app
                 windowService,
                 catalogImportService,
                 fileDialogService,
-                messageBoxService);
+                messageBoxService,
+                measurementImportService);
         }
 
         // ---------------------------------------------------------
