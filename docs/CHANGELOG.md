@@ -1,5 +1,46 @@
 # Changelog
 
+## [1.13.0-feature] - 2026-07-19
+
+### Přidáno
+
+- Samostatná .NET MAUI aplikace `ElektroOffer.Field` pro offline zaměření na Androidu a Windows, včetně místností, prací, materiálu, poznámek, rezervy a fotografií.
+- Sdílený projekt `ElektroOffer.Contracts` s verzovanými kontrakty, validací a bezpečnou serializací terénních balíčků.
+- Export aktuálního katalogu hlavní aplikace do `.eofcatalog` a export zaměření z terénní aplikace do `.eofmeasure` bez cloudu nebo serveru.
+- Importní náhled v hlavní aplikaci s mapováním na aktuální katalog, výběrem přenášených řádků a fotografií a blokováním nevyřešených položek.
+- Kontrola relativních cest, velikostí a SHA-256 příloh, historie `exportId` a ochrana proti opakovanému importu stejného měření.
+- Uložení zdrojového balíčku a vybraných fotografií do doprovodné složky projektu `.assets`; `Uložit jako` kopíruje i tyto přílohy.
+- Testovací data pro mobilní měření, samostatně instalovatelné Debug APK a dokumentovaný testovací podpis Windows balíčku.
+- Unit testy kontraktů, validace, importu, idempotence a persistence příloh projektu.
+
+### Změněno
+
+- Hlavní i fakturační aplikace a terénní klient používají verzi `1.13.0-feature`.
+- CI používá cílené joby: unit testy běží při každém pushi, integrační testy při PR, tagu a ručním spuštění a náročné mobilní sestavení pouze při změně mobilního či sdíleného kódu. Povinný status `Build and test` zůstává stabilní pro Ruleset.
+- Souhrn každého CI běhu znovu obsahuje metadata, přesné počty provedených a neúspěšných testů a samostatné výsledky Windows, Android a release kontroly včetně důvodu přeskočení.
+- Rozpracovaná fakturace se průběžně uchovává a lze samostatně vymazat celý formulář, dodavatele nebo odběratele.
+- Publikační skript umí připravit testovací balíček pro druhý počítač a samostatné Android APK.
+- Mobilní projekt cílí pouze na používané platformy Android a Windows; nepoužité šablony iOS, MacCatalyst a demonstrační assety byly odstraněny.
+
+### Ověřeno
+
+- 102 unit testů a 36 automatických integračních testů prošlo; tři systémové dialogové testy zůstávají záměrně ruční.
+- Windows projekty byly sestaveny bez chyb a upozornění.
+- Samostatné Android APK bylo podepsáno, ověřeno schématy APK Signature v2/v3 a spuštěno na Samsung Galaxy S8 s Androidem 9.
+- Offline tok katalog → telefon → měření a fotografie → hlavní aplikace byl ověřen bez cloudu a serveru.
+
+### Známé omezení
+
+- Terénní aplikace nepřenáší ceny a nepočítá DPH; hlavní aplikace vždy použije aktuální lokální ceník. Sazba DPH se ve fakturaci zadává po řádcích a její automatické určení není součástí 1.13.0.
+- Katalog pro terén přenáší pouze pracovní úkony a kategorie materiálu. Upřesnění práce, podklad, umístění, konkrétní materiál, dodavatel a nabídka se záměrně vybírají až v hlavní kalkulaci.
+
+### Opraveno
+
+- Import již nepřidává naplněný existující řádek do kolekce podruhé.
+- Položka vytvořená bez načteného katalogu se neodhaduje jako práce; zůstane jako jediný nevyřešený záznam s vysvětlením.
+
+---
+
 ## [1.12.0] - 2026-07-17
 
 ### Přidáno

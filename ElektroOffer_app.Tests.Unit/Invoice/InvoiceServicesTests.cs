@@ -74,6 +74,59 @@ namespace ElektroOffer_app.Tests.Unit.Invoice
         }
 
         [Test]
+        public void ClearSupplier_Should_ClearOnlySupplierSection()
+        {
+            var draft = CreateDraft();
+            draft.Supplier.AccountNumber = "123456789";
+            var vm = new InvoiceViewModel([], draft);
+
+            vm.ClearSupplierCommand.Execute(null);
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(vm.Supplier.Name, Is.Empty);
+                Assert.That(vm.Supplier.RegistrationNo, Is.Empty);
+                Assert.That(vm.Supplier.AccountNumber, Is.Empty);
+                Assert.That(vm.Supplier.Country, Is.EqualTo("CZ"));
+                Assert.That(vm.Customer.Name, Is.EqualTo("Test Customer s.r.o."));
+                Assert.That(vm.Lines, Has.Count.EqualTo(1));
+            });
+        }
+
+        [Test]
+        public void ClearCustomer_Should_ClearOnlyCustomerSection()
+        {
+            var draft = CreateDraft();
+            draft.Supplier.Name = "Test Supplier s.r.o.";
+            var vm = new InvoiceViewModel([], draft);
+
+            vm.ClearCustomerCommand.Execute(null);
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(vm.Customer.Name, Is.Empty);
+                Assert.That(vm.Customer.RegistrationNo, Is.Empty);
+                Assert.That(vm.Supplier.Name, Is.EqualTo("Test Supplier s.r.o."));
+                Assert.That(vm.Lines, Has.Count.EqualTo(1));
+            });
+        }
+
+        [Test]
+        public void MeaningfulContent_Should_DetectFilledPartyOrInvoiceLines()
+        {
+            var empty = new InvoiceDraft();
+            var partyOnly = new InvoiceDraft();
+            partyOnly.Customer.RegistrationNo = "27074358";
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(InvoiceDraftStateService.HasMeaningfulContent(empty), Is.False);
+                Assert.That(InvoiceDraftStateService.HasMeaningfulContent(partyOnly), Is.True);
+                Assert.That(InvoiceDraftStateService.HasMeaningfulContent(CreateDraft()), Is.True);
+            });
+        }
+
+        [Test]
         public void FakturoidExport_Should_Use_Effective_Unit_Price_After_Discount()
         {
             var draft = CreateDraft();

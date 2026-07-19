@@ -1,0 +1,86 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ElektroOffer.Field.MainPage">
+
+    <Grid RowDefinitions="Auto,*,Auto" BackgroundColor="{AppThemeBinding Light=#F4F6F8, Dark=#101418}">
+        <Grid Padding="16,12" ColumnDefinitions="*,Auto,Auto" ColumnSpacing="8" BackgroundColor="#124E78">
+            <VerticalStackLayout Spacing="0">
+                <Label Text="ElektroOffer Terén" FontSize="22" FontAttributes="Bold" TextColor="White" />
+                <Label Text="Offline zaměření stavby" FontSize="13" TextColor="#D8ECF7" />
+            </VerticalStackLayout>
+            <Button Grid.Column="1" Text="Načíst katalog" Clicked="OnImportCatalogClicked" BackgroundColor="#D8ECF7" TextColor="#17212B" />
+            <Button Grid.Column="2" Text="Nové" Clicked="OnNewClicked" BackgroundColor="#F9A826" TextColor="#17212B" />
+        </Grid>
+
+        <ScrollView Grid.Row="1">
+            <VerticalStackLayout Padding="16" Spacing="16" MaximumWidthRequest="900">
+                <Border Stroke="#CBD5E1" StrokeShape="RoundRectangle 10" Padding="14" BackgroundColor="{AppThemeBinding Light=White, Dark=#182027}">
+                    <VerticalStackLayout Spacing="8">
+                        <Label Text="Zakázka" FontSize="20" FontAttributes="Bold" />
+                        <Entry x:Name="ProjectNameEntry" Placeholder="Název zakázky *" Unfocused="OnProjectFieldUnfocused" />
+                        <Entry x:Name="CustomerEntry" Placeholder="Zákazník" Unfocused="OnProjectFieldUnfocused" />
+                        <Entry x:Name="AddressEntry" Placeholder="Adresa stavby" Unfocused="OnProjectFieldUnfocused" />
+                        <Entry x:Name="TechnicianEntry" Placeholder="Technik" Unfocused="OnProjectFieldUnfocused" />
+                        <Editor x:Name="ProjectNoteEditor" Placeholder="Poznámka" AutoSize="TextChanges" Unfocused="OnProjectFieldUnfocused" />
+                    </VerticalStackLayout>
+                </Border>
+
+                <Border Stroke="#CBD5E1" StrokeShape="RoundRectangle 10" Padding="14" BackgroundColor="{AppThemeBinding Light=White, Dark=#182027}">
+                    <VerticalStackLayout Spacing="10">
+                        <Label Text="Místnosti a části stavby" FontSize="20" FontAttributes="Bold" />
+                        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
+                            <Entry x:Name="AreaNameEntry" Placeholder="Např. Kuchyně, 1. patro" ReturnType="Done" Completed="OnAddAreaClicked" />
+                            <Button Grid.Column="1" Text="Přidat" Clicked="OnAddAreaClicked" />
+                        </Grid>
+                        <Picker x:Name="AreaPicker" Title="Vyberte místnost" ItemDisplayBinding="{Binding Name}" SelectedIndexChanged="OnAreaSelected" />
+                    </VerticalStackLayout>
+                </Border>
+
+                <Border x:Name="ItemSection" IsVisible="False" Stroke="#CBD5E1" StrokeShape="RoundRectangle 10" Padding="14" BackgroundColor="{AppThemeBinding Light=White, Dark=#182027}">
+                    <VerticalStackLayout Spacing="10">
+                        <Label Text="Práce a materiál" FontSize="20" FontAttributes="Bold" />
+                        <Label x:Name="CatalogStatusLabel" Text="Nejprve načtěte katalog z hlavní aplikace" FontSize="12" TextColor="Gray" />
+                        <Picker x:Name="CatalogPicker" Title="Vybrat pracovní úkon nebo kategorii materiálu *" ItemDisplayBinding="{Binding DisplayName}" SelectedIndexChanged="OnCatalogSelected" />
+                        <Picker x:Name="KindPicker" Title="Druh měření" ItemDisplayBinding="{Binding Label}" IsEnabled="False" />
+                        <Entry x:Name="ItemNameEntry" Placeholder="Popis položky" />
+                        <Grid ColumnDefinitions="2*,*,*" ColumnSpacing="8">
+                            <Entry x:Name="QuantityEntry" Placeholder="Množství *" Keyboard="Numeric" />
+                            <Entry x:Name="UnitEntry" Grid.Column="1" Placeholder="Jednotka" />
+                            <Entry x:Name="ReserveEntry" Grid.Column="2" Placeholder="Rezerva %" Keyboard="Numeric" />
+                        </Grid>
+                        <Editor x:Name="ItemNoteEditor" Placeholder="Poznámka k provedení" AutoSize="TextChanges" />
+                        <Button Text="Přidat položku" Clicked="OnAddItemClicked" BackgroundColor="#124E78" TextColor="White" />
+
+                        <CollectionView x:Name="ItemsView" SelectionMode="Single" SelectionChanged="OnItemSelected" EmptyView="Zatím nejsou zadané žádné položky.">
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid Padding="8" ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto">
+                                        <Label Text="{Binding DisplayName}" FontAttributes="Bold" />
+                                        <Label Grid.Column="1" Text="{Binding Quantity, StringFormat='{0:0.##}'}" />
+                                        <Label Grid.Row="1" Text="{Binding Kind}" FontSize="12" TextColor="Gray" />
+                                        <Label Grid.Row="1" Grid.Column="1" Text="{Binding Unit}" FontSize="12" TextColor="Gray" />
+                                    </Grid>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                        </CollectionView>
+
+                        <Grid ColumnDefinitions="*,*" ColumnSpacing="8">
+                            <Button Text="Přidat fotografii" Clicked="OnAddPhotoClicked" />
+                            <Button Grid.Column="1" Text="Vymazat položku" Clicked="OnDeleteItemClicked" BackgroundColor="#9B2C2C" TextColor="White" />
+                        </Grid>
+                        <Label x:Name="PhotoCountLabel" Text="Fotografie: 0" FontSize="13" />
+                    </VerticalStackLayout>
+                </Border>
+
+                <Grid ColumnDefinitions="*,*" ColumnSpacing="8">
+                    <Button Text="Načíst testovací data" Clicked="OnLoadDemoClicked" />
+                    <Button Grid.Column="1" Text="Uložit a exportovat" Clicked="OnExportClicked" BackgroundColor="#237A57" TextColor="White" />
+                </Grid>
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <Label x:Name="StatusLabel" Grid.Row="2" Padding="16,10" Text="Připraveno" BackgroundColor="{AppThemeBinding Light=#E2E8F0, Dark=#202A33}" />
+    </Grid>
+
+</ContentPage>

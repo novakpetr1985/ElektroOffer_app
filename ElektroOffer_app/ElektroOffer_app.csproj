@@ -44,10 +44,10 @@
       <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
 
       <!-- Hlavní verze aplikace (suffixy povoleny) -->
-      <Version>1.12.0</Version>
+      <Version>1.13.0</Version>
 
       <!-- Verze souboru (Windows Explorer) -->
-      <FileVersion>1.12.0.0</FileVersion>
+      <FileVersion>1.13.0.0</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>
@@ -95,6 +95,11 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ElektroOffer_app.Invoice\ElektroOffer_app.Invoice.csproj" />
+    <ProjectReference Include="..\ElektroOffer.Contracts\ElektroOffer.Contracts.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="ElektroOffer_app.Tests.Unit" />
   </ItemGroup>
 
   <ItemGroup>
