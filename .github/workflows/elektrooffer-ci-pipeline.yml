@@ -15,14 +15,80 @@ on:
         type: boolean
         default: false
 
-jobs:
-  ci:
-    name: Build and test
-    runs-on: windows-latest
-    env:
-      DOTNET_SKIP_FIRST_TIME_EXPERIENCE: "1"
-      DOTNET_NOLOGO: "1"
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ !startsWith(github.ref, 'refs/tags/') }}
 
+env:
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: "1"
+  DOTNET_NOLOGO: "1"
+
+jobs:
+  changes:
+    name: Detect affected projects
+    runs-on: windows-latest
+    outputs:
+      field: ${{ steps.filter.outputs.field }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Detect mobile or shared changes
+        id: filter
+        shell: pwsh
+        run: |
+          $event = Get-Content $env:GITHUB_EVENT_PATH -Raw | ConvertFrom-Json
+          $changedFiles = @()
+
+          if ($env:GITHUB_EVENT_NAME -eq "pull_request") {
+            $changedFiles = git diff --name-only "$($event.pull_request.base.sha)...$env:GITHUB_SHA"
+          } elseif ($env:GITHUB_EVENT_NAME -eq "push" -and
+                    -not $env:GITHUB_REF.StartsWith("refs/tags/") -and
+                    $event.before -and
+                    $event.before -ne "0000000000000000000000000000000000000000") {
+            $changedFiles = git diff --name-only "$($event.before)..$env:GITHUB_SHA"
+          } else {
+            # Tags, manual runs and the first push of a branch perform a full check.
+            $changedFiles = @("ElektroOffer.Field/full-check")
+          }
+
+          $fieldPatterns = @(
+            '^ElektroOffer\.Field/',
+            '^ElektroOffer\.Contracts/',
+            '^Directory\.Build\.',
+            '^Directory\.Packages\.props$',
+            '^global\.json$',
+            '^ElektroOffer_app\.slnx$',
+            '^\.github/workflows/elektrooffer-ci-pipeline\.yml$'
+          )
+
+          $fieldChanged = $false
+          foreach ($file in $changedFiles) {
+            if ($fieldPatterns | Where-Object { $file -match $_ }) {
+              $fieldChanged = $true
+              break
+            }
+          }
+
+          "field=$($fieldChanged.ToString().ToLowerInvariant())" | Out-File $env:GITHUB_OUTPUT -Append -Encoding utf8
+          "Mobile/shared build required: $fieldChanged" | Out-File $env:GITHUB_STEP_SUMMARY -Append -Encoding utf8
+          if ($changedFiles) {
+            "Changed files:" | Out-File $env:GITHUB_STEP_SUMMARY -Append -Encoding utf8
+            $changedFiles | ForEach-Object { "- ``$_``" } | Out-File $env:GITHUB_STEP_SUMMARY -Append -Encoding utf8
+          }
+
+  unit:
+    name: Unit tests
+    runs-on: windows-latest
+    outputs:
+      outcome: ${{ steps.unit_summary.outputs.outcome }}
+      total: ${{ steps.unit_summary.outputs.total }}
+      executed: ${{ steps.unit_summary.outputs.executed }}
+      passed: ${{ steps.unit_summary.outputs.passed }}
+      failed: ${{ steps.unit_summary.outputs.failed }}
+      skipped: ${{ steps.unit_summary.outputs.skipped }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -32,53 +98,232 @@ jobs:
         with:
           dotnet-version: "10.0.x"
 
-      - name: Restore NuGet packages
-        run: dotnet restore ElektroOffer_app.slnx
+      - name: Cache NuGet packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj', '**/*.props', '**/*.targets', 'global.json') }}
+          restore-keys: ${{ runner.os }}-nuget-
 
-      - name: Build solution
-        run: dotnet build ElektroOffer_app.slnx --configuration Debug --no-restore
+      - name: Restore unit test projects
+        run: dotnet restore ElektroOffer_app.Tests.Unit/ElektroOffer_app.Tests.Unit.csproj
+
+      - name: Build unit test projects
+        run: dotnet build ElektroOffer_app.Tests.Unit/ElektroOffer_app.Tests.Unit.csproj --configuration Debug --no-restore
 
       - name: Run unit tests
-        if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
         run: dotnet test ElektroOffer_app.Tests.Unit/ElektroOffer_app.Tests.Unit.csproj --configuration Debug --no-build --no-restore --verbosity normal --logger trx --results-directory TestResults/Unit --collect:"XPlat Code Coverage"
 
-      - name: Run integration tests
-        if: github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch' || startsWith(github.ref, 'refs/tags/')
-        run: dotnet test ElektroOffer_app.Tests.Integration/ElektroOffer_app.Tests.Integration.csproj --configuration Debug --no-build --no-restore --verbosity normal --logger trx --results-directory TestResults/Integration --collect:"XPlat Code Coverage"
-
-      - name: Simulate diagnostic failure
-        if: ${{ github.event_name == 'workflow_dispatch' && inputs.simulate_failure }}
-        shell: pwsh
-        run: |
-          Write-Error "Intentional failure requested by workflow_dispatch for diagnostic verification."
-          exit 1
-
-      - name: Generate short CI summary
+      - name: Summarize unit tests
+        id: unit_summary
         if: always()
         shell: pwsh
         run: |
-          function Write-TrxSummary {
-            param(
-              [string] $Title,
-              [string] $Path
-            )
-
-            $file = Get-ChildItem -Path $Path -Filter *.trx -Recurse -ErrorAction SilentlyContinue |
-              Sort-Object LastWriteTime |
-              Select-Object -Last 1
-
-            if (-not $file) {
-              "| $Title | not run | 0 | 0 | 0 | 0 | 0 |" | Out-File elektrooffer-ci-summary.md -Append -Encoding utf8
-              return
-            }
-
+          $file = Get-ChildItem TestResults/Unit -Filter *.trx -Recurse -ErrorAction SilentlyContinue |
+            Sort-Object LastWriteTime | Select-Object -Last 1
+          $values = [ordered]@{ outcome = "not run"; total = 0; executed = 0; passed = 0; failed = 0; skipped = 0 }
+          if ($file) {
             [xml] $xml = Get-Content $file.FullName
-            $resultSummary = $xml.SelectSingleNode("//*[local-name()='ResultSummary']")
+            $summary = $xml.SelectSingleNode("//*[local-name()='ResultSummary']")
             $counters = $xml.SelectSingleNode("//*[local-name()='ResultSummary']/*[local-name()='Counters']")
-            $outcome = $resultSummary.outcome
+            $values.outcome = $summary.outcome
+            $values.total = $counters.total
+            $values.executed = $counters.executed
+            $values.passed = $counters.passed
+            $values.failed = $counters.failed
+            $values.skipped = $counters.notExecuted
+          }
+          foreach ($entry in $values.GetEnumerator()) {
+            "$($entry.Key)=$($entry.Value)" | Out-File $env:GITHUB_OUTPUT -Append -Encoding utf8
+          }
+          "### Unit tests" | Out-File $env:GITHUB_STEP_SUMMARY -Append -Encoding utf8
+          "| Outcome | Total | Executed | Passed | Failed | Skipped |" | Out-File $env:GITHUB_STEP_SUMMARY -Append -Encoding utf8
+          "|---|---:|---:|---:|---:|---:|" | Out-File $env:GITHUB_STEP_SUMMARY -Append -Encoding utf8
+          "| $($values.outcome) | $($values.total) | $($values.executed) | $($values.passed) | $($values.failed) | $($values.skipped) |" | Out-File $env:GITHUB_STEP_SUMMARY -Append -Encoding utf8
 
-            "| $Title | $outcome | $($counters.total) | $($counters.executed) | $($counters.passed) | $($counters.failed) | $($counters.notExecuted) |" |
-              Out-File elektrooffer-ci-summary.md -Append -Encoding utf8
+      - name: Upload unit coverage
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: elektrooffer-unit-coverage
+          path: TestResults/Unit/**/coverage.cobertura.xml
+          if-no-files-found: warn
+          retention-days: 14
+
+      - name: Upload failed unit test results
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: elektrooffer-unit-test-results
+          path: TestResults/Unit
+          retention-days: 14
+
+  integration:
+    name: Integration tests
+    if: github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch' || startsWith(github.ref, 'refs/tags/')
+    runs-on: windows-latest
+    outputs:
+      outcome: ${{ steps.integration_summary.outputs.outcome }}
+      total: ${{ steps.integration_summary.outputs.total }}
+      executed: ${{ steps.integration_summary.outputs.executed }}
+      passed: ${{ steps.integration_summary.outputs.passed }}
+      failed: ${{ steps.integration_summary.outputs.failed }}
+      skipped: ${{ steps.integration_summary.outputs.skipped }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "10.0.x"
+
+      - name: Cache NuGet packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj', '**/*.props', '**/*.targets', 'global.json') }}
+          restore-keys: ${{ runner.os }}-nuget-
+
+      - name: Restore integration test projects
+        run: dotnet restore ElektroOffer_app.Tests.Integration/ElektroOffer_app.Tests.Integration.csproj
+
+      - name: Build integration test projects
+        run: dotnet build ElektroOffer_app.Tests.Integration/ElektroOffer_app.Tests.Integration.csproj --configuration Debug --no-restore
+
+      - name: Run integration tests
+        run: dotnet test ElektroOffer_app.Tests.Integration/ElektroOffer_app.Tests.Integration.csproj --configuration Debug --no-build --no-restore --verbosity normal --logger trx --results-directory TestResults/Integration --collect:"XPlat Code Coverage"
+
+      - name: Summarize integration tests
+        id: integration_summary
+        if: always()
+        shell: pwsh
+        run: |
+          $file = Get-ChildItem TestResults/Integration -Filter *.trx -Recurse -ErrorAction SilentlyContinue |
+            Sort-Object LastWriteTime | Select-Object -Last 1
+          $values = [ordered]@{ outcome = "not run"; total = 0; executed = 0; passed = 0; failed = 0; skipped = 0 }
+          if ($file) {
+            [xml] $xml = Get-Content $file.FullName
+            $summary = $xml.SelectSingleNode("//*[local-name()='ResultSummary']")
+            $counters = $xml.SelectSingleNode("//*[local-name()='ResultSummary']/*[local-name()='Counters']")
+            $values.outcome = $summary.outcome
+            $values.total = $counters.total
+            $values.executed = $counters.executed
+            $values.passed = $counters.passed
+            $values.failed = $counters.failed
+            $values.skipped = $counters.notExecuted
+          }
+          foreach ($entry in $values.GetEnumerator()) {
+            "$($entry.Key)=$($entry.Value)" | Out-File $env:GITHUB_OUTPUT -Append -Encoding utf8
+          }
+          "### Integration tests" | Out-File $env:GITHUB_STEP_SUMMARY -Append -Encoding utf8
+          "| Outcome | Total | Executed | Passed | Failed | Skipped |" | Out-File $env:GITHUB_STEP_SUMMARY -Append -Encoding utf8
+          "|---|---:|---:|---:|---:|---:|" | Out-File $env:GITHUB_STEP_SUMMARY -Append -Encoding utf8
+          "| $($values.outcome) | $($values.total) | $($values.executed) | $($values.passed) | $($values.failed) | $($values.skipped) |" | Out-File $env:GITHUB_STEP_SUMMARY -Append -Encoding utf8
+
+      - name: Upload integration coverage
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: elektrooffer-integration-coverage
+          path: TestResults/Integration/**/coverage.cobertura.xml
+          if-no-files-found: warn
+          retention-days: 14
+
+      - name: Upload failed integration test results
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: elektrooffer-integration-test-results
+          path: TestResults/Integration
+          retention-days: 14
+
+  field:
+    name: Mobile build
+    needs: changes
+    if: needs.changes.outputs.field == 'true'
+    runs-on: windows-latest
+    outputs:
+      windows: ${{ steps.field_summary.outputs.windows }}
+      android: ${{ steps.field_summary.outputs.android }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "10.0.x"
+
+      - name: Cache NuGet packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj', '**/*.props', '**/*.targets', 'global.json') }}
+          restore-keys: ${{ runner.os }}-nuget-
+
+      - name: Build mobile application for Windows
+        id: field_windows
+        run: dotnet build ElektroOffer.Field/ElektroOffer.Field.csproj --configuration Debug --framework net10.0-windows10.0.19041.0
+
+      - name: Build mobile application for Android
+        id: field_android
+        if: github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch' || startsWith(github.ref, 'refs/tags/')
+        run: dotnet build ElektroOffer.Field/ElektroOffer.Field.csproj --configuration Debug --framework net10.0-android --no-restore
+
+      - name: Summarize mobile build
+        id: field_summary
+        if: always()
+        shell: pwsh
+        env:
+          WINDOWS_RESULT: ${{ steps.field_windows.outcome }}
+          ANDROID_RESULT: ${{ steps.field_android.outcome }}
+        run: |
+          "windows=$env:WINDOWS_RESULT" | Out-File $env:GITHUB_OUTPUT -Append -Encoding utf8
+          "android=$env:ANDROID_RESULT" | Out-File $env:GITHUB_OUTPUT -Append -Encoding utf8
+          "### Mobile build" | Out-File $env:GITHUB_STEP_SUMMARY -Append -Encoding utf8
+          "| Target | Result |" | Out-File $env:GITHUB_STEP_SUMMARY -Append -Encoding utf8
+          "|---|---|" | Out-File $env:GITHUB_STEP_SUMMARY -Append -Encoding utf8
+          "| Windows | $env:WINDOWS_RESULT |" | Out-File $env:GITHUB_STEP_SUMMARY -Append -Encoding utf8
+          "| Android | $env:ANDROID_RESULT |" | Out-File $env:GITHUB_STEP_SUMMARY -Append -Encoding utf8
+
+  ci:
+    name: Build and test
+    if: always()
+    needs:
+      - changes
+      - unit
+      - integration
+      - field
+    runs-on: windows-latest
+    steps:
+      - name: Verify required CI jobs
+        shell: pwsh
+        env:
+          CHANGES_RESULT: ${{ needs.changes.result }}
+          UNIT_RESULT: ${{ needs.unit.result }}
+          INTEGRATION_RESULT: ${{ needs.integration.result }}
+          FIELD_RESULT: ${{ needs.field.result }}
+          UNIT_OUTCOME: ${{ needs.unit.outputs.outcome }}
+          UNIT_TOTAL: ${{ needs.unit.outputs.total }}
+          UNIT_EXECUTED: ${{ needs.unit.outputs.executed }}
+          UNIT_PASSED: ${{ needs.unit.outputs.passed }}
+          UNIT_FAILED: ${{ needs.unit.outputs.failed }}
+          UNIT_SKIPPED: ${{ needs.unit.outputs.skipped }}
+          INTEGRATION_OUTCOME: ${{ needs.integration.outputs.outcome }}
+          INTEGRATION_TOTAL: ${{ needs.integration.outputs.total }}
+          INTEGRATION_EXECUTED: ${{ needs.integration.outputs.executed }}
+          INTEGRATION_PASSED: ${{ needs.integration.outputs.passed }}
+          INTEGRATION_FAILED: ${{ needs.integration.outputs.failed }}
+          INTEGRATION_SKIPPED: ${{ needs.integration.outputs.skipped }}
+          FIELD_WINDOWS: ${{ needs.field.outputs.windows }}
+          FIELD_ANDROID: ${{ needs.field.outputs.android }}
+        run: |
+          $results = [ordered]@{
+            "Change detection" = $env:CHANGES_RESULT
+            "Unit tests" = $env:UNIT_RESULT
+            "Integration tests" = $env:INTEGRATION_RESULT
+            "Mobile build" = $env:FIELD_RESULT
           }
 
           "# ElektroOffer CI Summary" | Out-File elektrooffer-ci-summary.md -Encoding utf8
@@ -86,16 +331,47 @@ jobs:
           "- Timestamp: $(Get-Date -Format o)" | Out-File elektrooffer-ci-summary.md -Append -Encoding utf8
           "- Event: $env:GITHUB_EVENT_NAME" | Out-File elektrooffer-ci-summary.md -Append -Encoding utf8
           "- Ref: $env:GITHUB_REF" | Out-File elektrooffer-ci-summary.md -Append -Encoding utf8
-          "- Branch: $env:GITHUB_REF_NAME" | Out-File elektrooffer-ci-summary.md -Append -Encoding utf8
           "- Commit: $env:GITHUB_SHA" | Out-File elektrooffer-ci-summary.md -Append -Encoding utf8
           "- Run: $env:GITHUB_SERVER_URL/$env:GITHUB_REPOSITORY/actions/runs/$env:GITHUB_RUN_ID" | Out-File elektrooffer-ci-summary.md -Append -Encoding utf8
           "" | Out-File elektrooffer-ci-summary.md -Append -Encoding utf8
-          "| Suite | Outcome | Total | Executed | Passed | Failed | Not executed |" | Out-File elektrooffer-ci-summary.md -Append -Encoding utf8
-          "|---|---:|---:|---:|---:|---:|---:|" | Out-File elektrooffer-ci-summary.md -Append -Encoding utf8
-          Write-TrxSummary -Title "Unit" -Path "TestResults/Unit"
-          Write-TrxSummary -Title "Integration" -Path "TestResults/Integration"
-
+          "## Tests" | Out-File elektrooffer-ci-summary.md -Append -Encoding utf8
+          "| Suite | Job | Outcome | Total | Executed | Passed | Failed | Skipped |" | Out-File elektrooffer-ci-summary.md -Append -Encoding utf8
+          "|---|---|---|---:|---:|---:|---:|---:|" | Out-File elektrooffer-ci-summary.md -Append -Encoding utf8
+          "| Unit | $env:UNIT_RESULT | $env:UNIT_OUTCOME | $env:UNIT_TOTAL | $env:UNIT_EXECUTED | $env:UNIT_PASSED | $env:UNIT_FAILED | $env:UNIT_SKIPPED |" | Out-File elektrooffer-ci-summary.md -Append -Encoding utf8
+          if ($env:INTEGRATION_RESULT -eq "skipped") {
+            "| Integration | skipped | not required for push | - | - | - | - | - |" | Out-File elektrooffer-ci-summary.md -Append -Encoding utf8
+          } else {
+            "| Integration | $env:INTEGRATION_RESULT | $env:INTEGRATION_OUTCOME | $env:INTEGRATION_TOTAL | $env:INTEGRATION_EXECUTED | $env:INTEGRATION_PASSED | $env:INTEGRATION_FAILED | $env:INTEGRATION_SKIPPED |" | Out-File elektrooffer-ci-summary.md -Append -Encoding utf8
+          }
+          "" | Out-File elektrooffer-ci-summary.md -Append -Encoding utf8
+          "## Build and release" | Out-File elektrooffer-ci-summary.md -Append -Encoding utf8
+          "| Check | Result | Detail |" | Out-File elektrooffer-ci-summary.md -Append -Encoding utf8
+          "|---|---|---|" | Out-File elektrooffer-ci-summary.md -Append -Encoding utf8
+          "| Change detection | $env:CHANGES_RESULT | Mobile/shared change: ${{ needs.changes.outputs.field }} |" | Out-File elektrooffer-ci-summary.md -Append -Encoding utf8
+          if ($env:FIELD_RESULT -eq "skipped") {
+            "| Mobile Windows | skipped | no relevant mobile/shared change |" | Out-File elektrooffer-ci-summary.md -Append -Encoding utf8
+            "| Mobile Android | skipped | no relevant change or ordinary push |" | Out-File elektrooffer-ci-summary.md -Append -Encoding utf8
+          } else {
+            "| Mobile Windows | $env:FIELD_WINDOWS | runs for relevant changes |" | Out-File elektrooffer-ci-summary.md -Append -Encoding utf8
+            "| Mobile Android | $env:FIELD_ANDROID | PR, tag or manual run only |" | Out-File elektrooffer-ci-summary.md -Append -Encoding utf8
+          }
+          if ($env:GITHUB_REF -like "refs/tags/*") {
+            "| Release publish | pending | starts after successful CI and manual approval |" | Out-File elektrooffer-ci-summary.md -Append -Encoding utf8
+          } else {
+            "| Release publish | skipped | tags only |" | Out-File elektrooffer-ci-summary.md -Append -Encoding utf8
+          }
           Get-Content elektrooffer-ci-summary.md | Out-File $env:GITHUB_STEP_SUMMARY -Append -Encoding utf8
+
+          $failed = $results.Values | Where-Object { $_ -notin @("success", "skipped") }
+          if ($failed) {
+            Write-Error "At least one required CI job failed or was cancelled."
+            exit 1
+          }
+
+          if ($env:GITHUB_EVENT_NAME -eq "workflow_dispatch" -and "${{ inputs.simulate_failure }}" -eq "true") {
+            Write-Error "Intentional failure requested by workflow_dispatch for diagnostic verification."
+            exit 1
+          }
 
       - name: Upload short CI summary
         if: always()
@@ -105,23 +381,6 @@ jobs:
           path: elektrooffer-ci-summary.md
           retention-days: 14
 
-      - name: Upload coverage reports
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: elektrooffer-coverage
-          path: TestResults/**/coverage.cobertura.xml
-          if-no-files-found: warn
-          retention-days: 14
-
-      - name: Upload test results
-        if: failure()
-        uses: actions/upload-artifact@v4
-        with:
-          name: elektrooffer-test-results
-          path: TestResults
-          retention-days: 14
-
   release:
     name: Release publish
     if: startsWith(github.ref, 'refs/tags/')
@@ -129,7 +388,6 @@ jobs:
     runs-on: windows-latest
     environment:
       name: manual-approval
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -168,7 +426,6 @@ jobs:
     env:
       CI_JOB_RESULT: ${{ needs.ci.result }}
       RELEASE_JOB_RESULT: ${{ needs.release.result }}
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -197,11 +454,11 @@ jobs:
           "============================================================" | Out-File elektrooffer-ci-error.log -Append
 
           "" | Out-File elektrooffer-ci-error.log -Append
-          "RESTORE" | Out-File elektrooffer-ci-error.log -Append
+          "FULL RESTORE" | Out-File elektrooffer-ci-error.log -Append
           dotnet restore ElektroOffer_app.slnx --verbosity detailed *>> elektrooffer-ci-error.log
 
           "" | Out-File elektrooffer-ci-error.log -Append
-          "BUILD" | Out-File elektrooffer-ci-error.log -Append
+          "FULL BUILD" | Out-File elektrooffer-ci-error.log -Append
           dotnet build ElektroOffer_app.slnx --configuration Debug --no-restore --verbosity detailed *>> elektrooffer-ci-error.log
 
           "" | Out-File elektrooffer-ci-error.log -Append

@@ -16,6 +16,6 @@ Projekt zatím nemá EF Core migrace ani tabulku historie schématu. Hotfix bezp
 
 - První instalace: vznikne AppData DB, schéma a výchozí katalog.
 - Existující DB: zůstane zachována; doplní se pouze idempotentní schéma a seed se neduplikuje.
-- Reinstalace: instalátor 1.12.0 nahrazuje pouze aplikační soubory; uživatelskou databázi v AppData nemaže.
+- Reinstalace: instalátor nahrazuje pouze aplikační soubory; uživatelskou databázi v AppData nemaže.
 - Jiný počítač/účet: vznikne samostatná nová DB bez uživatelských dat jiného zařízení.
 - Odstranění uživatelských dat: musí být explicitní samostatná volba se zálohou/potvrzením; aplikace ji automaticky neprovádí.

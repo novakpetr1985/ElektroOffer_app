@@ -35,3 +35,10 @@ artifacts/
 ElektroOffer_app/publish/
 ElektroOffer_app/elektrooffer.db
 ElektroOffer_app/elektrooffer.sqbpro
+
+# Signing private keys must never be committed
+*.pfx
+*.p12
+*.jks
+*.keystore
+signing-private/

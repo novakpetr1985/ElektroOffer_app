@@ -84,7 +84,7 @@ namespace ElektroOffer_app.Services
         // Otevře dialog pro výběr cesty a uloží projekt na novou cestu.
         //
         // ============================================================================
-        public string? SaveAs(ProjectData data)
+        public string? SaveAs(ProjectData data, string? currentPath = null)
         {
             EnsureDialogService();
 
@@ -96,6 +96,21 @@ namespace ElektroOffer_app.Services
 
             if (path == null)
                 return null;
+
+            if (!string.IsNullOrWhiteSpace(currentPath)
+                && !string.Equals(Path.GetFullPath(currentPath), Path.GetFullPath(path), StringComparison.OrdinalIgnoreCase))
+            {
+                try
+                {
+                    CopyProjectAssets(currentPath, path);
+                }
+                catch (Exception ex)
+                {
+                    _msg!.Show($"Přílohy projektu nelze zkopírovat:\n{ex.Message}", "Chyba",
+                        MessageBoxButton.OK, MessageBoxImage.Error);
+                    return null;
+                }
+            }
 
             return SaveToPath(data, path);
         }
@@ -203,6 +218,22 @@ namespace ElektroOffer_app.Services
                 _msg!.Show($"Chyba ukládání:\n{ex.Message}", "Chyba",
                     MessageBoxButton.OK, MessageBoxImage.Error);
                 return null;
+            }
+        }
+
+        private static void CopyProjectAssets(string sourceProjectPath, string destinationProjectPath)
+        {
+            var source = MeasurementImportService.GetProjectAssetsDirectory(sourceProjectPath);
+            if (!Directory.Exists(source)) return;
+            var destination = MeasurementImportService.GetProjectAssetsDirectory(destinationProjectPath);
+            Directory.CreateDirectory(destination);
+            foreach (var directory in Directory.GetDirectories(source, "*", SearchOption.AllDirectories))
+                Directory.CreateDirectory(Path.Combine(destination, Path.GetRelativePath(source, directory)));
+            foreach (var file in Directory.GetFiles(source, "*", SearchOption.AllDirectories))
+            {
+                var target = Path.Combine(destination, Path.GetRelativePath(source, file));
+                Directory.CreateDirectory(Path.GetDirectoryName(target)!);
+                File.Copy(file, target, overwrite: true);
             }
         }
 

@@ -106,5 +106,8 @@
         /// Počet viditelných řádků v sekci MATERIÁL, včetně prázdných řádků.
         /// </summary>
         public int MaterialRowCount { get; set; } = 5;
+
+        /// <summary>Historie potvrzených importů terénního měření včetně mapování a příloh.</summary>
+        public List<ImportedMeasurementData> MeasurementImports { get; set; } = new();
     }
 }

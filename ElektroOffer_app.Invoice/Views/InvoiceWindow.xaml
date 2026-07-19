@@ -85,6 +85,7 @@
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
                             </Grid.RowDefinitions>
 
                             <TextBlock Grid.Row="0" Text="Nazev" Margin="0,4"/>
@@ -117,6 +118,10 @@
                             <TextBox Grid.Row="11" Grid.Column="1" Grid.ColumnSpan="2" Text="{Binding Supplier.Iban, UpdateSourceTrigger=PropertyChanged}"/>
                             <TextBlock Grid.Row="12" Text="BIC/SWIFT" Margin="0,4"/>
                             <TextBox Grid.Row="12" Grid.Column="1" Text="{Binding Supplier.Swift, UpdateSourceTrigger=PropertyChanged}"/>
+                            <Button Grid.Row="13" Grid.Column="1" Grid.ColumnSpan="2"
+                                    Content="Vymazat dodavatele"
+                                    Command="{Binding ClearSupplierCommand}"
+                                    HorizontalAlignment="Right" Margin="0,8,0,0"/>
                         </Grid>
                     </GroupBox>
 
@@ -128,6 +133,7 @@
                                 <ColumnDefinition Width="90"/>
                             </Grid.ColumnDefinitions>
                             <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
@@ -158,6 +164,10 @@
                             <TextBox Grid.Row="6" Grid.Column="1" Text="{Binding Customer.Email, UpdateSourceTrigger=PropertyChanged}"/>
                             <TextBlock Grid.Row="7" Text="Telefon" Margin="0,4"/>
                             <TextBox Grid.Row="7" Grid.Column="1" Text="{Binding Customer.Phone, UpdateSourceTrigger=PropertyChanged}"/>
+                            <Button Grid.Row="8" Grid.Column="1" Grid.ColumnSpan="2"
+                                    Content="Vymazat odberatele"
+                                    Command="{Binding ClearCustomerCommand}"
+                                    HorizontalAlignment="Right" Margin="0,8,0,0"/>
                         </Grid>
                     </GroupBox>
                 </Grid>
