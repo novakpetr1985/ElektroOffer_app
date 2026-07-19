@@ -1,5 +1,19 @@
 # Changelog
 
+## [1.14.0-feature] - 2026-07-20
+
+### Změněno
+
+- Tři interaktivní testy systémových dialogů mají jednotnou kategorii `ManualUI` a CI je uvádí samostatně jako explicitní manuální scénáře mimo automatický TRX součet.
+- Strom projektu v README odpovídá skutečným verzovaným souborům včetně Contracts, Field, Invoice, nových testů a publikačních i podpisových skriptů.
+
+### Ověřeno
+
+- Všech 36 automatických integračních testů prošlo; tři scénáře `ManualUI` zůstávají záměrně určeny pro lokální obsluhované spuštění.
+- GitHub Actions pro release 1.13.0 byly prověřeny od PR do `dev` přes `test` a `main` až po tag: povinné joby uspěly, release se spustil jen pro tag a diagnostika nikde neběžela zbytečně.
+
+---
+
 ## [1.13.0-feature] - 2026-07-19
 
 ### Přidáno

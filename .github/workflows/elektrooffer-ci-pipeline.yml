@@ -169,6 +169,7 @@ jobs:
       passed: ${{ steps.integration_summary.outputs.passed }}
       failed: ${{ steps.integration_summary.outputs.failed }}
       skipped: ${{ steps.integration_summary.outputs.skipped }}
+      manual: ${{ steps.integration_summary.outputs.manual }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -213,13 +214,18 @@ jobs:
             $values.failed = $counters.failed
             $values.skipped = $counters.notExecuted
           }
+          $manual = (Get-ChildItem ElektroOffer_app.Tests.Integration -Filter *.cs -Recurse |
+            Select-String -Pattern 'Category\("ManualUI"\)').Count
           foreach ($entry in $values.GetEnumerator()) {
             "$($entry.Key)=$($entry.Value)" | Out-File $env:GITHUB_OUTPUT -Append -Encoding utf8
           }
+          "manual=$manual" | Out-File $env:GITHUB_OUTPUT -Append -Encoding utf8
           "### Integration tests" | Out-File $env:GITHUB_STEP_SUMMARY -Append -Encoding utf8
           "| Outcome | Total | Executed | Passed | Failed | Skipped |" | Out-File $env:GITHUB_STEP_SUMMARY -Append -Encoding utf8
           "|---|---:|---:|---:|---:|---:|" | Out-File $env:GITHUB_STEP_SUMMARY -Append -Encoding utf8
           "| $($values.outcome) | $($values.total) | $($values.executed) | $($values.passed) | $($values.failed) | $($values.skipped) |" | Out-File $env:GITHUB_STEP_SUMMARY -Append -Encoding utf8
+          "" | Out-File $env:GITHUB_STEP_SUMMARY -Append -Encoding utf8
+          "Manual UI scenarios: **$manual** (category ``ManualUI``, intentionally excluded from unattended CI)." | Out-File $env:GITHUB_STEP_SUMMARY -Append -Encoding utf8
 
       - name: Upload integration coverage
         if: always()
@@ -316,6 +322,7 @@ jobs:
           INTEGRATION_PASSED: ${{ needs.integration.outputs.passed }}
           INTEGRATION_FAILED: ${{ needs.integration.outputs.failed }}
           INTEGRATION_SKIPPED: ${{ needs.integration.outputs.skipped }}
+          INTEGRATION_MANUAL: ${{ needs.integration.outputs.manual }}
           FIELD_WINDOWS: ${{ needs.field.outputs.windows }}
           FIELD_ANDROID: ${{ needs.field.outputs.android }}
         run: |
@@ -342,6 +349,7 @@ jobs:
             "| Integration | skipped | not required for push | - | - | - | - | - |" | Out-File elektrooffer-ci-summary.md -Append -Encoding utf8
           } else {
             "| Integration | $env:INTEGRATION_RESULT | $env:INTEGRATION_OUTCOME | $env:INTEGRATION_TOTAL | $env:INTEGRATION_EXECUTED | $env:INTEGRATION_PASSED | $env:INTEGRATION_FAILED | $env:INTEGRATION_SKIPPED |" | Out-File elektrooffer-ci-summary.md -Append -Encoding utf8
+            "| Manual UI | documented | explicit/manual only | $env:INTEGRATION_MANUAL | - | - | - | $env:INTEGRATION_MANUAL |" | Out-File elektrooffer-ci-summary.md -Append -Encoding utf8
           }
           "" | Out-File elektrooffer-ci-summary.md -Append -Encoding utf8
           "## Build and release" | Out-File elektrooffer-ci-summary.md -Append -Encoding utf8

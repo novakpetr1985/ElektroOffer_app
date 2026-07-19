@@ -40,7 +40,7 @@ namespace ElektroOffer_app.Tests.Integration.Services
         [DllImport("user32.dll")]
         private static extern bool SetForegroundWindow(IntPtr hWnd);
 
-        [Test, Explicit("UI dialog – spouštět pouze lokálně, CI nemá UI prostředí")]
+        [Test, Category("ManualUI"), Explicit("UI dialog – spouštět pouze lokálně, CI nemá UI prostředí")]
         public void Show_Should_Not_Throw_And_Return_Valid_Result()
         {
             // 🔧 1) Vytvoříme WPF Application, pokud neexistuje

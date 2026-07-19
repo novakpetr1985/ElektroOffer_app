@@ -47,7 +47,7 @@ namespace ElektroOffer_app.Tests.Integration.Services
                 File.Delete(_testFilePath);
         }
 
-        [Test, Explicit("UI dialog – spouštět pouze lokálně, CI nemá UI prostředí")]
+        [Test, Category("ManualUI"), Explicit("UI dialog – spouštět pouze lokálně, CI nemá UI prostředí")]
         public void ShowOpenFileDialog_Should_Not_Throw()
         {
             var service = new RealFileDialogService();
@@ -66,7 +66,7 @@ namespace ElektroOffer_app.Tests.Integration.Services
             });
         }
 
-        [Test, Explicit("UI dialog – spouštět pouze lokálně, CI nemá UI prostředí")]
+        [Test, Category("ManualUI"), Explicit("UI dialog – spouštět pouze lokálně, CI nemá UI prostředí")]
         public void ShowSaveFileDialog_Should_Not_Throw()
         {
             var service = new RealFileDialogService();
