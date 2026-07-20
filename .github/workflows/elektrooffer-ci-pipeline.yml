@@ -216,16 +216,28 @@ jobs:
           }
           $manual = (Get-ChildItem ElektroOffer_app.Tests.Integration -Filter *.cs -Recurse |
             Select-String -Pattern 'Category\("ManualUI"\)').Count
+          $discovered = [int] $values.total
+          # NUnit includes Explicit tests in discovery Total, but reports them neither as
+          # Executed nor as Skipped. The automated total must therefore be derived only
+          # from tests that belong to the unattended run.
+          $values.total = [int] $values.executed + [int] $values.skipped
           foreach ($entry in $values.GetEnumerator()) {
             "$($entry.Key)=$($entry.Value)" | Out-File $env:GITHUB_OUTPUT -Append -Encoding utf8
           }
           "manual=$manual" | Out-File $env:GITHUB_OUTPUT -Append -Encoding utf8
-          "### Integration tests" | Out-File $env:GITHUB_STEP_SUMMARY -Append -Encoding utf8
+          "### Automated integration tests" | Out-File $env:GITHUB_STEP_SUMMARY -Append -Encoding utf8
           "| Outcome | Total | Executed | Passed | Failed | Skipped |" | Out-File $env:GITHUB_STEP_SUMMARY -Append -Encoding utf8
           "|---|---:|---:|---:|---:|---:|" | Out-File $env:GITHUB_STEP_SUMMARY -Append -Encoding utf8
           "| $($values.outcome) | $($values.total) | $($values.executed) | $($values.passed) | $($values.failed) | $($values.skipped) |" | Out-File $env:GITHUB_STEP_SUMMARY -Append -Encoding utf8
           "" | Out-File $env:GITHUB_STEP_SUMMARY -Append -Encoding utf8
-          "Manual UI scenarios: **$manual** (category ``ManualUI``, intentionally excluded from unattended CI)." | Out-File $env:GITHUB_STEP_SUMMARY -Append -Encoding utf8
+          "### Manual UI scenarios" | Out-File $env:GITHUB_STEP_SUMMARY -Append -Encoding utf8
+          "| Category | Discovered | Executed by CI | Included in automated Total/Skipped |" | Out-File $env:GITHUB_STEP_SUMMARY -Append -Encoding utf8
+          "|---|---:|---:|---|" | Out-File $env:GITHUB_STEP_SUMMARY -Append -Encoding utf8
+          "| ``ManualUI`` | $manual | 0 | No – requires local user interaction |" | Out-File $env:GITHUB_STEP_SUMMARY -Append -Encoding utf8
+          "" | Out-File $env:GITHUB_STEP_SUMMARY -Append -Encoding utf8
+          if ($file) {
+            "NUnit discovery reconciliation: **$discovered discovered = $($values.total) automated + $manual manual UI**." | Out-File $env:GITHUB_STEP_SUMMARY -Append -Encoding utf8
+          }
 
       - name: Upload integration coverage
         if: always()
