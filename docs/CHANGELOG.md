@@ -1,6 +1,8 @@
 # Changelog
 
-## [1.14.0-feature] - 2026-07-20
+## [1.14.0-feature] - rozpracováno od 2026-07-20
+
+**Stav:** Dosud dokončené změny této větve se týkají CI, klasifikace testů a dokumentace. Funkční rozšíření plánovaná pro řadu 1.14.x zatím nejsou implementována a jsou oddělena níže jako budoucí práce.
 
 ### Změněno
 
@@ -11,6 +13,26 @@
 
 - Všech 36 automatických integračních testů prošlo; tři scénáře `ManualUI` zůstávají záměrně určeny pro lokální obsluhované spuštění.
 - GitHub Actions pro release 1.13.0 byly prověřeny od PR do `dev` přes `test` a `main` až po tag: povinné joby uspěly, release se spustil jen pro tag a diagnostika nikde neběžela zbytečně.
+
+### Stav otevřených funkcí
+
+- **NEDOKONČENO — hlavní cíl 1.14.0:** Rozšířit terénní katalog a import o vazby `WorkTask → WorkSpecification` a `Category → Material.Name`, včetně verzování nového `.eofcatalog` a rozhodnutí, zda je nutná nová verze `.eofmeasure`.
+- **ČÁSTEČNĚ — Android FLD-07:** Instalace a spuštění na Androidu 9 jsou ověřené; úplný ruční scénář export katalogu → přenos → import katalogu → měření → fotografie → export `.eofmeasure` → import do hlavní aplikace zbývá dokončit.
+- **ČÁSTEČNĚ — databázový lifecycle:** Bezpečný bootstrap, převzetí starší databáze a ochrana uživatelských dat jsou hotové; obecné EF Core migrace a historie verzí schématu zavedené nejsou.
+- **ČÁSTEČNĚ — přechod na `MaterialPrice`:** Hlavní kalkulace používá cenu konkrétní nabídky, ale `Material.Price` zůstává kompatibilním fallbackem. Odstranit jej až po zavedení migrací a regresních testů starých dat.
+- **ČÁSTEČNĚ — tisk:** Profesionální fakturační PDF používá QuestPDF; hlavní Windows náhled a tisk zatím neběží nad stejným dokumentem.
+- **ČÁSTEČNĚ — automatické UI pokrytí:** Existují testy resource dictionary, stylů a ViewModelů; skutečný desktopový a mobilní lifecycle zůstává manuální.
+- **K OVĚŘENÍ:** Zpětná kompatibilita velmi starých `.eof` souborů bez `Position`, zobrazení `SupplierCode` a ceny nabídky v detailním rozpočtu, neprovedené manuální scénáře, aktuální coverage po změnách 1.13/1.14 a jednotné verze všech aplikačních `.csproj`.
+
+### Budoucí práce — mimo první implementační celek 1.14.0
+
+- **NEDOKONČENO:** Oddělení systémových, demonstračních a testovacích dat.
+- **NEDOKONČENO:** ARES cache a omezený retry pro HTTP 429 a přechodné chyby 5xx.
+- **NEDOKONČENO:** Atomické `Save` a `Save As` včetně poškozených souborů a dalších chybových scénářů.
+- **NEDOKONČENO:** Pravidla balení a minimálního odběru, automatické dodavatelské strategie a bezpečný výběr technicky kompatibilních nabídek.
+- **NEDOKONČENO:** Řízené nastavení DPH a daňová pravidla.
+- **NEDOKONČENO:** Hromadná sleva na celý úsek.
+- **NEDOKONČENO:** MVVM refactor `AboutWindow` a další rozšíření testů ViewModelů a ukládání.
 
 ---
 
@@ -86,7 +108,7 @@
 
 ---
 
-## [1.11.1] - rozpracováno
+## [1.11.1] - dokončeno, zahrnuto do následujícího vydání 1.12.0
 
 ### Opraveno
 
@@ -111,7 +133,7 @@
 
 ---
 
-## [1.11.0] - rozpracováno
+## [1.11.0] - dokončeno, zahrnuto do následujícího vydání 1.12.0
 
 ### Změněno
 
@@ -202,7 +224,7 @@ Formát vychází z [Keep a Changelog](https://keepachangelog.com/cs/1.0.0/).
 - Unit a integrační testy byly přepsány ze starého modelu `PriceItems` / `WorkItem` na nový pracovní model.
 - Databázové a katalogové testy ověřují nové tabulky práce (`Tasks`, `Specifications`, `BaseMaterials`, `Positions`, `TaskSpecifications`).
 - `ProjectData` nově ukládá počet řádků v sekcích PRÁCE a MATERIÁL (`WorkRowCount`, `MaterialRowCount`), aby se zachoval i stav přidaných nebo odebraných prázdných řádků.
-- Doporučený směr importu materiálů je CSV import přes UI s validací a mapováním sloupců, ne ruční SQL zásahy do databáze.
+- **NAHRAZENO:** Původně doporučený CSV import materiálů byl nahrazen úplnějším XLSX importem s validací a upsert logikou ve verzi 1.10.0.
 - Globální WPF styly a barvy jsou nově zapojené přes `App.xaml` a používají dynamické resources pro světlý/tmavý režim.
 - Vzhled byl srovnán blíže ke standardnímu Windows chování; zůstávají jen ty vlastní styly a šablony, které jsou potřeba pro čitelnost světlého/tmavého režimu.
 - Tmavý režim se nově aplikuje na hlavní okno, fakturaci, nastavení i okno O aplikaci včetně kořenových panelů, menu, toolbarů, vstupů, tabulek a systémových WPF barev.
@@ -337,7 +359,7 @@ Formát vychází z [Keep a Changelog](https://keepachangelog.com/cs/1.0.0/).
 - Kaskádový výběr materiálu v kalkulaci: Kategorie → Název → Dodavatel → Materiál
   (obdobně jako existující kaskáda Task → Specification → Material → Location u práce)
 - `MaterialCascadeService` – řízení kaskády výběru materiálu a dotažení ceny
-- Naplánován import ceníku materiálu z CSV exportu Excel listu Import_Master s upsert logikou podle jednoznačného klíče dodavatele a položky.
+- **NAHRAZENO:** Plánovaný CSV import ceníku byl nahrazen úplnějším XLSX importem ve verzi 1.10.0.
 - Unikátní databázový index na `MaterialPrices (SupplierId, SupplierCode)`
 - Testovací sada 10 materiálů (kabely, chráničky, spínače, zásuvky, rozvaděče,  jističe, chrániče) s cenami od dvou dodavatelů (ELKOV, EMAS)
 - uložené hodnoty pro práci `SelectedWorkPrice`, `SelectedWorkUnit`
@@ -397,7 +419,7 @@ Formát vychází z [Keep a Changelog](https://keepachangelog.com/cs/1.0.0/).
 - výpočet Total je plně delegován do `CalculationPriceService`
 
 ### Na obzoru
-- Doplnění a reálné vyzkoušení UI importu ceníku materiálu z CSV; zatím jsou testovací data vložená ručně přes SQL.
+- **NAHRAZENO:** UI import ceníku z CSV nahradil XLSX import ve verzi 1.10.0.
 - Zobrazení kódu a ceny konkrétní nabídky (`SupplierCode`, `Price`) v detailním rozpočtu
   - aktuálně se v kalkulaci zobrazuje jen název položky od dodavatele
 - Odstranění staršího pole `Material.Price` po úplném přechodu na `MaterialPrice`
@@ -825,7 +847,7 @@ Příčina: VS měl otevřené projekty a při detekci změn souborů na disku j
     - výpočty (`Recalculate`)
     - UI (MainWindow)
     - export/tisk (ExportAsText + PrintDialog)
-  - příprava na budoucí PDF export (QuestPDF nebo Print-to-PDF pipeline)
+  - **DOKONČENO:** Příprava na PDF export byla završena profesionálním QuestPDF exportem faktur ve verzi 1.12.0; hlavní Windows tisk zůstává samostatnou cestou.
 
 ### Opraveno
 - odstraněny build chyby:
@@ -835,7 +857,7 @@ Příčina: VS měl otevřené projekty a při detekci změn souborů na disku j
 - stabilizace kompilace solution (Unit + Integration testy + UI projekt)
 
 ### Poznámka
-Tato verze zavádí první jednoduchý reporting/export vrstvu nad kalkulací bez externích knihoven. Slouží jako základ pro budoucí PDF export a pokročilé tiskové šablony (fakturační styl).
+Tato verze zavedla první jednoduchou reporting/export vrstvu nad kalkulací bez externích knihoven. **DOKONČENO:** Navazující PDF export a pokročilá fakturační šablona byly realizovány přes QuestPDF ve verzi 1.12.0.
 
 ---
 
